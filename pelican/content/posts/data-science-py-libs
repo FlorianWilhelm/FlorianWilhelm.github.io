@@ -1,0 +1,12 @@
+ipython
+jupyter
+numpy
+scipy
+numexpr
+pandas
+scikit-learn
+xgboost
+isoweek
+python-dateutils
+bokeh
+matplotlib

@@ -2,3 +2,4 @@ pelican
 Markdown
 pelican-youtube
 typogrify
+BeautifulSoup4

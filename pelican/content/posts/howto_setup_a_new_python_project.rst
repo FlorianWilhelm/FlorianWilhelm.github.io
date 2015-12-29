@@ -1,10 +1,11 @@
+=================================
 How to Setup a new Python Project
 =================================
 
 :date: 2014-07-23 14:20
 :modified: 2015-12-22 19:30
 :category: Talks
-:tags: python
+:tags: python, template
 :slug: how-to-setup-up-a-new-python-project
 :authors: Felix Wick, Florian Wilhelm
 :summary: Challenges of Big Data and how Blue Yonder addresses them with Python.

@@ -1,10 +1,11 @@
+==============================================
 Extending Scikit-Learn with your own Regressor
 ==============================================
 
 :date: 2014-07-25 12:00
 :modified: 2015-12-22 19:30
 :category: Talks
-:tags: python, scikit-learn
+:tags: python, scikit-learn, machine-learning
 :slug: extending-scikit-learn
 :authors: Florian Wilhelm
 :summary: How to write your own robust linear estimator within the Scikit-Learn framework.

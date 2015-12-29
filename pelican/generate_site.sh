@@ -2,7 +2,13 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OUTPUT="$( readlink -f "$DIR/../" )"
 
-pelican $DIR/content -o $OUTPUT
+# Clean output directory
 cd $OUTPUT
-rm -rf !(pelican)
+shopt -s extglob
+rm -rf !(pelican|_config.yml)
+# Generate content
+cd $DIR
+pelican $DIR/content -o $OUTPUT
+# Run webserver
+cd $OUTPUT
 python -m pelican.server

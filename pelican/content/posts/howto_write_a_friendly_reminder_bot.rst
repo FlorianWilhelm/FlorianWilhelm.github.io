@@ -1,10 +1,11 @@
+====================================
 How to write a friendly reminder bot
 ====================================
 
 :date: 2015-07-24 12:30
 :modified: 2015-12-22 19:30
 :category: Talks
-:tags: python, google hangouts, asyncio, even-driven, asynchronous
+:tags: python, google hangouts, asyncio, event-driven, asynchronous
 :slug: howto-write-a-friendly-reminder-bot
 :authors: Florian Wilhelm
 :summary: How to use event-driven, asynchronous programming to write a chat bot.
@@ -18,6 +19,9 @@ in the Google Developers Console in order to access the Google+ Hangouts API.
 I explain then on how to use an event-driven library to write a bot
 that sends scheduled messages, waits for a proper reply and repeats the question if need be.
 Thereby, a primer on event-driven, asynchronous architectures is given.
+
+The source code can be downloaded on `GitHub <https://github.com/blue-yonder/medbot>`_
+and the slides is available as `html preview <http://htmlpreview.github.io/?https://github.com/blue-yonder/medbot/blob/master/medbot.slides.html?theme=solarized#/>`_.
 
 .. youtube:: ztfdv9jcxtw
   :width: 800

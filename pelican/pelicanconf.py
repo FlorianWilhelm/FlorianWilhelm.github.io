@@ -116,7 +116,8 @@ DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives', 'search', 'tag
 
 # plumage settings
 SITESUBTITLE = 'Data Scientist'
-SITE_THUMBNAIL = '/images/myself.jpeg'
+SITE_THUMBNAIL = '/images/thumbnail.jpeg'
+SITE_THUMBNAIL_TEXT = 'Sometimes with hip glasses 😎'
 MENUITEMS = (
     ('Home', '/'),
     ('About me', '/about/'),
@@ -139,11 +140,13 @@ SITEMAP = {
 # Plugins
 PLUGIN_PATHS = ['plugins-core']
 PLUGINS = [
-#     # Core plugins
-#     'related_posts',
-#     # 'thumbnailer',
-#     'tipue_search',
-#     'neighbors',
+     # Core plugins
+     'related_posts',
+     # 'thumbnailer',
+     'tipue_search',
+     'neighbors',
      'sitemap',
-      'pelican_youtube'
+     'pelican_youtube'
 ]
+
+DISQUS_SITENAME = 'florian-wilhelm-blog'

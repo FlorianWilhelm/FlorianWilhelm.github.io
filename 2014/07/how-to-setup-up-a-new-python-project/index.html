@@ -57,6 +57,10 @@
 <li ><a href="/">Home</a></li>
 <li ><a href="/about/">About me</a></li>
             </ul>
+              <form class="navbar-search pull-right" action="http://florianwilhelm.github.io/search.html" onsubmit="return validateForm(this.elements['q'].value);">
+                <input type="text" name="q" id="tipue_search_input" class="search-query span2" placeholder="Search" required/>
+                <i class="fa fa-search fa-fw"></i>
+              </form>
           </div>
         </div>
       </header>
@@ -79,21 +83,22 @@
 
   <div>
     <p>In this presentation held at the <a class="reference external" href="https://ep2014.europython.eu/">EuroPython 2014</a>
-in Berlin, my colleague Felix Wick show what that setting up a new Python project
-from scratch can be quite hard. How to structure your files and directories.
-He addresses questions like &#8220;Where should my packages, modules, documentation and
+in Berlin, my colleague Felix Wick demonstrates that setting up a new Python project
+from scratch can be quite complicated. Especially, structuring your files and directories
+the right way in order to build a Python package.
+Thereby, he addresses questions like &#8220;Where should my modules, documentation and
 unit tests go?&#8221; and &#8220;How do I configure setup.py, Sphinx and so on?&#8221; with proven answers!
-Finally, also the template tool <a class="reference external" href="http://pyscaffold.readthedocs.org/">PyScaffold</a>
-is presented that helps you to set up a new project in the blink of an&nbsp;eye.</p>
+Finally, he demonstrates the template tool <a class="reference external" href="http://pyscaffold.readthedocs.org/">PyScaffold</a>
+which helps a lot in setting up a new&nbsp;project.</p>
 <div class="youtube"><iframe src="https://www.youtube.com/embed/r8Rqp2w_kHk" width="800" height="500" allowfullscreen seamless frameBorder="0"></iframe></div>
   </div>
 
     <h3>Related content</h3>
     <!-- TODO: Use fancier related layout, as in http://kevin.deldycke.com/2012/04/beautify-contextual-related-posts-wordpress-plugin/ -->
     <ul>
-        <li><a href="http://florianwilhelm.github.io/2015/07/howto-write-a-friendly-reminder-bot/">How to write a friendly reminder&nbsp;bot</a></li>
         <li><a href="http://florianwilhelm.github.io/2014/07/extending-scikit-learn/">Extending Scikit-Learn with your own&nbsp;Regressor</a></li>
         <li><a href="http://florianwilhelm.github.io/2013/10/handling-big-data-with-python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://florianwilhelm.github.io/2015/07/howto-write-a-friendly-reminder-bot/">How to write a friendly reminder&nbsp;bot</a></li>
       </ul>
 
     <div class="comments">

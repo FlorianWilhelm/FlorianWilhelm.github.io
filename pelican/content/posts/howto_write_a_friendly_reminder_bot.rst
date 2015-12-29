@@ -16,7 +16,7 @@ library can be used in order to write a small chatbot that connects to Google Ha
 and reminds you or someone else to take his/her medication.
 The secure and recommended OAuth2 protocol is used to authorize the bot application
 in the Google Developers Console in order to access the Google+ Hangouts API.
-I explain then on how to use an event-driven library to write a bot
+Subsequently, I explain how to use an event-driven library to write a bot
 that sends scheduled messages, waits for a proper reply and repeats the question if need be.
 Thereby, a primer on event-driven, asynchronous architectures is given.
 

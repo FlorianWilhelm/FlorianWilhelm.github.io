@@ -150,3 +150,4 @@ PLUGINS = [
 ]
 
 DISQUS_SITENAME = 'florianwilhelmblog'
+TIPUE_SEARCH = True

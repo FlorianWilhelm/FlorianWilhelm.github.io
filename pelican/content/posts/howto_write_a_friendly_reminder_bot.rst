@@ -21,7 +21,7 @@ that sends scheduled messages, waits for a proper reply and repeats the question
 Thereby, a primer on event-driven, asynchronous architectures is given.
 
 The source code can be downloaded on `GitHub <https://github.com/blue-yonder/medbot>`_
-and the slides is available as `html preview <http://htmlpreview.github.io/?https://github.com/blue-yonder/medbot/blob/master/medbot.slides.html?theme=solarized#/>`_.
+and the slides are available as `html preview <http://htmlpreview.github.io/?https://github.com/blue-yonder/medbot/blob/master/medbot.slides.html?theme=solarized#/>`_.
 
 .. youtube:: ztfdv9jcxtw
   :width: 800

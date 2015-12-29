@@ -15,7 +15,7 @@ in Berlin, my colleague Felix Wick show what that setting up a new Python projec
 from scratch can be quite hard. How to structure your files and directories.
 He addresses questions like "Where should my packages, modules, documentation and
 unit tests go?" and "How do I configure setup.py, Sphinx and so on?" with proven answers!
-Finally, also the template tool `PyScacffold <http://pyscaffold.readthedocs.org/>`_
+Finally, also the template tool `PyScaffold <http://pyscaffold.readthedocs.org/>`_
 is presented that helps you to set up a new project in the blink of an eye.
 
 .. youtube:: r8Rqp2w_kHk

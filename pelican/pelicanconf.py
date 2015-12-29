@@ -149,4 +149,4 @@ PLUGINS = [
      'pelican_youtube'
 ]
 
-DISQUS_SITENAME = 'florian-wilhelm-blog'
+DISQUS_SITENAME = 'florianwilhelmblog'

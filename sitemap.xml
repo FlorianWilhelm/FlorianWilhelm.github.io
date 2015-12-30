@@ -4,133 +4,133 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>/</loc>
-<lastmod>2015-12-30T18:07:57-00:00</lastmod>
+<loc>http://www.florianwilhelm.info/</loc>
+<lastmod>2015-12-30T19:14:29-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/404-not-found/</loc>
-<lastmod>2015-12-30T18:07:57-00:00</lastmod>
+<loc>http://www.florianwilhelm.info/404-not-found/</loc>
+<lastmod>2015-12-30T19:14:29-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/410-gone/</loc>
-<lastmod>2015-12-30T18:07:57-00:00</lastmod>
+<loc>http://www.florianwilhelm.info/410-gone/</loc>
+<lastmod>2015-12-30T19:14:29-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/500-error/</loc>
-<lastmod>2015-12-30T18:07:57-00:00</lastmod>
+<loc>http://www.florianwilhelm.info/500-error/</loc>
+<lastmod>2015-12-30T19:14:29-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/about/</loc>
-<lastmod>2015-12-30T18:07:57-00:00</lastmod>
+<loc>http://www.florianwilhelm.info/about/</loc>
+<lastmod>2015-12-30T19:14:29-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/2015/07/howto-write-a-friendly-reminder-bot/</loc>
+<loc>http://www.florianwilhelm.info/2015/07/howto-write-a-friendly-reminder-bot/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/2014/07/extending-scikit-learn/</loc>
+<loc>http://www.florianwilhelm.info/2014/07/extending-scikit-learn/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/2014/07/how-to-setup-up-a-new-python-project/</loc>
+<loc>http://www.florianwilhelm.info/2014/07/how-to-setup-up-a-new-python-project/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/2013/10/handling-big-data-with-python/</loc>
+<loc>http://www.florianwilhelm.info/2013/10/handling-big-data-with-python/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/talks/</loc>
+<loc>http://www.florianwilhelm.info/category/talks/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/template/</loc>
+<loc>http://www.florianwilhelm.info/tag/template/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/event-driven/</loc>
+<loc>http://www.florianwilhelm.info/tag/event-driven/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/python/</loc>
+<loc>http://www.florianwilhelm.info/tag/python/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/big-data/</loc>
+<loc>http://www.florianwilhelm.info/tag/big-data/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/scikit-learn/</loc>
+<loc>http://www.florianwilhelm.info/tag/scikit-learn/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/google-hangouts/</loc>
+<loc>http://www.florianwilhelm.info/tag/google-hangouts/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/asynchronous/</loc>
+<loc>http://www.florianwilhelm.info/tag/asynchronous/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/machine-learning/</loc>
+<loc>http://www.florianwilhelm.info/tag/machine-learning/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/asyncio/</loc>
+<loc>http://www.florianwilhelm.info/tag/asyncio/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>

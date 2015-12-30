@@ -8,7 +8,6 @@ Handling Big Data with Python
 :tags: python, scikit-learn, big data
 :slug: handling-big-data-with-python
 :authors: Florian Wilhelm
-:summary: Challenges of Big Data and how Blue Yonder addresses them with Python.
 
 The talk presented at the PyCon 2013 in Cologne gives a small introduction of how
 `Blue Yonder <http://www.blue-yonder.com/>`_ applies machine learning and Predictive

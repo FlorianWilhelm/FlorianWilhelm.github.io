@@ -114,6 +114,9 @@ ARCHIVES_SAVE_AS = 'archives/index.html'
 
 DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives', 'search', 'tags']
 
+
+#LEFT_SIDEBAR = """"""
+
 # plumage settings
 SITESUBTITLE = 'Data Scientist'
 SITE_THUMBNAIL = '/images/thumbnail.jpeg'

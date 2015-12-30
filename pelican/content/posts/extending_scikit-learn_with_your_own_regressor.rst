@@ -8,8 +8,6 @@ Extending Scikit-Learn with your own Regressor
 :tags: python, scikit-learn, machine-learning
 :slug: extending-scikit-learn
 :authors: Florian Wilhelm
-:summary: How to write your own robust linear estimator within the Scikit-Learn framework.
-
 
 `Scikit-Learn <http://scikit-learn.org/>`_ is a well-known and popular framework for machine learning that is used by Data Scientists all over the world.
 In this tutorial presented at the `EuroPython 2014 <https://ep2014.europython.eu/>`_ in Berlin,

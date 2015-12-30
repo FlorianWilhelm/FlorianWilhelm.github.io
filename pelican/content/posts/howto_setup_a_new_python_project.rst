@@ -8,8 +8,6 @@ How to Setup a new Python Project
 :tags: python, template
 :slug: how-to-setup-up-a-new-python-project
 :authors: Felix Wick, Florian Wilhelm
-:summary: Setting up a new Python project can be quite cumbersome and complex.
-  This talk provides details on how to structure a Python package and introduces PyScaffold as a project template tool.
 
 In this presentation held at the `EuroPython 2014 <https://ep2014.europython.eu/>`_
 in Berlin, my colleague Felix Wick demonstrates that setting up a new Python project

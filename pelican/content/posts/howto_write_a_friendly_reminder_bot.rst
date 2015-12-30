@@ -8,8 +8,6 @@ How to write a friendly reminder bot
 :tags: python, google hangouts, asyncio, event-driven, asynchronous
 :slug: howto-write-a-friendly-reminder-bot
 :authors: Florian Wilhelm
-:summary: How to use event-driven, asynchronous programming to write a chat bot.
-
 
 In this presentation given at the `EuroPython 2015 <https://ep2015.europython.eu/>`_ in Bilbao, I show how the `hangups <https://github.com/tdryer/hangups>`_
 library can be used in order to write a small chatbot that connects to Google Hangouts

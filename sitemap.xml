@@ -4,133 +4,133 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>http://florianwilhelm.github.io/</loc>
-<lastmod>2015-12-30T17:25:04-00:00</lastmod>
+<loc>/</loc>
+<lastmod>2015-12-30T18:07:57-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/404-not-found/</loc>
-<lastmod>2015-12-30T17:25:04-00:00</lastmod>
+<loc>/404-not-found/</loc>
+<lastmod>2015-12-30T18:07:57-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/410-gone/</loc>
-<lastmod>2015-12-30T17:25:04-00:00</lastmod>
+<loc>/410-gone/</loc>
+<lastmod>2015-12-30T18:07:57-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/500-error/</loc>
-<lastmod>2015-12-30T17:25:04-00:00</lastmod>
+<loc>/500-error/</loc>
+<lastmod>2015-12-30T18:07:57-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/about/</loc>
-<lastmod>2015-12-30T17:25:04-00:00</lastmod>
+<loc>/about/</loc>
+<lastmod>2015-12-30T18:07:57-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/2015/07/howto-write-a-friendly-reminder-bot/</loc>
+<loc>/2015/07/howto-write-a-friendly-reminder-bot/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/2014/07/extending-scikit-learn/</loc>
+<loc>/2014/07/extending-scikit-learn/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/2014/07/how-to-setup-up-a-new-python-project/</loc>
+<loc>/2014/07/how-to-setup-up-a-new-python-project/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/2013/10/handling-big-data-with-python/</loc>
+<loc>/2013/10/handling-big-data-with-python/</loc>
 <lastmod>2015-12-22T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/category/talks/</loc>
+<loc>/category/talks/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/template/</loc>
+<loc>/tag/template/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/event-driven/</loc>
+<loc>/tag/event-driven/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/python/</loc>
+<loc>/tag/python/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/big-data/</loc>
+<loc>/tag/big-data/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/scikit-learn/</loc>
+<loc>/tag/scikit-learn/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/google-hangouts/</loc>
+<loc>/tag/google-hangouts/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/asynchronous/</loc>
+<loc>/tag/asynchronous/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/machine-learning/</loc>
+<loc>/tag/machine-learning/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://florianwilhelm.github.io/tag/asyncio/</loc>
+<loc>/tag/asyncio/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>

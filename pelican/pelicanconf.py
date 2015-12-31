@@ -64,7 +64,7 @@ REVERSE_ARCHIVE_ORDER = True
 DISPLAY_PAGES_ON_MENU = False
 
 # Google Analytics
-GOOGLE_ANALYTICS_UNIVERSAL = 'UA-7169420-1'
+GOOGLE_ANALYTICS_UNIVERSAL = 'UA-71694209-1'
 GOOGLE_ANALYTICS_UNIVERSAL_PROPERTY = 'auto'
 
 # Uncomment following line if you want document-relative URLs when developing

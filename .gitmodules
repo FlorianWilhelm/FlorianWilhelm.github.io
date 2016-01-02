@@ -8,3 +8,6 @@
 	path = pelican/themes/plumage
 	url = https://github.com/FlorianWilhelm/plumage.git
 	branch = develop
+[submodule "pelican/plugins/plugins/ipynb"]
+	path = pelican/plugins/ipynb
+	url = git://github.com/danielfrg/pelican-ipynb.git

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
 
-    <title>  How to Setup a new Python Project
+    <title>  Handling Big Data with Python
  | Florian Wilhelm</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.0.3/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/magnific-popup.min.css"/>
-    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/jquery.mglass.css"/>
-    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/pygment-solarized-dark.css"/>
-    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css"/>
+    <link rel="stylesheet" href="/theme/css/jquery.mglass.css"/>
+    <link rel="stylesheet" href="/theme/css/pygment-solarized-dark.css"/>
+    <link rel="stylesheet" href="/theme/css/style.css"/>
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
@@ -25,13 +25,13 @@
       <link href='//fonts.googleapis.com/css?family=Expletus+Sans' rel='stylesheet' type='text/css'>
 
 
-    <link rel="icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <!-- Feeds -->
-      <link href="http://www.florianwilhelm.info/feed/atom/index.html" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Atom Feed"/>
-      <link href="http://www.florianwilhelm.info/feed/index.html" type="application/rss+xml" rel="alternate" title="Florian Wilhelm RSS Feed"/>
-      <link href="http://www.florianwilhelm.info/feeds/talks.atom.xml" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Categories Atom Feed"/>
+      <link href="/feed/atom/index.html" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Atom Feed"/>
+      <link href="/feed/index.html" type="application/rss+xml" rel="alternate" title="Florian Wilhelm RSS Feed"/>
+      <link href="/feeds/talks.atom.xml" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Categories Atom Feed"/>
 
 
   </head>
@@ -41,23 +41,23 @@
 
       <header>
         <div class="page-header">
-            <a href="http://www.florianwilhelm.info" class="avatar-container">
+            <a href="" class="avatar-container">
               <div class="avatar  animate ">
                 <div class="side"><img src="/images/thumbnail.jpeg"/></div>
                   <div class="side back"><p class="text-center">Sometimes with hip glasses 😎</p></div>
               </div>
             </a>
-          <h1><a href="http://www.florianwilhelm.info">Florian Wilhelm</a> <small>Data Scientist</small></h1>
+          <h1><a href="">Florian Wilhelm</a> <small>Data Scientist</small></h1>
         </div>
 
         <div class="navbar">
           <div class="navbar-inner">
-            <a class="brand" href="http://www.florianwilhelm.info" title="Data Scientist">Florian Wilhelm</a>
+            <a class="brand" href="" title="Data Scientist">Florian Wilhelm</a>
             <ul class="nav">
 <li ><a href="/">Home</a></li>
 <li ><a href="/about/">About me</a></li>
             </ul>
-              <form class="navbar-search pull-right" action="http://www.florianwilhelm.info/search.html" onsubmit="return validateForm(this.elements['q'].value);">
+              <form class="navbar-search pull-right" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);">
                 <input type="text" name="q" id="tipue_search_input" class="search-query span2" placeholder="Search" required/>
                 <i class="fa fa-search fa-fw"></i>
               </form>
@@ -70,7 +70,7 @@
         <div class="row">
           <div class=" span9  ">
   <h1>
-    <a href="http://www.florianwilhelm.info/2014/07/how-to-setup-up-a-new-python-project/" rel="bookmark" title="Permalink to How to Setup a new Python Project">How to Setup a new Python&nbsp;Project</a>
+    <a href="/2013/10/handling_big_data_with_python/" rel="bookmark" title="Permalink to Handling Big Data with Python">Handling Big Data with&nbsp;Python</a>
   </h1>
           </div>
         </div>
@@ -82,62 +82,61 @@
   
 
   <div>
-    <p>In this presentation held at the <a class="reference external" href="https://ep2014.europython.eu/">EuroPython 2014</a>
-in Berlin, my colleague Felix Wick demonstrates that setting up a new Python project
-from scratch can be quite complicated. Especially, structuring your files and directories
-the right way in order to build a Python package.
-Thereby, he addresses questions like &#8220;Where should my modules, documentation and
-unit tests go?&#8221; and &#8220;How do I configure setup.py, Sphinx and so on?&#8221; with proven answers!
-Finally, he demonstrates the template tool <a class="reference external" href="http://pyscaffold.readthedocs.org/">PyScaffold</a>
-which helps a lot in setting up a new&nbsp;project.</p>
-<div class="youtube"><iframe src="https://www.youtube.com/embed/r8Rqp2w_kHk" width="800" height="500" allowfullscreen seamless frameBorder="0"></iframe></div>
+    <p>The talk presented at the PyCon 2013 in Cologne gives a small introduction of how
+<a href="http://www.blue-yonder.com/">Blue Yonder</a> applies machine learning and Predictive
+Analytics in various fields as well as the challenges of Big Data.
+Using the example of Blue Yonder&#8217;s machine learning software NeuroBayes, I show
+the made efforts and hit dead ends in order to provide a flexible and yet easy to
+use interface for NeuroBayes to Data Scientists.
+Since NeuroBayes is written in <span class="caps">FORTRAN</span> for performance reasons different interface
+approaches were tried which lead us eventually to a Python interface. In this talk,
+I elaborate on the up- and downsides of the different approaches and the various
+reasons why Python won the race with an emphasize on the benefits of the Python ecosystem itself.
+Also, I discuss performance as well as scalability issues with Python and how we address them at Blue Yonder.
+In detail, I show the application of Cython to speed up calculations in the Python interface
+layer as well as distributed computing in a private cloud called Stratosphere.
+Scalability and efficiency is of utmost importance when data processing is time critical.
+The overall goal is to give the audience an overview how Python fits in the software ecosystem of a company handling Big&nbsp;Data.</p>
+<p><div class="videobox">
+                <iframe width="800" height="500"
+                    src='https://www.youtube.com/embed/CxinlY8yGUM'
+                    frameborder='0' webkitAllowFullScreen mozallowfullscreen
+                    allowFullScreen>
+                </iframe>
+            </div></p>
   </div>
 
     <h3>Related content</h3>
     <!-- TODO: Use fancier related layout, as in http://kevin.deldycke.com/2012/04/beautify-contextual-related-posts-wordpress-plugin/ -->
     <ul>
-        <li><a href="http://www.florianwilhelm.info/2014/07/extending-scikit-learn/">Extending Scikit-Learn with your own&nbsp;Regressor</a></li>
-        <li><a href="http://www.florianwilhelm.info/2013/10/handling-big-data-with-python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2015/07/howto-write-a-friendly-reminder-bot/">How to write a friendly reminder&nbsp;bot</a></li>
+        <li><a href="/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;Regressor</a></li>
+        <li><a href="/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
+        <li><a href="/2014/07/howto_setup_a_new_python_project/">How to Setup a new Python&nbsp;Project</a></li>
       </ul>
 
-    <div class="comments">
-      <div id="disqus_thread"></div>
-      <script type="text/javascript">
-        var disqus_shortname = 'florianwilhelmblog';
-        var disqus_identifier = "2014/07/how-to-setup-up-a-new-python-project/";
-        var disqus_title = "How to Setup a new Python Project";
-        var disqus_url = "http://www.florianwilhelm.info/2014/07/how-to-setup-up-a-new-python-project/";
-        (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-      </script>
-      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus</a>.</noscript>
-    </div>
 
           </div>
 
             <div class="span3">
   <div class="well">
 
-    <p><abbr class="fa fa-calendar" title="2014-07-23T14:20:00+02:00"> Jul. 23, 2014</abbr></p>
+    <p><abbr class="fa fa-calendar" title="2013-10-17T14:20:00+02:00"> Okt. 17, 2013</abbr></p>
 
 
     <hr/>
 
       <p>
-              <a href="http://www.florianwilhelm.info/category/talks/" rel="tag tooltip" class="label label-info" data-placement="right" data-original-title="4 articles in this category">Talks</a>
+              <a href="/category/talks/" rel="tag tooltip" class="label label-info" data-placement="right" data-original-title="4 articles in this category">Talks</a>
             <a href="/tag/python/" rel="tooltip" class="label" data-placement="right" data-original-title="4 articles with this tag">python</a>
-            <a href="/tag/template/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">template</a>
+            <a href="/tag/scikit-learn/" rel="tooltip" class="label" data-placement="right" data-original-title="2 articles with this tag">scikit-learn</a>
+            <a href="/tag/big-data/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">big data</a>
       </p>
       <hr/>
 
 
       <ul class="pager">
-        <li class="previous "><a  href="http://www.florianwilhelm.info/2013/10/handling-big-data-with-python/" title="Handling Big Data with Python"  rel="prev">← Older</a></li>
-        <li class="next "><a  href="http://www.florianwilhelm.info/2014/07/extending-scikit-learn/" title="Extending Scikit-Learn with your own Regressor"  rel="next">Newer →</a></li>
+        <li class="previous  disabled "><a  rel="prev">← Older</a></li>
+        <li class="next "><a  href="/2014/07/howto_setup_a_new_python_project/" title="How to Setup a new Python Project"  rel="next">Newer →</a></li>
       </ul>
 
   </div>
@@ -192,11 +191,11 @@ which helps a lot in setting up a new&nbsp;project.</p>
           <div class="span2">
             <h5>Browse content by</h5>
             <ul class="fa-ul">
-                <li><a href="http://www.florianwilhelm.info/categories/index.html"><i class="fa-li fa fa-tags"></i> Categories</a></li>
-                <li><a href="http://www.florianwilhelm.info/archives/index.html"><i class="fa-li fa fa-calendar"></i> Dates</a></li>
-                <li><a href="http://www.florianwilhelm.info/tags/index.html"><i class="fa-li fa fa-tag"></i> Tags</a></li>
+                <li><a href="/categories/index.html"><i class="fa-li fa fa-tags"></i> Categories</a></li>
+                <li><a href="/archives/index.html"><i class="fa-li fa fa-calendar"></i> Dates</a></li>
+                <li><a href="/tags/index.html"><i class="fa-li fa fa-tag"></i> Tags</a></li>
 
-                <li><a href="http://www.florianwilhelm.info/feeds/talks.atom.xml"><i class="fa-li fa fa-rss"></i> Feed</a></li>
+                <li><a href="/feeds/talks.atom.xml"><i class="fa-li fa fa-rss"></i> Feed</a></li>
             </ul>
           </div>
 
@@ -226,8 +225,7 @@ which helps a lot in setting up a new&nbsp;project.</p>
 
     </footer>
 
-    <!-- Google Analytics Universal -->
-    <script type="text/javascript">
+   <script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -235,14 +233,13 @@ which helps a lot in setting up a new&nbsp;project.</p>
         ga('create', 'UA-71694209-1', 'auto');
         ga('send', 'pageview');
     </script>
-    <!-- End Google Analytics Universal Code -->
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/jquery.magnific-popup.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.min.js"></script>
-    <script src="http://www.florianwilhelm.info/theme/js/jquery.mglass.js"></script>
-    <script src="http://www.florianwilhelm.info/theme/js/application.js"></script>
+    <script src="/theme/js/jquery.mglass.js"></script>
+    <script src="/theme/js/application.js"></script>
 
   </body>
 </html>

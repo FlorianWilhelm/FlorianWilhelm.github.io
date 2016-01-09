@@ -14,6 +14,7 @@ SITEURL = 'http://www.florianwilhelm.info'
 
 
 PATH = 'content'
+MARKUP = ('md', 'ipynb')
 TIMEZONE = 'Europe/Paris'
 DEFAULT_LANG = u'en'
 OUTPUT_PATH = os.path.join(__location__, '../')
@@ -64,8 +65,8 @@ REVERSE_ARCHIVE_ORDER = True
 DISPLAY_PAGES_ON_MENU = False
 
 # Google Analytics
-GOOGLE_ANALYTICS_UNIVERSAL = 'UA-71694209-1'
-GOOGLE_ANALYTICS_UNIVERSAL_PROPERTY = 'auto'
+GOOGLE_ANALYTICS = 'UA-71694209-1'
+GOOGLE_ANALYTICS_PROPERTY = 'auto'
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
@@ -141,7 +142,7 @@ SITEMAP = {
 }
 
 # Plugins
-PLUGIN_PATHS = ['plugins-core']
+PLUGIN_PATHS = ['plugins-core', 'plugins']
 PLUGINS = [
      # Core plugins
      'related_posts',
@@ -149,7 +150,12 @@ PLUGINS = [
      'tipue_search',
      'neighbors',
      'sitemap',
-     'pelican_youtube'
+     'liquid_tags.img',
+     'liquid_tags.video',
+     'liquid_tags.youtube',
+     'liquid_tags.vimeo',
+     'liquid_tags.include_code',
+     'ipynb'
 ]
 
 DISQUS_SITENAME = 'florianwilhelmblog'

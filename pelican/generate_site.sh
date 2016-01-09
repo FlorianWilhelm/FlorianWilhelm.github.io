@@ -5,7 +5,7 @@ OUTPUT="$( readlink -f "$DIR/../" )"
 # Clean output directory
 cd $OUTPUT
 shopt -s extglob
-rm -rf !(pelican|_config.yml|CNAME)
+rm -rf !(pelican|_config.yml|CNAME|README.md)
 # Generate content
 cd $DIR
 pelican $DIR/content -o $OUTPUT

@@ -5,10 +5,12 @@ OUTPUT="$( readlink -f "$DIR/../" )"
 # Clean output directory
 cd $OUTPUT
 shopt -s extglob
-rm -rf !(pelican|_config.yml|CNAME|README.md|.nojekyll)
+rm -rf !(pelican|_config.yml|CNAME|README.md)
 # Generate content
 cd $DIR
 pelican $DIR/content -o $OUTPUT
+# Copy Error 404 page to root for github.io
+cp $OUTPUT/404-not-found/index.html $OUTPUT/404.html
 # Run webserver
 cd $OUTPUT
 python -m pelican.server

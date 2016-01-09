@@ -12,7 +12,6 @@ AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
 SITEURL = 'http://www.florianwilhelm.info'
 
-
 PATH = 'content'
 MARKUP = ('md', 'ipynb')
 TIMEZONE = 'Europe/Paris'

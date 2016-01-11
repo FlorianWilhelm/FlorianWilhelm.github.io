@@ -2,7 +2,7 @@
 title: How to write a friendly reminder bot
 date: 2015-07-24 12:30
 modified: 2015-12-22 19:30
-category: Talks
+category: talk
 tags: python, google hangouts, asyncio, event-driven, asynchronous
 authors: Florian Wilhelm
 ---

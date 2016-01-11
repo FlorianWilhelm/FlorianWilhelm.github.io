@@ -1,8 +1,8 @@
 ---
-title: Extending Scikit-Learn with your own Regressor
+title: Extending Scikit-Learn with your own regressor
 date: 2014-07-25 12:00
 modified: 2015-12-22 19:30
-category: Talks
+category: talk
 tags: python, scikit-learn, machine-learning
 authors: Florian Wilhelm
 ---

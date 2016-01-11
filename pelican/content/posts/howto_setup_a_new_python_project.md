@@ -1,8 +1,8 @@
 ---
-title: How to Setup a new Python Project
+title: How to setup a new Python project
 date: 2014-07-23 14:20
 modified: 2015-12-22 19:30
-category: Talks
+category: talk
 tags: python, template
 authors: Felix Wick, Florian Wilhelm
 ---

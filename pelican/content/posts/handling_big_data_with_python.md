@@ -2,7 +2,7 @@
 title: Handling Big Data with Python
 date: 2013-10-17 14:20
 modified: 2015-12-22 19:30
-category: Talks
+category: talk
 tags: python, scikit-learn, big data
 authors: Florian Wilhelm
 ---

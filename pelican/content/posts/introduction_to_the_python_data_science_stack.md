@@ -9,8 +9,8 @@ authors: Florian Wilhelm
 
 Often I get the question as a Data Scientist what the *Python Data Science Stack*
 actually is and where a beginner should start to learn. The Python ecosystem,
-especially around the topics data analytics, data science and machine learning is
-so vast and rich that it confuses many rookies.
+especially around the topics such as data analytics, data mining, data science and
+machine learning is so vast and rich that it confuses many rookies.
 
 For such an audience I created a slide deck that starts with pointing out the
 benefits of the Python language for analytics. Even beginners in Python are

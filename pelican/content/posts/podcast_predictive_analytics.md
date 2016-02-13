@@ -8,9 +8,10 @@ authors: Florian Wilhelm
 ---
 
 The german [Modellansatz][] podcast curated by [Gudrun Thäter][] and
-[Sebastian Ritterbusch][] conveys the importance of mathematics and mathematical
-modeling in our everyday life. Starting from the water tap, automatic velocity control
-systems on highways to your mobile phone, mathematics is almost everywhere.
+[Sebastian Ritterbusch][], supported by the Karlsruhe Institute for Technology ([KIT][]),
+conveys the importance of mathematics and mathematical modeling in our everyday life.
+Starting from the water tap, automatic velocity control systems on highways
+to your mobile phone, mathematics is almost everywhere.
 
 In [issue 25][] of the podcast, I talk about predictive analytics, especially the
 challenges of making sales forecasts for retailers. With the help of these forecasts

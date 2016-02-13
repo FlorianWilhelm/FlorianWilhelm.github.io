@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/podcast.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2016-01-10T19:30:00+01:00</updated><entry><title>Podcast about Predictive Analytics</title><link href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/" rel="alternate"></link><updated>2016-01-10T19:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2014-06-26:2014/06/podcast_predictive_analytics/</id><summary type="html">&lt;p&gt;The german &lt;a href="http://www.modellansatz.de/"&gt;Modellansatz&lt;/a&gt; podcast curated by &lt;a href="http://www.math.kit.edu/ianm2/~thaeter/de"&gt;Gudrun Thäter&lt;/a&gt; and
-&lt;a href="http://www.math.kit.edu/ianm4/~ritterbusch/de"&gt;Sebastian Ritterbusch&lt;/a&gt; conveys the importance of mathematics and mathematical
-modeling in our everyday life. Starting from the water tap, automatic velocity control
-systems on highways to your mobile phone, mathematics is almost&amp;nbsp;everywhere.&lt;/p&gt;
+&lt;a href="http://www.math.kit.edu/ianm4/~ritterbusch/de"&gt;Sebastian Ritterbusch&lt;/a&gt;, supported by the Karlsruhe Institute for Technology ([&lt;span class="caps"&gt;KIT&lt;/span&gt;][]),
+conveys the importance of mathematics and mathematical modeling in our everyday life.
+Starting from the water tap, automatic velocity control systems on highways
+to your mobile phone, mathematics is almost&amp;nbsp;everywhere.&lt;/p&gt;
 &lt;p&gt;In &lt;a href="http://modellansatz.de/predictive-analytics"&gt;issue 25&lt;/a&gt; of the podcast, I talk about predictive analytics, especially the
 challenges of making sales forecasts for retailers. With the help of these forecasts
 optimal order decisions can be made with respect to the availability of goods and&amp;nbsp;write-offs.&lt;/p&gt;

@@ -24,5 +24,6 @@ optimal order decisions can be made with respect to the availability of goods an
 
 [Modellansatz]: http://www.modellansatz.de/
 [Gudrun Thäter]: http://www.math.kit.edu/ianm2/~thaeter/de
+[KIT]: http://www.kit.edu/
 [Sebastian Ritterbusch]: http://www.math.kit.edu/ianm4/~ritterbusch/de
 [issue 25]: http://modellansatz.de/predictive-analytics

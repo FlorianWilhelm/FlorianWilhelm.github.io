@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+
+    <title>  Radial basis function networks with TensorFlow
+ | Florian Wilhelm</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content=""/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.0.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/magnific-popup.min.css"/>
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/jquery.mglass.css"/>
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/pygment-solarized-dark.css"/>
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css"/>
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='//fonts.googleapis.com/css?family=Istok+Web' rel='stylesheet' type='text/css'/>
+    <link href='//fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
+      <link href='//fonts.googleapis.com/css?family=Expletus+Sans' rel='stylesheet' type='text/css'>
+
+
+    <link rel="icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
+
+    <!-- Feeds -->
+      <link href="http://www.florianwilhelm.info/feed/atom/index.html" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Atom Feed"/>
+      <link href="http://www.florianwilhelm.info/feed/index.html" type="application/rss+xml" rel="alternate" title="Florian Wilhelm RSS Feed"/>
+      <link href="http://www.florianwilhelm.info/feeds/article.atom.xml" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Categories Atom Feed"/>
+
+
+  </head>
+
+  <body>
+    <div class="container">
+
+      <header>
+        <div class="page-header">
+            <a href="http://www.florianwilhelm.info" class="avatar-container">
+              <div class="avatar  animate ">
+                <div class="side"><img src="/images/thumbnail.jpeg"/></div>
+                  <div class="side back"><p class="text-center">Sometimes with hip glasses 😎</p></div>
+              </div>
+            </a>
+          <h1><a href="http://www.florianwilhelm.info">Florian Wilhelm</a> <small>Data Scientist</small></h1>
+        </div>
+
+        <div class="navbar">
+          <div class="navbar-inner">
+            <a class="brand" href="http://www.florianwilhelm.info" title="Data Scientist">Florian Wilhelm</a>
+            <ul class="nav">
+<li ><a href="/">Home</a></li>
+<li ><a href="/about/">About me</a></li>
+            </ul>
+              <form class="navbar-search pull-right" action="http://www.florianwilhelm.info/search.html" onsubmit="return validateForm(this.elements['q'].value);">
+                <input type="text" name="q" id="tipue_search_input" class="search-query span2" placeholder="Search" required/>
+                <i class="fa fa-search fa-fw"></i>
+              </form>
+          </div>
+        </div>
+      </header>
+
+      <section>
+
+        <div class="row">
+          <div class=" span9  ">
+  <h1>
+    <a href="http://www.florianwilhelm.info/drafts/rbf_networks_with_tensorflow.html" rel="bookmark" title="Permalink to Radial basis function networks with TensorFlow">Radial basis function networks with&nbsp;TensorFlow</a>
+  </h1>
+          </div>
+        </div>
+
+        <div class="row">
+
+
+          <div class=" span9 " id="content" role="main">
+  
+
+  <div>
+    <p><a href="https://www.tensorflow.org/">TensorFlow</a> from Google is an open source software library for artificial neural
+networks (esp. deep learning) and there is a lot of buzz around it right now.
+Some find it <a href="http://www.kdnuggets.com/2015/12/tensor-flow-terrific-deep-learning-library.html">terrific</a> while others seem to be quite <a href="http://www.kdnuggets.com/2015/11/google-tensorflow-deep-learning-disappoints.html">disappointed</a>. I
+think that although TensorFlow is not revolutionary as some say, it surely does
+a lot of things right especially when it comes to the <a href="https://github.com/zer0n/deepframeworks/blob/master/README.md">interface and architecture</a>.
+My verdict is that TensorFlow is here to stay and this should mean to every
+data scientist that it&#8217;s at least beneficial to become familiar with&nbsp;it.</p>
+<p>In order to do so, my strategy is always the same. After having read some <a href="https://www.tensorflow.org/versions/master/tutorials/index.html">basic tutorials</a>,
+I pick myself a task that comprises some more advanced features of a library and
+define a set of achievements I want to fulfill. In order to use TensorFlow as part
+of a predictive application that could be deployed productively, I need it to&nbsp;be:</p>
+<ul>
+<li>comfortable to use similar to a regressor in <a href="http://scikit-learn.org/stable/">Scikit-Learn</a>,</li>
+<li>easy to debug (e.g. visualization of the graph, accessibility of variables etc.)&nbsp;and</li>
+<li>able to store a trained network for later&nbsp;usage.</li>
+</ul>
+<p>The new part for me is that I now write, in the spirit of Einstein&#8217;s &#8220;You do not really
+understand something unless you can explain it to your grandmother.&#8221;, an article
+about my learnings and&nbsp;experiences.</p>
+<p>There are already a lot of neural network examples For TensorFlow to find on the web.
+Besides its own examples there is <a href="https://github.com/aymericdamien/TensorFlow-Examples">TensorFlow-Examples</a> and in terms of Scikit-Learn
+usage <a href="https://github.com/tensorflow/skflow">skflow</a> is definitely noteworthy. Mainly to do something different, our
+task will be to develop an old-school <em>radial basis function (<span class="caps">RBF</span>) network</em> with TensorFlow.
+So let&#8217;s start with the definition what that exactly is. An <span class="caps">RBF</span> network is an
+artificial neural network consisting of three layers, input, output and a hidden
+layer that uses radial basis functions as activation functions. An <span class="caps">RBF</span> is a
+real-valued function whose value depend only on the radius, i.e. the distance to
+the origin. So every&nbsp;function </p>
+<div class="math">$$\phi$$</div>
+<p> satisfying the&nbsp;property
+</p>
+<div class="math">$$\phi(\mathbf{x}) = \phi(\|\mathbf{x}\|)$$</div>
+<p> is an <span class="caps">RBF</span>.</p>
+<p><img class="noZoom" src="/images/rbf-network.png" alt="Radial basis function network"></p>
+<div class="math">$$\varphi (\mathbf {x} )=\sum _{i=1}^{N}a_{i}\rho (||\mathbf {x} -\mathbf {c} _{i}||)$$</div>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div>
+
+
+    <div class="comments">
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'florianwilhelmblog';
+        var disqus_identifier = "drafts/rbf_networks_with_tensorflow.html";
+        var disqus_title = "Radial basis function networks with TensorFlow";
+        var disqus_url = "http://www.florianwilhelm.info/drafts/rbf_networks_with_tensorflow.html";
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus</a>.</noscript>
+    </div>
+
+          </div>
+
+            <div class="span3">
+  <div class="well">
+
+    <p><abbr class="fa fa-calendar" title="2016-01-24T12:30:00+01:00"> Jan. 24, 2016</abbr></p>
+
+
+    <hr/>
+
+      <p>
+            <a href="/tag/python/" rel="tooltip" class="label" data-placement="right" data-original-title="5 articles with this tag">python</a>
+      </p>
+      <hr/>
+
+
+
+  </div>
+              
+            </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TODO: make footer sticky -->
+    <footer class="container-fluid">
+      <div class="container">
+        <div class="row">
+
+            <div class="span2">
+                <h5>Social</h5>
+                <ul class="unstyled">
+                  <li>  <a href="https://twitter.com/FlorianWilhelm">
+      <i class="fa fa-twitter"></i>
+    @FlorianWilhelm
+  </a></li>
+                  <li>  <a href="https://linkedin.com/in/florian-wilhelm-621ba834">
+      <i class="fa fa-linkedin-square"></i>
+    LinkedIn
+  </a></li>
+                  <li>  <a href="https://github.com/FlorianWilhelm">
+      <i class="fa fa-github"></i>
+    GitHub
+  </a></li>
+                </ul>
+            </div>
+            <div class="span2">
+                <h5>Links</h5>
+                <ul class="unstyled">
+                  <li>  <a href="http://pyscaffold.readthedocs.org/">
+    PyScaffold
+  </a></li>
+                  <li>  <a href="http://www.datasciencecentral.com/">
+    Data Science Central
+  </a></li>
+                  <li>  <a href="http://www.kdnuggets.com/">
+    KDNuggetes
+  </a></li>
+                  <li>  <a href="http://www.analyticsvidhya.com/">
+    Analytics Vidhya
+  </a></li>
+                </ul>
+            </div>
+
+          <div class="span2">
+            <h5>Browse content by</h5>
+            <ul class="fa-ul">
+                <li><a href="http://www.florianwilhelm.info/categories/index.html"><i class="fa-li fa fa-tags"></i> Categories</a></li>
+                <li><a href="http://www.florianwilhelm.info/archives/index.html"><i class="fa-li fa fa-calendar"></i> Dates</a></li>
+                <li><a href="http://www.florianwilhelm.info/tags/index.html"><i class="fa-li fa fa-tag"></i> Tags</a></li>
+
+                <li><a href="http://www.florianwilhelm.info/feeds/article.atom.xml"><i class="fa-li fa fa-rss"></i> Feed</a></li>
+            </ul>
+          </div>
+
+          <div class="span2 muted">
+            <h5>Copyright notice</h5>
+            <p>© Copyright 2013-2016 Florian Wilhelm.</p>
+          </div>
+
+          <div class="span2 muted">
+            <h5>Disclaimer</h5>
+              <p>All opinions expressed in this site are my own personal opinions and are not endorsed by, nor do they represent the opinions of my previous, current and future employers or any of its affiliates, partners or customers.</p>
+          </div>
+
+          <div class="span2">
+            <h5 class="pull-right"><a href="#" class="fa fa-arrow-up"> Back to top</a></h5>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row span12 muted text-center">
+          Site generated by <a href="http://getpelican.com"> Pelican</a>.<br/>
+          <a href="https://github.com/kdeldycke/plumage"> Plumage</a> theme by <a href="http://kevin.deldycke.com">Kevin Deldycke</a>.
+        </div>
+      </div>
+
+    </footer>
+
+   <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-71694209-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/jquery.magnific-popup.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.min.js"></script>
+    <script src="http://www.florianwilhelm.info/theme/js/jquery.mglass.js"></script>
+    <script src="http://www.florianwilhelm.info/theme/js/application.js"></script>
+
+  </body>
+</html>

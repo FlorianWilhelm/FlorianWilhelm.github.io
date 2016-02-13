@@ -1,5 +1,5 @@
 ---
-title: Podcast about predictive analytics
+title: Podcast about Predictive Analytics
 date: 2014-06-26 12:30
 modified: 2016-01-10 19:30
 category: podcast

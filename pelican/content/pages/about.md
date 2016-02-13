@@ -1,7 +1,7 @@
 ---
 title: About me
 ---
-<img class="thumbnail" width="250px"
+<img width="250px"
 style="float: left; margin-right: 20px; margin-bottom: 20px"
 src="/images/myself.jpeg"/>
 

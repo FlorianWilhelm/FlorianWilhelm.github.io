@@ -19,12 +19,12 @@ solve them with the help of high-performance computing (HPC) on a large-scale cl
 
 As *Head of the Research Lab for Application and Innovation* at the Institute of Applied and
 Numerical Mathematics, I worked in several industry-funded projects
-and supervised several bachelor and master students.
+and supervised bachelor and master students.
 
 ----------
 
-After my postdoctoral position I started as a Data Scientist at [Blue Yonder](http://www.blue-yonder.com/)
-which is the leading platform provider for Predictive Applications and Big Data on the European market.
+After my postdoctoral position I started as a Data Scientist at [Blue Yonder](http://www.blue-yonder.com/),
+the leading platform provider for Predictive Applications and Big Data in the European market.
 With more than three years of project experience in the field of Predictive & Prescriptive Analytics and
 Big Data, I have acquired profound knowledge in the domains of mathematical modelling, statistics,
 machine learning, high-performance computing and data mining.
@@ -37,5 +37,5 @@ Due to some project work I have also gained experience in R as well as
 C/C++, Java, Matlab and Fortran.
 
 If you want to know more, please read all about my professional details in my
-[Resume]({filename}/documents/Resume.pdf) or on
+[résumé]({filename}/documents/Resume.pdf) or on
 [LinkedIn](https://de.linkedin.com/in/florian-wilhelm-621ba834).

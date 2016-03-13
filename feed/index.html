@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Florian Wilhelm</title><link>http://www.florianwilhelm.info/</link><description>Data Scientist</description><atom:link href="http://www.florianwilhelm.info/feed/index.html" rel="self"></atom:link><lastBuildDate>Sat, 13 Feb 2016 12:30:00 +0100</lastBuildDate><item><title>Introduction to the Python Data Science Stack</title><link>http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/</link><description>&lt;p&gt;Often I get the question as a Data Scientist what the &lt;em&gt;Python Data Science Stack&lt;/em&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Florian Wilhelm</title><link>http://www.florianwilhelm.info/</link><description>Data Scientist</description><atom:link href="http://www.florianwilhelm.info/feed/index.html" rel="self"></atom:link><lastBuildDate>Sun, 13 Mar 2016 22:00:00 +0100</lastBuildDate><item><title>Explaining the Idea behind Automatic Relevance Determination and Bayesian Interpolation</title><link>http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/</link><description>&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+model selection techniques, especially the Automatic Relevance Determination.
+The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Even in the era of Big Data there are many real-world problems where the number
+of input features has about the some order of magnitude than the number of samples.
+Often many of those input features are irrelevant and thus inferring the relevant
+ones is an important problem in order to prevent over-fitting. Automatic Relevance
+Determination solves this problem by applying Bayesian&amp;nbsp;techniques.&lt;/p&gt;
+&lt;p&gt;In order to motivate Automatic Relevance Determination (&lt;span class="caps"&gt;ARD&lt;/span&gt;) an intuition for
+the problem of choosing a complex model that fits the data well vs a simple model
+that generalizes well is established. Thereby the idea behind Occam&amp;#8217;s razor is
+presented as a way of balancing bias and variance. This leads us to the mathematical
+framework of Bayesian interpolation and model selection to choose between different
+models based on the&amp;nbsp;data.&lt;/p&gt;
+&lt;p&gt;To derive &lt;span class="caps"&gt;ARD&lt;/span&gt; as gently as possible the mathematical basics of a simple linear model
+are repeated as well as the idea of regularization to prevent over-fitting.
+Based on that, the Bayesian Ridge Regression (BayesianRidge in Scikit-Learn) is
+introduced. Generalizing the concept of Bayesian Ridge Regression even more gets
+us eventually to the the idea behind &lt;span class="caps"&gt;ARD&lt;/span&gt; (ARDRegression in&amp;nbsp;Scikit-Learn).&lt;/p&gt;
+&lt;p&gt;With the help of a practical example, we consolidate what has been learned so far
+and compare &lt;span class="caps"&gt;ARD&lt;/span&gt; to an ordinary least square model. Now we dive deep into the
+mathematics of &lt;span class="caps"&gt;ARD&lt;/span&gt; and present the algorithm that solves the minimization problem
+of &lt;span class="caps"&gt;ARD&lt;/span&gt;. Finally, some details of Scikit-Learn&amp;#8217;s &lt;span class="caps"&gt;ARD&lt;/span&gt; implementation are&amp;nbsp;discussed.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Florian Wilhelm</dc:creator><pubDate>Sun, 13 Mar 2016 22:00:00 +0100</pubDate><guid>tag:www.florianwilhelm.info,2016-03-13:2016/03/explaining_the_idea_behind_ard/</guid><category>scikit-learn</category><category>machine-learning</category><category>bayesian</category></item><item><title>Introduction to the Python Data Science Stack</title><link>http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/</link><description>&lt;p&gt;Often I get the question as a Data Scientist what the &lt;em&gt;Python Data Science Stack&lt;/em&gt;
 actually is and where a beginner should start to learn. The Python ecosystem,
 especially around the topics such as data analytics, data mining, data science and
 machine learning is so vast and rich that it confuses many&amp;nbsp;rookies.&lt;/p&gt;
@@ -65,15 +87,4 @@ simplifies the process of setting up a new Python project and is freely availabl
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Felix Wick</dc:creator><pubDate>Tue, 22 Dec 2015 19:30:00 +0100</pubDate><guid>tag:www.florianwilhelm.info,2014-07-23:2014/07/howto_setup_a_new_python_project/</guid><category>python</category><category>template</category></item><item><title>Podcast about Predictive Analytics</title><link>http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/</link><description>&lt;p&gt;The german &lt;a href="http://www.modellansatz.de/"&gt;Modellansatz&lt;/a&gt; podcast curated by &lt;a href="http://www.math.kit.edu/ianm2/~thaeter/de"&gt;Gudrun Thäter&lt;/a&gt; and
-&lt;a href="http://www.math.kit.edu/ianm4/~ritterbusch/de"&gt;Sebastian Ritterbusch&lt;/a&gt;, supported by the Karlsruhe Institute for Technology (&lt;a href="http://www.kit.edu/"&gt;&lt;span class="caps"&gt;KIT&lt;/span&gt;&lt;/a&gt;),
-conveys the importance of mathematics and mathematical modeling in our everyday life.
-Starting from the water tap, automatic velocity control systems on highways
-to your mobile phone, mathematics is almost&amp;nbsp;everywhere.&lt;/p&gt;
-&lt;p&gt;In &lt;a href="http://modellansatz.de/predictive-analytics"&gt;issue 25&lt;/a&gt; of the podcast, I talk about predictive analytics, especially the
-challenges of making sales forecasts for retailers. With the help of these forecasts
-optimal order decisions can be made with respect to the availability of goods and&amp;nbsp;write-offs.&lt;/p&gt;
-&lt;p&gt;&lt;audio controls style="width:100%; margin-top:1em;margin-bottom:1.5em;"&gt;
-  &lt;source src="http://modellansatz.de/modell025-predictive-analytics-140602.ogg" type="audio/ogg"&gt;
-  &lt;source src="http://modellansatz.de/modell025-predictive-analytics-140602.mp3" type="audio/mpeg"&gt;
-&lt;/audio&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Florian Wilhelm</dc:creator><pubDate>Sun, 10 Jan 2016 19:30:00 +0100</pubDate><guid>tag:www.florianwilhelm.info,2014-06-26:2014/06/podcast_predictive_analytics/</guid><category>Blue Yonder</category><category>predictive analytics</category><category>machine learning</category></item></channel></rss>
+            &lt;/div&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Felix Wick</dc:creator><pubDate>Tue, 22 Dec 2015 19:30:00 +0100</pubDate><guid>tag:www.florianwilhelm.info,2014-07-23:2014/07/howto_setup_a_new_python_project/</guid><category>python</category><category>template</category></item></channel></rss>

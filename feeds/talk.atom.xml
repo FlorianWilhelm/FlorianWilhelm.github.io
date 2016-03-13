@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/talk.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2015-12-22T19:30:00+01:00</updated><entry><title>How to write a friendly reminder bot</title><link href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/" rel="alternate"></link><updated>2015-12-22T19:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2015-07-24:2015/07/howto_write_a_friendly_reminder_bot/</id><summary type="html">&lt;p&gt;In this presentation given at the &lt;a href="https://ep2015.europython.eu/"&gt;EuroPython 2015&lt;/a&gt; in Bilbao,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/talk.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2016-03-13T22:00:00+01:00</updated><entry><title>Explaining the Idea behind Automatic Relevance Determination and Bayesian Interpolation</title><link href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><updated>2016-03-13T22:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-03-13:2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+model selection techniques, especially the Automatic Relevance Determination.
+The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Even in the era of Big Data there are many real-world problems where the number
+of input features has about the some order of magnitude than the number of samples.
+Often many of those input features are irrelevant and thus inferring the relevant
+ones is an important problem in order to prevent over-fitting. Automatic Relevance
+Determination solves this problem by applying Bayesian&amp;nbsp;techniques.&lt;/p&gt;
+&lt;p&gt;In order to motivate Automatic Relevance Determination (&lt;span class="caps"&gt;ARD&lt;/span&gt;) an intuition for
+the problem of choosing a complex model that fits the data well vs a simple model
+that generalizes well is established. Thereby the idea behind Occam&amp;#8217;s razor is
+presented as a way of balancing bias and variance. This leads us to the mathematical
+framework of Bayesian interpolation and model selection to choose between different
+models based on the&amp;nbsp;data.&lt;/p&gt;
+&lt;p&gt;To derive &lt;span class="caps"&gt;ARD&lt;/span&gt; as gently as possible the mathematical basics of a simple linear model
+are repeated as well as the idea of regularization to prevent over-fitting.
+Based on that, the Bayesian Ridge Regression (BayesianRidge in Scikit-Learn) is
+introduced. Generalizing the concept of Bayesian Ridge Regression even more gets
+us eventually to the the idea behind &lt;span class="caps"&gt;ARD&lt;/span&gt; (ARDRegression in&amp;nbsp;Scikit-Learn).&lt;/p&gt;
+&lt;p&gt;With the help of a practical example, we consolidate what has been learned so far
+and compare &lt;span class="caps"&gt;ARD&lt;/span&gt; to an ordinary least square model. Now we dive deep into the
+mathematics of &lt;span class="caps"&gt;ARD&lt;/span&gt; and present the algorithm that solves the minimization problem
+of &lt;span class="caps"&gt;ARD&lt;/span&gt;. Finally, some details of Scikit-Learn&amp;#8217;s &lt;span class="caps"&gt;ARD&lt;/span&gt; implementation are&amp;nbsp;discussed.&lt;/p&gt;</summary><category term="scikit-learn"></category><category term="machine-learning"></category><category term="bayesian"></category></entry><entry><title>How to write a friendly reminder bot</title><link href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/" rel="alternate"></link><updated>2015-12-22T19:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2015-07-24:2015/07/howto_write_a_friendly_reminder_bot/</id><summary type="html">&lt;p&gt;In this presentation given at the &lt;a href="https://ep2015.europython.eu/"&gt;EuroPython 2015&lt;/a&gt; in Bilbao,
 I show how the &lt;a href="https://github.com/tdryer/hangups"&gt;hangups&lt;/a&gt; library can be used
 in order to write a small chatbot that connects to Google Hangouts
 and reminds you or someone else to take his/her medication.

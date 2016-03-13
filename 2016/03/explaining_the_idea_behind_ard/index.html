@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
 
-    <title>  The traveling salesman problem
+    <title>  Explaining the Idea behind Automatic Relevance Determination and Bayesian Interpolation
  | Florian Wilhelm</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -31,7 +31,7 @@
     <!-- Feeds -->
       <link href="http://www.florianwilhelm.info/feed/atom/index.html" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Atom Feed"/>
       <link href="http://www.florianwilhelm.info/feed/index.html" type="application/rss+xml" rel="alternate" title="Florian Wilhelm RSS Feed"/>
-      <link href="http://www.florianwilhelm.info/feeds/article.atom.xml" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Categories Atom Feed"/>
+      <link href="http://www.florianwilhelm.info/feeds/talk.atom.xml" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Categories Atom Feed"/>
 
 
   </head>
@@ -70,7 +70,7 @@
         <div class="row">
           <div class=" span9  ">
   <h1>
-    <a href="http://www.florianwilhelm.info/drafts/traveling_salesman_problem.html" rel="bookmark" title="Permalink to The traveling salesman problem">The traveling salesman&nbsp;problem</a>
+    <a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="bookmark" title="Permalink to Explaining the Idea behind Automatic Relevance Determination and Bayesian Interpolation">Explaining the Idea behind Automatic Relevance Determination and Bayesian&nbsp;Interpolation</a>
   </h1>
           </div>
         </div>
@@ -82,17 +82,46 @@
   
 
   <div>
-    <p>Article about&nbsp;https://tech.zalando.com/blog/defeating-the-travelling-salesman-problem-for-warehouse-logistics/</p>
+    <p>This talk presented at the <a href="http://pydata.org/amsterdam2016/schedule/presentation/17/">PyData Amsterdam 2016</a> explains the idea of Bayesian
+model selection techniques, especially the Automatic Relevance Determination.
+The slides of this talk are available on <a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957">SlideShare</a>.</p>
+<p>Even in the era of Big Data there are many real-world problems where the number
+of input features has about the some order of magnitude than the number of samples.
+Often many of those input features are irrelevant and thus inferring the relevant
+ones is an important problem in order to prevent over-fitting. Automatic Relevance
+Determination solves this problem by applying Bayesian&nbsp;techniques.</p>
+<p>In order to motivate Automatic Relevance Determination (<span class="caps">ARD</span>) an intuition for
+the problem of choosing a complex model that fits the data well vs a simple model
+that generalizes well is established. Thereby the idea behind Occam&#8217;s razor is
+presented as a way of balancing bias and variance. This leads us to the mathematical
+framework of Bayesian interpolation and model selection to choose between different
+models based on the&nbsp;data.</p>
+<p>To derive <span class="caps">ARD</span> as gently as possible the mathematical basics of a simple linear model
+are repeated as well as the idea of regularization to prevent over-fitting.
+Based on that, the Bayesian Ridge Regression (BayesianRidge in Scikit-Learn) is
+introduced. Generalizing the concept of Bayesian Ridge Regression even more gets
+us eventually to the the idea behind <span class="caps">ARD</span> (ARDRegression in&nbsp;Scikit-Learn).</p>
+<p>With the help of a practical example, we consolidate what has been learned so far
+and compare <span class="caps">ARD</span> to an ordinary least square model. Now we dive deep into the
+mathematics of <span class="caps">ARD</span> and present the algorithm that solves the minimization problem
+of <span class="caps">ARD</span>. Finally, some details of Scikit-Learn&#8217;s <span class="caps">ARD</span> implementation are&nbsp;discussed.</p>
   </div>
 
+    <h3>Related content</h3>
+    <!-- TODO: Use fancier related layout, as in http://kevin.deldycke.com/2012/04/beautify-contextual-related-posts-wordpress-plugin/ -->
+    <ul>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+      </ul>
 
     <div class="comments">
       <div id="disqus_thread"></div>
       <script type="text/javascript">
         var disqus_shortname = 'florianwilhelmblog';
-        var disqus_identifier = "drafts/traveling_salesman_problem.html";
-        var disqus_title = "The traveling salesman problem";
-        var disqus_url = "http://www.florianwilhelm.info/drafts/traveling_salesman_problem.html";
+        var disqus_identifier = "2016/03/explaining_the_idea_behind_ard/";
+        var disqus_title = "Explaining the Idea behind Automatic Relevance Determination and Bayesian Interpolation";
+        var disqus_url = "http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/";
         (function() {
           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
           dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
@@ -107,16 +136,24 @@
             <div class="span3">
   <div class="well">
 
-    <p><abbr class="fa fa-calendar" title="2016-01-24T12:30:00+01:00"> Jan. 24, 2016</abbr></p>
+    <p><abbr class="fa fa-calendar" title="2016-03-13T22:00:00+01:00"> Mär. 13, 2016</abbr></p>
 
 
     <hr/>
 
       <p>
+              <a href="http://www.florianwilhelm.info/category/talk/" rel="tag tooltip" class="label label-info" data-placement="right" data-original-title="5 articles in this category">talk</a>
+            <a href="/tag/scikit-learn/" rel="tooltip" class="label" data-placement="right" data-original-title="3 articles with this tag">scikit-learn</a>
+            <a href="/tag/machine-learning/" rel="tooltip" class="label" data-placement="right" data-original-title="3 articles with this tag">machine-learning</a>
+            <a href="/tag/bayesian/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">bayesian</a>
       </p>
       <hr/>
 
 
+      <ul class="pager">
+        <li class="previous "><a  href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/" title="Introduction to the Python Data Science Stack"  rel="prev">← Older</a></li>
+        <li class="next  disabled "><a  rel="next">Newer →</a></li>
+      </ul>
 
   </div>
               
@@ -174,7 +211,7 @@
                 <li><a href="http://www.florianwilhelm.info/archives/index.html"><i class="fa-li fa fa-calendar"></i> Dates</a></li>
                 <li><a href="http://www.florianwilhelm.info/tags/index.html"><i class="fa-li fa fa-tag"></i> Tags</a></li>
 
-                <li><a href="http://www.florianwilhelm.info/feeds/article.atom.xml"><i class="fa-li fa fa-rss"></i> Feed</a></li>
+                <li><a href="http://www.florianwilhelm.info/feeds/talk.atom.xml"><i class="fa-li fa fa-rss"></i> Feed</a></li>
             </ul>
           </div>
 

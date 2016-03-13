@@ -6,6 +6,7 @@ category: article
 tags: python, TensorFlow, neural network
 authors: Florian Wilhelm
 status: draft
+summary:
 ---
 
 [TensorFlow][] from Google is an open source software library for artificial neural
@@ -46,6 +47,7 @@ $$\phi(\mathbf{x}) = \phi(\|\mathbf{x}\|)$$ is an RBF.
 $$\varphi (\mathbf {x} )=\sum _{i=1}^{N}a_{i}\rho (||\mathbf {x} -\mathbf {c} _{i}||)$$
 
 
+{% notebook ./notebooks/rbf_networks_with_tensorflow.ipynb %}
 
 [TensorFlow]: https://www.tensorflow.org/
 [terrific]: http://www.kdnuggets.com/2015/12/tensor-flow-terrific-deep-learning-library.html

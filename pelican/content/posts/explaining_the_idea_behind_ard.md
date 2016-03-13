@@ -1,12 +1,11 @@
 ---
-title: Explaining the Idea behind Automatic Relevance Determination and Bayesian Interpolation
+title: Explaining the Idea behind ARD and Bayesian Interpolation
 date: 2016-03-13 22:00
 modified: 2016-03-13 22:00
 category: talk
 tags: scikit-learn, machine-learning, bayesian
 authors: Florian Wilhelm
 status: published
-summary:
 ---
 
 This talk presented at the [PyData Amsterdam 2016][] explains the idea of Bayesian

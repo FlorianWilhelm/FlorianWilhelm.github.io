@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/slides.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2016-02-13T12:30:00+01:00</updated><entry><title>Introduction to the Python Data Science Stack</title><link href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/" rel="alternate"></link><updated>2016-02-13T12:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-02-13:2016/02/introduction_to_the_python_data_science_stack/</id><summary type="html">&lt;p&gt;Often I get the question as a Data Scientist what the &lt;em&gt;Python Data Science Stack&lt;/em&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/slides.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2016-02-13T12:30:00+01:00</updated><entry><title>Introduction to the Python Data Science Stack</title><link href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/" rel="alternate"></link><updated>2016-02-13T12:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-02-13:2016/02/introduction_to_the_python_data_science_stack/</id><summary type="html">&lt;p&gt;Often I get the question as a Data Scientist what the &lt;em&gt;Python Data Science Stack&lt;/em&gt;
 actually is and where a beginner should start to learn. The Python ecosystem,
 especially around the topics such as data analytics, data mining, data science and
-machine learning is so vast and rich that it confuses many&amp;nbsp;rookies.&lt;/p&gt;
+machine learning is so vast and rich that it confuses many rookies.&lt;/p&gt;
 &lt;p&gt;For such an audience I created a slide deck that starts with pointing out the
 benefits of the Python language for analytics. Even beginners in Python are
 addressed by some slides that explain the syntax of Python and how to get
@@ -10,9 +10,9 @@ started. After that some slides present the most important packages of the data
 science stack, namely &lt;a href="http://www.numpy.org/"&gt;NumPy&lt;/a&gt;, &lt;a href="http://www.scipy.org/"&gt;SciPy&lt;/a&gt;, &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;, &lt;a href="http://scikit-learn.org/"&gt;Scikit-Learn&lt;/a&gt;,
 &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt; and &lt;a href="http://ipython.org/"&gt;IPython&lt;/a&gt;. The merits of Jupyter are best shown in a live
 demonstration to convey its power. The interplay between Pandas and
-Scikit-Learn is shown based on Kaggle&amp;#8217;s &lt;a href="https://www.kaggle.com/c/titanic"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;
+Scikit-Learn is shown based on Kaggle's &lt;a href="https://www.kaggle.com/c/titanic"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;
 dataset. Eventually, an outlook to further libraries in the data science domain
-are&amp;nbsp;presented.&lt;/p&gt;
+are presented.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/python_data-science_stack/blob/master/notebook.ipynb#/"&gt;View in fullscreen&lt;/a&gt;&lt;/strong&gt;
 &lt;iframe src="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/python_data-science_stack/blob/master/notebook.ipynb#/"
 style="width: 100%; height: 600px" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0"&gt;

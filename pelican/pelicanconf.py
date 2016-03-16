@@ -154,7 +154,7 @@ PLUGINS = [
      'liquid_tags.youtube',
      'liquid_tags.vimeo',
      'liquid_tags.include_code',
-#     'ipynb.liquid',
+     'ipynb.markup',
      'render_math'
 ]
 

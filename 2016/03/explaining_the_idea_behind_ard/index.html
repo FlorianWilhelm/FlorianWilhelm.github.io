@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
 
-    <title>  Explaining the Idea behind ARD and Bayesian Interpolation
+    <title>  Explaining the Idea behind ARD and Bayesian Interpolation
  | Florian Wilhelm</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -22,6 +22,7 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
     <link href='//fonts.googleapis.com/css?family=Istok+Web' rel='stylesheet' type='text/css'/>
     <link href='//fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
+      <link href='//fonts.googleapis.com/css?family=Expletus+Sans' rel='stylesheet' type='text/css'>
 
 
     <link rel="icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
@@ -69,7 +70,7 @@
         <div class="row">
           <div class=" span9  ">
   <h1>
-    <a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="bookmark" title="Permalink to Explaining the Idea behind ARD and Bayesian Interpolation">Explaining the Idea behind ARD and Bayesian Interpolation</a>
+    <a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="bookmark" title="Permalink to Explaining the Idea behind ARD and Bayesian Interpolation">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a>
   </h1>
           </div>
         </div>
@@ -88,30 +89,30 @@ The slides of this talk are available on <a href="http://www.slideshare.net/Flor
 of input features has about the some order of magnitude than the number of samples.
 Often many of those input features are irrelevant and thus inferring the relevant
 ones is an important problem in order to prevent over-fitting. Automatic Relevance
-Determination solves this problem by applying Bayesian techniques.</p>
-<p>In order to motivate Automatic Relevance Determination (ARD) an intuition for
+Determination solves this problem by applying Bayesian&nbsp;techniques.</p>
+<p>In order to motivate Automatic Relevance Determination (<span class="caps">ARD</span>) an intuition for
 the problem of choosing a complex model that fits the data well vs a simple model
-that generalizes well is established. Thereby the idea behind Occam's razor is
+that generalizes well is established. Thereby the idea behind Occam&#8217;s razor is
 presented as a way of balancing bias and variance. This leads us to the mathematical
 framework of Bayesian interpolation and model selection to choose between different
-models based on the data.</p>
-<p>To derive ARD as gently as possible the mathematical basics of a simple linear model
+models based on the&nbsp;data.</p>
+<p>To derive <span class="caps">ARD</span> as gently as possible the mathematical basics of a simple linear model
 are repeated as well as the idea of regularization to prevent over-fitting.
 Based on that, the Bayesian Ridge Regression (BayesianRidge in Scikit-Learn) is
 introduced. Generalizing the concept of Bayesian Ridge Regression even more gets
-us eventually to the the idea behind ARD (ARDRegression in Scikit-Learn).</p>
+us eventually to the the idea behind <span class="caps">ARD</span> (ARDRegression in&nbsp;Scikit-Learn).</p>
 <p>With the help of a practical example, we consolidate what has been learned so far
-and compare ARD to an ordinary least square model. Now we dive deep into the
-mathematics of ARD and present the algorithm that solves the minimization problem
-of ARD. Finally, some details of Scikit-Learn's ARD implementation are discussed.</p>
+and compare <span class="caps">ARD</span> to an ordinary least square model. Now we dive deep into the
+mathematics of <span class="caps">ARD</span> and present the algorithm that solves the minimization problem
+of <span class="caps">ARD</span>. Finally, some details of Scikit-Learn&#8217;s <span class="caps">ARD</span> implementation are&nbsp;discussed.</p>
   </div>
 
     <h3>Related content</h3>
     <!-- TODO: Use fancier related layout, as in http://kevin.deldycke.com/2012/04/beautify-contextual-related-posts-wordpress-plugin/ -->
     <ul>
-        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own regressor</a></li>
-        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive Analytics</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
       </ul>
 
     <div class="comments">
@@ -119,7 +120,7 @@ of ARD. Finally, some details of Scikit-Learn's ARD implementation are discussed
       <script type="text/javascript">
         var disqus_shortname = 'florianwilhelmblog';
         var disqus_identifier = "2016/03/explaining_the_idea_behind_ard/";
-        var disqus_title = "Explaining the Idea behind ARD and Bayesian Interpolation";
+        var disqus_title = "Explaining the Idea behind ARD and Bayesian Interpolation";
         var disqus_url = "http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/";
         (function() {
           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -150,8 +151,8 @@ of ARD. Finally, some details of Scikit-Learn's ARD implementation are discussed
 
 
       <ul class="pager">
-        <li class="previous "><a  href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/" title="Introduction to the Python Data Science Stack"  rel="prev">← Older</a></li>
-        <li class="next  disabled "><a  rel="next">Newer →</a></li>
+        <li class="previous "><a  href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/" title="Introduction to the Python Data Science Stack"  rel="prev">← Older</a></li>
+        <li class="next "><a  href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/" title="Interactively visualizing distributions in a Jupyter notebook with Bokeh"  rel="next">Newer →</a></li>
       </ul>
 
   </div>

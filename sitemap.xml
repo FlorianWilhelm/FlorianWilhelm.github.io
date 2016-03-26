@@ -5,35 +5,42 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/</loc>
-<lastmod>2016-03-16T18:08:13-00:00</lastmod>
+<lastmod>2016-03-26T09:18:13-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/404-not-found/</loc>
-<lastmod>2016-03-16T18:08:13-00:00</lastmod>
+<lastmod>2016-03-26T09:18:13-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/410-gone/</loc>
-<lastmod>2016-03-16T18:08:13-00:00</lastmod>
+<lastmod>2016-03-26T09:18:13-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/500-error/</loc>
-<lastmod>2016-03-16T18:08:13-00:00</lastmod>
+<lastmod>2016-03-26T09:18:13-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/about/</loc>
-<lastmod>2016-03-16T18:08:13-00:00</lastmod>
+<lastmod>2016-03-26T09:18:13-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/</loc>
+<lastmod>2016-03-26T09:00:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -95,6 +102,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>http://www.florianwilhelm.info/category/post/</loc>
+<lastmod>2016-03-26T09:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>http://www.florianwilhelm.info/category/slides/</loc>
 <lastmod>2016-02-13T12:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
@@ -110,21 +124,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/tag/jupyter/</loc>
+<lastmod>2016-03-26T09:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/data-science/</loc>
 <lastmod>2016-02-13T12:30:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://www.florianwilhelm.info/tag/asyncio/</loc>
-<lastmod>2015-12-22T19:30:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://www.florianwilhelm.info/tag/google-hangouts/</loc>
-<lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -137,8 +144,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/data-science/</loc>
-<lastmod>2016-02-13T12:30:00+00:09</lastmod>
+<loc>http://www.florianwilhelm.info/tag/python/</loc>
+<lastmod>2016-03-26T09:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -158,21 +165,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/bayesian/</loc>
-<lastmod>2016-03-13T22:00:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://www.florianwilhelm.info/tag/asynchronous/</loc>
-<lastmod>2015-12-22T19:30:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://www.florianwilhelm.info/tag/template/</loc>
+<loc>http://www.florianwilhelm.info/tag/google-hangouts/</loc>
 <lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -186,8 +179,22 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/blue-yonder/</loc>
-<lastmod>2016-01-10T19:30:00+00:09</lastmod>
+<loc>http://www.florianwilhelm.info/tag/bokeh/</loc>
+<lastmod>2016-03-26T09:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/scipy/</loc>
+<lastmod>2016-03-26T09:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/asynchronous/</loc>
+<lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -200,8 +207,29 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/python/</loc>
-<lastmod>2016-02-13T12:30:00+00:09</lastmod>
+<loc>http://www.florianwilhelm.info/tag/bayesian/</loc>
+<lastmod>2016-03-13T22:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/template/</loc>
+<lastmod>2015-12-22T19:30:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/blue-yonder/</loc>
+<lastmod>2016-01-10T19:30:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/asyncio/</loc>
+<lastmod>2015-12-22T19:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

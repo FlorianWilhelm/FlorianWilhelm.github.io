@@ -37,7 +37,7 @@ installs necessary requirements and finally runs your notebook! By just clicking
 on a link! Amazing to see how the ecosystem around Jupyter develops these days.
 
 And of course to wet your appetite, here are the screenshots of the final tool
-that you will experience interactively by clicking on the [binder][] link.
+that you will experience interactively by [starting the notebook with binder][].
 
 <figure>
 <img class="noZoom" src="/images/alpha_dist.png" alt="Alpha distribution">
@@ -60,4 +60,4 @@ that you will experience interactively by clicking on the [binder][] link.
 [scipy.stats]: http://docs.scipy.org/doc/scipy/reference/stats.html
 [GitHub repository]: https://github.com/FlorianWilhelm/distvis
 [binder]: http://mybinder.org/
-[notebook with binder]: http://mybinder.org/repo/FlorianWilhelm/distvis
+[starting the notebook with binder]: http://mybinder.org/repo/FlorianWilhelm/distvis

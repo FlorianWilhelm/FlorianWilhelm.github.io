@@ -2,6 +2,10 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OUTPUT="$( readlink -f "$DIR/../" )"
 
+# Set language to english
+export LC_ALL="C"
+export LANG="C"
+
 # Clean output directory
 cd $OUTPUT
 shopt -s extglob

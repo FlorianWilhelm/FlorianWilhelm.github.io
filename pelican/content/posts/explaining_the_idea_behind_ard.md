@@ -36,5 +36,7 @@ and compare ARD to an ordinary least square model. Now we dive deep into the
 mathematics of ARD and present the algorithm that solves the minimization problem
 of ARD. Finally, some details of Scikit-Learn's ARD implementation are discussed.
 
+{% youtube 2gT-Q0NZzoE 800 500 %}
+
 [PyData Amsterdam 2016]: http://pydata.org/amsterdam2016/schedule/presentation/17/
 [SlideShare]: http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957

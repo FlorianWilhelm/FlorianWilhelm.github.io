@@ -60,7 +60,9 @@ target/
 
 # Notebook checkpoints and includes
 pelican/content/notebooks/input
-pelican/content/notebooks/.ipynb_checkpoints
+.ipynb_checkpoints/
 
 # Temporary files
 *.swp
+
+

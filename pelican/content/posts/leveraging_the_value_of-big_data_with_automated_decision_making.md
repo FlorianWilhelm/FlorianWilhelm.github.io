@@ -3,7 +3,7 @@ title: Leveraging the Value of Big Data with Automated Decision Making
 date: 2016-04-07 12:00
 modified: 2016-04-07 12:00
 category: post
-tags: big data, data science, Prescriptive analytics
+tags: big data, data science, predictive analytics
 authors: Florian Wilhelm
 ---
 

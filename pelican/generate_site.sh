@@ -1,3 +1,5 @@
+set -e
+
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OUTPUT="$( readlink -f "$DIR/../" )"
@@ -17,4 +19,5 @@ pelican $DIR/content -o $OUTPUT
 cp $OUTPUT/404-not-found/index.html $OUTPUT/404.html
 # Run webserver
 cd $OUTPUT
+echo "Open http://localhost:8000"
 python -m pelican.server

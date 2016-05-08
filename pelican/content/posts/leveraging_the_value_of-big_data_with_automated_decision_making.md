@@ -64,6 +64,7 @@ company is to give special offerings and product recommendations based on differ
 market segments, not single customers. Being able to scale the number of decisions
 due to automation would allow special offerings and recommendations for individual
 customers, just like Amazon’s recommendation system.
+
 To justify our statement that the automation of routine decisions with Prescriptive
 Analytics is exceptionally well suited as a pioneer project in a traditional company,
 it is necessary to elaborate on certain characteristics that many operational decisions hold.

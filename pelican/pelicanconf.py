@@ -9,7 +9,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
     inspect.getfile(inspect.currentframe())))
 
 AUTHOR = u'Florian Wilhelm'
-SITENAME = 'Florian Wilhelm'
+SITENAME = 'Blog of Florian Wilhelm'
 SITEURL = 'http://www.florianwilhelm.info'
 
 PATH = 'content'
@@ -25,6 +25,11 @@ WITH_FUTURE_DATES = False
 THEME = 'themes/plumage'
 
 STATIC_PATHS = ['images', 'documents', 'extras']
+
+DEFAULT_METADATA = {
+    'author': 'Florian Wilhelm',
+    'description': 'Description'
+}
 
 EXTRA_PATH_METADATA = {
     'extras/favicon.ico': {'path': 'favicon.ico'},

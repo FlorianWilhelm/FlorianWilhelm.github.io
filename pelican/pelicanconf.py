@@ -9,7 +9,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
     inspect.getfile(inspect.currentframe())))
 
 AUTHOR = u'Florian Wilhelm'
-SITENAME = 'Blog of Florian Wilhelm'
+SITENAME = 'Florian Wilhelm'
 SITEURL = 'http://www.florianwilhelm.info'
 
 PATH = 'content'

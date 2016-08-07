@@ -35,6 +35,8 @@ demonstrate by presenting an implementation in Python with the help of Numpy and
 Scipy. My presentation will make heavy use of the Jupyter notebook which is a
 wonderful tool perfectly suited for experimenting and learning.
 
+{% youtube 9Q8nEA_0ccg 800 500 %}
+
 [EuroPython 2016]: https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python
 [Github]: https://github.com/FlorianWilhelm/gps_data_with_python
 [nbviewer]: http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/

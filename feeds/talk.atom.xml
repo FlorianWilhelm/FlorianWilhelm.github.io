@@ -20,7 +20,14 @@ kinds of sensor, not only &lt;span class="caps"&gt;GPS&lt;/span&gt;, has the rep
 Still, its concept is really easy and quite comprehensible as I will also
 demonstrate by presenting an implementation in Python with the help of Numpy and
 Scipy. My presentation will make heavy use of the Jupyter notebook which is a
-wonderful tool perfectly suited for experimenting and&amp;nbsp;learning.&lt;/p&gt;</summary><category term="python"></category><category term="jupyter"></category><category term="kalman"></category><category term="gps"></category></entry><entry><title>Explaining the Idea behind ARD and Bayesian Interpolation</title><link href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><published>2016-03-13T22:00:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-03-13:2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+wonderful tool perfectly suited for experimenting and&amp;nbsp;learning.&lt;/p&gt;
+&lt;p&gt;&lt;div class="videobox"&gt;
+                &lt;iframe width="800" height="500"
+                    src='https://www.youtube.com/embed/9Q8nEA_0ccg'
+                    frameborder='0' webkitAllowFullScreen mozallowfullscreen
+                    allowFullScreen&gt;
+                &lt;/iframe&gt;
+            &lt;/div&gt;&lt;/p&gt;</summary><category term="python"></category><category term="jupyter"></category><category term="kalman"></category><category term="gps"></category></entry><entry><title>Explaining the Idea behind ARD and Bayesian Interpolation</title><link href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><published>2016-03-13T22:00:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-03-13:2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
 model selection techniques, especially the Automatic Relevance Determination.
 The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Even in the era of Big Data there are many real-world problems where the number

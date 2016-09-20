@@ -11,7 +11,7 @@ export LANG="C"
 # Clean output directory
 cd $OUTPUT
 shopt -s extglob
-rm -rf !(pelican|_config.yml|CNAME|README.md|googlef0310dc40eb99e21.html)
+rm -rf !(pelican|_config.yml|CNAME|README.md|google49264a6d4745bc7a.html)
 # Generate content
 cd $DIR
 pelican $DIR/content -o $OUTPUT

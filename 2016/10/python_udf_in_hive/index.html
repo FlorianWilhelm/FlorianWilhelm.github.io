@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+
+    <title>  Python UDFs and UDAFs in Hive
+ | Florian Wilhelm</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content=""/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.0.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/magnific-popup.min.css"/>
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/jquery.mglass.css"/>
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/pygment-solarized-dark.css"/>
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css"/>
+
+    <!-- Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='//fonts.googleapis.com/css?family=Istok+Web' rel='stylesheet' type='text/css'/>
+    <link href='//fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
+      <link href='//fonts.googleapis.com/css?family=Expletus+Sans' rel='stylesheet' type='text/css'>
+
+
+    <link rel="icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
+
+    <!-- Feeds -->
+      <link href="http://www.florianwilhelm.info/feed/atom/index.html" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Atom Feed"/>
+      <link href="http://www.florianwilhelm.info/feed/index.html" type="application/rss+xml" rel="alternate" title="Florian Wilhelm RSS Feed"/>
+      <link href="http://www.florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Categories Atom Feed"/>
+
+
+  </head>
+
+  <body>
+    <div class="container">
+
+      <header>
+        <div class="page-header">
+            <a href="http://www.florianwilhelm.info" class="avatar-container">
+              <div class="avatar  animate ">
+                <div class="side"><img src="/images/thumbnail.jpeg"/></div>
+                  <div class="side back"><p class="text-center">Sometimes with hip glasses 😎</p></div>
+              </div>
+            </a>
+          <h1><a href="http://www.florianwilhelm.info">Florian Wilhelm</a> <small>Data Scientist</small></h1>
+        </div>
+
+        <div class="navbar">
+          <div class="navbar-inner">
+            <a class="brand" href="http://www.florianwilhelm.info" title="Data Scientist">Florian Wilhelm</a>
+            <ul class="nav">
+<li ><a href="/">Home</a></li>
+<li ><a href="/about/">About me</a></li>
+            </ul>
+              <form class="navbar-search pull-right" action="http://www.florianwilhelm.info/search.html" onsubmit="return validateForm(this.elements['q'].value);">
+                <input type="text" name="q" id="tipue_search_input" class="search-query span2" placeholder="Search" required/>
+                <i class="fa fa-search fa-fw"></i>
+              </form>
+          </div>
+        </div>
+      </header>
+
+      <section>
+
+        <div class="row">
+          <div class=" span9  ">
+  <h1>
+    <a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/" rel="bookmark" title="Permalink to Python UDFs and UDAFs in Hive">Python UDFs and UDAFs in&nbsp;Hive</a>
+  </h1>
+          </div>
+        </div>
+
+        <div class="row">
+
+
+          <div class=" span9 " id="content" role="main">
+  
+
+  <div>
+    <p>Sometimes the analytical power of <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF">built-in Hive functions</a> is just not enough.
+In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
+for transformations and even aggregations which are therefore called User-Defined
+Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
+UDFs and UDAFs in Python. By sophisticated we mean that our <span class="caps">UD</span>(A)Fs should
+also be able to leverage external libraries like Numpy, Scipy, Pandas etc.
+This makes things a lot more complicated since we have to provide not only some
+Python script but also a full-blown virtual environment including the external
+libraries. Therefore, we require only from the actual Hive setup that
+a basic installation of Python is available on the data&nbsp;nodes.</p>
+<h2>General&nbsp;information</h2>
+<p>To keep the idea behind <span class="caps">UD</span>(A)Fs short, only some general notes are mentioned here.
+With the help of the <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Transform">Transform/Map-Reduce syntax</a>, i.e. <code>TRANSFORM</code>, it is
+possible to plug in own custom mappers and reducers. This is where we gonna hook
+in our Python script. An <span class="caps">UDF</span> is basically only a transformation done by a mapper
+meaning that each row should be mapped to exactly one row. A <span class="caps">UDAF</span> on the
+other hand allows us to transform a group of rows into one or more rows so we
+can reduce the number of input rows to a single output row by some custom
+aggregation. We can control if the script is run in a mapper or reducer step
+by the way we formulate our HiveQL query. The statements <code>DISTRIBUTE BY</code> and
+<code>CLUSTER BY</code> allow us to indicate that we want to actually perform an aggregation.
+HiveQL feeds its data to the Python script or any other custom script by using
+the standard input and reads the result from its standard out. All messages from
+standard error are ignored and can therefore be used for debugging.
+Since a <span class="caps">UDAF</span> is more complex than a <span class="caps">UDF</span> and actually can be seen as a generalization
+of it, the development of an <span class="caps">UDAF</span> is demonstrated&nbsp;here.   </p>
+<h2>Overview and our little&nbsp;task</h2>
+<p>In order to not get lost in the details, here is what we want to achieve from
+a high-level&nbsp;perspective.</p>
+<ol>
+<li>Set up small example Hive table within some&nbsp;database.</li>
+<li>Create a virtual environment and upload it to Hive&#8217;s distributed&nbsp;cache.</li>
+<li>Write the actual <span class="caps">UDAF</span> as Python script and a little helper shell&nbsp;script.</li>
+<li>Write a HiveQL query that feeds our example table into the Python&nbsp;script.</li>
+</ol>
+<p>Our dummy data consists of different types of vehicles (car or bike) and a price. For
+each category we want to calculate mean and the standard deviation with the help
+of Pandas to keep things simple. It should not be necessary to mention that this
+task can be handled in HiveQL directly, so this is really only for&nbsp;demonstration.</p>
+<h2>1. Setting up our dummy&nbsp;table</h2>
+<p>With the following query we generate our sample&nbsp;data:</p>
+<div class="highlight"><pre><span></span><span class="k">create</span> <span class="k">database</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="n">use</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">foo</span> <span class="p">(</span><span class="n">id</span> <span class="nb">int</span><span class="p">,</span> <span class="k">type</span> <span class="n">string</span><span class="p">,</span> <span class="n">price</span> <span class="nb">float</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">69</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="mi">1426</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="mi">1234</span><span class="p">.);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Note that the last row even contains a null value we need to handle&nbsp;later.</p>
+<h2>2. Creating and uploading a virtual&nbsp;environment</h2>
+<p>We start by creating an empty virtual environment&nbsp;with:</p>
+<blockquote>
+<p>virtualenv &#8212;no-site-packages -p /usr/bin/python3&nbsp;venv</p>
+</blockquote>
+<p>assuming that <code>virtualenv</code> was already installed with the help of pip. Note that
+we explicitly ask for Python 3. Who uses Python 2 these days anyhow?
+We activate the virtual environment and install Pandas in&nbsp;it.</p>
+<blockquote>
+<p>source&nbsp;venv/bin/activate</p>
+<p>pip install numpy&nbsp;pandas</p>
+</blockquote>
+<p>This should install Pandas and all its dependencies into our virtual environment.
+No we package the virtual environment for later deployment in the distributed&nbsp;cache:</p>
+<blockquote>
+<p>cd&nbsp;venv</p>
+<p>cd venv; tar cvfhz ../venv.tgz&nbsp;./</p>
+<p>cd&nbsp;..</p>
+</blockquote>
+<p>Be aware that the archive was created with the actual content at its root so
+when unpacking there will be no directory holding the actual content. We also
+used the parameter <code>h</code> to package linked&nbsp;files.</p>
+<p>Now we push the archive to <span class="caps">HDFS</span> so that later Hive&#8217;s data nodes will be able to
+find&nbsp;it:</p>
+<blockquote>
+<p>hdfs dfs -put venv.tgz&nbsp;/tmp</p>
+</blockquote>
+<p>The directory <code>/tmp</code> should be changed accordingly. One should also note that
+in principle the same procedure should also be possible with conda environments. In
+practice though, it might be a bit more involved since the activation of a conda
+environment (what we need to do later) assumes an installation of at least
+miniconda which might not be available on the data&nbsp;nodes.</p>
+<h2>3. Writing and uploading the&nbsp;scripts</h2>
+<p>We start by writing a simple Python script <code>udaf.py</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="n">SEP</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span>
+<span class="n">NULL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">N&#39;</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">read_input</span><span class="p">(</span><span class="n">input_data</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_data</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">SEP</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_input</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading group {}...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vtype</span><span class="p">))</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">rowid</span><span class="p">),</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">price</span> <span class="o">==</span> <span class="n">NULL</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">price</span><span class="p">))</span>
+                 <span class="k">for</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">price</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">))</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">vtype</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()]</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">output</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+
+<p>The script should be pretty much self-explanatory. We read from the standard
+input with the help of a generator that strips and splits the lines by the
+separator &#8216;\t&#8217;. At any point we want to avoid to have more data in memory as
+needed to perform the actual computation. We use the <code>groupby</code> function that
+is shipped with Python to iterate over our two types of vehicles. For each group
+we convert the read values to their respective data types and at that point
+also take care of <code>null</code> values which are encoded as <code>\N</code>. After this preprocessing
+we finally feed everything into a Pandas dataframe, do our little mean and standard
+deviation calculations and print everything as a tabular separated list.
+It should also be noted that we set up a logger at the beginning which writes
+everything to standard error. This really helps a lot with debugging and should
+be used. For demonstration purposes the vehicle type of the group currently
+processed is&nbsp;printed.</p>
+<p>At this point we would actually be done if it wasn&#8217;t for the fact that we are
+importing external libraries like Pandas. So if we ran this Python script directly
+as <span class="caps">UDAF</span> we would see import errors if Pandas is not installed on all cluster nodes.
+But in the spirit of David Wheeler&#8217;s &#8220;All problems in computer science can be
+solved by another level of indirection.&#8221; we just write a little helper script
+called <code>udaf.sh</code> that does this job for us and calls the Python script&nbsp;afterwards.</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span> -e
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="nb">echo</span> <span class="s2">&quot;Begin of script&quot;</span><span class="o">)</span>
+<span class="nb">source</span> ./venv.tgz/bin/activate
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="nb">echo</span> <span class="s2">&quot;Activated venv&quot;</span><span class="o">)</span>
+./venv.tgz/bin/python3 udaf.py
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="nb">echo</span> <span class="s2">&quot;End of script&quot;</span><span class="o">)</span>
+</pre></div>
+
+
+<p>With the help of <code>chmod 755</code> we make sure that it is executable and now all that&#8217;s
+left is to push both files somewhere on <span class="caps">HDFS</span> for the cluster to&nbsp;find:</p>
+<blockquote>
+<p>hdfs dfs -put udaf.py&nbsp;/tmp</p>
+<p>hdfs dfs -put udaf.sh&nbsp;/tmp</p>
+</blockquote>
+<h2>4. Writing the actual HiveQL&nbsp;query</h2>
+<p>After we are all prepared and set we can write the actual HiveQL&nbsp;query:</p>
+<div class="highlight"><pre><span></span><span class="k">DELETE</span> <span class="n">ARCHIVE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">venv</span><span class="p">.</span><span class="n">tgz</span><span class="p">;</span>
+<span class="k">ADD</span> <span class="n">ARCHIVE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">venv</span><span class="p">.</span><span class="n">tgz</span><span class="p">;</span>
+<span class="k">DELETE</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
+<span class="k">ADD</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
+<span class="k">DELETE</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">sh</span><span class="p">;</span>
+<span class="k">ADD</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">sh</span><span class="p">;</span>
+
+<span class="n">USE</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="k">TRANSFORM</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="k">type</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span> <span class="k">USING</span> <span class="s1">&#39;udaf.sh&#39;</span> <span class="k">AS</span> <span class="p">(</span><span class="k">type</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">mean</span> <span class="nb">FLOAT</span><span class="p">,</span> <span class="n">var</span> <span class="nb">FLOAT</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">foo</span> <span class="k">CLUSTER</span> <span class="k">BY</span> <span class="k">type</span><span class="p">)</span> <span class="k">AS</span> <span class="n">TEMP_TABLE</span><span class="p">;</span>
+</pre></div>
+
+
+<p>At first we add the zipped virtual environment to the distributed cache that
+will be automatically unpacked for us due to the <code>ADD ARCHIVE</code> command.
+Then we upload the Python and helper script. To make sure the current version
+in the cache is actually the latest, so in case changes are made, we
+prepended <code>DELETE</code> statements before each <code>ADD</code>.</p>
+<p>The actual query now calls <code>TRANSFORM</code> with the three input column we expect
+in our Python script. After the <code>USING</code> statement our helper script is provided
+as the actual <span class="caps">UDAF</span> seen by HiveQL. This is followed by <code>AS</code> defining the names
+and types of the output&nbsp;columns.</p>
+<p>At this point we need to make sure that the script is executed in a reducer step.
+We assure this by defining a subselect that reads from our <code>foo</code> table and clusters
+by the <code>type</code>. <code>CLUSTER BY</code> which is a shortcut for <code>DISTRIBUTE BY</code> followed by
+<code>SORT BY</code> asserts that rows having the same <code>type</code> column are also located on
+the same reducer. Furthermore, the implicit <code>SORT BY</code> orders within a reducer
+the rows with respect to the <code>type</code> column. The overall result are consecutive
+partitions of a given type (car and bike in our case) whereas each partition resides
+on a single reducer. Finally, our script is fed the whole data on a single reducer
+and needs to figure out itself where one partition ends and another one starts
+(what we did with <code>itertools.groupby</code>).</p>
+<p>Since our little task is now accomplished, it should also be noted that there
+are some more Python libraries one should know when working with Hive.
+To actually execute the HiveQL query we have written with the help of Python, there
+is <a href="https://github.com/cloudera/impyla">impyla</a> by Cloudera with supports Python 3 in contrast to <a href="https://github.com/dropbox/PyHive">PyHive</a> by Dropbox.
+In order to work with <span class="caps">HDFS</span> the best library around is <a href="https://hdfs3.readthedocs.io/">hdfs3</a>. That would
+for instance allow us to push changes in <code>udaf.py</code> automatically with a Python&nbsp;script.</p>
+<p>Have fun hacking Hive with the power of&nbsp;Python!</p>
+  </div>
+
+    <h3>Related content</h3>
+    <!-- TODO: Use fancier related layout, as in http://kevin.deldycke.com/2012/04/beautify-contextual-related-posts-wordpress-plugin/ -->
+    <ul>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/04/leveraging_the_value_of-big_data_with_automated_decision_making/">Leveraging the Value of Big Data with Automated Decision&nbsp;Making</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
+      </ul>
+
+    <div class="comments">
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'florianwilhelmblog';
+        var disqus_identifier = "2016/10/python_udf_in_hive/";
+        var disqus_title = "Python UDFs and UDAFs in Hive";
+        var disqus_url = "http://www.florianwilhelm.info/2016/10/python_udf_in_hive/";
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus</a>.</noscript>
+    </div>
+
+          </div>
+
+            <div class="span3">
+  <div class="well">
+
+    <p><abbr class="fa fa-calendar" title="2016-10-23T11:00:00+02:00"> Oct. 23, 2016</abbr></p>
+
+
+    <hr/>
+
+      <p>
+              <a href="http://www.florianwilhelm.info/category/post/" rel="tag tooltip" class="label label-info" data-placement="right" data-original-title="3 articles in this category">post</a>
+            <a href="/tag/python/" rel="tooltip" class="label" data-placement="right" data-original-title="8 articles with this tag">python</a>
+            <a href="/tag/big-data/" rel="tooltip" class="label" data-placement="right" data-original-title="3 articles with this tag">big data</a>
+            <a href="/tag/hadoop/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">hadoop</a>
+            <a href="/tag/hive/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">hive</a>
+      </p>
+      <hr/>
+
+
+      <ul class="pager">
+        <li class="previous "><a  href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/" title="Handling GPS Data with Python"  rel="prev">← Older</a></li>
+        <li class="next  disabled "><a  rel="next">Newer →</a></li>
+      </ul>
+
+  </div>
+              
+            </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TODO: make footer sticky -->
+    <footer class="container-fluid">
+      <div class="container">
+        <div class="row">
+
+            <div class="span2">
+                <h5>Social</h5>
+                <ul class="unstyled">
+                  <li>  <a href="https://twitter.com/FlorianWilhelm">
+      <i class="fa fa-twitter"></i>
+    @FlorianWilhelm
+  </a></li>
+                  <li>  <a href="https://linkedin.com/in/florian-wilhelm-621ba834">
+      <i class="fa fa-linkedin-square"></i>
+    LinkedIn
+  </a></li>
+                  <li>  <a href="https://github.com/FlorianWilhelm">
+      <i class="fa fa-github"></i>
+    GitHub
+  </a></li>
+                </ul>
+            </div>
+            <div class="span2">
+                <h5>Links</h5>
+                <ul class="unstyled">
+                  <li>  <a href="http://pyscaffold.readthedocs.org/">
+    PyScaffold
+  </a></li>
+                  <li>  <a href="http://www.datasciencecentral.com/">
+    Data Science Central
+  </a></li>
+                  <li>  <a href="http://www.kdnuggets.com/">
+    KDNuggetes
+  </a></li>
+                  <li>  <a href="http://www.analyticsvidhya.com/">
+    Analytics Vidhya
+  </a></li>
+                </ul>
+            </div>
+
+          <div class="span2">
+            <h5>Browse content by</h5>
+            <ul class="fa-ul">
+                <li><a href="http://www.florianwilhelm.info/categories/index.html"><i class="fa-li fa fa-tags"></i> Categories</a></li>
+                <li><a href="http://www.florianwilhelm.info/archives/index.html"><i class="fa-li fa fa-calendar"></i> Dates</a></li>
+                <li><a href="http://www.florianwilhelm.info/tags/index.html"><i class="fa-li fa fa-tag"></i> Tags</a></li>
+
+                <li><a href="http://www.florianwilhelm.info/feeds/post.atom.xml"><i class="fa-li fa fa-rss"></i> Feed</a></li>
+            </ul>
+          </div>
+
+          <div class="span2 muted">
+            <h5>Copyright notice</h5>
+            <p>© Copyright 2013-2016 Florian Wilhelm.</p>
+          </div>
+
+          <div class="span2 muted">
+            <h5>Disclaimer</h5>
+              <p>All opinions expressed in this site are my own personal opinions and are not endorsed by, nor do they represent the opinions of my previous, current and future employers or any of its affiliates, partners or customers.</p>
+          </div>
+
+          <div class="span2">
+            <h5 class="pull-right"><a href="#" class="fa fa-arrow-up"> Back to top</a></h5>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row span12 muted text-center">
+          Site generated by <a href="http://getpelican.com"> Pelican</a>.<br/>
+          <a href="https://github.com/kdeldycke/plumage"> Plumage</a> theme by <a href="http://kevin.deldycke.com">Kevin Deldycke</a>.
+        </div>
+      </div>
+
+    </footer>
+
+   <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-71694209-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/jquery.magnific-popup.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.min.js"></script>
+    <script src="http://www.florianwilhelm.info/theme/js/jquery.mglass.js"></script>
+    <script src="http://www.florianwilhelm.info/theme/js/application.js"></script>
+
+  </body>
+</html>

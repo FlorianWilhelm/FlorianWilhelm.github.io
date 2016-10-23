@@ -71,7 +71,7 @@ We activate the virtual environment and install Pandas in&amp;nbsp;it.&lt;/p&gt;
 No we package the virtual environment for later deployment in the distributed&amp;nbsp;cache:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;cd&amp;nbsp;venv&lt;/p&gt;
-&lt;p&gt;cd venv; tar cvfhz ../venv.tgz&amp;nbsp;./&lt;/p&gt;
+&lt;p&gt;tar cvfhz ../venv.tgz&amp;nbsp;./&lt;/p&gt;
 &lt;p&gt;cd&amp;nbsp;..&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Be aware that the archive was created with the actual content at its root so

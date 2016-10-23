@@ -90,7 +90,7 @@ This should install Pandas and all its dependencies into our virtual environment
 No we package the virtual environment for later deployment in the distributed cache:
 > cd venv
 
-> cd venv; tar cvfhz ../venv.tgz ./
+> tar cvfhz ../venv.tgz ./
 
 > cd ..
 

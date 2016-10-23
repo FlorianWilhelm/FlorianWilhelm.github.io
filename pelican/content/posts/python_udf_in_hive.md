@@ -1,14 +1,13 @@
 ---
-title: Python UD(A)Fs in Hive
-date: 2016-10-23 22:00
-modified: 2016-10-23 22:00
+title: Python UDFs and UDAFs in Hive
+date: 2016-10-23 11:00
+modified: 2016-10-23 11:00
 category: post
-tags: python, hadoop, hive
+tags: python, hadoop, hive, big data
 authors: Florian Wilhelm
-status: draft
 ---
 
-Sometimes the analytical power of the [built-in Hive functions][1] is just not enough.
+Sometimes the analytical power of [built-in Hive functions][1] is just not enough.
 In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
 for transformations and even aggregations which are therefore called User-Defined
 Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
@@ -16,13 +15,14 @@ UDFs and UDAFs in Python. By sophisticated we mean that our UD(A)Fs should
 also be able to leverage external libraries like Numpy, Scipy, Pandas etc.
 This makes things a lot more complicated since we have to provide not only some
 Python script but also a full-blown virtual environment including the external
-libraries. Therefore, all we require here from the actual Hive setup is that
+libraries. Therefore, we require only from the actual Hive setup that
 a basic installation of Python is available on the data nodes.
+
 
 ## General information
 
 To keep the idea behind UD(A)Fs short, only some general notes are mentioned here.
-With the help of the [Transform/Map-Reduce syntax][2], i.e. ``TRANSFORM`` it is
+With the help of the [Transform/Map-Reduce syntax][2], i.e. ``TRANSFORM``, it is
 possible to plug in own custom mappers and reducers. This is where we gonna hook
 in our Python script. An UDF is basically only a transformation done by a mapper
 meaning that each row should be mapped to exactly one row. A UDAF on the
@@ -36,6 +36,7 @@ the standard input and reads the result from its standard out. All messages from
 standard error are ignored and can therefore be used for debugging.
 Since a UDAF is more complex than a UDF and actually can be seen as a generalization
 of it, the development of an UDAF is demonstrated here.   
+
 
 ## Overview and our little task
 
@@ -51,6 +52,7 @@ Our dummy data consists of different types of vehicles (car or bike) and a price
 each category we want to calculate mean and the standard deviation with the help
 of Pandas to keep things simple. It should not be necessary to mention that this
 task can be handled in HiveQL directly, so this is really only for demonstration.
+
 
 ## 1. Setting up our dummy table
 
@@ -71,6 +73,7 @@ insert into table foo VALUES (8, "bike", null);
 ```
 Note that the last row even contains a null value we need to handle later.
 
+
 ## 2. Creating and uploading a virtual environment
 
 We start by creating an empty virtual environment with:
@@ -80,12 +83,15 @@ assuming that `virtualenv` was already installed with the help of pip. Note that
 we explicitly ask for Python 3. Who uses Python 2 these days anyhow?
 We activate the virtual environment and install Pandas in it.
 > source venv/bin/activate
+
 > pip install numpy pandas
 
 This should install Pandas and all its dependencies into our virtual environment.
 No we package the virtual environment for later deployment in the distributed cache:
 > cd venv
+
 > cd venv; tar cvfhz ../venv.tgz ./
+
 > cd ..
 
 Be aware that the archive was created with the actual content at its root so
@@ -101,6 +107,7 @@ in principle the same procedure should also be possible with conda environments.
 practice though, it might be a bit more involved since the activation of a conda
 environment (what we need to do later) assumes an installation of at least
 miniconda which might not be available on the data nodes.
+
 
 ## 3. Writing and uploading the scripts
 
@@ -154,14 +161,14 @@ everything to standard error. This really helps a lot with debugging and should
 be used. For demonstration purposes the vehicle type of the group currently
 processed is printed.
 
-At this point we were actually done if it wasn't for the fact that we are
+At this point we would actually be done if it wasn't for the fact that we are
 importing external libraries like Pandas. So if we ran this Python script directly
 as UDAF we would see import errors if Pandas is not installed on all cluster nodes.
 But in the spirit of David Wheeler's "All problems in computer science can be
 solved by another level of indirection." we just write a little helper script
 called `udaf.sh` that does this job for us and calls the Python script afterwards.
 
-```
+```sh
 #!/bin/bash
 set -e
 (>&2 echo "Begin of script")
@@ -174,7 +181,9 @@ source ./venv.tgz/bin/activate
 With the help of `chmod 755` we make sure that it is executable and now all that's
 left is to push both files somewhere on HDFS for the cluster to find:
 > hdfs dfs -put udaf.py /tmp
+
 > hdfs dfs -put udaf.sh /tmp
+
 
 ## 4. Writing the actual HiveQL query
 
@@ -196,8 +205,8 @@ SELECT TRANSFORM(id, type, price) USING 'udaf.sh' AS (type STRING, mean FLOAT, v
 At first we add the zipped virtual environment to the distributed cache that
 will be automatically unpacked for us due to the `ADD ARCHIVE` command.
 Then we upload the Python and helper script. To make sure the current version
-in the cache is actually the latest, so in case changes are made, we can
-prepend `DELETE` statements before each `ADD`.
+in the cache is actually the latest, so in case changes are made, we
+prepended `DELETE` statements before each `ADD`.
 
 The actual query now calls `TRANSFORM` with the three input column we expect
 in our Python script. After the `USING` statement our helper script is provided
@@ -206,14 +215,14 @@ and types of the output columns.
 
 At this point we need to make sure that the script is executed in a reducer step.
 We assure this by defining a subselect that reads from our `foo` table and clusters
-by the type. `CLUSTER BY` which is a shortcut for `DISTRIBUTE BY` followed by
+by the `type`. `CLUSTER BY` which is a shortcut for `DISTRIBUTE BY` followed by
 `SORT BY` asserts that rows having the same `type` column are also located on
 the same reducer. Furthermore, the implicit `SORT BY` orders within a reducer
 the rows with respect to the `type` column. The overall result are consecutive
 partitions of a given type (car and bike in our case) whereas each partition resides
 on a single reducer. Finally, our script is fed the whole data on a single reducer
 and needs to figure out itself where one partition ends and another one starts
-(what we accomplished with `itertools.groupby`).
+(what we did with `itertools.groupby`).
 
 Since our little task is now accomplished, it should also be noted that there
 are some more Python libraries one should know when working with Hive.
@@ -221,7 +230,7 @@ To actually execute the HiveQL query we have written with the help of Python, th
 is [impyla][3] by Cloudera with supports Python 3 in contrast to [PyHive][4] by Dropbox.
 In order to work with HDFS the best library around is [hdfs3][5]. That would
 for instance allow us to push changes in `udaf.py` automatically with a Python
-script. 
+script.
 
 Have fun hacking Hive with the power of Python!
 

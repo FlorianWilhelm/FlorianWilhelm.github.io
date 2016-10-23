@@ -90,25 +90,26 @@ UDFs and UDAFs in Python. By sophisticated we mean that our <span class="caps">U
 also be able to leverage external libraries like Numpy, Scipy, Pandas etc.
 This makes things a lot more complicated since we have to provide not only some
 Python script but also a full-blown virtual environment including the external
-libraries. Therefore, we require only from the actual Hive setup that
-a basic installation of Python is available on the data&nbsp;nodes.</p>
+libraries since they may not be available on the cluster nodes.
+Therefore, in this tutorial we require only that a basic installation of Python
+is available on the data nodes of the Hive&nbsp;cluster.</p>
 <h2>General&nbsp;information</h2>
 <p>To keep the idea behind <span class="caps">UD</span>(A)Fs short, only some general notes are mentioned here.
 With the help of the <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Transform">Transform/Map-Reduce syntax</a>, i.e. <code>TRANSFORM</code>, it is
-possible to plug in own custom mappers and reducers. This is where we gonna hook
-in our Python script. An <span class="caps">UDF</span> is basically only a transformation done by a mapper
+possible to plug in your own custom mappers and reducers. This is where we gonna hook
+in our Python script. A <span class="caps">UDF</span> is basically only a transformation done by a mapper
 meaning that each row should be mapped to exactly one row. A <span class="caps">UDAF</span> on the
-other hand allows us to transform a group of rows into one or more rows so we
+other hand allows us to transform a group of rows into one or more rows, meaning that we
 can reduce the number of input rows to a single output row by some custom
 aggregation. We can control if the script is run in a mapper or reducer step
 by the way we formulate our HiveQL query. The statements <code>DISTRIBUTE BY</code> and
 <code>CLUSTER BY</code> allow us to indicate that we want to actually perform an aggregation.
-HiveQL feeds its data to the Python script or any other custom script by using
+HiveQL feeds the data to the Python script or any other custom script by using
 the standard input and reads the result from its standard out. All messages from
 standard error are ignored and can therefore be used for debugging.
 Since a <span class="caps">UDAF</span> is more complex than a <span class="caps">UDF</span> and actually can be seen as a generalization
-of it, the development of an <span class="caps">UDAF</span> is demonstrated&nbsp;here.   </p>
-<h2>Overview and our little&nbsp;task</h2>
+of it, the development of a <span class="caps">UDAF</span> is demonstrated&nbsp;here.   </p>
+<h2>Overview and a little&nbsp;task</h2>
 <p>In order to not get lost in the details, here is what we want to achieve from
 a high-level&nbsp;perspective.</p>
 <ol>
@@ -118,7 +119,7 @@ a high-level&nbsp;perspective.</p>
 <li>Write a HiveQL query that feeds our example table into the Python&nbsp;script.</li>
 </ol>
 <p>Our dummy data consists of different types of vehicles (car or bike) and a price. For
-each category we want to calculate mean and the standard deviation with the help
+each category we want to calculate the mean and the standard deviation with the help
 of Pandas to keep things simple. It should not be necessary to mention that this
 task can be handled in HiveQL directly, so this is really only for&nbsp;demonstration.</p>
 <h2>1. Setting up our dummy&nbsp;table</h2>
@@ -147,8 +148,8 @@ any recent 64bit Linux distribution will&nbsp;do.</p>
 <p>virtualenv &#8212;no-site-packages -p /usr/bin/python3&nbsp;venv</p>
 </blockquote>
 <p>assuming that <code>virtualenv</code> was already installed with the help of pip. Note that
-we explicitly ask for Python 3. Who uses Python 2 these days anyhow?
-We activate the virtual environment and install Pandas in&nbsp;it.</p>
+we explicitly ask for Python 3. Who uses Python 2 these days&nbsp;anyhow?</p>
+<p>We activate the virtual environment and install Pandas in&nbsp;it.</p>
 <blockquote>
 <p>source&nbsp;venv/bin/activate</p>
 <p>pip install numpy&nbsp;pandas</p>
@@ -294,10 +295,10 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
     <!-- TODO: Use fancier related layout, as in http://kevin.deldycke.com/2012/04/beautify-contextual-related-posts-wordpress-plugin/ -->
     <ul>
         <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/04/leveraging_the_value_of-big_data_with_automated_decision_making/">Leveraging the Value of Big Data with Automated Decision&nbsp;Making</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
       </ul>
 
     <div class="comments">
@@ -330,8 +331,8 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
               <a href="http://www.florianwilhelm.info/category/post/" rel="tag tooltip" class="label label-info" data-placement="right" data-original-title="3 articles in this category">post</a>
             <a href="/tag/python/" rel="tooltip" class="label" data-placement="right" data-original-title="8 articles with this tag">python</a>
             <a href="/tag/big-data/" rel="tooltip" class="label" data-placement="right" data-original-title="3 articles with this tag">big data</a>
-            <a href="/tag/hadoop/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">hadoop</a>
             <a href="/tag/hive/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">hive</a>
+            <a href="/tag/hadoop/" rel="tooltip" class="label" data-placement="right" data-original-title="1 article with this tag">hadoop</a>
       </p>
       <hr/>
 

@@ -15,30 +15,31 @@ UDFs and UDAFs in Python. By sophisticated we mean that our UD(A)Fs should
 also be able to leverage external libraries like Numpy, Scipy, Pandas etc.
 This makes things a lot more complicated since we have to provide not only some
 Python script but also a full-blown virtual environment including the external
-libraries. Therefore, we require only from the actual Hive setup that
-a basic installation of Python is available on the data nodes.
+libraries since they may not be available on the cluster nodes.
+Therefore, in this tutorial we require only that a basic installation of Python
+is available on the data nodes of the Hive cluster.
 
 
 ## General information
 
 To keep the idea behind UD(A)Fs short, only some general notes are mentioned here.
 With the help of the [Transform/Map-Reduce syntax][2], i.e. ``TRANSFORM``, it is
-possible to plug in own custom mappers and reducers. This is where we gonna hook
-in our Python script. An UDF is basically only a transformation done by a mapper
+possible to plug in your own custom mappers and reducers. This is where we gonna hook
+in our Python script. A UDF is basically only a transformation done by a mapper
 meaning that each row should be mapped to exactly one row. A UDAF on the
-other hand allows us to transform a group of rows into one or more rows so we
+other hand allows us to transform a group of rows into one or more rows, meaning that we
 can reduce the number of input rows to a single output row by some custom
 aggregation. We can control if the script is run in a mapper or reducer step
 by the way we formulate our HiveQL query. The statements ``DISTRIBUTE BY`` and
 ``CLUSTER BY`` allow us to indicate that we want to actually perform an aggregation.
-HiveQL feeds its data to the Python script or any other custom script by using
+HiveQL feeds the data to the Python script or any other custom script by using
 the standard input and reads the result from its standard out. All messages from
 standard error are ignored and can therefore be used for debugging.
 Since a UDAF is more complex than a UDF and actually can be seen as a generalization
-of it, the development of an UDAF is demonstrated here.   
+of it, the development of a UDAF is demonstrated here.   
 
 
-## Overview and our little task
+## Overview and a little task
 
 In order to not get lost in the details, here is what we want to achieve from
 a high-level perspective.
@@ -49,7 +50,7 @@ a high-level perspective.
 4.  Write a HiveQL query that feeds our example table into the Python script.
 
 Our dummy data consists of different types of vehicles (car or bike) and a price. For
-each category we want to calculate mean and the standard deviation with the help
+each category we want to calculate the mean and the standard deviation with the help
 of Pandas to keep things simple. It should not be necessary to mention that this
 task can be handled in HiveQL directly, so this is really only for demonstration.
 
@@ -85,6 +86,7 @@ We start by creating an empty virtual environment with:
 
 assuming that `virtualenv` was already installed with the help of pip. Note that
 we explicitly ask for Python 3. Who uses Python 2 these days anyhow?
+
 We activate the virtual environment and install Pandas in it.
 > source venv/bin/activate
 

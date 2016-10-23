@@ -61,7 +61,7 @@ With the following query we generate our sample data:
 ```sql
 create database tmp;
 use tmp;
-create table foo (id int, type string, price float);
+create table foo (id int, vtype string, price float);
 insert into table foo VALUES (1, "car", 1000.);
 insert into table foo VALUES (2, "car", 42.);
 insert into table foo VALUES (3, "car", 10000.);
@@ -139,7 +139,7 @@ def main():
         _logger.info("Reading group {}...".format(vtype))
         group = [(int(rowid), vtype, np.nan if price == NULL else float(price))
                  for rowid, vtype, price in group]
-        df = pd.DataFrame(group, columns=('id', 'type', 'price'))
+        df = pd.DataFrame(group, columns=('id', 'vtype', 'price'))
         output = [vtype, df['price'].mean(), df['price'].std()]
         print(SEP.join(str(o) for o in output))
 
@@ -160,9 +160,6 @@ It should also be noted that we set up a logger at the beginning which writes
 everything to standard error. This really helps a lot with debugging and should
 be used. For demonstration purposes the vehicle type of the group currently
 processed is printed.
-
-
-## Finally
 
 At this point we would actually be done if it wasn't for the fact that we are
 importing external libraries like Pandas. So if we ran this Python script directly
@@ -201,8 +198,8 @@ DELETE FILE hdfs:///tmp/udaf.sh;
 ADD FILE hdfs:///tmp/udaf.sh;
 
 USE tmp;
-SELECT TRANSFORM(id, type, price) USING 'udaf.sh' AS (type STRING, mean FLOAT, var FLOAT)
-  FROM (SELECT * FROM foo CLUSTER BY type) AS TEMP_TABLE;
+SELECT TRANSFORM(id, vtype, price) USING 'udaf.sh' AS (vtype STRING, mean FLOAT, var FLOAT)
+  FROM (SELECT * FROM foo CLUSTER BY vtype) AS TEMP_TABLE;
 ```
 
 At first we add the zipped virtual environment to the distributed cache that
@@ -218,14 +215,17 @@ and types of the output columns.
 
 At this point we need to make sure that the script is executed in a reducer step.
 We assure this by defining a subselect that reads from our `foo` table and clusters
-by the `type`. `CLUSTER BY` which is a shortcut for `DISTRIBUTE BY` followed by
-`SORT BY` asserts that rows having the same `type` column are also located on
+by the `vtype`. `CLUSTER BY` which is a shortcut for `DISTRIBUTE BY` followed by
+`SORT BY` asserts that rows having the same `vtype` column are also located on
 the same reducer. Furthermore, the implicit `SORT BY` orders within a reducer
-the rows with respect to the `type` column. The overall result are consecutive
-partitions of a given type (car and bike in our case) whereas each partition resides
+the rows with respect to the `vtype` column. The overall result are consecutive
+partitions of a given vehicle type (car and bike in our case) whereas each partition resides
 on a single reducer. Finally, our script is fed the whole data on a single reducer
 and needs to figure out itself where one partition ends and another one starts
 (what we did with `itertools.groupby`).
+
+
+## Finally
 
 Since our little task is now accomplished, it should also be noted that there
 are some more Python libraries one should know when working with Hive.

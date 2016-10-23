@@ -1,5 +1,5 @@
 ---
-title: Python UDFs and UDAFs in Hive
+title: Hive UDFs and UDAFs with Python
 date: 2016-10-23 11:00
 modified: 2016-10-23 11:00
 category: post

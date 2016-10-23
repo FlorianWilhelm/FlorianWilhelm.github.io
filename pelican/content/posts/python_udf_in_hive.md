@@ -59,17 +59,17 @@ task can be handled in HiveQL directly, so this is really only for demonstration
 With the following query we generate our sample data:
 
 ```sql
-create database tmp;
-use tmp;
-create table foo (id int, vtype string, price float);
-insert into table foo VALUES (1, "car", 1000.);
-insert into table foo VALUES (2, "car", 42.);
-insert into table foo VALUES (3, "car", 10000.);
-insert into table foo VALUES (4, "car", 69.);
-insert into table foo VALUES (5, "bike", 1426.);
-insert into table foo VALUES (6, "bike", 32.);
-insert into table foo VALUES (7, "bike", 1234.);
-insert into table foo VALUES (8, "bike", null);
+CREATE DATABASE tmp;
+USE tmp;
+CREATE TABLE foo (id INT, vtype STRING, price FLOAT);
+INSERT INTO table foo VALUES (1, "car", 1000.);
+INSERT INTO table foo VALUES (2, "car", 42.);
+INSERT INTO table foo VALUES (3, "car", 10000.);
+INSERT INTO table foo VALUES (4, "car", 69.);
+INSERT INTO table foo VALUES (5, "bike", 1426.);
+INSERT INTO table foo VALUES (6, "bike", 32.);
+INSERT INTO table foo VALUES (7, "bike", 1234.);
+INSERT INTO table foo VALUES (8, "bike", null);
 ```
 Note that the last row even contains a null value we need to handle later.
 

@@ -26,7 +26,7 @@ and supervised bachelor and master students.
 After my postdoctoral position I started as a Data Scientist at [Blue Yonder](http://www.blue-yonder.com/),
 the leading platform provider for Predictive Applications and Big Data in the European market.
 Right now I enjoy working on innovative Data Science projects with experts every day at [inovex](https://www.inovex.de/en/).
-With more than three years of project experience in the field of Predictive & Prescriptive Analytics and
+With more than five years of project experience in the field of Predictive & Prescriptive Analytics and
 Big Data, I have acquired profound knowledge in the domains of mathematical modelling, statistics,
 machine learning, high-performance computing and data mining.
 
@@ -34,8 +34,8 @@ For the last years I programmed mostly with the Python Data Science stack ([NumP
 [SciPy](http://www.scipy.org/), [Scikit-Learn](http://scikit-learn.org/),
 [Pandas](http://pandas.pydata.org/), [Matplotlib](http://matplotlib.org/),
 [Jupyter](http://jupyter.org/), etc.) to which I also contributed several extensions.
-Due to some project work I have also gained experience in R as well as
-C/C++, Java, Matlab and Fortran.
+Due to my participation in many industry projects, I have also gained experience
+in the Hadoop stack and R as well as C/C++ and Java.
 
 If you want to know more, please read all about my professional details in my
 [résumé]({filename}/documents/Resume.pdf) or on

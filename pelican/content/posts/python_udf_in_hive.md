@@ -76,6 +76,10 @@ Note that the last row even contains a null value that we need to handle later.
 
 ## 2. Creating and uploading a virtual environment
 
+In order to prepare a proper virtual environment we need to execute the following
+steps on an OS that is binary compatible to the OS on the Hive cluster. Typically
+any recent 64bit Linux distribution will do.
+
 We start by creating an empty virtual environment with:
 > virtualenv --no-site-packages -p /usr/bin/python3 venv
 
@@ -149,7 +153,7 @@ if __name__ == '__main__':
 ```
 The script should be pretty much self-explanatory. We read from the standard
 input with the help of a generator that strips and splits the lines by the
-separator '\t'. At any point we want to avoid to have more data in memory as
+separator `\t`. At any point we want to avoid to have more data in memory as
 needed to perform the actual computation. We use the ``groupby`` function that
 is shipped with Python to iterate over our two types of vehicles. For each group
 we convert the read values to their respective data types and at that point

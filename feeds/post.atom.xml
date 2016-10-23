@@ -56,6 +56,9 @@ task can be handled in HiveQL directly, so this is really only for&amp;nbsp;demo
 
 &lt;p&gt;Note that the last row even contains a null value that we need to handle&amp;nbsp;later.&lt;/p&gt;
 &lt;h2&gt;2. Creating and uploading a virtual&amp;nbsp;environment&lt;/h2&gt;
+&lt;p&gt;In order to prepare a proper virtual environment we need to execute the following
+steps on an &lt;span class="caps"&gt;OS&lt;/span&gt; that is binary compatible to the &lt;span class="caps"&gt;OS&lt;/span&gt; on the Hive cluster. Typically
+any recent 64bit Linux distribution will&amp;nbsp;do.&lt;/p&gt;
 &lt;p&gt;We start by creating an empty virtual environment&amp;nbsp;with:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;virtualenv &amp;#8212;no-site-packages -p /usr/bin/python3&amp;nbsp;venv&lt;/p&gt;
@@ -126,7 +129,7 @@ miniconda which might not be available on the data&amp;nbsp;nodes.&lt;/p&gt;
 
 &lt;p&gt;The script should be pretty much self-explanatory. We read from the standard
 input with the help of a generator that strips and splits the lines by the
-separator &amp;#8216;\t&amp;#8217;. At any point we want to avoid to have more data in memory as
+separator &lt;code&gt;\t&lt;/code&gt;. At any point we want to avoid to have more data in memory as
 needed to perform the actual computation. We use the &lt;code&gt;groupby&lt;/code&gt; function that
 is shipped with Python to iterate over our two types of vehicles. For each group
 we convert the read values to their respective data types and at that point

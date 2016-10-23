@@ -62,16 +62,16 @@ With the following query we generate our sample data:
 CREATE DATABASE tmp;
 USE tmp;
 CREATE TABLE foo (id INT, vtype STRING, price FLOAT);
-INSERT INTO table foo VALUES (1, "car", 1000.);
-INSERT INTO table foo VALUES (2, "car", 42.);
-INSERT INTO table foo VALUES (3, "car", 10000.);
-INSERT INTO table foo VALUES (4, "car", 69.);
-INSERT INTO table foo VALUES (5, "bike", 1426.);
-INSERT INTO table foo VALUES (6, "bike", 32.);
-INSERT INTO table foo VALUES (7, "bike", 1234.);
-INSERT INTO table foo VALUES (8, "bike", null);
+INSERT INTO TABLE foo VALUES (1, "car", 1000.);
+INSERT INTO TABLE foo VALUES (2, "car", 42.);
+INSERT INTO TABLE foo VALUES (3, "car", 10000.);
+INSERT INTO TABLE foo VALUES (4, "car", 69.);
+INSERT INTO TABLE foo VALUES (5, "bike", 1426.);
+INSERT INTO TABLE foo VALUES (6, "bike", 32.);
+INSERT INTO TABLE foo VALUES (7, "bike", 1234.);
+INSERT INTO TABLE foo VALUES (8, "bike", null);
 ```
-Note that the last row even contains a null value we need to handle later.
+Note that the last row even contains a null value that we need to handle later.
 
 
 ## 2. Creating and uploading a virtual environment
@@ -177,8 +177,8 @@ source ./venv.tgz/bin/activate
 ./venv.tgz/bin/python3 udaf.py
 (>&2 echo "End of script")
 ```
-
-With the help of `chmod 755` we make sure that it is executable and now all that's
+Again we use standard error to trace what the script is currently doing.
+With the help of `chmod u+x` we make the script executable and now all that's
 left is to push both files somewhere on HDFS for the cluster to find:
 > hdfs dfs -put udaf.py /tmp
 

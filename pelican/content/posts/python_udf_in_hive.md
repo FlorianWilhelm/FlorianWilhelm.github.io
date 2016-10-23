@@ -161,6 +161,9 @@ everything to standard error. This really helps a lot with debugging and should
 be used. For demonstration purposes the vehicle type of the group currently
 processed is printed.
 
+
+## Finally
+
 At this point we would actually be done if it wasn't for the fact that we are
 importing external libraries like Pandas. So if we ran this Python script directly
 as UDAF we would see import errors if Pandas is not installed on all cluster nodes.

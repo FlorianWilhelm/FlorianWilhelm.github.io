@@ -1,200 +1,343 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>python - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>  python
- | Florian Wilhelm</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="author" content=""/>
+
+
+    <meta name="author" content="Florian Wilhelm" />
+    <meta name="keywords" content="python" />
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Florian Wilhelm"/>
+        <meta property="og:url" content=""/>
+        <meta property="og:description" content="Florian Wilhelm"/>
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.0.3/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/magnific-popup.min.css"/>
-    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/jquery.mglass.css"/>
-    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/pygment-solarized-dark.css"/>
-    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css"/>
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Fonts -->
-    <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
-    <link href='//fonts.googleapis.com/css?family=Istok+Web' rel='stylesheet' type='text/css'/>
-    <link href='//fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
-      <link href='//fonts.googleapis.com/css?family=Expletus+Sans' rel='stylesheet' type='text/css'>
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+        <link href="/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
 
 
-    <link rel="icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="http://www.florianwilhelm.info/favicon.ico" type="image/x-icon">
-
-    <!-- Feeds -->
-      <link href="http://www.florianwilhelm.info/feed/atom/index.html" type="application/atom+xml" rel="alternate" title="Florian Wilhelm Atom Feed"/>
-      <link href="http://www.florianwilhelm.info/feed/index.html" type="application/rss+xml" rel="alternate" title="Florian Wilhelm RSS Feed"/>
 
 
-  </head>
 
-  <body>
-    <div class="container">
+</head>
+<body>
 
-      <header>
-        <div class="page-header">
-            <a href="http://www.florianwilhelm.info" class="avatar-container">
-              <div class="avatar  animate ">
-                <div class="side"><img src="/images/thumbnail.jpeg"/></div>
-                  <div class="side back"><p class="text-center">Sometimes with hip glasses 😎</p></div>
-              </div>
-            </a>
-          <h1><a href="http://www.florianwilhelm.info">Florian Wilhelm</a> <small>Data Scientist</small></h1>
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Florian Wilhelm            </a>
         </div>
-
-        <div class="navbar">
-          <div class="navbar-inner">
-            <a class="brand" href="http://www.florianwilhelm.info" title="Data Scientist">Florian Wilhelm</a>
-            <ul class="nav">
-<li ><a href="/">Home</a></li>
-<li ><a href="/about/">About me</a></li>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
             </ul>
-              <form class="navbar-search pull-right" action="http://www.florianwilhelm.info/search.html" onsubmit="return validateForm(this.elements['q'].value);">
-                <input type="text" name="q" id="tipue_search_input" class="search-query span2" placeholder="Search" required/>
-                <i class="fa fa-search fa-fw"></i>
-              </form>
-          </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
         </div>
-      </header>
-
-      <section>
-
-        <div class="row">
-          <div class=" span12  ">
-  <h1>
-    <a  href="http://www.florianwilhelm.info/tag/python/" rel="bookmark" title="Permalink to python articles">python articles</a>
-  </h1>
-          </div>
-        </div>
-
-        <div class="row">
-
-
-          <div class=" span12 " id="content" role="main">
-  <dl class="dl-horizontal">
-      <dt><abbr class="published" title="2016-10-23T11:00:00+02:00">Oct. 23, 2016</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></dd>
-      <dt><abbr class="published" title="2016-07-22T11:15:00+02:00">Jul. 22, 2016</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></dd>
-      <dt><abbr class="published" title="2016-03-26T09:00:00+01:00">Mar. 26, 2016</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></dd>
-      <dt><abbr class="published" title="2016-02-13T12:30:00+01:00">Feb. 13, 2016</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></dd>
-      <dt><abbr class="published" title="2015-07-24T12:30:00+02:00">Jul. 24, 2015</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></dd>
-      <dt><abbr class="published" title="2014-07-25T12:00:00+02:00">Jul. 25, 2014</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></dd>
-      <dt><abbr class="published" title="2014-07-23T14:20:00+02:00">Jul. 23, 2014</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></dd>
-      <dt><abbr class="published" title="2013-10-17T14:20:00+02:00">Oct. 17, 2013</abbr></dt>
-      <dd><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></dd>
-  </dl>
-          </div>
-
-
-        </div>
-      </section>
-
+        <!-- /.navbar-collapse -->
     </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <article>
+                <h2><a href="/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></h2>
+                <div class="summary"><p>Sometimes the analytical power of <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF">built-in Hive functions</a> is just not enough.
+In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
+for transformations and even aggregations which are therefore called User-Defined
+Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
+UDFs and UDAFs …</p>
+                    <a class="btn btn-default btn-xs" href="/2016/10/python_udf_in_hive/">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></h2>
+                <div class="summary"><p>This talk presented at the <a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python">EuroPython 2016</a> introduces several Python libraries related to the handling of <span class="caps">GPS</span> data. The slides of this talk are available on <a href="https://github.com/FlorianWilhelm/gps_data_with_python">Github</a> or on <a href="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/">nbviewer</a>.</p>
+                    <a class="btn btn-default btn-xs" href="/2016/07/handling_gps_data_with_python/">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></h2>
+                <div class="summary"><p>If you are doing probabilistic programming you are dealing with all kinds of
+different distributions. That means choosing an ensemble of right distributions
+which describe the underlying real-world process in a suitable way but also
+choosing the right parameters for prior distributions. At that point I often
+start visualizing the …</p>
+                    <a class="btn btn-default btn-xs" href="/2016/03/jupyter_distribution_visualizer/">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></h2>
+                <div class="summary"><p>Often I get the question as a Data Scientist what the <em>Python Data Science Stack</em>
+actually is and where a beginner should start to learn. The Python ecosystem,
+especially around the topics such as data analytics, data mining, data science and
+machine learning is so vast and rich that it …</p>
+                    <a class="btn btn-default btn-xs" href="/2016/02/introduction_to_the_python_data_science_stack/">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></h2>
+                <div class="summary"><p>In this presentation given at the <a href="https://ep2015.europython.eu/">EuroPython 2015</a> in Bilbao,
+I show how the <a href="https://github.com/tdryer/hangups">hangups</a> library can be used
+in order to write a small chatbot that connects to Google Hangouts
+and reminds you or someone else to take his/her medication.
+The secure and recommended OAuth2 protocol is used …</p>
+                    <a class="btn btn-default btn-xs" href="/2015/07/howto_write_a_friendly_reminder_bot/">more ...</a>
+                </div>
+            </article>
+            <hr/>
 
-    <!-- TODO: make footer sticky -->
-    <footer class="container-fluid">
-      <div class="container">
-        <div class="row">
-
-            <div class="span2">
-                <h5>Social</h5>
-                <ul class="unstyled">
-                  <li>  <a href="https://twitter.com/FlorianWilhelm">
-      <i class="fa fa-twitter"></i>
-    @FlorianWilhelm
-  </a></li>
-                  <li>  <a href="https://linkedin.com/in/florian-wilhelm-621ba834">
-      <i class="fa fa-linkedin-square"></i>
-    LinkedIn
-  </a></li>
-                  <li>  <a href="https://github.com/FlorianWilhelm">
-      <i class="fa fa-github"></i>
-    GitHub
-  </a></li>
-                </ul>
-            </div>
-            <div class="span2">
-                <h5>Links</h5>
-                <ul class="unstyled">
-                  <li>  <a href="http://pyscaffold.readthedocs.org/">
-    PyScaffold
-  </a></li>
-                  <li>  <a href="http://www.datasciencecentral.com/">
-    Data Science Central
-  </a></li>
-                  <li>  <a href="http://www.kdnuggets.com/">
-    KDNuggetes
-  </a></li>
-                  <li>  <a href="http://www.analyticsvidhya.com/">
-    Analytics Vidhya
-  </a></li>
-                </ul>
-            </div>
-
-          <div class="span2">
-            <h5>Browse content by</h5>
-            <ul class="fa-ul">
-                <li><a href="http://www.florianwilhelm.info/categories/index.html"><i class="fa-li fa fa-tags"></i> Categories</a></li>
-                <li><a href="http://www.florianwilhelm.info/archives/index.html"><i class="fa-li fa fa-calendar"></i> Dates</a></li>
-                <li><a href="http://www.florianwilhelm.info/tags/index.html"><i class="fa-li fa fa-tag"></i> Tags</a></li>
-
-            </ul>
-          </div>
-
-          <div class="span2 muted">
-            <h5>Copyright notice</h5>
-            <p>© Copyright 2013-2016 Florian Wilhelm.</p>
-          </div>
-
-          <div class="span2 muted">
-            <h5>Disclaimer</h5>
-              <p>All opinions expressed in this site are my own personal opinions and are not endorsed by, nor do they represent the opinions of my previous, current and future employers or any of its affiliates, partners or customers.</p>
-          </div>
-
-          <div class="span2">
-            <h5 class="pull-right"><a href="#" class="fa fa-arrow-up"> Back to top</a></h5>
-          </div>
-
+        <ul class="pagination">
+                <li class="prev disabled"><a href="#">&laquo;</a></li>
+                    <li class="active"><a
+                            href="/tag/python/index.html">1</a></li>
+                    <li class=""><a
+                            href="/tag/python/index2.html">2</a></li>
+                <li class="next"><a
+                        href="/tag/python/index2.html">&raquo;</a></li>
+        </ul>
         </div>
-      </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
 
-      <div class="container">
-        <div class="row span12 muted text-center">
-          Site generated by <a href="http://getpelican.com"> Pelican</a>.<br/>
-          <a href="https://github.com/kdeldycke/plumage"> Plumage</a> theme by <a href="http://kevin.deldycke.com">Kevin Deldycke</a>.
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
+
+
+            <li class="list-group-item"><a href="/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="/category/podcast/">
+                            <i class="fa fa-folder-open fa-lg"></i> podcast
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/post/">
+                            <i class="fa fa-folder-open fa-lg"></i> post
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/slides/">
+                            <i class="fa fa-folder-open fa-lg"></i> slides
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/talk/">
+                            <i class="fa fa-folder-open fa-lg"></i> talk
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/blue-yonder/">
+                            Blue Yonder
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/kalman/">
+                            kalman
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="/tag/template/">
+                            template
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
         </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
       </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
 
-    </footer>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
 
-   <script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-71694209-1', 'auto');
-        ga('send', 'pageview');
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
     </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/jquery.magnific-popup.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.min.js"></script>
-    <script src="http://www.florianwilhelm.info/theme/js/jquery.mglass.js"></script>
-    <script src="http://www.florianwilhelm.info/theme/js/application.js"></script>
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
 
-  </body>
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
 </html>

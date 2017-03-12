@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2016-10-23T11:00:00+02:00</updated><entry><title>Hive UDFs and UDAFs with Python</title><link href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/" rel="alternate"></link><published>2016-10-23T11:00:00+02:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-10-23:2016/10/python_udf_in_hive/</id><summary type="html">&lt;p&gt;Sometimes the analytical power of &lt;a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF"&gt;built-in Hive functions&lt;/a&gt; is just not enough.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="/" rel="alternate"></link><link href="/feed/atom/index.html" rel="self"></link><id>/</id><updated>2016-10-23T11:00:00+02:00</updated><entry><title>Hive UDFs and UDAFs with Python</title><link href="/2016/10/python_udf_in_hive/" rel="alternate"></link><published>2016-10-23T11:00:00+02:00</published><updated>2016-10-23T11:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-10-23:/2016/10/python_udf_in_hive/</id><summary type="html">&lt;p&gt;Sometimes the analytical power of &lt;a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF"&gt;built-in Hive functions&lt;/a&gt; is just not enough.
+In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
+for transformations and even aggregations which are therefore called User-Defined
+Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
+UDFs and UDAFs …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Sometimes the analytical power of &lt;a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF"&gt;built-in Hive functions&lt;/a&gt; is just not enough.
 In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
 for transformations and even aggregations which are therefore called User-Defined
 Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
@@ -103,7 +107,7 @@ miniconda which might not be available on the data&amp;nbsp;nodes.&lt;/p&gt;
 &lt;span class="n"&gt;SEP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
 &lt;span class="n"&gt;NULL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;N&amp;#39;&lt;/span&gt;
 
-&lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;read_input&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input_data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -123,7 +127,7 @@ miniconda which might not be available on the data&amp;nbsp;nodes.&lt;/p&gt;
         &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SEP&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
 
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -205,7 +209,7 @@ To actually execute the HiveQL query we have written with the help of Python, th
 is &lt;a href="https://github.com/cloudera/impyla"&gt;impyla&lt;/a&gt; by Cloudera with supports Python 3 in contrast to &lt;a href="https://github.com/dropbox/PyHive"&gt;PyHive&lt;/a&gt; by Dropbox.
 In order to work with &lt;span class="caps"&gt;HDFS&lt;/span&gt; the best library around is &lt;a href="https://hdfs3.readthedocs.io/"&gt;hdfs3&lt;/a&gt;. That would
 for instance allow us to push changes in &lt;code&gt;udaf.py&lt;/code&gt; automatically with a Python&amp;nbsp;script.&lt;/p&gt;
-&lt;p&gt;Have fun hacking Hive with the power of&amp;nbsp;Python!&lt;/p&gt;</summary><category term="python"></category><category term="hadoop"></category><category term="hive"></category><category term="big data"></category></entry><entry><title>Handling GPS Data with Python</title><link href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/" rel="alternate"></link><published>2016-07-22T11:15:00+02:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-07-22:2016/07/handling_gps_data_with_python/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python"&gt;EuroPython 2016&lt;/a&gt; introduces several Python libraries
+&lt;p&gt;Have fun hacking Hive with the power of&amp;nbsp;Python!&lt;/p&gt;</content><category term="python"></category><category term="hadoop"></category><category term="hive"></category><category term="big data"></category></entry><entry><title>Handling GPS Data with Python</title><link href="/2016/07/handling_gps_data_with_python/" rel="alternate"></link><published>2016-07-22T11:15:00+02:00</published><updated>2016-07-22T11:15:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-07-22:/2016/07/handling_gps_data_with_python/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python"&gt;EuroPython 2016&lt;/a&gt; introduces several Python libraries related to the handling of &lt;span class="caps"&gt;GPS&lt;/span&gt; data. The slides of this talk are available on &lt;a href="https://github.com/FlorianWilhelm/gps_data_with_python"&gt;Github&lt;/a&gt; or on &lt;a href="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/"&gt;nbviewer&lt;/a&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This talk presented at the &lt;a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python"&gt;EuroPython 2016&lt;/a&gt; introduces several Python libraries
 related to the handling of &lt;span class="caps"&gt;GPS&lt;/span&gt; data. The slides of this talk are available on
 &lt;a href="https://github.com/FlorianWilhelm/gps_data_with_python"&gt;Github&lt;/a&gt; or on &lt;a href="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/"&gt;nbviewer&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you have ever happened to need to deal with &lt;span class="caps"&gt;GPS&lt;/span&gt; data in Python you may have
@@ -227,13 +231,16 @@ Still, its concept is really easy and quite comprehensible as I will also
 demonstrate by presenting an implementation in Python with the help of Numpy and
 Scipy. My presentation will make heavy use of the Jupyter notebook which is a
 wonderful tool perfectly suited for experimenting and&amp;nbsp;learning.&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/9Q8nEA_0ccg'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="python"></category><category term="jupyter"></category><category term="kalman"></category><category term="gps"></category></entry><entry><title>Leveraging the Value of Big Data with Automated Decision Making</title><link href="http://www.florianwilhelm.info/2016/04/leveraging_the_value_of-big_data_with_automated_decision_making/" rel="alternate"></link><published>2016-04-07T12:00:00+02:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-04-07:2016/04/leveraging_the_value_of-big_data_with_automated_decision_making/</id><summary type="html">&lt;p&gt;It is a widely accepted fact that we are living in the era of Big Data. Many
+            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="jupyter"></category><category term="kalman"></category><category term="gps"></category></entry><entry><title>Leveraging the Value of Big Data with Automated Decision Making</title><link href="/2016/04/leveraging_the_value_of-big_data_with_automated_decision_making/" rel="alternate"></link><published>2016-04-07T12:00:00+02:00</published><updated>2016-04-07T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-04-07:/2016/04/leveraging_the_value_of-big_data_with_automated_decision_making/</id><summary type="html">&lt;p&gt;It is a widely accepted fact that we are living in the era of Big Data. Many
+traditional companies are looking for ways to improve their business through
+the virtues of Big Data and Data Science. While matured startups born in this
+era like Facebook and Twitter seem to naturally …&lt;/p&gt;</summary><content type="html">&lt;p&gt;It is a widely accepted fact that we are living in the era of Big Data. Many
 traditional companies are looking for ways to improve their business through
 the virtues of Big Data and Data Science. While matured startups born in this
 era like Facebook and Twitter seem to naturally exploit the value of their data,
@@ -352,7 +359,11 @@ It consists of the following questions that should be answered&amp;nbsp;positive
 in your company. The successful implementation of a lighthouse project in the business process
 generates momentum for new projects. This drives the digital transformation of a classical
 business in an iterative&amp;nbsp;way.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;This article was originally posted on the &lt;a href="http://www.21stcenturyit.de/leveraging-the-value-of-big-data-with-automated-decision-making/"&gt;&lt;span class="caps"&gt;CSC&lt;/span&gt; 21st Century &lt;span class="caps"&gt;IT&lt;/span&gt; blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</summary><category term="big data"></category><category term="data science"></category><category term="predictive analytics"></category></entry><entry><title>Interactively visualizing distributions in a Jupyter notebook with Bokeh</title><link href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/" rel="alternate"></link><published>2016-03-26T09:00:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-03-26:2016/03/jupyter_distribution_visualizer/</id><summary type="html">&lt;p&gt;If you are doing probabilistic programming you are dealing with all kinds of
+&lt;p&gt;&lt;em&gt;This article was originally posted on the &lt;a href="http://www.21stcenturyit.de/leveraging-the-value-of-big-data-with-automated-decision-making/"&gt;&lt;span class="caps"&gt;CSC&lt;/span&gt; 21st Century &lt;span class="caps"&gt;IT&lt;/span&gt; blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</content><category term="big data"></category><category term="data science"></category><category term="predictive analytics"></category></entry><entry><title>Interactively visualizing distributions in a Jupyter notebook with Bokeh</title><link href="/2016/03/jupyter_distribution_visualizer/" rel="alternate"></link><published>2016-03-26T09:00:00+01:00</published><updated>2016-03-26T09:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-03-26:/2016/03/jupyter_distribution_visualizer/</id><summary type="html">&lt;p&gt;If you are doing probabilistic programming you are dealing with all kinds of
+different distributions. That means choosing an ensemble of right distributions
+which describe the underlying real-world process in a suitable way but also
+choosing the right parameters for prior distributions. At that point I often
+start visualizing the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;If you are doing probabilistic programming you are dealing with all kinds of
 different distributions. That means choosing an ensemble of right distributions
 which describe the underlying real-world process in a suitable way but also
 choosing the right parameters for prior distributions. At that point I often
@@ -388,7 +399,11 @@ that you will experience interactively by &lt;a href="http://mybinder.org/repo/F
 &lt;figure&gt;
 &lt;img class="noZoom" src="/images/binom_dist.png" alt="Binomial distribution"&gt;
 &lt;figcaption&gt;The probability mass function of a discrete binomial distribution with shape parameters n=10 and p=0.7&lt;/figcaption&gt;
-&lt;/figure&gt;</summary><category term="jupyter"></category><category term="python"></category><category term="scipy"></category><category term="bokeh"></category></entry><entry><title>Explaining the Idea behind ARD and Bayesian Interpolation</title><link href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><published>2016-03-13T22:00:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-03-13:2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+&lt;/figure&gt;</content><category term="jupyter"></category><category term="python"></category><category term="scipy"></category><category term="bokeh"></category></entry><entry><title>Explaining the Idea behind ARD and Bayesian Interpolation</title><link href="/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><published>2016-03-13T22:00:00+01:00</published><updated>2016-03-13T22:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-03-13:/2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+model selection techniques, especially the Automatic Relevance Determination.
+The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Even in the era of Big Data there are many real-world problems where the number
+of input features has about …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
 model selection techniques, especially the Automatic Relevance Determination.
 The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Even in the era of Big Data there are many real-world problems where the number
@@ -411,10 +426,10 @@ us eventually to the the idea behind &lt;span class="caps"&gt;ARD&lt;/span&gt; (
 and compare &lt;span class="caps"&gt;ARD&lt;/span&gt; to an ordinary least square model. Now we dive deep into the
 mathematics of &lt;span class="caps"&gt;ARD&lt;/span&gt; and present the algorithm that solves the minimization problem
 of &lt;span class="caps"&gt;ARD&lt;/span&gt;. Finally, some details of Scikit-Learn&amp;#8217;s &lt;span class="caps"&gt;ARD&lt;/span&gt; implementation are&amp;nbsp;discussed.&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/2gT-Q0NZzoE'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="scikit-learn"></category><category term="machine-learning"></category><category term="bayesian"></category></entry></feed>
+            &lt;/span&gt;&lt;/p&gt;</content><category term="scikit-learn"></category><category term="machine-learning"></category><category term="bayesian"></category></entry></feed>

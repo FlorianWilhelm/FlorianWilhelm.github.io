@@ -11,10 +11,10 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
 SITEURL = 'http://www.florianwilhelm.info'
-#SITEURL = ''
+SITEURL = ''
 
 PATH = 'content'
-MARKUP = ('md', 'ipynb')
+MARKUP = ('md',)
 TIMEZONE = 'Europe/Paris'
 DEFAULT_LANG = u'en'
 OUTPUT_PATH = os.path.join(__location__, '../')
@@ -23,7 +23,8 @@ TYPOGRIFY = True
 # Do not publish articles set in the future
 WITH_FUTURE_DATES = False
 
-THEME = 'themes/plumage'
+THEME = 'themes/pelican-bootstrap3'
+JINJA_EXTENSIONS = ['jinja2.ext.i18n']
 
 STATIC_PATHS = ['images', 'documents', 'extras']
 
@@ -48,13 +49,13 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('PyScaffold', 'http://pyscaffold.readthedocs.org/'),
-         ('Data Science Central', 'http://www.datasciencecentral.com/'),
-         ('KDNuggetes', 'http://www.kdnuggets.com/'),
-         ('Analytics Vidhya', 'http://www.analyticsvidhya.com/'))
+#LINKS = (('PyScaffold', 'http://pyscaffold.readthedocs.org/'),
+#         ('Data Science Central', 'http://www.datasciencecentral.com/'),
+#         ('KDNuggets', 'http://www.kdnuggets.com/'),
+#         ('Analytics Vidhya', 'http://www.analyticsvidhya.com/'))
 
 # Social widget
-SOCIAL = (('@FlorianWilhelm', 'https://twitter.com/FlorianWilhelm'),
+SOCIAL = (('Twitter', 'https://twitter.com/FlorianWilhelm'),
           ('LinkedIn', 'https://linkedin.com/in/florian-wilhelm-621ba834'),
           ('GitHub', 'https://github.com/FlorianWilhelm'))
 
@@ -68,6 +69,17 @@ DEFAULT_CATEGORY = 'English'
 DEFAULT_DATE_FORMAT = '%b. %d, %Y'
 REVERSE_ARCHIVE_ORDER = True
 DISPLAY_PAGES_ON_MENU = False
+DISPLAY_CATEGORIES_ON_MENU = False
+DISPLAY_TAGS_ON_SIDEBAR = True
+DISPLAY_TAGS_INLINE = True
+DISPLAY_CATEGORIES_ON_SIDEBAR = True
+TWITTER_CARDS = True
+USE_OPEN_GRAPH = True
+TWITTER_USERNAME = 'FlorianWilhelm'
+#GITHUB_USER = 'FlorianWilhelm'
+#GITHUB_SKIP_FORK = True
+#BANNER = ''
+#BANNER_SUBTITLE = 'This is my subtitle'
 
 # Google Analytics
 GOOGLE_ANALYTICS = 'UA-71694209-1'
@@ -108,9 +120,9 @@ PAGE_LANG_SAVE_AS = None
 
 # Tags, categories and archives are Direct Templates, so they don't have a
 # <NAME>_URL option.
-TAGS_SAVE_AS = 'tags/index.html'
-CATEGORIES_SAVE_AS = 'categories/index.html'
-ARCHIVES_SAVE_AS = 'archives/index.html'
+TAGS_SAVE_AS = 'tags.html'
+CATEGORIES_SAVE_AS = 'categories.html'
+ARCHIVES_SAVE_AS = 'archives.html'
 
 # TEMPLATE_PAGES = {
 #     'templates/videos.html': 'video/index.html',
@@ -150,8 +162,10 @@ SITEMAP = {
 PLUGIN_PATHS = ['plugins-core', 'plugins']
 PLUGINS = [
      # Core plugins
+     'i18n_subsites',
+     'tag_cloud',
      'related_posts',
-     # 'thumbnailer',
+     'thumbnailer',
      'tipue_search',
      'neighbors',
      'sitemap',
@@ -160,7 +174,7 @@ PLUGINS = [
      'liquid_tags.youtube',
      'liquid_tags.vimeo',
      'liquid_tags.include_code',
-     'ipynb.markup',
+     #'ipynb.markup',
      'render_math'
 ]
 

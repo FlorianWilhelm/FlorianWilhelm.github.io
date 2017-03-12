@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/talk.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2016-07-22T11:15:00+02:00</updated><entry><title>Handling GPS Data with Python</title><link href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/" rel="alternate"></link><published>2016-07-22T11:15:00+02:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-07-22:2016/07/handling_gps_data_with_python/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python"&gt;EuroPython 2016&lt;/a&gt; introduces several Python libraries
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - talk</title><link href="/" rel="alternate"></link><link href="/feeds/talk.atom.xml" rel="self"></link><id>/</id><updated>2016-07-22T11:15:00+02:00</updated><entry><title>Handling GPS Data with Python</title><link href="/2016/07/handling_gps_data_with_python/" rel="alternate"></link><published>2016-07-22T11:15:00+02:00</published><updated>2016-07-22T11:15:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-07-22:/2016/07/handling_gps_data_with_python/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python"&gt;EuroPython 2016&lt;/a&gt; introduces several Python libraries related to the handling of &lt;span class="caps"&gt;GPS&lt;/span&gt; data. The slides of this talk are available on &lt;a href="https://github.com/FlorianWilhelm/gps_data_with_python"&gt;Github&lt;/a&gt; or on &lt;a href="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/"&gt;nbviewer&lt;/a&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This talk presented at the &lt;a href="https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python"&gt;EuroPython 2016&lt;/a&gt; introduces several Python libraries
 related to the handling of &lt;span class="caps"&gt;GPS&lt;/span&gt; data. The slides of this talk are available on
 &lt;a href="https://github.com/FlorianWilhelm/gps_data_with_python"&gt;Github&lt;/a&gt; or on &lt;a href="http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/"&gt;nbviewer&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you have ever happened to need to deal with &lt;span class="caps"&gt;GPS&lt;/span&gt; data in Python you may have
@@ -21,13 +21,17 @@ Still, its concept is really easy and quite comprehensible as I will also
 demonstrate by presenting an implementation in Python with the help of Numpy and
 Scipy. My presentation will make heavy use of the Jupyter notebook which is a
 wonderful tool perfectly suited for experimenting and&amp;nbsp;learning.&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/9Q8nEA_0ccg'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="python"></category><category term="jupyter"></category><category term="kalman"></category><category term="gps"></category></entry><entry><title>Explaining the Idea behind ARD and Bayesian Interpolation</title><link href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><published>2016-03-13T22:00:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-03-13:2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="jupyter"></category><category term="kalman"></category><category term="gps"></category></entry><entry><title>Explaining the Idea behind ARD and Bayesian Interpolation</title><link href="/2016/03/explaining_the_idea_behind_ard/" rel="alternate"></link><published>2016-03-13T22:00:00+01:00</published><updated>2016-03-13T22:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2016-03-13:/2016/03/explaining_the_idea_behind_ard/</id><summary type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
+model selection techniques, especially the Automatic Relevance Determination.
+The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Even in the era of Big Data there are many real-world problems where the number
+of input features has about …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This talk presented at the &lt;a href="http://pydata.org/amsterdam2016/schedule/presentation/17/"&gt;PyData Amsterdam 2016&lt;/a&gt; explains the idea of Bayesian
 model selection techniques, especially the Automatic Relevance Determination.
 The slides of this talk are available on &lt;a href="http://www.slideshare.net/FlorianWilhelm2/explaining-the-idea-behind-automatic-relevance-determination-and-bayesian-interpolation-59498957"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Even in the era of Big Data there are many real-world problems where the number
@@ -50,13 +54,17 @@ us eventually to the the idea behind &lt;span class="caps"&gt;ARD&lt;/span&gt; (
 and compare &lt;span class="caps"&gt;ARD&lt;/span&gt; to an ordinary least square model. Now we dive deep into the
 mathematics of &lt;span class="caps"&gt;ARD&lt;/span&gt; and present the algorithm that solves the minimization problem
 of &lt;span class="caps"&gt;ARD&lt;/span&gt;. Finally, some details of Scikit-Learn&amp;#8217;s &lt;span class="caps"&gt;ARD&lt;/span&gt; implementation are&amp;nbsp;discussed.&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/2gT-Q0NZzoE'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="scikit-learn"></category><category term="machine-learning"></category><category term="bayesian"></category></entry><entry><title>How to write a friendly reminder bot</title><link href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/" rel="alternate"></link><published>2015-12-22T19:30:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2015-07-24:2015/07/howto_write_a_friendly_reminder_bot/</id><summary type="html">&lt;p&gt;In this presentation given at the &lt;a href="https://ep2015.europython.eu/"&gt;EuroPython 2015&lt;/a&gt; in Bilbao,
+            &lt;/span&gt;&lt;/p&gt;</content><category term="scikit-learn"></category><category term="machine-learning"></category><category term="bayesian"></category></entry><entry><title>How to write a friendly reminder bot</title><link href="/2015/07/howto_write_a_friendly_reminder_bot/" rel="alternate"></link><published>2015-07-24T12:30:00+02:00</published><updated>2015-12-22T19:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2015-07-24:/2015/07/howto_write_a_friendly_reminder_bot/</id><summary type="html">&lt;p&gt;In this presentation given at the &lt;a href="https://ep2015.europython.eu/"&gt;EuroPython 2015&lt;/a&gt; in Bilbao,
+I show how the &lt;a href="https://github.com/tdryer/hangups"&gt;hangups&lt;/a&gt; library can be used
+in order to write a small chatbot that connects to Google Hangouts
+and reminds you or someone else to take his/her medication.
+The secure and recommended OAuth2 protocol is used …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this presentation given at the &lt;a href="https://ep2015.europython.eu/"&gt;EuroPython 2015&lt;/a&gt; in Bilbao,
 I show how the &lt;a href="https://github.com/tdryer/hangups"&gt;hangups&lt;/a&gt; library can be used
 in order to write a small chatbot that connects to Google Hangouts
 and reminds you or someone else to take his/her medication.
@@ -67,13 +75,17 @@ that sends scheduled messages, waits for a proper reply and repeats the question
 Thereby, a primer on event-driven, asynchronous architectures is&amp;nbsp;given.&lt;/p&gt;
 &lt;p&gt;The source code can be downloaded on &lt;a href="https://github.com/blue-yonder/medbot"&gt;GitHub&lt;/a&gt;
 and the slides are available as &lt;a href="http://htmlpreview.github.io/?https://github.com/blue-yonder/medbot/blob/master/medbot.slides.html?theme=solarized#/"&gt;html preview&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/ztfdv9jcxtw'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="python"></category><category term="google hangouts"></category><category term="asyncio"></category><category term="event-driven"></category><category term="asynchronous"></category></entry><entry><title>Extending Scikit-Learn with your own regressor</title><link href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/" rel="alternate"></link><published>2015-12-22T19:30:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2014-07-25:2014/07/extending_scikit-learn_with_your_own_regressor/</id><summary type="html">&lt;p&gt;&lt;a href="http://scikit-learn.org/"&gt;Scikit-Learn&lt;/a&gt; is a well-known and popular framework for
+            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="google hangouts"></category><category term="asyncio"></category><category term="event-driven"></category><category term="asynchronous"></category></entry><entry><title>Extending Scikit-Learn with your own regressor</title><link href="/2014/07/extending_scikit-learn_with_your_own_regressor/" rel="alternate"></link><published>2014-07-25T12:00:00+02:00</published><updated>2015-12-22T19:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2014-07-25:/2014/07/extending_scikit-learn_with_your_own_regressor/</id><summary type="html">&lt;p&gt;&lt;a href="http://scikit-learn.org/"&gt;Scikit-Learn&lt;/a&gt; is a well-known and popular framework for
+machine learning that is used by Data Scientists all over the world.
+In this tutorial presented at the &lt;a href="https://ep2014.europython.eu/"&gt;EuroPython 2014&lt;/a&gt; in Berlin,
+I show in a practical way how you can add your own estimator following the interfaces of Scikit-Learn.
+First a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="http://scikit-learn.org/"&gt;Scikit-Learn&lt;/a&gt; is a well-known and popular framework for
 machine learning that is used by Data Scientists all over the world.
 In this tutorial presented at the &lt;a href="https://ep2014.europython.eu/"&gt;EuroPython 2014&lt;/a&gt; in Berlin,
 I show in a practical way how you can add your own estimator following the interfaces of Scikit-Learn.
@@ -84,13 +96,17 @@ In order to demonstrate this, I extend Scikit-Learn by the popular and robust
 that was not in Scikit-Learn until version 0.16.
 I also motivate this estimator by outlining some of its superior properties compared
 to the ordinary least squares method (LinearRegression in&amp;nbsp;Scikit-Learn).&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/u2tnvWyO3U0'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="python"></category><category term="scikit-learn"></category><category term="machine-learning"></category></entry><entry><title>How to setup a new Python project</title><link href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/" rel="alternate"></link><published>2015-12-22T19:30:00+01:00</published><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2014-07-23:2014/07/howto_setup_a_new_python_project/</id><summary type="html">&lt;p&gt;In this presentation held at the &lt;a href="https://ep2014.europython.eu/"&gt;EuroPython 2014&lt;/a&gt;
+            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="scikit-learn"></category><category term="machine-learning"></category></entry><entry><title>How to setup a new Python project</title><link href="/2014/07/howto_setup_a_new_python_project/" rel="alternate"></link><published>2014-07-23T14:20:00+02:00</published><updated>2015-12-22T19:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:None,2014-07-23:/2014/07/howto_setup_a_new_python_project/</id><summary type="html">&lt;p&gt;In this presentation held at the &lt;a href="https://ep2014.europython.eu/"&gt;EuroPython 2014&lt;/a&gt;
+in Berlin, my colleague Felix Wick demonstrates that setting up a new Python project
+from scratch can be quite complicated. Especially, structuring your files and directories
+the right way in order to build a Python package.
+Thereby, questions are addressed like &amp;#8220;Where …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this presentation held at the &lt;a href="https://ep2014.europython.eu/"&gt;EuroPython 2014&lt;/a&gt;
 in Berlin, my colleague Felix Wick demonstrates that setting up a new Python project
 from scratch can be quite complicated. Especially, structuring your files and directories
 the right way in order to build a Python package.
@@ -99,10 +115,10 @@ unit tests go?&amp;#8221; and &amp;#8220;How do I configure setup.py, Sphinx and
 Finally, the template tool &lt;a href="http://pyscaffold.readthedocs.org/"&gt;PyScaffold&lt;/a&gt; is demonstrated
 that I developed at &lt;a href="http://www.blue-yonder.com/"&gt;Blue Yonder&lt;/a&gt;. PyScaffold extremely
 simplifies the process of setting up a new Python project and is freely available to&amp;nbsp;anyone.&lt;/p&gt;
-&lt;p&gt;&lt;div class="videobox"&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
                 &lt;iframe width="800" height="500"
                     src='https://www.youtube.com/embed/r8Rqp2w_kHk'
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/div&gt;&lt;/p&gt;</summary><category term="python"></category><category term="template"></category></entry></feed>
+            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="template"></category></entry></feed>

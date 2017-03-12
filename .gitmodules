@@ -1,13 +1,6 @@
-[submodule "plugins-core"]
-	path = pelican/pelican-plugins
-	url = https://github.com/getpelican/pelican-plugins
 [submodule "pelican/plugins-core"]
 	path = pelican/plugins-core
 	url = https://github.com/getpelican/pelican-plugins
-[submodule "pelican/themes/plumage"]
-	path = pelican/themes/plumage
-	url = https://github.com/FlorianWilhelm/plumage.git
-	branch = develop
 [submodule "pelican/plugins/plugins/ipynb"]
 	path = pelican/plugins/ipynb
 	url = https://github.com/danielfrg/pelican-ipynb.git

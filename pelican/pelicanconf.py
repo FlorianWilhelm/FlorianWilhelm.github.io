@@ -76,6 +76,7 @@ DISPLAY_CATEGORIES_ON_SIDEBAR = False
 TWITTER_CARDS = True
 USE_OPEN_GRAPH = True
 TWITTER_USERNAME = 'FlorianWilhelm'
+NOTEBOOK_DIR = 'notebooks'
 #GITHUB_USER = 'FlorianWilhelm'
 #GITHUB_SKIP_FORK = True
 #BANNER = ''
@@ -174,7 +175,7 @@ PLUGINS = [
      'liquid_tags.youtube',
      'liquid_tags.vimeo',
      'liquid_tags.include_code',
-     #'ipynb.markup',
+     'liquid_tags.notebook',
      'render_math'
 ]
 

@@ -65,4 +65,5 @@ pelican/content/notebooks/input
 # Temporary files
 *.swp
 
-
+# PyCharm
+.idea/

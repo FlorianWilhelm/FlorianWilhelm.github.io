@@ -43,6 +43,8 @@ ToDo:
 - r durch y ersetzen und {} statt ()
 - gross und kleinschreibung achten von x und X etc.
 
+{% notebook causal_inference_and_the_propensity_score.ipynb %}
+
 [^rosenbaum]: Paul R. Rosenbaum, Donald B. Rubin; "The Central Role of the Propensity Score in Observational Studies for Causal Effects"; Biometrika, Vol. 70, No. 1. (Apr., 1983), [pp. 41-55](http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf)
 [^pearl1]: Judea Pearl; "CAUSALITY - Models, Reasoning and Inference"; 2nd Edition, 2009, [pp. 348-352](http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf)
 [^pearl2]: Judea Pearl; "CAUSALITY - Models, Reasoning and Inference"; 2nd Edition, 2009, [pp. 341-344](http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf)

@@ -25,9 +25,8 @@ Following the original paper of Rosenbaum & Rubin[^rosenbaum], in a randomized t
 In a randomized trail, the strong ignorability of $Z$ allows us to estimate the effect of the treatment by comparing the response of the treatment group with the one of the control group. The obvious approach for estimating the individual effect of for instance an additional booking option on a car's selling time with machine learning methods like a random forest is as following:
 
 1. train the model with the covariates $X$ and $Z$ as feature and response $Y$ as target,
-2. check the quality of the trained model on a test set,
-3. predict for a given $x$ the response $\hat{y}_1$ with $Z=1$ and $\hat{y}_0$ with $Z=0$,
-4. calculate the effect with $\hat{y}_1 - \hat{y}_0$ or $\frac{\hat{y}_1}{\hat{y}_0}$.
+2. predict for a given $x$ the response $\hat{y}_1$ with $Z=1$ and $\hat{y}_0$ with $Z=0$,
+3. calculate the effect with $\hat{y}_1 - \hat{y}_0$ or $\frac{\hat{y}_1}{\hat{y}_0}$.
 
 In a real-world, big data problem we often have no control over the experimental setup, we are just left with the data.
  In this case things are really bad since there is no way mathematical way to check if the treatment is strongly ignorable[^pearl1]. According to Pearl[^pearl2] by now assuming strong ignorability we are basically assuming that our covariate set $X$ is *admissible*, i.e. $p(y|\mathrm{do}(z))=p(y|x,z)$. Here, the Pearl's $\mathrm{do}$-notation $p(y|\mathrm{do}(z))$ denotes the “causal effect” of $Z$ on $Y$, i.e. the distribution of $Y$ after setting variable $X$ to a constant $X = x$ by external intervention. In practice the assumption of admissibility of $X$ is often used in order to estimate a causal effect. This also led to wrong results in some studies as well as controversies[^pearl1] and therefore one should always be at least aware that the whole causal analysis stands and falls with it. 
@@ -36,11 +35,19 @@ In a real-world, big data problem we often have no control over the experimental
  
 ### Propensity score
  
-By predicting $Z$ based on $X$ without even knowing we have estimated the *propensity score*, i.e. $p(z=1|x)$. This of course assumes that we have used some classification methods that returns probabilities for the classes $z=1$ and $z=0$. 
+By predicting $Z$ based on $X$ without even knowing we have estimated the *propensity score*, i.e. $p(Z=1|x)$. This of course assumes that we have used some classification methods that returns probabilities for the classes $Z=1$ and $Z=0$. Let
+ $e_i=p(Z=1|x_i)$ be the propensity score of the $i$-th observation, i.e. the propensity of the $i$-th participant getting the treatment ($Z=1$). We can make use of the propensity score to define weights $w_i$ in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment[^austin], i.e. $$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$ where $z_i$ indicates if the $i$-th subject was treated. The covariates from our data sample $x_i$ are then multiplied by these weights to eliminate the correlation between $X$ and $Z$ which is a technique known as *inverse probability of treatment weighting* (IPTW). Taken as a whole this allows us to define the following approach to estimate the causal effect:
+ 
+ 1. train a model with covariates $X$ in order to predict $Z$,
+ 2. calculate the propensities scores $e_i$ by applying the trained model to all $x_i$,
+ 3. train a second model with covariates $X$ and $Z$ as features and response $Y$ as target by using $e_i$ as sample weight for the $i$-th observation,
+ 4. use this model to predict the causal effect like in the approach of the randomized trail.
+ 
+### Python implementation
+ 
+ In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don't know what would have happened if we had not treated someone, sent a voucher or not booked that additional option.
 
 {% notebook causal_inference_propensity_score.ipynb %}
-
-
 
 [^rosenbaum]: Paul R. Rosenbaum, Donald B. Rubin; "The Central Role of the Propensity Score in Observational Studies for Causal Effects"; Biometrika, Vol. 70, No. 1. (Apr., 1983), [pp. 41-55](http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf)
 [^pearl1]: Judea Pearl; "CAUSALITY - Models, Reasoning and Inference"; 2nd Edition, 2009, [pp. 348-352](http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf)

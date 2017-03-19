@@ -11,7 +11,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
 SITEURL = 'http://www.florianwilhelm.info'
-#SITEURL = ''
+SITEURL = ''
 
 PATH = 'content'
 MARKUP = ('md',)
@@ -162,7 +162,8 @@ SITEMAP = {
 # Plugins
 PLUGIN_PATHS = ['plugins-core', 'plugins']
 PLUGINS = [
-     # Core plugins
+     # Core plugins (order actually matters)
+    'render_math',
      'i18n_subsites',
      'tag_cloud',
      'related_posts',
@@ -175,9 +176,11 @@ PLUGINS = [
      'liquid_tags.youtube',
      'liquid_tags.vimeo',
      'liquid_tags.include_code',
-     'liquid_tags.notebook',
-     'render_math'
+     'liquid_tags.notebook',  # be careful, this inserts mathjax due to the theme
 ]
+
+# check https://github.com/barrysteyn/pelican_plugin-render_math for options
+MATH_JAX = {'align': 'center'}
 
 DISQUS_SITENAME = 'florianwilhelmblog'
 TIPUE_SEARCH = True

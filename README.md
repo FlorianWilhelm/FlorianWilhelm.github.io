@@ -8,5 +8,5 @@ Installation
 ------------
 
 ```bash
-pip install Markdown bs4 IPython pillow
+pip install pelican Markdown bs4 IPython pillow jsonschema mistune nbconvert jupyter typogrify
 ```

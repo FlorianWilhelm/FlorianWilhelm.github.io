@@ -20,7 +20,7 @@ The answer to this question lies in another important and actually the original 
 
 Following the original paper of Rosenbaum & Rubin[^rosenbaum], in a randomized trial the treatment assignment $Z$ and the (unobservable) potential outcome ${Y_1, Y_0}$ are conditionally independent given the covariates $X$, i.e. $${Y_1, Y_0} ⫫ Z \mid X.$$ Furthermore, we assume that each participant in the experiment has a chance to receive each treatment, i.e. $0 < p(Z=1|x) < 1$. The treatment assignment is said to be *strongly ignorable* if those two conditions hold for our observed covariates $x$. As already mentioned, in an randomized experiment the treatment assignment is strongly ignorable. 
  
-### Causal effect in a randomized trail
+## Causal effect in a randomized trail
  
 In a randomized trail, the strong ignorability of $Z$ allows us to estimate the effect of the treatment by comparing the response of the treatment group with the one of the control group. The obvious approach for estimating the individual effect of for instance an additional booking option on a car's selling time with machine learning methods like a random forest is as following:
 
@@ -34,7 +34,7 @@ In such a nonrandomized experiment, things are really bad since there is no math
  
  So far we have not only assumed admissibility of $X$ but also a randomized trail for our approach. Therefore we need to check beforehand if $X ⫫ Z$ before applying the former approach. This can be done for instance by using $X$ to predict $Z$. If this is not possible and thus $p(z|x) = p(z)$ the former approach is a viable way. But what if $Z$ is not independent of $X$ as it happens quite often in real-world data. For instance car dealers of expensive car brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of $Z$ from our covariates $X$.
  
-### Propensity score
+## Propensity score
  
 By predicting $Z$ based on $X$ without even knowing we have estimated the *propensity score*, i.e. $p(Z=1|x)$. This of course assumes that we have used some classification methods that returns probabilities for the classes $Z=1$ and $Z=0$. Let $e_i=p(Z=1|x_i)$ be the propensity score of the $i$-th observation, i.e. the propensity of the $i$-th participant getting the treatment ($Z=1$). We can make use of the propensity score to define weights $w_i$ in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment[^austin], i.e. $$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$ where $z_i$ indicates if the $i$-th subject was treated. The covariates from our data sample $x_i$ are then multiplied by these weights to eliminate the correlation between $X$ and $Z$ which is a technique known as *inverse probability of treatment weighting* (IPTW). Taken as a whole this allows us to define the following approach to estimate the causal effect:
  
@@ -43,13 +43,18 @@ By predicting $Z$ based on $X$ without even knowing we have estimated the *prope
  3. train a second model with covariates $X$ and $Z$ as features and response $Y$ as target by using $e_i$ as sample weight for the $i$-th observation,
  4. use this model to predict the causal effect like in the approach of the randomized trail.
  
-### Python implementation
+## Python implementation
  
 In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don't know what would have happened if we had not treated someone, sent a voucher or not booked that additional option. Therefore, we come up with a model that describes the relationship of $X$ on $Y$ else well as the effect of $Z$ on $Y$. We use this model to generate observational data where for each sample $x_i$ we either have $Z=1$ or $Z=0$ and thus incomplete information in our data. Our task is now set to estimating the effect with the help of the generated data.
    
 The remaining part of this blog post is a Jupyter notebook and be also be downloaded here [here]({filename}/notebooks/causal_inference_propensity_score.ipynb).
 
 {% notebook causal_inference_propensity_score.ipynb %}
+
+## Final notes
+
+With great power comes great responsibility, so they say. Keep in mind that a controlled randomized experiment remains the gold standard to estimate a causal effect and should always be preferred. Additionally, the demonstrated techniques relies on several things. Firstly, $X$ needs to be *admissible* which cannot practically be practically checked. Secondly, way to accurately estimate the propensities is needed. For the sake of simplicity in our demonstration we did not even check the prediction quality of our machine learning models on a test set which would be quite sloppy in a real application. That being said, sometimes this technique might be quite handy :-)
+
 
 [^rosenbaum]: Paul R. Rosenbaum, Donald B. Rubin; "The Central Role of the Propensity Score in Observational Studies for Causal Effects"; Biometrika, Vol. 70, No. 1. (Apr., 1983), [pp. 41-55](http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf)
 [^pearl1]: Judea Pearl; "CAUSALITY - Models, Reasoning and Inference"; 2nd Edition, 2009, [pp. 348-352](http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf)

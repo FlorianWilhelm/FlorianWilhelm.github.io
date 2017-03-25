@@ -11,7 +11,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
 SITEURL = 'http://www.florianwilhelm.info'
-SITEURL = ''
+# SITEURL = ''
 
 PATH = 'content'
 MARKUP = ('md',)
@@ -26,7 +26,7 @@ WITH_FUTURE_DATES = False
 THEME = 'themes/pelican-bootstrap3'
 JINJA_EXTENSIONS = ['jinja2.ext.i18n']
 
-STATIC_PATHS = ['images', 'documents', 'extras']
+STATIC_PATHS = ['images', 'documents', 'extras', 'notebooks']
 
 DEFAULT_METADATA = {
     'author': 'Florian Wilhelm',
@@ -163,12 +163,12 @@ SITEMAP = {
 PLUGIN_PATHS = ['plugins-core', 'plugins']
 PLUGINS = [
      # Core plugins (order actually matters)
-    'render_math',
+     'render_math',
      'i18n_subsites',
      'tag_cloud',
      'related_posts',
      'thumbnailer',
-     'tipue_search',
+#   'tipue_search',
      'neighbors',
      'sitemap',
      'liquid_tags.img',
@@ -181,6 +181,7 @@ PLUGINS = [
 
 # check https://github.com/barrysteyn/pelican_plugin-render_math for options
 MATH_JAX = {'align': 'center'}
+BOOTSTRAP_NAVBAR_INVERSE = True
 
 DISQUS_SITENAME = 'florianwilhelmblog'
 TIPUE_SEARCH = True

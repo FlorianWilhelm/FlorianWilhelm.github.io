@@ -154,7 +154,7 @@ init_mathjax = function() {
                 inlineMath: [ ['$','$'], ["\\(","\\)"] ],
                 displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
             },
-            displayAlign: 'left', // Change this to 'center' to center equations.
+            displayAlign: 'center', // Change this to 'center' to center equations.
             "HTML-CSS": {
                 styles: {'.MathJax_Display': {"margin": 0}}
             }
@@ -162,9 +162,10 @@ init_mathjax = function() {
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     }
 }
+init_mathjax();
 </script>
 
-<link rel="canonical" href="/2016/03/jupyter_distribution_visualizer/">
+<link rel="canonical" href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="jupyter,python,scipy,bokeh" />
@@ -173,7 +174,7 @@ init_mathjax = function() {
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Interactively visualizing distributions in a Jupyter notebook with Bokeh"/>
-        <meta property="og:url" content="/2016/03/jupyter_distribution_visualizer/"/>
+        <meta property="og:url" content="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/"/>
         <meta property="og:description" content="If you are doing probabilistic programming you are dealing with all kinds of different distributions. That means choosing an ensemble of right distributions which describe the underlying real-world process in a suitable way but also choosing the right parameters for prior distributions. At that point I often start visualizing the …"/>
         <meta property="article:published_time" content="2016-03-26" />
             <meta property="article:section" content="post" />
@@ -186,27 +187,26 @@ init_mathjax = function() {
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
-    <meta name="twitter:domain" content="">
+    <meta name="twitter:domain" content="http://www.florianwilhelm.info">
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://www.florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link href="/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
-        <link href="/theme/css/typogrify.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
+    <link href="http://www.florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="http://www.florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
 
-        <link href="/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+
+        <link href="http://www.florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post ATOM Feed"/>
 
 </head>
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -215,7 +215,7 @@ init_mathjax = function() {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://www.florianwilhelm.info/" class="navbar-brand">
 Florian Wilhelm            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -224,12 +224,7 @@ Florian Wilhelm            </a>
                     <li><a href="/about/">About me</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><span>
-                <form class="navbar-search" action="/search.html">
-                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
-                </form></span>
-              </li>
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://www.florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -244,7 +239,7 @@ Florian Wilhelm            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/2016/03/jupyter_distribution_visualizer/"
+                    <a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/"
                        rel="bookmark"
                        title="Permalink to Interactively visualizing distributions in a Jupyter notebook with Bokeh">
                         Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh
@@ -265,13 +260,13 @@ Florian Wilhelm            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/jupyter/">jupyter</a>
+	<a href="http://www.florianwilhelm.info/tag/jupyter/">jupyter</a>
         /
-	<a href="/tag/python/">python</a>
+	<a href="http://www.florianwilhelm.info/tag/python/">python</a>
         /
-	<a href="/tag/scipy/">scipy</a>
+	<a href="http://www.florianwilhelm.info/tag/scipy/">scipy</a>
         /
-	<a href="/tag/bokeh/">bokeh</a>
+	<a href="http://www.florianwilhelm.info/tag/bokeh/">bokeh</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -317,11 +312,11 @@ that you will experience interactively by <a href="http://mybinder.org/repo/Flor
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
-        <li><a href="/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
-        <li><a href="/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
-        <li><a href="/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
-        <li><a href="/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
     </ul>
 </section>
     <hr/>
@@ -334,7 +329,7 @@ that you will experience interactively by <a href="http://mybinder.org/repo/Flor
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'jupyter_distribution_visualizer';
-                var disqus_url = '/2016/03/jupyter_distribution_visualizer/';
+                var disqus_url = 'http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -373,105 +368,105 @@ that you will experience interactively by <a href="http://mybinder.org/repo/Flor
 
 
 
-            <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+            <li class="list-group-item"><a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group list-inline tagcloud" id="tags">
                     <li class="list-group-item tag-4">
-                        <a href="/tag/asynchronous/">
+                        <a href="http://www.florianwilhelm.info/tag/asynchronous/">
                             asynchronous
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/asyncio/">
+                        <a href="http://www.florianwilhelm.info/tag/asyncio/">
                             asyncio
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/bayesian/">
+                        <a href="http://www.florianwilhelm.info/tag/bayesian/">
                             bayesian
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/big-data/">
+                        <a href="http://www.florianwilhelm.info/tag/big-data/">
                             big data
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/blue-yonder/">
+                        <a href="http://www.florianwilhelm.info/tag/blue-yonder/">
                             Blue Yonder
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/bokeh/">
+                        <a href="http://www.florianwilhelm.info/tag/bokeh/">
                             bokeh
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="/tag/data-science/">
+                        <a href="http://www.florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/event-driven/">
+                        <a href="http://www.florianwilhelm.info/tag/event-driven/">
                             event-driven
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/google-hangouts/">
+                        <a href="http://www.florianwilhelm.info/tag/google-hangouts/">
                             google hangouts
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/gps/">
+                        <a href="http://www.florianwilhelm.info/tag/gps/">
                             gps
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/hadoop/">
+                        <a href="http://www.florianwilhelm.info/tag/hadoop/">
                             hadoop
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/hive/">
+                        <a href="http://www.florianwilhelm.info/tag/hive/">
                             hive
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/jupyter/">
+                        <a href="http://www.florianwilhelm.info/tag/jupyter/">
                             jupyter
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/kalman/">
+                        <a href="http://www.florianwilhelm.info/tag/kalman/">
                             kalman
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/machine-learning/">
+                        <a href="http://www.florianwilhelm.info/tag/machine-learning/">
                             machine-learning
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="/tag/predictive-analytics/">
+                        <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">
                             predictive analytics
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="/tag/python/">
+                        <a href="http://www.florianwilhelm.info/tag/python/">
                             python
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/scikit-learn/">
+                        <a href="http://www.florianwilhelm.info/tag/scikit-learn/">
                             scikit-learn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/scipy/">
+                        <a href="http://www.florianwilhelm.info/tag/scipy/">
                             scipy
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/template/">
+                        <a href="http://www.florianwilhelm.info/tag/template/">
                             template
                         </a>
                     </li>
@@ -496,13 +491,13 @@ that you will experience interactively by <a href="http://mybinder.org/repo/Flor
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">

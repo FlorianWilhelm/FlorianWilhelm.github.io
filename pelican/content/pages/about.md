@@ -2,8 +2,8 @@
 title: About me
 ---
 <img width="250px"
-style="float: left; margin-right: 20px; margin-bottom: 20px"
-src="/images/myself.jpeg"/>
+style="margin-right: 20px; margin-bottom: 20px"
+src="/images/myself.jpeg"/><br>
 
 My name is **Florian Wilhelm** and I am a Data Scientist living in Cologne, Germany.
 

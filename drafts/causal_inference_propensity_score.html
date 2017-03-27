@@ -1928,10 +1928,10 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
   <th>Method:</th>               <td><span class="caps">IRLS</span></td>       <th>  Log-Likelihood:    </th> <td> -34429.</td>
 </tr>
 <tr>
-  <th>Date:</th>           <td>Sat, 25 Mar 2017</td> <th>  Deviance:          </th> <td>  10080.</td>
+  <th>Date:</th>           <td>Mon, 27 Mar 2017</td> <th>  Deviance:          </th> <td>  10080.</td>
 </tr>
 <tr>
-  <th>Time:</th>               <td>17:32:59</td>     <th>  Pearson chi2:      </th> <td>1.00e+04</td>
+  <th>Time:</th>               <td>20:31:26</td>     <th>  Pearson chi2:      </th> <td>1.00e+04</td>
 </tr>
 <tr>
   <th>No. Iterations:</th>         <td>5</td>        <th>                     </th>     <td> </td>   
@@ -2476,7 +2476,7 @@ uFipAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Nonrandomized-trial">Nonrandomized trial<a class="anchor-link" href="#Nonrandomized-trial">&#182;</a></h3><p>To make things a bit more interesting, we put now patients on a treatment depending on their sex and severity of the illness. Since men often suffer more than women from the same illness, e.g. man-flu, they tend to complain more and thus are more likely to convince the doctor of prescibing a medication. Thereafter we generate the recovery time again and follow the same procedure as before in the randomized&nbsp;trial.</p>
+<h3 id="Nonrandomized-trial">Nonrandomized trial<a class="anchor-link" href="#Nonrandomized-trial">&#182;</a></h3><p>To make things a bit more interesting, we put now patients on a treatment depending on their sex and severity of the illness. Since men often suffer more than women from the same illness, e.g. <a href="https://en.wikipedia.org/wiki/Man_flu">man flu</a>, they tend to complain more and thus are more likely to convince the doctor of prescibing a medication. Thereafter we generate the recovery time again and follow the same procedure as before in the randomized&nbsp;trial.</p>
 
 </div>
 </div>
@@ -3028,10 +3028,10 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
   <th>Method:</th>               <td><span class="caps">IRLS</span></td>       <th>  Log-Likelihood:    </th> <td> -35645.</td>
 </tr>
 <tr>
-  <th>Date:</th>           <td>Sat, 25 Mar 2017</td> <th>  Deviance:          </th> <td>  10018.</td>
+  <th>Date:</th>           <td>Mon, 27 Mar 2017</td> <th>  Deviance:          </th> <td>  10018.</td>
 </tr>
 <tr>
-  <th>Time:</th>               <td>17:33:01</td>     <th>  Pearson chi2:      </th> <td>9.98e+03</td>
+  <th>Time:</th>               <td>20:31:29</td>     <th>  Pearson chi2:      </th> <td>9.98e+03</td>
 </tr>
 <tr>
   <th>No. Iterations:</th>         <td>5</td>        <th>                     </th>     <td> </td>   
@@ -4239,10 +4239,10 @@ YM1+hUYAAAAHSURBVJL/D/DLhzwXpJ0hAAAAAElFTkSuQmCC
   <th>Method:</th>               <td><span class="caps">IRLS</span></td>       <th>  Log-Likelihood:    </th> <td> -64795.</td>
 </tr>
 <tr>
-  <th>Date:</th>           <td>Sat, 25 Mar 2017</td> <th>  Deviance:          </th> <td>  18482.</td>
+  <th>Date:</th>           <td>Mon, 27 Mar 2017</td> <th>  Deviance:          </th> <td>  18482.</td>
 </tr>
 <tr>
-  <th>Time:</th>               <td>17:33:02</td>     <th>  Pearson chi2:      </th> <td>1.83e+04</td>
+  <th>Time:</th>               <td>20:31:31</td>     <th>  Pearson chi2:      </th> <td>1.83e+04</td>
 </tr>
 <tr>
   <th>No. Iterations:</th>         <td>5</td>        <th>                     </th>     <td> </td>   
@@ -4745,7 +4745,7 @@ UcILK8YYY4yxKOGFFWOMMcZYlPDCijHGGGMsSv4PMM0sKb24GtkAAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After taking a brief look at the distribution we see that using <span class="caps">IPTW</span> drastically improved the estimation of the treatment&#8217;s causal&nbsp;effect.</p>
+<p>After taking a brief look at the distribution we see that using <span class="caps">IPTW</span> drastically improved the estimation of the treatment&#8217;s causal effect. On second glance though, it can also be seen that for a few samples we have over-estimation beyond 1. Looking at those patients it can be seen that all of them are female. This indicates that the causal effect for these cases could not be captured maybe due to the bagging approach in random forests. For most of the patients the estimation of the causal effect is improved&nbsp;though.</p>
 
 </div>
 </div>
@@ -6439,7 +6439,7 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 </p>
 <h2>Final&nbsp;notes</h2>
 <p>With great power comes great responsibility, so they say, and <span class="caps">IPTW</span> surely is a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard to estimate a causal effect and should always be preferred. Furthermore, the demonstrated techniques relies on several things. Firstly, <span class="math">\(X\)</span> needs to be <em>admissible</em> which cannot be practically checked. What can be done though is an investigation on how the treatment was assigned in our data. In our campaign example, that would mean to ask the marketing department about their former strategy when sending vouchers to customers. Then one would make sure that the data at hand includes all factors on wich their strategy relied on. Secondly, for this method to work a way to accurately estimate the propensity scores is needed. For the sake of simplicity in our demonstration we did not even check the prediction quality of our machine learning models on a test set which would be quite sloppy in a real application. It should go unsaid that the application of machine learning models should always encompass training, validation, test splits and a proper cost&nbsp;functional.</p>
-<p>That being said, this technique of <span class="caps">IPTW</span> might be quite handy at times. Further improvements are achieved by first using only the covariates to estimate the recovery time followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment but this is beyond the scope of this&nbsp;post.</p>
+<p>That being said, propensity score techniques like <span class="caps">IPTW</span> might be quite handy at times. Further improvements are achieved by first using only the covariates to estimate the recovery time followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment but this is beyond the scope of this&nbsp;post.</p>
 <h2>References</h2>
 <div class="footnote">
 <hr>
@@ -6527,8 +6527,8 @@ estimating causal effects</a>; Johns Hopkins Bloomberg School of Public Health, 
         <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
         <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
-        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
     </ul>
 </section>
     <hr/>

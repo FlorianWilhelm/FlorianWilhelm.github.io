@@ -176,7 +176,7 @@ init_mathjax();
         <meta property="og:title" content="Causal Inference and Propensity Score Methods"/>
         <meta property="og:url" content="http://www.florianwilhelm.info/drafts/causal_inference_propensity_score.html"/>
         <meta property="og:description" content="In the field of machine learning and particularly in supervised learning, correlation is key in order to predict the target variable with the help of the feature variables. Rarely do we think about causation and the actual effect of a single feature variable or covariate resp. on the target or …"/>
-        <meta property="article:published_time" content="2017-04-09" />
+        <meta property="article:published_time" content="2017-04-17" />
             <meta property="article:section" content="post" />
             <meta property="article:tag" content="scikit-learn" />
             <meta property="article:tag" content="machine-learning" />
@@ -252,7 +252,7 @@ Florian Wilhelm            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2017-04-09T22:00:00+02:00"> Apr. 09, 2017</time>
+        <i class="fa fa-calendar"></i><time datetime="2017-04-17T22:00:00+02:00"> Apr. 17, 2017</time>
     </span>
 
 
@@ -287,10 +287,10 @@ Florian Wilhelm            </a>
 <li>calculate the effect with <span class="math">\(\hat{y}_1 - \hat{y}_0\)</span> or <span class="math">\(\frac{\hat{y}_1}{\hat{y}_0}\)</span>.</li>
 </ol>
 <p>In a real-world, big data problem we often have no control over the experimental setup, we are just left with the data. This happens for instance in observational studies. Imagine for instance the treatment with an experimental drug having strong side-effects that might cure a life-threatening disease. A controlled, randomized experiment where the control groups gets a placebo might be impracticable or even&nbsp;unethical. </p>
-<p>In such a nonrandomized experiment, things are really bad since there is no proper mathematical way to check if the treatment is strongly ignorable<sup id="fnref-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup>. According to Pearl<sup id="fnref-pearl2"><a class="footnote-ref" href="#fn-pearl2">4</a></sup> by now assuming strong ignorability we are basically assuming that our covariate set <span class="math">\(X\)</span> is <em>admissible</em>, i.e. <span class="math">\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)</span>. Here, the Pearl&#8217;s <span class="math">\(\mathrm{do}\)</span>-notation <span class="math">\(p(y|\mathrm{do}(z))\)</span> denotes the “causal effect” of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>, i.e. the distribution of <span class="math">\(Y\)</span> after setting variable <span class="math">\(X\)</span> to a constant <span class="math">\(X = x\)</span> by external intervention. In practice the assumption of admissibility of <span class="math">\(X\)</span> is often used in order to estimate a causal effect. This also led to wrong results in some studies as well as controversies<sup id="fnref2-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup> and therefore one should always be at least aware that the whole causal analysis stands and falls with&nbsp;it. </p>
+<p>In such a nonrandomized experiment, things are really bad since there is no proper mathematical way to check if the treatment is strongly ignorable<sup id="fnref-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup>. According to Pearl<sup id="fnref-pearl2"><a class="footnote-ref" href="#fn-pearl2">4</a></sup> by now assuming strong ignorability we are basically assuming that our covariate set <span class="math">\(X\)</span> is <em>admissible</em>, i.e. <span class="math">\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)</span>. Here, the Pearl&#8217;s <span class="math">\(\mathrm{do}\)</span>-notation <span class="math">\(p(y|\mathrm{do}(z))\)</span> denotes the “causal effect” of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>, i.e. the distribution of <span class="math">\(Y\)</span> after setting variable <span class="math">\(X\)</span> to a constant <span class="math">\(X = x\)</span> by external intervention. In practice the assumption of admissibility of <span class="math">\(X\)</span> is often used in order to estimate a causal effect. This also led to wrong results in some studies as well as controversies<sup id="fnref-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup> and therefore one should always be at least aware that the whole causal analysis stands and falls with&nbsp;it. </p>
 <p>So far we have not only assumed admissibility of <span class="math">\(X\)</span> but also a randomized trial for our approach. Therefore we should check beforehand that <span class="math">\(X ⫫ Z\)</span>, which is a necessary but not sufficient condition, before applying the former approach. This can be done for instance by using <span class="math">\(X\)</span> to predict <span class="math">\(Z\)</span>. If this is not possible and thus <span class="math">\(p(z|x) = p(z)\)</span> the former approach is a viable way. But what if <span class="math">\(Z\)</span> is not independent of <span class="math">\(X\)</span> as it happens quite often in real-world data. For instance car dealers of expensive car brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of <span class="math">\(Z\)</span> from our covariates <span class="math">\(X\)</span>.</p>
 <h2>Propensity&nbsp;score</h2>
-<p>By predicting <span class="math">\(Z\)</span> based on <span class="math">\(X\)</span> without even knowing we have estimated the <em>propensity score</em>, i.e. <span class="math">\(p(Z=1|x)\)</span>. This of course assumes that we have used some classification methods that returns probabilities for the classes <span class="math">\(Z=1\)</span> and <span class="math">\(Z=0\)</span>. Let <span class="math">\(e_i=p(Z=1|x_i)\)</span> be the propensity score of the <span class="math">\(i\)</span>-th observation, i.e. the propensity of the <span class="math">\(i\)</span>-th participant getting the treatment (<span class="math">\(Z=1\)</span>). We can make use of the propensity score to define weights <span class="math">\(w_i\)</span> in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment<sup id="fnref-austin"><a class="footnote-ref" href="#fn-austin">5</a></sup>,&nbsp;i.e. </p>
+<p>By predicting <span class="math">\(Z\)</span> based on <span class="math">\(X\)</span>, without even knowing we have estimated the <em>propensity score</em>, i.e. <span class="math">\(p(Z=1|x)\)</span>. This of course assumes that we have used some classification methods that returns probabilities for the classes <span class="math">\(Z=1\)</span> and <span class="math">\(Z=0\)</span>. Let <span class="math">\(e_i=p(Z=1|x_i)\)</span> be the propensity score of the <span class="math">\(i\)</span>-th observation, i.e. the propensity of the <span class="math">\(i\)</span>-th participant getting the treatment (<span class="math">\(Z=1\)</span>). We can make use of the propensity score to define weights <span class="math">\(w_i\)</span> in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment<sup id="fnref-austin"><a class="footnote-ref" href="#fn-austin">5</a></sup>,&nbsp;i.e. </p>
 <div class="math">$$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$</div>
 <p> where <span class="math">\(z_i\)</span> indicates if the <span class="math">\(i\)</span>-th subject was treated. The covariates from our data sample <span class="math">\(x_i\)</span> are then weighted by <span class="math">\(w_i\)</span> to eliminate the correlation between <span class="math">\(X\)</span> and <span class="math">\(Z\)</span> which is a technique known as <em>inverse probability of treatment weighting</em> (<span class="caps">IPTW</span>). Taken as a whole this allows us to define the following approach to estimate the causal&nbsp;effect:</p>
 <ol>
@@ -299,9 +299,9 @@ Florian Wilhelm            </a>
 <li>train a second model with covariates <span class="math">\(X\)</span> and <span class="math">\(Z\)</span> as features and response <span class="math">\(Y\)</span> as target by using <span class="math">\(w_i\)</span> as sample weight for the <span class="math">\(i\)</span>-th&nbsp;observation,</li>
 <li>use this model to predict the causal effect like in the approach of the randomized&nbsp;trial.</li>
 </ol>
-<p>There is actually a quite simple intuition behind <span class="caps">IPTW</span>. First of all we note that in case of a randomized trial with <span class="math">\(p(Z=1)=k\)</span> the propensity score would be equal for all patients, i.e. <span class="math">\(e_i=\frac{1}{k}\)</span> and thus <span class="math">\(w_i=k\)</span>. In a nonrandomized trial we would assign low weights to samples where the assignment of treatment is according to our expectation and height weights in opposite cases. By doing so we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most&nbsp;dominant.</p>
+<p>There is actually a quite simple intuition behind <span class="caps">IPTW</span>. First of all we note that in case of a randomized trial with <span class="math">\(p(Z=1)=k\)</span> the propensity score would be equal for all patients, i.e. <span class="math">\(e_i=\frac{1}{k}\)</span> and thus <span class="math">\(w_i=k\)</span>. In a nonrandomized trial we would assign low weights to samples where the assignment of treatment is according to our expectation and high weights in opposite cases. By doing so we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most prevalent, i.e. least confounded with the&nbsp;covariates.</p>
 <h2>Python&nbsp;implementation</h2>
-<p>In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don&#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we come up with a model that describes the relationship of <span class="math">\(X\)</span> on <span class="math">\(Y\)</span> else well as the effect of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>. We use this model to generate observational data where for each sample <span class="math">\(x_i\)</span> we either have <span class="math">\(Z=1\)</span> or <span class="math">\(Z=0\)</span> and thus incomplete information in our data. Our task is now to estimate the effect of <span class="math">\(Z\)</span> with the help of the generated&nbsp;data.</p>
+<p>In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don&#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we come up with a model that describes the relationship of <span class="math">\(X\)</span> on <span class="math">\(Y\)</span> as well as the effect of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>. We use this model to generate observational data where for each sample <span class="math">\(x_i\)</span> we either have <span class="math">\(Z=1\)</span> or <span class="math">\(Z=0\)</span> and thus incomplete information in our data. Our task is now to estimate the effect of <span class="math">\(Z\)</span> with the help of the generated&nbsp;data.</p>
 <p>The remaining part of this blog post is a Jupyter notebook and can also be downloaded <a href="http://www.florianwilhelm.info/notebooks/causal_inference_propensity_score.ipynb">here</a>.</p>
 <p>
 <div class="cell border-box-sizing code_cell rendered">
@@ -349,7 +349,7 @@ Florian Wilhelm            </a>
 <h3 id="Model">Model<a class="anchor-link" href="#Model">&#182;</a></h3><p>Assume we have patients characterized by sex and age suffering from some disease with different severities. The recovery time of a patient depends only on the sex, age, severity and if the patient is on medication. Let the expected recovery time in days $t_{recovery}$ be defined as
 $$\mathbf{E}(t_{recovery}) = \exp(2+0.5\cdot{}I_{male}+0.03\cdot{}age+2\cdot{}severity-1\cdot{}I_{medication}),$$
 where $I$ is an indicator function.
-Furthermore, we will assume a Poisson distribution in order to generate some synthetic data of our patient&#8217;s recovery time. Due to our definition, treating the disease with medication reduces the recovery time to $exp(-1)\approx 0.37$ of the recovery time having no treatment. Although the recovery time is specific to each patients, i.e. his/her features, the effect of a reduction to 37% of the recovery time without medication is the same for all&nbsp;patients.</p>
+Furthermore, we will assume a Poisson distribution in order to generate some synthetic data of our patient&#8217;s recovery time. Due to our definition, treating the disease with medication reduces the recovery time to $exp(-1)\approx 0.37$ of the recovery time having no treatment. Although the recovery time is specific to each patient, i.e. his/her features, the effect of a reduction to 37% of the recovery time without medication is the same for all&nbsp;patients.</p>
 
 </div>
 </div>
@@ -433,9 +433,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -1387,9 +1385,7 @@ RK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[6]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -1478,9 +1474,7 @@ RK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[7]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -1606,9 +1600,7 @@ RK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -1989,9 +1981,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[9]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table class="simpletable">
@@ -2054,7 +2044,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we use a randome forest which is a pretty standard machine learning method to estimate the individual effects of the treatment on the patients. We fit the model and predict for each patient the recovery time assuming medication, i.e. medication column is 1, as well as assuming no medication, i.e. medication column is 0. Subsequently we divide the prediction assuming medication by the prediction assuming no medication to get an estimation of the treatment&#8217;s&nbsp;effect.</p>
+<p>Now we use a random forest which is a pretty standard machine learning method to estimate the individual effects of the treatment on the patients. We fit the model and predict for each patient the recovery time assuming medication, i.e. medication column is 1, as well as assuming no medication, i.e. medication column is 0. Subsequently we divide the prediction assuming medication by the prediction assuming no medication to get an estimation of the treatment&#8217;s&nbsp;effect.</p>
 
 </div>
 </div>
@@ -2078,9 +2068,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[10]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -2147,9 +2135,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -2642,9 +2628,7 @@ QmCC
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[14]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -2770,9 +2754,7 @@ QmCC
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -3143,9 +3125,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[16]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table class="simpletable">
@@ -3232,9 +3212,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[17]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -3289,9 +3267,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -3769,7 +3745,7 @@ xhhjjLUQLqwYY4wxxlrI/wf9kRhzh29FEQAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The distribution is now quite skewed and we can see that for a lot of our patients their individual treatment effect is heavily underestimated. This due to the fact that the random forest overrates the impact of a patient&#8217;s sex which is highly correlated with the&nbsp;medication.</p>
+<p>The distribution is now quite skewed and we can see that for a lot of our patients their individual treatment effect is heavily underestimated. This is due to the fact that the random forest overrates the impact of a patient&#8217;s sex which is highly correlated with the&nbsp;medication.</p>
 
 </div>
 </div>
@@ -3809,9 +3785,7 @@ xhhjjLUQLqwYY4wxxlrI/wf9kRhzh29FEQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[20]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -3845,9 +3819,7 @@ xhhjjLUQLqwYY4wxxlrI/wf9kRhzh29FEQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[21]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -3925,9 +3897,7 @@ xhhjjLUQLqwYY4wxxlrI/wf9kRhzh29FEQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -4379,9 +4349,7 @@ LyGEEEIIM5HCSwghhBDCTKTwEkIIIYQwEym8hBBCCCHM5P8BjPQbOgGUOf0AAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -4814,9 +4782,7 @@ hCRmQgghhBA2QhIzIYQQQggb8X+qXTYtK8f9uAAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[25]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -4955,9 +4921,7 @@ hCRmQgghhBA2QhIzIYQQQggb8X+qXTYtK8f9uAAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[26]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table class="simpletable">
@@ -5044,9 +5008,7 @@ hCRmQgghhBA2QhIzIYQQQggb8X+qXTYtK8f9uAAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[27]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[27]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -5101,9 +5063,7 @@ hCRmQgghhBA2QhIzIYQQQggb8X+qXTYtK8f9uAAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -5554,9 +5514,7 @@ Zib/DwsicnWLzX1oAAAAAElFTkSuQmCC
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -6323,9 +6281,7 @@ YowxxhiTyf8DLaH++nUD8awAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[32]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[32]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -6423,9 +6379,7 @@ YowxxhiTyf8DLaH++nUD8awAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -6806,9 +6760,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[34]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -6906,9 +6858,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 
 
 <div class="output_png output_subarea ">
@@ -7261,13 +7211,10 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 </div>
 </div>
 
-</div>
- 
-
-</p>
+</div></p>
 <h2>Final&nbsp;notes</h2>
 <p>With great power comes great responsibility, so they say, and <span class="caps">IPTW</span> surely is a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard to estimate a causal effect and should always be preferred. But when reality hits us hard and we have just the data, i.e. no influence on the experiment generating it, we saw that <span class="caps">IPTW</span> improves causal inference to some extent. Still, the demonstrated techniques is no silver bullet and relies on several things. Firstly, <span class="math">\(X\)</span> needs to be <em>admissible</em> which cannot be practically checked. What can be done though is an investigation on how the treatment was assigned in our data. In our campaign example, that would mean to ask the marketing department about their former strategy when sending vouchers to customers. Then one would make sure that the data at hand includes all factors on which their strategy relied on. Secondly, for this method to work a way to accurately estimate the propensity scores is needed. For the sake of simplicity in our demonstration we did not even check the prediction quality of our machine learning models on a test set which would be quite sloppy in a real application. It should go unsaid that the application of machine learning models should always encompass training, validation, test splits and a proper cost&nbsp;functional.</p>
-<p>That being said, propensity score techniques like <span class="caps">IPTW</span> might be quite handy at times. Further improvements are achieved by first using only the covariates to estimate the recovery time followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">propensity score methods introduction</a> by Peter Austin<sup id="fnref2-austin"><a class="footnote-ref" href="#fn-austin">5</a></sup>.</p>
+<p>That being said, propensity score techniques like <span class="caps">IPTW</span> might be quite handy at times. Further improvements are achieved by first using only the covariates to estimate the recovery time followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">propensity score methods introduction</a> by Peter Austin<sup id="fnref-austin"><a class="footnote-ref" href="#fn-austin">5</a></sup>.</p>
 <h2>References</h2>
 <div class="footnote">
 <hr>
@@ -7279,13 +7226,13 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 <p>Paul R. Rosenbaum, Donald B. Rubin; &#8220;The Central Role of the Propensity Score in Observational Studies for Causal Effects&#8221;; Biometrika, Vol. 70, No. 1., Apr., 1983, <a href="http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf">pp. 41-55</a>&#160;<a class="footnote-backref" href="#fnref-rose" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn-pearl1">
-<p>Judea Pearl; &#8220;<span class="caps">CAUSALITY</span> - Models, Reasoning and Inference&#8221;; 2nd Edition, 2009, <a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf">pp. 348-352</a>&#160;<a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2-pearl1" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p>Judea Pearl; &#8220;<span class="caps">CAUSALITY</span> - Models, Reasoning and Inference&#8221;; 2nd Edition, 2009, <a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf">pp. 348-352</a>&#160;<a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn-pearl2">
 <p>Judea Pearl; &#8220;<span class="caps">CAUSALITY</span> - Models, Reasoning and Inference&#8221;; 2nd Edition, 2009, <a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf">pp. 341-344</a>&#160;<a class="footnote-backref" href="#fnref-pearl2" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 <li id="fn-austin">
-<p>Peter C. Austin; &#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&#8221;; Multivariate Behav Res. 2011 May; 46(3): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">pp. 399–424</a>&#160;<a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2-austin" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+<p>Peter C. Austin; &#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&#8221;; Multivariate Behav Res. 2011 May; 46(3): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">pp. 399–424</a>&#160;<a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
@@ -7354,8 +7301,8 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
         <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
         <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
     </ul>
 </section>
     <hr/>

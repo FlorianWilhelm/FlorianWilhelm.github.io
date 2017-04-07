@@ -1,7 +1,7 @@
 ---
 title: Causal Inference and Propensity Score Methods
-date: 2017-04-09 22:00
-modified: 2017-04-09 22:00
+date: 2017-04-17 22:00
+modified: 2017-04-17 22:00
 category: post
 tags: scikit-learn, machine-learning, python, causal inference
 authors: Florian Wilhelm
@@ -34,18 +34,18 @@ In such a nonrandomized experiment, things are really bad since there is no prop
  
 ## Propensity score
  
-By predicting $Z$ based on $X$ without even knowing we have estimated the *propensity score*, i.e. $p(Z=1|x)$. This of course assumes that we have used some classification methods that returns probabilities for the classes $Z=1$ and $Z=0$. Let $e_i=p(Z=1|x_i)$ be the propensity score of the $i$-th observation, i.e. the propensity of the $i$-th participant getting the treatment ($Z=1$). We can make use of the propensity score to define weights $w_i$ in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment[^austin], i.e. $$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$ where $z_i$ indicates if the $i$-th subject was treated. The covariates from our data sample $x_i$ are then weighted by $w_i$ to eliminate the correlation between $X$ and $Z$ which is a technique known as *inverse probability of treatment weighting* (IPTW). Taken as a whole this allows us to define the following approach to estimate the causal effect:
+By predicting $Z$ based on $X$, without even knowing we have estimated the *propensity score*, i.e. $p(Z=1|x)$. This of course assumes that we have used some classification methods that returns probabilities for the classes $Z=1$ and $Z=0$. Let $e_i=p(Z=1|x_i)$ be the propensity score of the $i$-th observation, i.e. the propensity of the $i$-th participant getting the treatment ($Z=1$). We can make use of the propensity score to define weights $w_i$ in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment[^austin], i.e. $$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$ where $z_i$ indicates if the $i$-th subject was treated. The covariates from our data sample $x_i$ are then weighted by $w_i$ to eliminate the correlation between $X$ and $Z$ which is a technique known as *inverse probability of treatment weighting* (IPTW). Taken as a whole this allows us to define the following approach to estimate the causal effect:
  
  1. train a model with covariates $X$ in order to predict $Z$,
  2. calculate the propensities scores $e_i$ by applying the trained model to all $x_i$,
  3. train a second model with covariates $X$ and $Z$ as features and response $Y$ as target by using $w_i$ as sample weight for the $i$-th observation,
  4. use this model to predict the causal effect like in the approach of the randomized trial.
  
-There is actually a quite simple intuition behind IPTW. First of all we note that in case of a randomized trial with $p(Z=1)=k$ the propensity score would be equal for all patients, i.e. $e_i=\frac{1}{k}$ and thus $w_i=k$. In a nonrandomized trial we would assign low weights to samples where the assignment of treatment is according to our expectation and height weights in opposite cases. By doing so we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most dominant.
+There is actually a quite simple intuition behind IPTW. First of all we note that in case of a randomized trial with $p(Z=1)=k$ the propensity score would be equal for all patients, i.e. $e_i=\frac{1}{k}$ and thus $w_i=k$. In a nonrandomized trial we would assign low weights to samples where the assignment of treatment is according to our expectation and high weights in opposite cases. By doing so we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most prevalent, i.e. least confounded with the covariates.
  
 ## Python implementation
  
-In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don't know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we come up with a model that describes the relationship of $X$ on $Y$ else well as the effect of $Z$ on $Y$. We use this model to generate observational data where for each sample $x_i$ we either have $Z=1$ or $Z=0$ and thus incomplete information in our data. Our task is now to estimate the effect of $Z$ with the help of the generated data.
+In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don't know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we come up with a model that describes the relationship of $X$ on $Y$ as well as the effect of $Z$ on $Y$. We use this model to generate observational data where for each sample $x_i$ we either have $Z=1$ or $Z=0$ and thus incomplete information in our data. Our task is now to estimate the effect of $Z$ with the help of the generated data.
    
 The remaining part of this blog post is a Jupyter notebook and can also be downloaded [here]({filename}/notebooks/causal_inference_propensity_score.ipynb).
 

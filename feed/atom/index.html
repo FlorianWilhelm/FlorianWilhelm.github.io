@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2017-04-15T18:00:00+02:00</updated><entry><title>Causal Inference and Propensity Score Methods</title><link href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/" rel="alternate"></link><published>2017-04-15T18:00:00+02:00</published><updated>2017-04-15T18:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2017-04-15:/2017/04/causal_inference_propensity_score/</id><summary type="html">&lt;p&gt;In the field of machine learning and particularly in supervised learning, correlation is key in order to predict the target variable with the help of the feature variables. Rarely do we think about causation and the actual effect of a single feature variable or covariate resp. on the target or …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In the field of machine learning and particularly in supervised learning, correlation is key in order to predict the target variable with the help of the feature variables. Rarely do we think about causation and the actual effect of a single feature variable or covariate resp. on the target or response respectively. Some even go so far saying that &amp;#8220;correlation trumps causation&amp;#8221; like in the book &amp;#8220;Big Data: A Revolution That Will Transform How We Live, Work, and Think&amp;#8221; by Viktor Mayer-Schönberger and Kenneth Cukier. Following their reasoning with Big Data there is no need anymore to think about causation since &lt;a href="https://en.wikipedia.org/wiki/Nonparametric_statistics"&gt;nonparametric models&lt;/a&gt; will do just fine using only correlation. For many practical use-cases this point of view seems to be acceptable but surely not for&amp;nbsp;all.&lt;/p&gt;
-&lt;p&gt;Consider for instance you are managing an advertisement campaign with a budget allowing you to send discount vouchers to 10,000 of your customer base. Obviously, you want to maximise the outcome of the campaign, meaning you want to focus on those customers that buy just because they received a voucher. If &lt;span class="math"&gt;\(y_{1i}\)&lt;/span&gt;, &lt;span class="math"&gt;\(y_{0i}\)&lt;/span&gt; resp., is the amount of money spent by a customer &lt;span class="math"&gt;\(i\)&lt;/span&gt; described by &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; having received, not having received resp., a voucher, we want to find a subset &lt;span class="math"&gt;\(I'\subset{}I\)&lt;/span&gt; where &lt;span class="math"&gt;\(I\)&lt;/span&gt; is the set of all former customers with &lt;span class="math"&gt;\(|I'|=10,000\)&lt;/span&gt; so&amp;nbsp;that &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2017-04-24T18:00:00+02:00</updated><entry><title>Causal Inference and Propensity Score Methods</title><link href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/" rel="alternate"></link><published>2017-04-15T18:00:00+02:00</published><updated>2017-04-24T18:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2017-04-15:/2017/04/causal_inference_propensity_score/</id><summary type="html">&lt;p&gt;In the field of machine learning and particularly in supervised learning, correlation is crucial to predict the target variable with the help of the feature variables. Rarely do we think about causation and the actual effect of a single feature variable or covariate on the target or response. Some even …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In the field of machine learning and particularly in supervised learning, correlation is crucial to predict the target variable with the help of the feature variables. Rarely do we think about causation and the actual effect of a single feature variable or covariate on the target or response. Some even go so far as to say that &amp;#8220;correlation trumps causation&amp;#8221; like in the book &amp;#8220;Big Data: A Revolution That Will Transform How We Live, Work, and Think&amp;#8221; by Viktor Mayer-Schönberger and Kenneth Cukier. Following their reasoning, with Big Data there is no need to think about causation anymore, since &lt;a href="https://en.wikipedia.org/wiki/Nonparametric_statistics"&gt;nonparametric models&lt;/a&gt; will do just fine using correlation alone. For many practical use cases, this point of view may seem acceptable — but surely not for&amp;nbsp;all.&lt;/p&gt;
+&lt;p&gt;Consider for instance you are managing an advertisement campaign with a budget allowing you to send discount vouchers to 10,000 of your customers. Obviously, you want to maximise the outcome of the campaign, meaning you want to focus on customers that buy because they received a voucher. If &lt;span class="math"&gt;\(y_{1i}\)&lt;/span&gt; and &lt;span class="math"&gt;\(y_{0i}\)&lt;/span&gt; are the amounts of money spent by a customer &lt;span class="math"&gt;\(i\)&lt;/span&gt; described by &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; that either received or did not receive a voucher, we want to find a subset &lt;span class="math"&gt;\(I'\subset{}I\)&lt;/span&gt; where &lt;span class="math"&gt;\(I\)&lt;/span&gt; is the set of all former customers with &lt;span class="math"&gt;\(|I'|=10,000\)&lt;/span&gt; so&amp;nbsp;that &lt;/p&gt;
 &lt;div class="math"&gt;$$\sum_{i\in I'}y_{1i} - y_{0i}$$&lt;/div&gt;
-&lt;p&gt; is maximised. Another example would be estimating the effect of additional booking options in an online market place. A common use-case of an online car marketplace is to give an estimation to a seller what the effect of an additional booking option (e.g. highlighting, top of page etc.) has on the selling time of a given car. Likewise, many dealers will be interested in knowing how changing the price of a car will affect the probability of selling the car within a certain period of time or the expected selling&amp;nbsp;time.&lt;/p&gt;
-&lt;p&gt;These two examples outline the need for methods to estimate the actual causal effect of a controllable covariate onto the response. Before we dip our toes into the deep sea of causal inference, a few general aspects are to be considered. The first and maybe not so obvious point when coming from a supervised learning background is that causal inference is thinking about &lt;em&gt;what did not happen&lt;/em&gt;. That means that we don&amp;#8217;t know for instance how much a customer that received a voucher would have ordered if he had not received one. This fundamental problem basically renders it an unsupervised learning problem. More interesting aspects of causal inference are summarized in the blog post &lt;a href="http://egap.org/methods-guides/10-things-you-need-know-about-causal-inference"&gt;10 Things to Know About Causal Inference&lt;/a&gt; by Macartan Humphreys. The question remains how can we estimate the causal effect of a controllable&amp;nbsp;covariate?&lt;/p&gt;
+&lt;p&gt; is&amp;nbsp;maximised. &lt;/p&gt;
+&lt;p&gt;Another example would be to estimate the effect of additional booking options in an online marketplace. A common use case of an online vehicle marketplace is to provide estimations to sellers on the effect that additional booking options (e.g. highlighting, top of page etc.) may have on the selling time of a given vehicle. Likewise, many dealers will be interested in knowing how changing the price of a vehicle will affect the probability of selling the vehicle within a certain period of time or the expected selling&amp;nbsp;time.&lt;/p&gt;
+&lt;p&gt;These two examples outline the need for methods to estimate the actual causal effect of a controllable covariate onto the response. Before we dip our toes into the deep sea of causal inference, let&amp;#8217;s consider a few general aspects. The first and maybe not so obvious point when coming from a supervised learning background is that causal inference is thinking about &lt;em&gt;what did not happen&lt;/em&gt;. That means that we don&amp;#8217;t know for instance how much a customer that received a voucher would have ordered if they had not received one. This fundamental problem basically renders it an unsupervised learning problem. More interesting aspects of causal inference are summarized in a blog post by Macartan Humphreys on &lt;a href="http://egap.org/methods-guides/10-things-you-need-know-about-causal-inference"&gt;10 Things to Know About Causal Inference&lt;/a&gt;. The question remains how can we estimate the causal effect of a controllable&amp;nbsp;covariate?&lt;/p&gt;
 &lt;h2&gt;Strongly&amp;nbsp;ignorable&lt;/h2&gt;
-&lt;p&gt;The answer to this question lies in another important and actually the original use-case of causal inference which is the analysis of therapy effects. In a best-case scenario the effect of a therapy can be determined in a randomized trial comparing the response of a treatment group to a control group. In a randomized trial the allocation of the participants to the test or control group is random and thus independent of any covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;. Following the original paper of Rosenbaum &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Rubin &lt;sup id="fnref-rose"&gt;&lt;a class="footnote-ref" href="#fn-rose"&gt;2&lt;/a&gt;&lt;/sup&gt;, in a randomized trial the treatment assignment &lt;span class="math"&gt;\(Z\)&lt;/span&gt; and the (unobservable) potential outcome &lt;span class="math"&gt;\({Y_1, Y_0}\)&lt;/span&gt; are conditionally independent given the covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;,&amp;nbsp;i.e. &lt;/p&gt;
+&lt;p&gt;The answer to this question lies in another important (and actually the original) use case of causal inference, which is the analysis of therapy effects. In a best-case scenario, the effect of a therapy can be determined in a randomized trial by comparing the response of a treatment group to a control group. In a randomized trial, the allocation of participants to the test or control group is random and thus independent of any covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;. Following the original paper of Rosenbaum &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Rubin &lt;sup id="fnref-rose"&gt;&lt;a class="footnote-ref" href="#fn-rose"&gt;2&lt;/a&gt;&lt;/sup&gt;, in a randomized trial the treatment assignment &lt;span class="math"&gt;\(Z\)&lt;/span&gt; and the (unobservable) potential outcome &lt;span class="math"&gt;\({Y_1, Y_0}\)&lt;/span&gt; are conditionally independent given the covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;,&amp;nbsp;i.e. &lt;/p&gt;
 &lt;div class="math"&gt;$${Y_1, Y_0} ⫫ Z \mid X.$$&lt;/div&gt;
-&lt;p&gt; Furthermore, we assume that each participant in the experiment has a chance to receive each treatment, i.e. &lt;span class="math"&gt;\(0 &amp;lt; p(Z=1|x) &amp;lt; 1\)&lt;/span&gt;. The treatment assignment is said to be &lt;em&gt;strongly ignorable&lt;/em&gt; if those two conditions hold for our observed covariates &lt;span class="math"&gt;\(x\)&lt;/span&gt;. As already mentioned, in a randomized experiment the treatment assignment is strongly&amp;nbsp;ignorable. &lt;/p&gt;
+&lt;p&gt; Furthermore, we assume that each participant in the experiment has a chance to receive each treatment, i.e. &lt;span class="math"&gt;\(0 &amp;lt; p(Z=1|x) &amp;lt; 1\)&lt;/span&gt;. The treatment assignment is said to be &lt;em&gt;strongly ignorable&lt;/em&gt; if those two conditions hold for our observed covariates &lt;span class="math"&gt;\(x\)&lt;/span&gt;. &lt;/p&gt;
 &lt;h2&gt;Causal effect in a randomized&amp;nbsp;trial&lt;/h2&gt;
-&lt;p&gt;In a randomized trial, the strong ignorability of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; allows us to estimate the effect of the treatment by comparing the response of the treatment group with the one of the control group. The obvious approach for estimating the individual effect of for instance an additional booking option on a car&amp;#8217;s selling time with machine learning methods like a random forest is as&amp;nbsp;following:&lt;/p&gt;
+&lt;p&gt;In a randomized trial, the strong ignorability of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; allows us to estimate the effect of the treatment by comparing the response of the treatment group with that of the control group. The following approach may be used to estimate the individual effect of an additional booking option on a vehicle&amp;#8217;s selling time with machine learning methods like a random&amp;nbsp;forest:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;train the model with the covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z\)&lt;/span&gt; as feature and response &lt;span class="math"&gt;\(Y\)&lt;/span&gt; as&amp;nbsp;target,&lt;/li&gt;
+&lt;li&gt;Train the model with the covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z\)&lt;/span&gt; as feature and response &lt;span class="math"&gt;\(Y\)&lt;/span&gt; as&amp;nbsp;target,&lt;/li&gt;
 &lt;li&gt;predict for a given &lt;span class="math"&gt;\(x\)&lt;/span&gt; the response &lt;span class="math"&gt;\(\hat{y}_1\)&lt;/span&gt; with &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; and &lt;span class="math"&gt;\(\hat{y}_0\)&lt;/span&gt; with &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt;,&lt;/li&gt;
 &lt;li&gt;calculate the effect with &lt;span class="math"&gt;\(\hat{y}_1 - \hat{y}_0\)&lt;/span&gt; or &lt;span class="math"&gt;\(\frac{\hat{y}_1}{\hat{y}_0}\)&lt;/span&gt;.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;In a real-world, big data problem we often have no control over the experimental setup, we are just left with the data. This happens for instance in observational studies. Imagine for instance the treatment with an experimental drug having strong side-effects that might cure a life-threatening disease. A controlled, randomized experiment where the control groups gets a placebo might be impracticable or even&amp;nbsp;unethical. &lt;/p&gt;
-&lt;p&gt;In such a nonrandomized experiment, things are really bad since there is no proper mathematical way to check if the treatment is strongly ignorable&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;. According to Pearl&lt;sup id="fnref-pearl2"&gt;&lt;a class="footnote-ref" href="#fn-pearl2"&gt;4&lt;/a&gt;&lt;/sup&gt; by now assuming strong ignorability we are basically assuming that our covariate set &lt;span class="math"&gt;\(X\)&lt;/span&gt; is &lt;em&gt;admissible&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)&lt;/span&gt;. Here, the Pearl&amp;#8217;s &lt;span class="math"&gt;\(\mathrm{do}\)&lt;/span&gt;-notation &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))\)&lt;/span&gt; denotes the “causal effect” of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;, i.e. the distribution of &lt;span class="math"&gt;\(Y\)&lt;/span&gt; after setting variable &lt;span class="math"&gt;\(Z\)&lt;/span&gt; to a constant &lt;span class="math"&gt;\(Z = z\)&lt;/span&gt; by external intervention. In practice the assumption of admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; is often used in order to estimate a causal effect. This also led to wrong results in some studies as well as controversies&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt; and therefore one should always be at least aware that the whole causal analysis stands and falls with&amp;nbsp;it. &lt;/p&gt;
-&lt;p&gt;So far we have not only assumed admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; but also a randomized trial for our approach. Therefore we should check beforehand that &lt;span class="math"&gt;\(X ⫫ Z\)&lt;/span&gt;, which is a necessary but not sufficient condition, before applying the former approach. This can be done for instance by using &lt;span class="math"&gt;\(X\)&lt;/span&gt; to predict &lt;span class="math"&gt;\(Z\)&lt;/span&gt;. If this is not possible and thus &lt;span class="math"&gt;\(p(z|x) = p(z)\)&lt;/span&gt; the former approach is a viable way. But what if &lt;span class="math"&gt;\(Z\)&lt;/span&gt; is not independent of &lt;span class="math"&gt;\(X\)&lt;/span&gt; as it happens quite often in real-world data. For instance car dealers of expensive car brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; from our covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;In a real-world big-data problem we often have no control over the experimental setup — we are just left with the data. This happens for instance in observational studies. Imagine for instance the treatment with an experimental drug having strong side-effects that might cure a life-threatening disease. A controlled, randomized experiment where the control groups gets a placebo might be impracticable or even&amp;nbsp;unethical. &lt;/p&gt;
+&lt;p&gt;In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;. According to Pearl&lt;sup id="fnref-pearl2"&gt;&lt;a class="footnote-ref" href="#fn-pearl2"&gt;4&lt;/a&gt;&lt;/sup&gt; by now assuming strong ignorability we are basically assuming that our covariate set &lt;span class="math"&gt;\(X\)&lt;/span&gt; is &lt;em&gt;admissible&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)&lt;/span&gt;. Here, Pearl&amp;#8217;s &lt;span class="math"&gt;\(\mathrm{do}\)&lt;/span&gt;-notation &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))\)&lt;/span&gt; denotes the “causal effect” of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;, i.e. the distribution of &lt;span class="math"&gt;\(Y\)&lt;/span&gt; after setting variable &lt;span class="math"&gt;\(Z\)&lt;/span&gt; to a constant &lt;span class="math"&gt;\(Z = z\)&lt;/span&gt; by external intervention. In practice, the assumption of admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies&lt;sup id="fnref2-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;, so one should always be aware that the entire causal analysis depends on the validity of this&amp;nbsp;assumption. &lt;/p&gt;
+&lt;p&gt;So far, we have not only assumed admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; but also a randomized trial for our approach. Therefore, we should check beforehand that &lt;span class="math"&gt;\(X ⫫ Z\)&lt;/span&gt;, (which is a necessary but not sufficient condition), before applying the aforementioned approach. This can be verified by using &lt;span class="math"&gt;\(X\)&lt;/span&gt; to predict &lt;span class="math"&gt;\(Z\)&lt;/span&gt;. If this is not possible, and thus &lt;span class="math"&gt;\(p(z|x) = p(z)\)&lt;/span&gt;, the former approach is viable. But what if &lt;span class="math"&gt;\(Z\)&lt;/span&gt; is not independent of &lt;span class="math"&gt;\(X\)&lt;/span&gt; — as is often the case with real-world data. For instance, dealers of expensive vehicle brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; from our covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;.&lt;/p&gt;
 &lt;h2&gt;Propensity&amp;nbsp;score&lt;/h2&gt;
-&lt;p&gt;By predicting &lt;span class="math"&gt;\(Z\)&lt;/span&gt; based on &lt;span class="math"&gt;\(X\)&lt;/span&gt;, without even knowing we have estimated the &lt;em&gt;propensity score&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(Z=1|x)\)&lt;/span&gt;. This of course assumes that we have used some classification methods that returns probabilities for the classes &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt;. Let &lt;span class="math"&gt;\(e_i=p(Z=1|x_i)\)&lt;/span&gt; be the propensity score of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th observation, i.e. the propensity of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th participant getting the treatment (&lt;span class="math"&gt;\(Z=1\)&lt;/span&gt;). We can make use of the propensity score to define weights &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; in order to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment&lt;sup id="fnref-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;,&amp;nbsp;i.e. &lt;/p&gt;
+&lt;p&gt;By predicting &lt;span class="math"&gt;\(Z\)&lt;/span&gt; based on &lt;span class="math"&gt;\(X\)&lt;/span&gt;, we have estimated the &lt;em&gt;propensity score&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(Z=1|x)\)&lt;/span&gt;. This of course assumes that we have used a classification method that returns probabilities for the classes &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt;. Let &lt;span class="math"&gt;\(e_i=p(Z=1|x_i)\)&lt;/span&gt; be the propensity score of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th observation, i.e. the propensity of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th participant getting the treatment (&lt;span class="math"&gt;\(Z=1\)&lt;/span&gt;). &lt;/p&gt;
+&lt;p&gt;We can use the propensity score to define weights &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment&lt;sup id="fnref-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;,&amp;nbsp;i.e. &lt;/p&gt;
 &lt;div class="math"&gt;$$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$&lt;/div&gt;
-&lt;p&gt; where &lt;span class="math"&gt;\(z_i\)&lt;/span&gt; indicates if the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th subject was treated. The covariates from our data sample &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; are then weighted by &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; to eliminate the correlation between &lt;span class="math"&gt;\(X\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z\)&lt;/span&gt; which is a technique known as &lt;em&gt;inverse probability of treatment weighting&lt;/em&gt; (&lt;span class="caps"&gt;IPTW&lt;/span&gt;). Taken as a whole this allows us to define the following approach to estimate the causal&amp;nbsp;effect:&lt;/p&gt;
+&lt;p&gt; where &lt;span class="math"&gt;\(z_i\)&lt;/span&gt; indicates if the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th subject was&amp;nbsp;treated. &lt;/p&gt;
+&lt;p&gt;The covariates from our data sample &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; are then weighted by &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; to eliminate the correlation between &lt;span class="math"&gt;\(X\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z\)&lt;/span&gt;, which is a technique known as &lt;em&gt;inverse probability of treatment weighting&lt;/em&gt; (&lt;span class="caps"&gt;IPTW&lt;/span&gt;). This allows us to estimate the causal effect via the following&amp;nbsp;approach:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;train a model with covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt; in order to predict &lt;span class="math"&gt;\(Z\)&lt;/span&gt;,&lt;/li&gt;
-&lt;li&gt;calculate the propensities scores &lt;span class="math"&gt;\(e_i\)&lt;/span&gt; by applying the trained model to all &lt;span class="math"&gt;\(x_i\)&lt;/span&gt;,&lt;/li&gt;
+&lt;li&gt;Train a model with covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt; to predict &lt;span class="math"&gt;\(Z\)&lt;/span&gt;,&lt;/li&gt;
+&lt;li&gt;calculate the propensity scores &lt;span class="math"&gt;\(e_i\)&lt;/span&gt; by applying the trained model to all &lt;span class="math"&gt;\(x_i\)&lt;/span&gt;,&lt;/li&gt;
 &lt;li&gt;train a second model with covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z\)&lt;/span&gt; as features and response &lt;span class="math"&gt;\(Y\)&lt;/span&gt; as target by using &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; as sample weight for the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th&amp;nbsp;observation,&lt;/li&gt;
-&lt;li&gt;use this model to predict the causal effect like in the approach of the randomized&amp;nbsp;trial.&lt;/li&gt;
+&lt;li&gt;use this model to predict the causal effect like in the randomized trial&amp;nbsp;approach.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;There is actually a quite simple intuition behind &lt;span class="caps"&gt;IPTW&lt;/span&gt;. First of all we note that in case of a randomized trial with &lt;span class="math"&gt;\(p(Z=1)=k\)&lt;/span&gt; the propensity score would be equal for all patients, i.e. &lt;span class="math"&gt;\(e_i=\frac{1}{k}\)&lt;/span&gt; and thus &lt;span class="math"&gt;\(w_i=k\)&lt;/span&gt;. In a nonrandomized trial we would assign low weights to samples where the assignment of treatment is according to our expectation and high weights in opposite cases. By doing so we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most prevalent, i.e. least confounded with the&amp;nbsp;covariates.&lt;/p&gt;
+&lt;p&gt;&lt;span class="caps"&gt;IPTW&lt;/span&gt; is based on a simple intuition. For a randomized trial with &lt;span class="math"&gt;\(p(Z=1)=k\)&lt;/span&gt; the propensity score would be equal for all patients, i.e. &lt;span class="math"&gt;\(e_i=\frac{1}{k}\)&lt;/span&gt; and thus &lt;span class="math"&gt;\(w_i=k\)&lt;/span&gt;. In a nonrandomized trial, we would assign low weights to samples where the assignment of treatment matches our expectation and high weights otherwise. By doing so, we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most prevalent, i.e. least confounded with the&amp;nbsp;covariates.&lt;/p&gt;
 &lt;h2&gt;Python&amp;nbsp;implementation&lt;/h2&gt;
-&lt;p&gt;In order to demonstrate and evaluate this method with the help of Python and Scikit-Learn we set up a synthetic experiment. The reason for a synthetic experiment is due to the fundamental problem of causal inference described above. With real data we just don&amp;#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we come up with a model that describes the relationship of &lt;span class="math"&gt;\(X\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt; as well as the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;. We use this model to generate observational data where for each sample &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; we either have &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; or &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt; and thus incomplete information in our data. Our task is now to estimate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; with the help of the generated&amp;nbsp;data.&lt;/p&gt;
-&lt;p&gt;The remaining part of this blog post is a Jupyter notebook and can also be downloaded &lt;a href="http://www.florianwilhelm.info/notebooks/causal_inference_propensity_score.ipynb"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We can set up a synthetic experiment to demonstrate and evaluate this method with the help of Python and Scikit-Learn. A synthetic experiment is appropriate to address the fundamental problem of causal inference described above. With real data, we  don&amp;#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we derive a model that describes the relationship of &lt;span class="math"&gt;\(X\)&lt;/span&gt; to &lt;span class="math"&gt;\(Y\)&lt;/span&gt; as well as the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;. We use this model to generate observational data where for each sample &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; we either have &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; or &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt; and thus incomplete information in our data. Our task is now to estimate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; with the help of the generated&amp;nbsp;data.&lt;/p&gt;
+&lt;p&gt;The following portion of this article is available for &lt;a href="http://www.florianwilhelm.info/notebooks/causal_inference_propensity_score.ipynb"&gt;download&lt;/a&gt; as a Jupyter&amp;nbsp;notebook.&lt;/p&gt;
 &lt;p&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
@@ -166,7 +169,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -1166,7 +1171,9 @@ AABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -1255,7 +1262,9 @@ AABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -1381,7 +1390,9 @@ AABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -1762,7 +1773,9 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;table class="simpletable"&gt;
@@ -1849,7 +1862,9 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -1917,7 +1932,9 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -2439,7 +2456,9 @@ TkSuQmCC
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -2555,7 +2574,9 @@ TkSuQmCC
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -2926,7 +2947,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[16]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[16]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;table class="simpletable"&gt;
@@ -3013,7 +3036,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[17]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[17]:&lt;/div&gt;
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -3069,7 +3094,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -3613,7 +3640,9 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[20]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[20]:&lt;/div&gt;
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -3647,7 +3676,9 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -3726,7 +3757,9 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -4206,7 +4239,9 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -4663,7 +4698,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[25]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[25]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -4802,7 +4839,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;table class="simpletable"&gt;
@@ -4889,7 +4928,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -4945,7 +4986,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -5425,7 +5468,9 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -6225,7 +6270,9 @@ RU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[32]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[32]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -6323,7 +6370,9 @@ RU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -6704,7 +6753,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[34]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[34]:&lt;/div&gt;
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -6802,7 +6853,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -7155,10 +7208,14 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;/div&gt;&lt;/p&gt;
+&lt;/div&gt;
+ 
+
+&lt;/p&gt;
 &lt;h2&gt;Final&amp;nbsp;notes&lt;/h2&gt;
-&lt;p&gt;With great power comes great responsibility, so they say, and &lt;span class="caps"&gt;IPTW&lt;/span&gt; surely is a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard to estimate a causal effect and should always be preferred. But when reality hits us hard and we have just the data, i.e. no influence on the experiment generating it, we saw that &lt;span class="caps"&gt;IPTW&lt;/span&gt; improves causal inference to some extent. Still, the demonstrated techniques is no silver bullet and relies on several things. Firstly, &lt;span class="math"&gt;\(X\)&lt;/span&gt; needs to be &lt;em&gt;admissible&lt;/em&gt; which cannot be practically checked. What can be done though is an investigation on how the treatment was assigned in our data. In our campaign example, that would mean to ask the marketing department about their former strategy when sending vouchers to customers. Then one would make sure that the data at hand includes all factors on which their strategy relied on. Secondly, for this method to work a way to accurately estimate the propensity scores is needed. For the sake of simplicity in our demonstration we did not even check the prediction quality of our machine learning models on a test set which would be quite sloppy in a real application. It should go unsaid that the application of machine learning models should always encompass training, validation, test splits and a proper cost&amp;nbsp;functional.&lt;/p&gt;
-&lt;p&gt;That being said, propensity score techniques like &lt;span class="caps"&gt;IPTW&lt;/span&gt; might be quite handy at times. Further improvements are achieved by first using only the covariates to estimate the recovery time followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;propensity score methods introduction&lt;/a&gt; by Peter Austin&lt;sup id="fnref-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;With great power comes great responsibility, so they say, and &lt;span class="caps"&gt;IPTW&lt;/span&gt; surely is a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard to estimate a causal effect and should always be preferred. But when reality hits us hard and we have just the data, i.e. no influence on the experiment generating it, we saw that &lt;span class="caps"&gt;IPTW&lt;/span&gt; improves causal inference to some&amp;nbsp;extent. &lt;/p&gt;
+&lt;p&gt;Still, the demonstrated technique is no silver bullet and relies on several things. First, &lt;span class="math"&gt;\(X\)&lt;/span&gt; needs to be &lt;em&gt;admissible&lt;/em&gt; — which cannot be practically checked. But we &lt;em&gt;can&lt;/em&gt; investigate how the treatment was assigned in our data. In our campaign example, that would mean asking the marketing department about their former strategy when sending vouchers to customers. Then we could verify that the data includes all factors on which their strategy relied. Second, we need an accurate method of estimating the propensity scores for this approach to work. For the sake of simplicity, our demonstration did not check the prediction quality of our machine learning models on a test set, which would be advisable in a real application. The application of machine learning models should always encompass training, validation, test splits and a proper cost&amp;nbsp;functional.&lt;/p&gt;
+&lt;p&gt;That said, propensity score techniques like &lt;span class="caps"&gt;IPTW&lt;/span&gt; can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;propensity score methods introduction&lt;/a&gt; by Peter Austin&lt;sup id="fnref2-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;h2&gt;References&lt;/h2&gt;
 &lt;div class="footnote"&gt;
 &lt;hr&gt;
@@ -7170,13 +7227,13 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 &lt;p&gt;Paul R. Rosenbaum, Donald B. Rubin; &amp;#8220;The Central Role of the Propensity Score in Observational Studies for Causal Effects&amp;#8221;; Biometrika, Vol. 70, No. 1., Apr., 1983, &lt;a href="http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf"&gt;pp. 41-55&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-rose" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn-pearl1"&gt;
-&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf"&gt;pp. 348-352&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf"&gt;pp. 348-352&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn-pearl2"&gt;
 &lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf"&gt;pp. 341-344&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl2" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn-austin"&gt;
-&lt;p&gt;Peter C. Austin; &amp;#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&amp;#8221;; Multivariate Behav Res. 2011 May; 46(3): &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;pp. 399–424&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Peter C. Austin; &amp;#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&amp;#8221;; Multivariate Behav Res. 2011 May; 46(3): &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;pp. 399–424&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;

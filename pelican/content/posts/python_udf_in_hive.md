@@ -1,7 +1,7 @@
 ---
 title: Hive UDFs and UDAFs with Python
 date: 2016-10-23 11:00
-modified: 2016-10-23 11:00
+modified: 2017-04-26 11:00
 category: post
 tags: python, hadoop, hive, big data
 authors: Florian Wilhelm
@@ -86,6 +86,27 @@ We start by creating an empty virtual environment with:
 
 assuming that `virtualenv` was already installed with the help of pip. Note that
 we explicitly ask for Python 3. Who uses Python 2 these days anyhow?
+
+The problem with the `activate` script of a virtual environment is that 
+its path is hard-coded. We change that by replacing the line 
+```bash
+VIRTUAL_ENV="your/path/to/venv"
+```
+with
+```bash
+HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+VIRTUAL_ENV="$( readlink -f "${HERE}/../" )"
+```
+in `./venv/bin/activate`. Additionally, we replace in `pip` the shebang line, i.e.
+replacing
+```bash
+#!/your/path/to/venv/venv/bin/python3
+```
+with
+```bash
+#!/usr/bin/env python
+```
+This will help us later when we call `pip list` for debugging reasons.
 
 We activate the virtual environment and install Pandas in it.
 > source venv/bin/activate
@@ -180,10 +201,13 @@ set -e
 (>&2 echo "Begin of script")
 source ./venv.tgz/bin/activate
 (>&2 echo "Activated venv")
-./venv.tgz/bin/python3 udaf.py
+(>&2 pip list --format=columns --no-cache-dir)
+python udaf.py
 (>&2 echo "End of script")
 ```
 Again we use standard error to trace what the script is currently doing.
+Furthermore, we use `pip list` to output the content of the virtual environment
+for debugging reasons.
 With the help of `chmod u+x` we make the script executable and now all that's
 left is to push both files somewhere on HDFS for the cluster to find:
 > hdfs dfs -put udaf.py /tmp

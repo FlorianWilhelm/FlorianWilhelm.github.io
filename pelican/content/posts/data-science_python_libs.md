@@ -7,7 +7,6 @@ tags: scikit-learn, machine-learning, bayesian
 authors: Florian Wilhelm
 status: draft
 ---
-{% notebook es_reco_and_linear_extensions.ipynb %}
 
 
 ipython

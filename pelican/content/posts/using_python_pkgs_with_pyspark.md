@@ -1,0 +1,108 @@
+---
+title: Using Python packages with PySpark
+date: 2017-06-01 12:30
+modified: 2017-06-01 19:30
+category: article
+tags: spark, python 
+authors: Florian Wilhelm
+status: draft
+---
+
+With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how to count words. In contrast to that I found resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in a PySpark program quite lacking. For most Spark/Hadoop distributions, in my case Cloudera, the [best-practise][] seems to set up (or rather let set up by a sysadmin) a virtual environment on all hosts of your cluster. This virtual environment can then be used by your PySpark application. The drawback of this approach are as severe as obvious. Firstly, either your data scientist have permission to access the actual cluster hosts with all implications or your sysadmins have a lot of fun setting up hundreds of virtual environments on a daily basis. Secondly, we are introducing a state in Spark leading to errors preventing sane application in production like:
+ 
+ DataScientist: "I deployed my virtual envs on all hosts two weeks ago, now my production code fails occasionally with missing imports."
+ SysAdmin: "Well, we added a few more nodes a week ago."
+
+In order to prevent situations like this we want to run every time our application with all its dependencies bundled like you would to with a JAR file in Scala. Since Python is a not a compiled language this task sounds easier than it actually is. This is recognized as a problem and several issues ([SPARK-13587][] & [SPARK-13587][]) suggest solutions but none are implemented yet. So that is point were it gets interesting. Coming up with a solution that that allows bundling all requirements together with the actual PySpark application of of course it should not be too hacky ;-)
+
+Luckily, PySpark provides the function [sc.addFile][] and [sc.addPyFile][] that allow us uploading files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. Still, due to the wheel format all we have to do is upload them with ``sc.addFile`` and unpack them, even the ``PYTHONPATH`` will be correctly set for us by PySpark. So we have already everything we need but how do we get the proper wheel files? First we check the Python version we want to use on Spark, in my case that is Python 3.4 on Cloudera cdh5.11.0. Now on some Linux, which needs to be compatible with the Linux on your Spark distribution, we create an Anaconda environment with the exact same Python version:
+
+> conda create -n py34 python=3.4
+> source activate py34
+
+Having activated the environment, we just use ``pip download`` to download all the requirements of our PySpark application as wells as the requirements of requirements and so on. In case there is no wheel file available, ``pip`` will download a source-based ``tar.gz`` file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type ``python setup.py bdist_wheel``. A wheel file should now reside in the `dist` folder. Thereafter, we push all wheel files into some hdfs directory that is accessible by spark. For this example we will use ``hdfs:///absolute/path/to/wheelhouse``. 
+
+Up until now was only preliminary skirmishing, so let's get coding Python. All we need to do is add the files from our hdfs directory to the Spark context. Then, we unzip them since wheel files are just plain zip files and that's about it. The code below will demonstrate this and serves as a basic template for a typical PySpark script. Therefore, the template also generates a ``SparkSession`` with Hive support, fires a query and converts it into a Pandas dataframe which can be removed of course if not needed. To execute the code just name it ``pyspark_with_py_pgks.py`` and run it with a command similar to this one:
+
+> PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster --num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 1  --files /etc/spark/conf/hive-site.xml --queue default pyspark_with_py_pgks.py
+
+The code is pretty much self-explanatory. If not, just drop me a line in the comments below:
+```python
+import os
+import sys
+import logging
+from zipfile import ZipFile
+
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark import SparkFiles
+
+
+_logger = logging.getLogger(__name__)
+
+
+def add_pkg(path):
+    SparkSession.builder.getOrCreate().sparkContext.addFile(path)
+    root_dir = SparkFiles.getRootDirectory()
+    file_name = os.path.basename(path)
+    file_path = os.path.join(root_dir, file_name)
+    with ZipFile(file_path, 'r') as zip_file:
+        zip_file.extractall(root_dir)
+    _logger.info("Added package {}".format(file_name))    
+
+
+sess = (SparkSession
+         .builder
+         .appName("Python Spark Data Science Stack Check")
+         .enableHiveSupport()
+         .getOrCreate())
+
+# setup basic logging
+logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+
+# upload all dependencies
+wheelhouse = 'hdfs:///absolute/path/to/wheelhouse'
+pkgs = ['turbodbc-1.1.1-cp34-cp34m-linux_x86_64.whl', 
+        'numpy-1.12.1-cp34-cp34m-manylinux1_x86_64.whl',
+        'six-1.10.0-py2.py3-none-any.whl',
+        'Jinja2-2.9.6-py2.py3-none-any.whl',
+        'MarkupSafe-1.0-cp34-cp34m-linux_x86_64.whl',
+        'cycler-0.10.0-py2.py3-none-any.whl',
+        'pandas-0.20.1-cp34-cp34m-manylinux1_x86_64.whl',
+        'pybind11-2.1.1-py2.py3-none-any.whl',
+        'pyparsing-2.2.0-py2.py3-none-any.whl',
+        'python_dateutil-2.6.0-py2.py3-none-any.whl',
+        'pytz-2017.2-py2.py3-none-any.whl',
+        'scikit_learn-0.18.1-cp34-cp34m-manylinux1_x86_64.whl',
+        'scipy-0.19.0-cp34-cp34m-manylinux1_x86_64.whl']
+for pkg in pkgs:
+    add_pkg(os.path.join(wheelhouse, pkg))
+
+# do the actual importing after adding the package
+import numpy as np
+import pandas as pd
+import scipy as sp
+import sklearn
+
+# just some random query 
+spark_df = sess.sql("SELECT * FROM my_database.my_table LIMIT 10")
+pd_df = spark_df.toPandas()
+print(pd_df)
+
+# print some versions to check with above
+print('Python', sys.version)
+print('PySpark', pyspark.__version__)
+print('NumPy', np.__version__)
+print('SciPy', sp.__version__)
+print('Pandas', pd.__version__)
+print('Scikit-Learn', sklearn.__version__)
+
+# check that NumPuy really works ;-)
+print(np.arange(10))
+```
+
+[^best-practise]: https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5
+[^sc.addFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile
+[^sc.addPyFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addPyFile
+[^SPARK-13587]: https://issues.apache.org/jira/browse/SPARK-13587
+[^SPARK-16367]: https://issues.apache.org/jira/browse/SPARK-16367

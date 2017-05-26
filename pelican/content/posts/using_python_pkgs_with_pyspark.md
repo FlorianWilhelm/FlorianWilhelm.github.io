@@ -8,23 +8,29 @@ authors: Florian Wilhelm
 status: draft
 ---
 
-With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how to count words. In contrast to that I found resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in a PySpark program quite lacking. For most Spark/Hadoop distributions, in my case Cloudera, the [best-practise][] seems to set up (or rather let set up by a sysadmin) a virtual environment on all hosts of your cluster. This virtual environment can then be used by your PySpark application. The drawback of this approach are as severe as obvious. Firstly, either your data scientist have permission to access the actual cluster hosts with all implications or your sysadmins have a lot of fun setting up hundreds of virtual environments on a daily basis. Secondly, we are introducing a state in Spark leading to errors preventing sane application in production like:
+With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how to count words. In contrast to that I found resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in a PySpark program quite lacking. For most Spark/Hadoop distributions, in my case Cloudera, the [best-practise][] seems to be that you (or rather a sysadmin) sets up a dedicated virtual environment (with [virtualenv][] or [conda][]) on all hosts of your cluster. This virtual environment can then be used by your PySpark application. The drawback of this approach are as severe as obvious. Firstly, either your data scientists have permission to access the actual cluster hosts with all implications or your sysadmins have a lot of fun setting up hundreds of virtual environments on a daily basis. Secondly, we are introducing a state in your Spark jobs which is always a root cause of errors in production:
  
- DataScientist: "I deployed my virtual envs on all hosts two weeks ago, now my production code fails occasionally with missing imports."
- SysAdmin: "Well, we added a few more nodes a week ago."
+ **DataScientist**: "I deployed my virtual envs on all hosts two weeks ago, now my production code fails occasionally with missing imports."<br />
+ **SysAdmin**: "Well, we added a few more nodes a week ago... did you push your envs to those?"
 
-In order to prevent situations like this we want to run every time our application with all its dependencies bundled like you would to with a JAR file in Scala. Since Python is a not a compiled language this task sounds easier than it actually is. This is recognized as a problem and several issues ([SPARK-13587][] & [SPARK-13587][]) suggest solutions but none are implemented yet. So that is point were it gets interesting. Coming up with a solution that that allows bundling all requirements together with the actual PySpark application of of course it should not be too hacky ;-)
+In order to prevent situations like this we want to deploy our application with all its dependencies bundled every time we run it, just like you would to with a jar file in Scala. Since Python is a not a compiled language this task sounds easier than it actually is. This observation is recognized as a problem and several issues ([SPARK-13587][] & [SPARK-13587][]) suggest solutions but none are implemented yet. So we are coming to the point were things get interesting and our goal is set. Coming up with a solution that that allows bundling all requirements together with the actual PySpark application and of course it should not be too hacky ;-)
 
-Luckily, PySpark provides the function [sc.addFile][] and [sc.addPyFile][] that allow us uploading files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. Still, due to the wheel format all we have to do is upload them with ``sc.addFile`` and unpack them, even the ``PYTHONPATH`` will be correctly set for us by PySpark. So we have already everything we need but how do we get the proper wheel files? First we check the Python version we want to use on Spark, in my case that is Python 3.4 on Cloudera cdh5.11.0. Now on some Linux, which needs to be compatible with the Linux on your Spark distribution, we create an Anaconda environment with the exact same Python version:
+Luckily, PySpark provides the function [sc.addFile][] and [sc.addPyFile][] that allow us uploading files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without those. At first sight this looks pretty bad but thanks to the wheel format all we have to do is upload with ``sc.addFile`` and unpack them, even the ``PYTHONPATH`` will be correctly set for us by PySpark. So in theory, we have already all the tools we need but how do we get the proper wheel files? First we check the Python version we want to use on Spark, in my case that is Python 3.4 on Cloudera cdh5.11.0. Now on some Linux, which needs to be compatible with the Linux on your Spark distribution, we create an Anaconda environment with the exact same Python version:
 
-> conda create -n py34 python=3.4
-> source activate py34
+```bash
+conda create -n py34 python=3.4
+source activate py34
+```
 
-Having activated the environment, we just use ``pip download`` to download all the requirements of our PySpark application as wells as the requirements of requirements and so on. In case there is no wheel file available, ``pip`` will download a source-based ``tar.gz`` file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type ``python setup.py bdist_wheel``. A wheel file should now reside in the `dist` folder. Thereafter, we push all wheel files into some hdfs directory that is accessible by spark. For this example we will use ``hdfs:///absolute/path/to/wheelhouse``. 
+Having activated the environment, we just use ``pip download`` to download all the requirements of our PySpark application as well as the requirements of the requirements and so on. In case there is no wheel file available, ``pip`` will download a source-based ``tar.gz`` file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type ``python setup.py bdist_wheel``. A wheel file should now reside in the `dist` folder. Thereafter, we push all wheel files into some hdfs directory that is accessible by spark. For this example we will use ``hdfs:///absolute/path/to/wheelhouse``. 
 
-Up until now was only preliminary skirmishing, so let's get coding Python. All we need to do is add the files from our hdfs directory to the Spark context. Then, we unzip them since wheel files are just plain zip files and that's about it. The code below will demonstrate this and serves as a basic template for a typical PySpark script. Therefore, the template also generates a ``SparkSession`` with Hive support, fires a query and converts it into a Pandas dataframe which can be removed of course if not needed. To execute the code just name it ``pyspark_with_py_pgks.py`` and run it with a command similar to this one:
+Up until now was only preliminary skirmishing, so let's get coding Python. We stick to the plan we laid out before, all we need to do is adding the files from our hdfs directory to the Spark context. Then, we unzip the files since wheel files are just plain zip files with a special structure and some meta information and that's about it. The code below will demonstrate this and often serves me as a basic template for a typical PySpark script. Therefore, the template also generates a ``SparkSession`` with Hive support, fires a query and converts it into a Pandas dataframe which can be removed of course if not needed. To execute the code just name it ``pyspark_with_py_pgks.py`` and run it with a command similar to this one:
 
-> PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster --num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 1  --files /etc/spark/conf/hive-site.xml --queue default pyspark_with_py_pgks.py
+```bash
+PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster \
+--num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 1 \ 
+--files /etc/spark/conf/hive-site.xml --queue default pyspark_with_py_pgks.py
+```
 
 The code is pretty much self-explanatory. If not, just drop me a line in the comments below:
 ```python
@@ -101,8 +107,10 @@ print('Scikit-Learn', sklearn.__version__)
 print(np.arange(10))
 ```
 
-[^best-practise]: https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5
-[^sc.addFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile
-[^sc.addPyFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addPyFile
-[^SPARK-13587]: https://issues.apache.org/jira/browse/SPARK-13587
-[^SPARK-16367]: https://issues.apache.org/jira/browse/SPARK-16367
+[best-practise]: https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5
+[sc.addFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile
+[sc.addPyFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addPyFile
+[SPARK-13587]: https://issues.apache.org/jira/browse/SPARK-13587
+[SPARK-16367]: https://issues.apache.org/jira/browse/SPARK-16367
+[virtualenv]: https://virtualenv.pypa.io/en/stable/
+[conda]: https://conda.io/docs/intro.html

@@ -142,6 +142,14 @@ div.text_cell_render {
 }
 
 img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+
+div.collapseheader {
+    width=100%;
+    padding: 2px;
+    cursor: pointer;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
@@ -283,132 +291,94 @@ start visualizing the …</p>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<!-- Sidebar -->
 <section class="well well-sm">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
-                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
-                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
-              </ul>
-            </li>
+  <ul class="list-group list-group-flush">
 
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
 
-
-            <li class="list-group-item"><a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group list-inline tagcloud" id="tags">
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/asynchronous/">
-                            asynchronous
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/asyncio/">
-                            asyncio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/bayesian/">
-                            bayesian
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://www.florianwilhelm.info/tag/big-data/">
-                            big data
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/blue-yonder/">
-                            Blue Yonder
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/bokeh/">
-                            bokeh
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/causal-inference/">
-                            causal inference
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://www.florianwilhelm.info/tag/data-science/">
-                            data science
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/event-driven/">
-                            event-driven
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/google-hangouts/">
-                            google hangouts
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/gps/">
-                            gps
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/hadoop/">
-                            hadoop
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/hive/">
-                            hive
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://www.florianwilhelm.info/tag/jupyter/">
-                            jupyter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/kalman/">
-                            kalman
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://www.florianwilhelm.info/tag/machine-learning/">
-                            machine-learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">
-                            predictive analytics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://www.florianwilhelm.info/tag/python/">
-                            python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://www.florianwilhelm.info/tag/scikit-learn/">
-                            scikit-learn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/scipy/">
-                            scipy
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://www.florianwilhelm.info/tag/template/">
-                            template
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-    </ul>
-</section>            </aside>
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/blue-yonder/">Blue Yonder</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="http://www.florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/kalman/">kalman</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="http://www.florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/template/">template</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
         </div>
     </div>
 </div>
@@ -465,5 +435,19 @@ start visualizing the …</p>
     </script>
     <!-- End Google Analytics Code -->
 
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $("div.collapseheader").click(function () {
+    $header = $(this).children("span").first();
+    $codearea = $(this).children(".input_area");
+    console.log($(this).children());
+    $codearea.slideToggle(500, function () {
+        $header.text(function () {
+            return $codearea.is(":visible") ? "Collapse Code" : "Expand Code";
+        });
+    });
+});
+});
+</script>
 </body>
 </html>

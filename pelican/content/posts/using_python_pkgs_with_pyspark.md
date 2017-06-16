@@ -13,9 +13,9 @@ With the sustained success of the Spark data processing platform even data scien
  **DataScientist**: "I deployed my virtual envs on all hosts two weeks ago, now my production code fails occasionally with missing imports."<br />
  **SysAdmin**: "Well, we added a few more nodes a week ago... did you push your envs to those?"
 
-In order to prevent situations like this we want to deploy our application with all its dependencies bundled every time we run it, just like you would to with a jar file in Scala. Since Python is not a compiled language this task sounds easier than it actually is. This observation is recognized as a problem and several issues ([SPARK-13587][] & [SPARK-16367][]) suggest solutions but none are implemented yet. So we are coming to the point were things get interesting and our goal is set. Coming up with a solution that that allows bundling all requirements together with the actual PySpark application and of course it should not be too hacky ;-)
+In order to prevent situations like this we want to deploy our application with all its dependencies bundled every time we run it, just like you would to with a jar file in Scala. Since Python is not a compiled language this task sounds easier than it actually is. This observation is recognized as a problem and several issues ([SPARK-13587][] & [SPARK-16367][]) suggest solutions but none are implemented yet. So we are coming to the point were things get interesting and our goal is set. Coming up with a solution that allows bundling all requirements together with the actual PySpark application and of course it should not be too hacky ;-)
 
-Luckily, PySpark provides the functions [sc.addFile][] and [sc.addPyFile][] that allow us uploading files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without those. At first sight this looks pretty bad but thanks to the wheel format all we have to do is upload with ``sc.addFile`` and unpack them, even the ``PYTHONPATH`` will be correctly set for us by PySpark. So in theory, we have already all the tools we need but how do we get the proper wheel files? First we check the Python version we want to use on Spark, in my case that is Python 3.4 on Cloudera cdh5.11.0. Now on some Linux, which needs to be compatible with the Linux on your Spark distribution, we create an Anaconda environment with the exact same Python version:
+Luckily, PySpark provides the functions [sc.addFile][] and [sc.addPyFile][] which allow us uploading files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without those. At first sight this looks pretty bad but thanks to the wheel format all we have to do is upload with ``sc.addFile`` and unpack them, even the ``PYTHONPATH`` will be correctly set for us by PySpark. So in theory, we have already all the tools we need but how do we get the proper wheel files? First we check the Python version we want to use on Spark, in my case that is Python 3.4 on Cloudera cdh5.11.0. Now on some Linux, which needs to be compatible with the Linux on your Spark distribution, we create an Anaconda environment with the exact same Python version:
 
 ```bash
 conda create -n py34 python=3.4
@@ -28,8 +28,9 @@ Up until now was only preliminary skirmishing, so let's get coding Python. We st
 
 ```bash
 PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster \
---num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 1 \ 
---files /etc/spark/conf/hive-site.xml --queue default pyspark_with_py_pgks.py
+--num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 1 \
+--files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts=1 \
+pyspark_with_py_pgks.py
 ```
 
 The code is pretty much self-explanatory. If not, just drop me a line in the comments below:
@@ -105,6 +106,159 @@ print('Scikit-Learn', sklearn.__version__)
 
 # check that NumPy really works ;-)
 print(np.arange(10))
+```
+
+Das hier noch verwerten
+http://blog.cloudera.com/blog/2015/09/how-to-prepare-your-apache-hadoop-cluster-for-pyspark-jobs/
+https://stackoverflow.com/questions/37343437/how-to-run-a-function-on-all-spark-workers-before-processing-data-in-pyspark
+
+
+sc._jsc.sc().getExecutorMemoryStatus().size()
+'-'.join(a.split('-')[:2]) + ".dist-info"
+
+```python
+import os
+import logging
+from zipfile import ZipFile
+from functools import wraps
+
+from pyspark import SparkFiles
+from pyspark.context import SparkContext
+
+
+_logger = logging.getLogger(__name__)
+
+
+class PyEnv(object):
+    def __init__(self, wheelhouse, pkgs):
+        self.wheelhouse = wheelhouse
+        self.pkgs = pkgs
+        self._init = False
+
+    def init(self):
+        for pkg in self.pkgs:
+            path = os.path.join(self.wheelhouse, pkg)
+            self.add_pkg(path)
+            self.unpack_pkg(pkg)
+        self._init = True
+        return self
+
+    @staticmethod
+    def add_pkg(path):
+        SparkContext.getOrCreate().addFile(path)
+        _logger.info("Added file {}".format(path))
+
+    @classmethod
+    def unpack_pkg(cls, pkg):
+        root_dir = SparkFiles.getRootDirectory()
+        path = os.path.join(root_dir, pkg)
+        with ZipFile(path, 'r') as zip_file:
+            zip_file.extractall(root_dir)
+        _logger.info("Extracted package {}".format(pkg))
+
+    def __call__(self, func):
+        assert self._init, "You need to run .init() first"
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except ImportError:
+                for pkg in self.pkgs:
+                    self.unpack_pkg(pkg)
+                return func(*args, **kwargs)
+        return wrapper
+```
+
+
+```python
+import sys
+import logging
+
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import udf, collect_list, isnull, struct
+from pyspark.sql.types import IntegerType, LongType, FloatType, MapType, StringType
+from pyspark import SparkFiles
+
+from pyenv import PyEnv
+
+sess = (SparkSession
+         .builder
+         .appName("Python Spark SQL Hive integration example")
+         .enableHiveSupport()
+         .getOrCreate())
+sc = sess.sparkContext
+
+# setup basic logging
+logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+
+wheelhouse = 'hdfs:///company/MOBILE/data-platform/wheelhouse/'
+pkgs = ['turbodbc-1.1.1-cp34-cp34m-linux_x86_64.whl',
+        'numpy-1.12.1-cp34-cp34m-manylinux1_x86_64.whl',
+        'six-1.10.0-py2.py3-none-any.whl',
+        'Jinja2-2.9.6-py2.py3-none-any.whl',
+        'MarkupSafe-1.0-cp34-cp34m-linux_x86_64.whl',
+        'cycler-0.10.0-py2.py3-none-any.whl',
+        'pandas-0.20.1-cp34-cp34m-manylinux1_x86_64.whl',
+        'pybind11-2.1.1-py2.py3-none-any.whl',
+        'pyparsing-2.2.0-py2.py3-none-any.whl',
+        'python_dateutil-2.6.0-py2.py3-none-any.whl',
+        'pytz-2017.2-py2.py3-none-any.whl',
+        'scikit_learn-0.18.1-cp34-cp34m-manylinux1_x86_64.whl',
+        'scipy-0.19.0-cp34-cp34m-manylinux1_x86_64.whl']
+
+env = PyEnv(wheelhouse, pkgs).init()
+
+# do the actual importing after adding the package
+import numpy as np
+import pandas as pd
+import scipy as sp
+import sklearn
+import turbodbc
+
+@env
+def squared(s):
+    import numpy as np
+    import pandas as pd
+    rnd = np.random.randn()
+    return s * rnd
+
+
+@env
+def count(struct):
+    import pandas as pd
+    series = pd.Series([elem.fuel for elem in struct])    
+    dct =  series.value_counts().to_dict()
+    return {k: int(v) for k, v in dct.items()}
+
+
+squared_udf = udf(squared, FloatType())
+count_udf = udf(count, MapType(StringType(), LongType()))
+df = sess.table("user_profiles_prod.monitor_profiles")
+df.select("sub_count", squared_udf("sub_count").alias("sub_count_squared")).show()
+
+df = sess.table("fwilhelm.profile_test")
+df = (df.groupby("uid")
+        .agg(collect_list(struct('fuel')).alias('struct'))
+        .withColumn('count', count_udf('struct')))
+df.show()
+
+pd_df = df.toPandas()
+print(pd_df)
+print('PySpark', pyspark.__version__)
+print('Numpy', np.__version__)
+print('Pandas', pd.__version__)
+print('Scikit-Learn', sklearn.__version__)
+print('turbodbc', turbodbc.api_constants.apilevel)
+print('SciPy', sp.__version__)
+
+# check that numpy really works ;-)
+print(np.arange(10))
+```
+
+```bash
+PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster --num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 2 --files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts=1 --py-files pyenv.py test.py
 ```
 
 [documentation]: https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5

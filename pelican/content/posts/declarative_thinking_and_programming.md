@@ -148,7 +148,7 @@ Mention leaky abstraction again
 <img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.jpeg"/><br>
  
  
- ```python
+```python
 import math
 from pyDatalog import pyDatalog
 

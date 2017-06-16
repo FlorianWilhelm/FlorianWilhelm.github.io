@@ -379,33 +379,32 @@ domain applying high-level concepts thus focusing more on the <em>what</em> and 
 readability of our code, quite often reduce the number of programming errors and also increase the performance at least
 compared to a naive implementation. To conclude this post let&#8217;s take a look at another example from the logic domain.
 We want to apply declarative programming to solve one of the <a href="http://www.zeit.de/2016/52/spiele-logelei-52">Logelei</a> riddles of the renowned German newspaper <a href="http://www.zeit.de/">Die Zeit</a>. </p>
-<p><img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.jpeg"/><br>
+<p><img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.png"/><br>
 <strong>horizontal:</strong> <br>
-A: digit sum of horizontal C, C: prime number, E: palindrome, <br>
-G: multiple of the backward number of horizontal A, <br>
-H: all digits are equal, I: vertical F times vertical K, <br>
-L: multiple of vertical M, N: multiple of horizontal Q, <br>
-P: vertical B is a multiple, Q: square number, <br>
-R: square number, S: prime number. <br></p>
+A: digit sum of horizontal C, C: prime number, E: palindrome, 
+G: multiple of the backward number of horizontal A, 
+H: all digits are equal, I: vertical F times vertical K,
+L: multiple of vertical M, N: multiple of horizontal Q,
+P: vertical B is a multiple, Q: square number,
+R: square number, S: prime&nbsp;number.</p>
 <p><strong>vertical:</strong> <br>
 All numbers are square&nbsp;numbers.</p>
 <p>Mention leaky abstraction&nbsp;again</p>
-<p><img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.jpeg"/><br></p>
+<p><img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.png"/><br></p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">pyDatalog</span> <span class="kn">import</span> <span class="n">pyDatalog</span>
 
 <span class="n">pyDatalog</span><span class="o">.</span><span class="n">create_terms</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
 <span class="n">pyDatalog</span><span class="o">.</span><span class="n">create_terms</span><span class="p">(</span><span class="s1">&#39;divmod&#39;</span><span class="p">)</span>
 
-
 <span class="nd">@pyDatalog.program</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">_</span><span class="p">():</span>
     <span class="n">is_divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">divmod</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">_is_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">is_divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-    <span class="n">_is_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="n">Y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">_is_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">_is_not_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">is_divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">_is_not_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">Y</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">is_divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
     <span class="o">+</span><span class="n">is_prim</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">is_prim</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">_is_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">is_prim</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">_is_not_prim</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="n">_is_squared</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">X</span> <span class="o">==</span> <span class="n">Y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">_is_squared</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">Y</span> <span class="o">&lt;=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">_is_squared</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
@@ -570,11 +569,11 @@ All numbers are square&nbsp;numbers.</p>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
         <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
     </ul>
 </section>
     <hr/>

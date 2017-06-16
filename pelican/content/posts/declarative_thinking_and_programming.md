@@ -129,14 +129,14 @@ readability of our code, quite often reduce the number of programming errors and
 compared to a naive implementation. To conclude this post let's take a look at another example from the logic domain.
 We want to apply declarative programming to solve one of the [Logelei][] riddles of the renowned German newspaper [Die Zeit]. 
 
-<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.jpeg"/><br>
+<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.png"/><br>
 **horizontal:** <br>
-A: digit sum of horizontal C, C: prime number, E: palindrome, <br>
-G: multiple of the backward number of horizontal A, <br>
-H: all digits are equal, I: vertical F times vertical K, <br>
-L: multiple of vertical M, N: multiple of horizontal Q, <br>
-P: vertical B is a multiple, Q: square number, <br>
-R: square number, S: prime number. <br>
+A: digit sum of horizontal C, C: prime number, E: palindrome, 
+G: multiple of the backward number of horizontal A, 
+H: all digits are equal, I: vertical F times vertical K,
+L: multiple of vertical M, N: multiple of horizontal Q,
+P: vertical B is a multiple, Q: square number,
+R: square number, S: prime number.
 
 **vertical:** <br>
 All numbers are square numbers.
@@ -145,7 +145,7 @@ All numbers are square numbers.
 Mention leaky abstraction again
 
 
-<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.jpeg"/><br>
+<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.png"/><br>
  
  
 ```python

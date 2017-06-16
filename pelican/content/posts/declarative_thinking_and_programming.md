@@ -155,15 +155,14 @@ from pyDatalog import pyDatalog
 pyDatalog.create_terms('math')
 pyDatalog.create_terms('divmod')
 
-
 @pyDatalog.program()
 def _():
     is_divisible(X, Y) <= (divmod(X, Y)[1] == 0)
 
-    _is_prim(X, Y) <= is_divisible(X, Y)
-    _is_prim(X, Y) <= (X > Y+1) & _is_prim(X, Y+1)
+    _is_not_prim(X, Y) <= is_divisible(X, Y)
+    _is_not_prim(X, Y) <= (Y+1 < math.sqrt(X)) & is_divisible(X, Y+1)
     +is_prim(2)
-    is_prim(X) <= (X > 2) & ~_is_prim(X, 2)
+    is_prim(X) <= (X > 2) & ~_is_not_prim(X, 2)
 
     _is_squared(X, Y) <= (X == Y**2)
     _is_squared(X, Y) <= (Y <= math.sqrt(X)) & _is_squared(X, Y+1)

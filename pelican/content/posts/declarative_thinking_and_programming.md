@@ -120,27 +120,33 @@ without any side effects. Let's assume some tasks depend on the result of others
 in parallel. Imparatively we could use Python's ``multiprocessing`` module to run certain tasks in parallel, synchronize when
 necessary and make sure we don't get confused in our bookkeeping. Thinking about the problem at hand, a declarative programmer
 would realise that a directed acyclic graph ([DAG][]) together with some mathematical concepts like [topological ordering][]
-will form a suitable abstraction layer for a scheduling problem like that. 
+will form a suitable abstraction layer for a scheduling problem like that. This epiphany would lead him directly to a
+nice tool called [Dask][] that allows to define and run a DAG in declarative way. 
+
+At this point you surely got the hang of it. Declarative programming in is essence is describing a problem within its 
+domain applying high-level concepts thus focusing more on the *what* and less on the *how*. This allows us to increase the
+readability of our code, quite often reduce the number of programming errors and also increase the performance at least
+compared to a naive implementation. To conclude this post let's take a look at another example from the logic domain.
+We want to apply declarative programming to solve one of the [Logelei][] riddles of the renowned German newspaper [Die Zeit]. 
+
+<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.jpeg"/><br>
+**horizontal:** <br>
+A: digit sum of horizontal C, C: prime number, E: palindrome, <br>
+G: multiple of the backward number of horizontal A, <br>
+H: all digits are equal, I: vertical F times vertical K, <br>
+L: multiple of vertical M, N: multiple of horizontal Q, <br>
+P: vertical B is a multiple, Q: square number, <br>
+R: square number, S: prime number. <br>
+
+**vertical:** <br>
+All numbers are square numbers.
 
 
- Arten der optimirierung, ueberberbestimmung
- https://en.wikipedia.org/wiki/Program_optimization#Levels_of_optimization
+Mention leaky abstraction again
+
+
+<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.jpeg"/><br>
  
- 
- 
- 
- https://tylermcginnis.com/imperative-vs-declarative-programming/
- 
- linear programming ist auch deklarative
- 
- story von hadoop map reduce erzaehlen und sql
- 
- nachteile hieraus:
- https://www.toptal.com/software/declarative-programming
- 
- 
- 
- [Logelei][]
  
  ```python
 import math
@@ -272,3 +278,6 @@ A0 | A1 | A2 | A3 | A4 | A5 | B0 | B1 | B2 | B3 | B4 | B5 | C0 | C1 | C2 | C3 | 
 [Voluptuous]: http://alecthomas.github.io/voluptuous/docs/_build/html/index.html
 [DAG]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
 [topological ordering]: https://en.wikipedia.org/wiki/Topological_sorting
+[Dask]: http://dask.pydata.org/en/latest/
+[Logelei]: http://www.zeit.de/2016/52/spiele-logelei-52
+[Die Zeit]: http://www.zeit.de/

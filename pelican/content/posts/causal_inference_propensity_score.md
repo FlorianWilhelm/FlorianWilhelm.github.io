@@ -1,7 +1,7 @@
 ---
 title: Causal Inference and Propensity Score Methods
 date: 2017-04-15 18:00
-modified: 2017-04-24 18:00
+modified: 2017-06-17 18:00
 category: post, talk
 tags: scikit-learn, machine-learning, python, causal inference
 authors: Florian Wilhelm
@@ -65,7 +65,9 @@ Furthermore, the demonstrated technique relies on several things. First, $X$ nee
 
 That said, propensity score techniques like IPTW can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the [propensity score methods introduction][propensity_introduction] by Peter Austin[^austin].
 
-A talk about this blog post was presented at a PyData meetup in Berlin:
+## PyData meetup talk
+
+A talk about this blog post was presented at PyData meetup in Berlin, April 19th:
 
 {% youtube tUq4esYY6CY 800 500 %}
 

@@ -294,7 +294,7 @@ Florian Wilhelm            </a>
 <li>calculate the effect with <span class="math">\(\hat{y}_1 - \hat{y}_0\)</span> or <span class="math">\(\frac{\hat{y}_1}{\hat{y}_0}\)</span>.</li>
 </ol>
 <p>In a real-world big-data problem we often have no control over the experimental setup — we are just left with the data. This happens for instance in observational studies. Imagine for instance the treatment with an experimental drug having strong side-effects that might cure a life-threatening disease. A controlled, randomized experiment where the control groups gets a placebo might be impracticable or even&nbsp;unethical. </p>
-<p>In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable<sup id="fnref-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup>. According to Pearl<sup id="fnref-pearl2"><a class="footnote-ref" href="#fn-pearl2">4</a></sup> by now assuming strong ignorability we are basically assuming that our covariate set <span class="math">\(X\)</span> is <em>admissible</em>, i.e. <span class="math">\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)</span>. Here, Pearl&#8217;s <span class="math">\(\mathrm{do}\)</span>-notation <span class="math">\(p(y|\mathrm{do}(z))\)</span> denotes the “causal effect” of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>, i.e. the distribution of <span class="math">\(Y\)</span> after setting variable <span class="math">\(Z\)</span> to a constant <span class="math">\(Z = z\)</span> by external intervention. In practice, the assumption of admissibility of <span class="math">\(X\)</span> is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies<sup id="fnref-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup>, so one should always be aware that the entire causal analysis depends on the validity of this&nbsp;assumption. </p>
+<p>In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable<sup id="fnref-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup>. According to Pearl<sup id="fnref-pearl2"><a class="footnote-ref" href="#fn-pearl2">4</a></sup> by now assuming strong ignorability we are basically assuming that our covariate set <span class="math">\(X\)</span> is <em>admissible</em>, i.e. <span class="math">\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)</span>. Here, Pearl&#8217;s <span class="math">\(\mathrm{do}\)</span>-notation <span class="math">\(p(y|\mathrm{do}(z))\)</span> denotes the “causal effect” of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>, i.e. the distribution of <span class="math">\(Y\)</span> after setting variable <span class="math">\(Z\)</span> to a constant <span class="math">\(Z = z\)</span> by external intervention. In practice, the assumption of admissibility of <span class="math">\(X\)</span> is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies<sup id="fnref2-pearl1"><a class="footnote-ref" href="#fn-pearl1">3</a></sup>, so one should always be aware that the entire causal analysis depends on the validity of this&nbsp;assumption. </p>
 <p>So far, we have not only assumed admissibility of <span class="math">\(X\)</span> but also a randomized trial for our approach. Therefore, we should check beforehand that <span class="math">\(X ⫫ Z\)</span>, (which is a necessary but not sufficient condition), before applying the aforementioned approach. This can be verified by using <span class="math">\(X\)</span> to predict <span class="math">\(Z\)</span>. If this is not possible, and thus <span class="math">\(p(z|x) = p(z)\)</span>, the former approach is viable. But what if <span class="math">\(Z\)</span> is not independent of <span class="math">\(X\)</span> — as is often the case with real-world data. For instance, dealers of expensive vehicle brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of <span class="math">\(Z\)</span> from our covariates <span class="math">\(X\)</span>.</p>
 <h2>Propensity&nbsp;score</h2>
 <p>By predicting <span class="math">\(Z\)</span> based on <span class="math">\(X\)</span>, we have estimated the <em>propensity score</em>, i.e. <span class="math">\(p(Z=1|x)\)</span>. This of course assumes that we have used a classification method that returns probabilities for the classes <span class="math">\(Z=1\)</span> and <span class="math">\(Z=0\)</span>. Let <span class="math">\(e_i=p(Z=1|x_i)\)</span> be the propensity score of the <span class="math">\(i\)</span>-th observation, i.e. the propensity of the <span class="math">\(i\)</span>-th participant getting the treatment (<span class="math">\(Z=1\)</span>). </p>
@@ -446,7 +446,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -1446,7 +1448,9 @@ AABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[6]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -1535,7 +1539,9 @@ AABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[7]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -1661,7 +1667,9 @@ AABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -2042,7 +2050,9 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[9]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table class="simpletable">
@@ -2129,7 +2139,9 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[10]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -2197,7 +2209,9 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -2719,7 +2733,9 @@ TkSuQmCC
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[14]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -2835,7 +2851,9 @@ TkSuQmCC
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -3206,7 +3224,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[16]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table class="simpletable">
@@ -3293,7 +3313,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[17]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -3349,7 +3371,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -3893,7 +3917,9 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[20]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -3927,7 +3953,9 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[21]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -4006,7 +4034,9 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -4486,7 +4516,9 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -4943,7 +4975,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[25]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -5082,7 +5116,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[26]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table class="simpletable">
@@ -5169,7 +5205,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[27]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[27]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -5225,7 +5263,9 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -5705,7 +5745,9 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -6505,7 +6547,9 @@ RU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[32]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[32]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -6603,7 +6647,9 @@ RU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -6984,7 +7030,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[34]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -7082,7 +7130,9 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
@@ -7435,12 +7485,16 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 </div>
 </div>
 
-</div></p>
+</div>
+ 
+
+</p>
 <h2>Final&nbsp;notes</h2>
 <p>“With great power comes great responsibility” so they say, and <span class="caps">IPTW</span> is surely a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard by which to  estimate a causal effect and should always be preferred. But when reality hits us hard and we have just the data, i.e. no influence on the experiment generating it, we saw that <span class="caps">IPTW</span> improves causal inference to some&nbsp;extent. </p>
 <p>Furthermore, the demonstrated technique relies on several things. First, <span class="math">\(X\)</span> needs to be <em>admissible</em> — which cannot be practically checked. But we <em>can</em> investigate how the treatment was assigned in our data. In our campaign example, that would mean asking the marketing department about their former strategy when sending vouchers to customers. Then we could verify that the data includes all factors on which their strategy relied. Second, we need an accurate method of estimating the propensity scores for this approach to work. For the sake of simplicity, our demonstration did not check the prediction quality of our machine learning models on a test set, which would be advisable in a real application. The application of machine learning models should always encompass training, validation, test splits and a proper cost&nbsp;functional.</p>
-<p>That said, propensity score techniques like <span class="caps">IPTW</span> can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">propensity score methods introduction</a> by Peter Austin<sup id="fnref-austin"><a class="footnote-ref" href="#fn-austin">5</a></sup>.</p>
-<p>A talk about this blog post was presented at a PyData meetup in&nbsp;Berlin:</p>
+<p>That said, propensity score techniques like <span class="caps">IPTW</span> can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">propensity score methods introduction</a> by Peter Austin<sup id="fnref2-austin"><a class="footnote-ref" href="#fn-austin">5</a></sup>.</p>
+<h2>PyData meetup&nbsp;talk</h2>
+<p>A talk about this blog post was presented at PyData meetup in Berlin, April&nbsp;19th:</p>
 <p><span class="videobox">
                 <iframe width="800" height="500"
                     src='https://www.youtube.com/embed/tUq4esYY6CY'
@@ -7459,13 +7513,13 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 <p>Paul R. Rosenbaum, Donald B. Rubin; &#8220;The Central Role of the Propensity Score in Observational Studies for Causal Effects&#8221;; Biometrika, Vol. 70, No. 1., Apr., 1983, <a href="http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf">pp. 41-55</a>&#160;<a class="footnote-backref" href="#fnref-rose" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn-pearl1">
-<p>Judea Pearl; &#8220;<span class="caps">CAUSALITY</span> - Models, Reasoning and Inference&#8221;; 2nd Edition, 2009, <a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf">pp. 348-352</a>&#160;<a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p>Judea Pearl; &#8220;<span class="caps">CAUSALITY</span> - Models, Reasoning and Inference&#8221;; 2nd Edition, 2009, <a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf">pp. 348-352</a>&#160;<a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2-pearl1" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn-pearl2">
 <p>Judea Pearl; &#8220;<span class="caps">CAUSALITY</span> - Models, Reasoning and Inference&#8221;; 2nd Edition, 2009, <a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf">pp. 341-344</a>&#160;<a class="footnote-backref" href="#fnref-pearl2" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 <li id="fn-austin">
-<p>Peter C. Austin; &#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&#8221;; Multivariate Behav Res. 2011 May; 46(3): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">pp. 399–424</a>&#160;<a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+<p>Peter C. Austin; &#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&#8221;; Multivariate Behav Res. 2011 May; 46(3): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/">pp. 399–424</a>&#160;<a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2-austin" title="Jump back to footnote 5 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
@@ -7530,10 +7584,10 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
         <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
     </ul>
 </section>
     <hr/>

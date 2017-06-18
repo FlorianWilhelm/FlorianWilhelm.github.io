@@ -45,7 +45,7 @@ elements to sum up first. This removes the possibility of our CAS software to ch
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the
 [single-level of abstraction principle][] which is highly connected to declarative programming and thinking. 
 If, on the other hand though, our task is to solve a given linear optimization problem, starting to implement a 
-Simplex algorithm on our own in order to solve it can be considered imperative. 
+Simplex algorithm on our own with the help of vector operations in order to solve it can be considered imperative. 
  
 Having realized the importance of the level of abstraction resp. the domain our task lives in, the obvious question is 
 the following one: How do languages like SQL and Prolog or Datalog fit into our picture since they are always stated as 
@@ -56,14 +56,14 @@ By using the relational algebra as toolbox to define queries we have an abstract
 the task at hand but unsuitable for any other task outside that domain. The same observation holds for Prolog and Datalog
 which apply a set of mathematical concepts, most prominently the [Horn clause][], to solve problems in the field of logistic programming.
 At that point, it should also be noted that functional programming can also be considered to be declarative programming.
-In this case the abstraction layer is based again on mathematical concepts with certain possible operations but also restrictions.
+Again, the abstraction layer is based again on mathematical concepts with certain possible operations but also restrictions.
 For example a function is typically treated as any other value and can therefore be chained with other functions, passed
 as parameters or even returned from another function. Compared to an imperative language, the most well-known restriction
 is that functions are not allowed to have any side-effects.
 
 Before we start to apply declarative concepts one word of caution about abstractions in general. In a perfect world an
 abstraction layer would completely hide the inner workings beneath it from the user. But even a DSL like SQL built on 
-such a well-conceived theoratical foundation as the relational algebra is in practice a bit leaky. This can be experienced
+such a well-conceived theoretical foundation as the relational algebra is in practice a bit leaky. This can be experienced
 quite easily when looking at two different but logically equivalent queries differing in performance by orders of magnitude.
 The *Law of Leaky Abstractions* by Spolsky even states that "All non-trivial abstractions, to some degree, are leaky."
 Beside this caveat, abstractions are still a powerful tool to handle complexity. 
@@ -89,7 +89,7 @@ result = [i**2 for i in range(1, 11)]
 Now we haven't specified an ordering which would theoretically even allow the Python interpreter to calculate the result in parallel.
 Besides the list comprehension similar syntax exists for dictionaries and even sets. 
 
-The set type might even be the most underappreciated data type in Python's standard library. Image you want check if some sentences in a newly
+Speaking about sets, the set type might even be the most underappreciated data type in Python's standard library. Image you want to check if some sentences in a newly
 published paper exactly match sentences in your paper to prove plagiarism. Of course there a special tools for that but
 assume you have only Python. The naive approach would be to take a sentence from the first paper and compare it to all
 sentences of the other. Since this algorithm would be of complexity $O(n^2)$ the performance would be quite bad if you want
@@ -104,8 +104,8 @@ result = A & B
 Again, we have not only gained readability compared to a version with two nested loops that I skipped here but
 execution will also be much faster since specialised algorithms based on hash tables are applied beneath the abstraction.
 
-Another often encounter that is deeply woven into Python is *configuration* via a Python module. Libraries like Sphinx,
-Python's setuptools and many others use actual Python module in order to configure certain settings. While this allows for
+Another often encounter that is deeply woven into Python is configuration via a Python module. Libraries like Sphinx,
+Python's setuptools and many others use actual Python modules in order to configure certain settings. While this allows for
 utmost flexibility, their configuration files are often hard to read and error-prone. An declarative approach for configuration
 is the usage of a markup language like for instance [YAML][]. Using YAML files to configure a Python program has several
 advantages. Firstly, any decent editor is able to parse it and therefore will warn you about syntax errors. Secondly, the
@@ -118,16 +118,16 @@ When it comes to parallel programming in Python declarative programming might al
 and falls with the actual use-case, but let's assume that we have several tasks in the form of pure functions, i.e. functions
 without any side effects. Let's assume some tasks depend on the result of others while others could be potentially executed
 in parallel. Imparatively we could use Python's ``multiprocessing`` module to run certain tasks in parallel, synchronize when
-necessary and make sure we don't get confused in our bookkeeping. Thinking about the problem at hand, a declarative programmer
+necessary and make sure we don't get confused in the bookkeeping. Thinking about the problem at hand, a declarative programmer
 would realise that a directed acyclic graph ([DAG][]) together with some mathematical concepts like [topological ordering][]
 will form a suitable abstraction layer for a scheduling problem like that. This epiphany would lead him directly to a
 nice tool called [Dask][] that allows to define and run a DAG in declarative way. 
 
-At this point you surely got the hang of it. Declarative programming in is essence is describing a problem within its 
+At this point you surely got the hang of it. The essence of declarative programming is describing a problem within its 
 domain applying high-level concepts thus focusing more on the *what* and less on the *how*. This allows us to increase the
 readability of our code, quite often reduce the number of programming errors and also increase the performance at least
-compared to a naive implementation. To conclude this post let's take a look at another example from the logic domain.
-We want to apply declarative programming to solve one of the [Logelei][] riddles of the renowned German newspaper [Die Zeit]. 
+compared to a naive implementation. To conclude this post let's take a look at a fancier example from the logic domain.
+We want to apply declarative programming to solve one of the [Logelei][] riddles of the renowned german newspaper [Die Zeit]. 
 
 <img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.png"/><br>
 **horizontal:** <br>
@@ -141,12 +141,79 @@ R: square number, S: prime number.
 **vertical:** <br>
 All numbers are square numbers.
 
+Solving such a problem with Python's common tools and libraries is possible but also quite cumbersome. Since we know
+that this problem is a problem from the domain of formal logic, there is actually no reason to leave this abstraction
+layer. With that in mind, the riddle can just be seen as a set of *rules* and *facts*. For instance we know for a fact
+that a number consist of digits 0 to 9 with the first digit being from 1 to 9. An example for a rule would be that
+an integer $n$ is a square number if and only if there exists an integer $k$ so that $k^2=n$.
+We will use the Python library [PyDatalog][] to translate the riddle into a proper form so that, after having stated
+all facts and rules, we can just ask for the values of each field of the table and PyDatalog will do the inference based
+on the knowledge we have given. The syntax of PyDatalog might seem a bit strange at first but it is really concise and powerful.
+The rule for a square number is stated as:
+```python
+squared(X) <= (math.sqrt(X).is_integer() == True)
+```
+It's best to read the leftmost ``<=`` as *if*. So the line above states that a number $X$ is squared if $\sqrt(X)\in\mathbb{Z}$. In an analogous manner, we can define a rule if one number is divisible by another:
+```python
+divisible(X, Y) <= (divmod(X, Y)[1] == 0)
+```
+Defining the rule for a prime number is a bit more tricky:
+```python
++prime(2)
++prime(3)
+prime(X) <= (X > 3) & ~divisible(X, 2) & ~factor(X, 3)
+factor(X, Y) <= divisible(X, Y)
+factor(X, Y) <= (Y+2 < math.sqrt(X)) & factor(X, Y+2)
+```
+The first two lines add the facts that $2$ and $3$ are prime numbers to our knowledge. 
+The third line says that any number $X$ is a prime number if it is greater than $3$, if it is not divisible by $2$ and if it has not any other factor greater or equal than $3$. To express the notion of *any other factor greater or equal than 3*, we have to apply recursion. From high school we know that in order that find out if an
+odd number is prime, we should check all odd numbers from $3$ to $\sqrt(X)$ if any of them is a factor of $X$. This is
+exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate $3$ (as in line 3), the recursion iterates over all odd numbers up to $\sqrt(X)$. Easy, right?
 
-Mention leaky abstraction again
-
+Let's denote each field in our table with a coordinate where rows are A to F and columns 0 to 5 for easier reference.
+Since each field holds a digit but our rules are defined for numbers we have to map digits to numbers. That can easily
+be done in PyDatalog with:
+```python
+digits2num[A, B] = 10*A + B
+digits2num[A, B, C] = 10*digits2num[A, B] + C
+digits2num[A, B, C, D] = 10*digits2num[A, B, C] + D
+digits2num[A, B, C, D, E] = 10*digits2num[A, B, C, D] + E
+digits2num[A, B, C, D, E, F] = 10*digits2num[A, B, C, D, E] + F
+```
+Now we are all set to translate the riddle one constraint after another to PyDatalog. Unfortunately, that's where
+things will go crazy due to leaky abstraction. Of course in theory everything should work but behind the curtain what
+PyDatalog will do is generating and eliminating possible solution candidates and if it does this in the wrong order
+computation could take forever if not some out of memory error bites us first. Putting a bit of thought into the riddle
+first, you could try to reorder the given constraints in a way that the list of solutions fulfilling the constraints stays
+ low at all time. We accomplish this by partitioning the table into four corner parts and define the constraints for each
+ of them separately like shown in the picture below:
 
 <img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.png"/><br>
  
+For the upper left, blue corner we can now define the set of all solutions with:
+```python
+ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) <= (
+    # C horizontal
+    A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & prime(digits2num[A2, A3]) &
+    # A horizontal
+    A0.in_(range(1, 10)) & A1.in_(range(1, 10)) & (digits2num[A0, A1] == A2 + A3) &
+    # C vertical
+    B2.in_(range(10)) & squared(digits2num[A2, B2]) &
+    # G horizontal
+    B0.in_(range(1, 10)) & B1.in_(range(10)) & divisible(digits2num[B0, B1, B2], digits2num[A1, A0]) &
+    # A vertical
+    C0.in_(range(1, 10)) & squared(digits2num[A0, B0, C0]) &
+    # B vertical
+    C1.in_(range(10)) & D1.in_(range(10)) & squared(digits2num[A1, B1, C1, D1]))
+```
+The code is pretty much self-explanatory. For instance, the constraint C says that the fields A2 and A3 should form a
+prime number. Additionally, A2 and A3 are first digits of two different numbers in our table which means they can only
+be 1 to 9. 
+
+Having defined all four parts we can just combine them to arrive at the final solution as shown in the code below.
+We have seen that declarative programming can be really powerful in that it improves readability, maintenance and separation
+in programming. The notion behind declarative programming is that for a given task the level of abstaction should be
+applied allowing to describe the task in a canonical way. 
  
 ```python
 import math
@@ -157,16 +224,15 @@ pyDatalog.create_terms('divmod')
 
 @pyDatalog.program()
 def _():
-    is_divisible(X, Y) <= (divmod(X, Y)[1] == 0)
+    squared(X) <= (math.sqrt(X).is_integer() == True)
+    
+    divisible(X, Y) <= (divmod(X, Y)[1] == 0)
 
-    _is_not_prim(X, Y) <= is_divisible(X, Y)
-    _is_not_prim(X, Y) <= (Y+1 < math.sqrt(X)) & is_divisible(X, Y+1)
-    +is_prim(2)
-    is_prim(X) <= (X > 2) & ~_is_not_prim(X, 2)
-
-    _is_squared(X, Y) <= (X == Y**2)
-    _is_squared(X, Y) <= (Y <= math.sqrt(X)) & _is_squared(X, Y+1)
-    is_squared(X) <= _is_squared(X, 1)
+    +prime(2)
+    +prime(3)
+    prime(X) <= (X > 3) & ~divisible(X, 2) & ~factor(X, 3)
+    factor(X, Y) <= divisible(X, Y)
+    factor(X, Y) <= (Y+2 < math.sqrt(X)) & factor(X, Y+2)
 
     digits2num[A, B] = 10*A + B
     digits2num[A, B, C] = 10*digits2num[A, B] + C
@@ -180,17 +246,17 @@ def _():
     # upper left corner
     ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) <= (
         # C horizontal
-        A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & is_prim(digits2num[A2, A3]) &
+        A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & prime(digits2num[A2, A3]) &
         # A horizontal
         A0.in_(range(1, 10)) & A1.in_(range(1, 10)) & (digits2num[A0, A1] == A2 + A3) &
         # C vertical
-        B2.in_(range(10)) & is_squared(digits2num[A2, B2]) &
+        B2.in_(range(10)) & squared(digits2num[A2, B2]) &
         # G horizontal
-        B0.in_(range(1, 10)) & B1.in_(range(10)) & is_divisible(digits2num[B0, B1, B2], digits2num[A1, A0]) &
+        B0.in_(range(1, 10)) & B1.in_(range(10)) & divisible(digits2num[B0, B1, B2], digits2num[A1, A0]) &
         # A vertical
-        C0.in_(range(1, 10)) & is_squared(digits2num[A0, B0, C0]) &
+        C0.in_(range(1, 10)) & squared(digits2num[A0, B0, C0]) &
         # B vertical
-        C1.in_(range(10)) & D1.in_(range(10)) & is_squared(digits2num[A1, B1, C1, D1]))
+        C1.in_(range(10)) & D1.in_(range(10)) & squared(digits2num[A1, B1, C1, D1]))
 
     # upper right corner
     ur(A4, A5, B3, B4, B5, C5) <= (
@@ -199,40 +265,40 @@ def _():
         # H horizontal
         B3.in_(range(1, 10)) & B4.in_(range(10)) & B5.in_(range(10)) & (B3 == B4) & (B4 == B5) &
         # E vertical
-        C5.in_(range(10)) & is_squared(digits2num[A4, B5]) &
+        C5.in_(range(10)) & squared(digits2num[A4, B5]) &
         # F vertical
-        is_squared(digits2num[A5, B5, C5]))
+        squared(digits2num[A5, B5, C5]))
 
     # lower left corner
     ll(D0, E0, E1, E2, F0, F1) <= (
         # Q horizontal
-        F0.in_(range(1, 10)) & F1.in_(range(10)) & is_squared(digits2num[F0, F1]) &
+        F0.in_(range(1, 10)) & F1.in_(range(10)) & squared(digits2num[F0, F1]) &
         # O vertical
-        E1.in_(range(1, 10)) & is_squared(digits2num[E1, F1]) &
+        E1.in_(range(1, 10)) & squared(digits2num[E1, F1]) &
         # N horizontal
-        E0.in_(range(1, 10)) & E2.in_(range(10)) & is_divisible(digits2num[E0, E1, E2], digits2num[F0, F1]) &
+        E0.in_(range(1, 10)) & E2.in_(range(10)) & divisible(digits2num[E0, E1, E2], digits2num[F0, F1]) &
         # L vertical
-        D0.in_(range(1, 10)) & is_squared(digits2num[D0, E0, F0]))
+        D0.in_(range(1, 10)) & squared(digits2num[D0, E0, F0]))
 
     # lower right corner
     lr(A0, A1, A2, A3, B0, B1, B2, C0, C1, C4, D1, D4, D5, E3, E4, E5, F2, F3, F4, F5) <= (
         # fulfill upper left corner in order to have B vertical
         ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) &
         # S horizontal
-        F4.in_(range(1, 10)) & F5.in_(range(10)) & is_prim(digits2num[F4, F5]) &
+        F4.in_(range(1, 10)) & F5.in_(range(10)) & prime(digits2num[F4, F5]) &
         # M vertical
-        D5.in_(range(1, 10)) & E5.in_(range(10)) & is_squared(digits2num[D5, E5, F5]) &
+        D5.in_(range(1, 10)) & E5.in_(range(10)) & squared(digits2num[D5, E5, F5]) &
         # P vertical
-        E3.in_(range(1, 10)) & F3.in_(range(10)) & is_squared(digits2num[E3, F3]) &
+        E3.in_(range(1, 10)) & F3.in_(range(10)) & squared(digits2num[E3, F3]) &
         # P horizontal
-        E4.in_(range(10)) & is_divisible(digits2num[A1, B1, C1, D1], digits2num[E3, E4, E5]) &
+        E4.in_(range(10)) & divisible(digits2num[A1, B1, C1, D1], digits2num[E3, E4, E5]) &
         # R horizontal
-        F2.in_(range(1, 10)) & is_squared(digits2num[F2, F3]) &
+        F2.in_(range(1, 10)) & squared(digits2num[F2, F3]) &
         # K vertical
-        C4.in_(range(1, 10)) & D4.in_(range(10)) & is_squared(digits2num[C4, D4, E4, F4]))
+        C4.in_(range(1, 10)) & D4.in_(range(10)) & squared(digits2num[C4, D4, E4, F4]))
 
-    # complete board
-    board(X) <= (
+    # complete riddle
+    riddle(X) <= (
         # fulfill all corners and connect them
         ul(X[0][0], X[0][1], X[0][2], X[0][3], X[1][0], X[1][1], X[1][2], X[2][0], X[2][1], X[3][1]) &
         ur(X[0][4], X[0][5], X[1][3], X[1][4], X[1][5], X[2][5]) &
@@ -247,19 +313,20 @@ def _():
         (I == F*K) &
         X[3][3].in_(range(1, 10)) &
         # D vertical
-        is_squared(digits2num[X[0][3], X[1][3], X[2][3], X[3][3]]) &
+        squared(digits2num[X[0][3], X[1][3], X[2][3], X[3][3]]) &
         X[3][2].in_(range(1, 10)) &
         # L horizontal
         (L == digits2num[X[3][0], X[3][1], X[3][2], X[3][3], X[3][4], X[3][5]]) &
         (M == digits2num[X[3][5], X[4][5], X[5][5]]) &
-        is_divisible(L, M) &
+        divisible(L, M) &
         # J vertical
-        is_squared(digits2num[X[2][2], X[3][2], X[4][2], X[5][2]]))
+        squared(digits2num[X[2][2], X[3][2], X[4][2], X[5][2]]))
 
-    print(board([(A0, A1, A2, A3, A4, A5), (B0, B1, B2, B3, B4, B5), (C0, C1, C2, C3, C4, C5),
+    print(riddle([(A0, A1, A2, A3, A4, A5), (B0, B1, B2, B3, B4, B5), (C0, C1, C2, C3, C4, C5),
                  (D0, D1, D2, D3, D4, D5), (E0, E1, E2, E3, E4, E5), (F0, F1, F2, F3, F4, F5)]))
 ```
- 
+
+The last line above tells PyDatalog to just output all digits fulfilling the constraints of our riddle:
  
 ```python
 A0 | A1 | A2 | A3 | A4 | A5 | B0 | B1 | B2 | B3 | B4 | B5 | C0 | C1 | C2 | C3 | C4 | C5 | D0 | D1 | D2 | D3 | D4 | D5 | E0 | E1 | E2 | E3 | E4 | E5 | F0 | F1 | F2 | F3 | F4 | F5
@@ -280,3 +347,4 @@ A0 | A1 | A2 | A3 | A4 | A5 | B0 | B1 | B2 | B3 | B4 | B5 | C0 | C1 | C2 | C3 | 
 [Dask]: http://dask.pydata.org/en/latest/
 [Logelei]: http://www.zeit.de/2016/52/spiele-logelei-52
 [Die Zeit]: http://www.zeit.de/
+[PyDatalog]: https://sites.google.com/site/pydatalog/

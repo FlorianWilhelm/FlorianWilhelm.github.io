@@ -111,8 +111,8 @@ is the usage of a markup language like for instance [YAML][]. Using YAML files t
 advantages. Firstly, any decent editor is able to parse it and therefore will warn you about syntax errors. Secondly, the
 format maps to Python's dictionary data type and therefore many other libraries (e.g. data validation library like [Voluptuous][])
 which work on dictionaries can be easily applied. C and C++ have a long history of declarative build automation with the 
-help of ``make`` and it's declarative ``Makefiles``. Also Rust's build and packaging tool cargo is applying a declarative markup
-language, namely TOML.
+help of ``make`` and its declarative ``Makefiles``. Also Rust's build and packaging tool cargo is applying a declarative 
+markup language, namely TOML.
   
 When it comes to parallel programming in Python declarative programming might also come in handy. Again, everything stands
 and falls with the actual use-case, but let's assume that we have several tasks in the form of pure functions, i.e. functions

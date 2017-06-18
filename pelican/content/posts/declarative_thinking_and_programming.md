@@ -171,7 +171,7 @@ odd number is prime, we should check all odd numbers from $3$ to $\sqrt{X}$ if a
 exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate $3$ (as in line 3), the recursion iterates over all odd numbers up to $\sqrt{X}$. Easy, right?
 
 Let's denote each field in our table with a coordinate where rows are A to F and columns 0 to 5 for easier reference.
-Since each field holds a digit but our rules are defined for numbers we have to map digits to numbers. That can be done easily in PyDatalog with:
+Since each field holds a digit but our rules and many constraints of the riddle are defined for numbers we have to map digits to the corresponding number. This can be done easily in PyDatalog with:
 ```python
 num[A, B] = 10*A + B
 num[A, B, C] = 10*num[A, B] + C
@@ -233,15 +233,15 @@ def _():
     factor(X, Y) <= divisible(X, Y)
     factor(X, Y) <= (Y+2 < math.sqrt(X)) & factor(X, Y+2)
 
-    # convert digits to numbers
+    # convert digits to number
     num[A, B] = 10*A + B
     num[A, B, C] = 10*num[A, B] + C
     num[A, B, C, D] = 10*num[A, B, C] + D
     num[A, B, C, D, E] = 10*num[A, B, C, D] + E
     num[A, B, C, D, E, F] = 10*num[A, B, C, D, E] + F
 
-    # rows are denoted with A,B,C,D,E,F
-    # columns are denoted with 0,1,2,3,4,5
+    # rows are denoted with A, B, C, D, E, F
+    # columns are denoted with 0, 1, 2, 3, 4, 5
 
     # upper left corner
     ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) <= (

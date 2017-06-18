@@ -153,7 +153,7 @@ The rule for a square number is stated as:
 ```python
 squared(X) <= (math.sqrt(X).is_integer() == True)
 ```
-It's best to read the leftmost ``<=`` as *if*. So the line above states that a number $X$ is squared if $\sqrt{X}\in\mathbb{N}$. In an analogous manner, we can define a rule if one number is divisible by another:
+It's best to read the leftmost ``<=`` as *if*. So the line above states that a number $X$ is squared if $\sqrt{X}\in\mathbb{N}$. In an analogous manner, we can define a rule if one number is divisible by another with:
 ```python
 divisible(X, Y) <= (divmod(X, Y)[1] == 0)
 ```
@@ -171,14 +171,13 @@ odd number is prime, we should check all odd numbers from $3$ to $\sqrt{X}$ if a
 exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate $3$ (as in line 3), the recursion iterates over all odd numbers up to $\sqrt{X}$. Easy, right?
 
 Let's denote each field in our table with a coordinate where rows are A to F and columns 0 to 5 for easier reference.
-Since each field holds a digit but our rules are defined for numbers we have to map digits to numbers. That can easily
-be done in PyDatalog with:
+Since each field holds a digit but our rules are defined for numbers we have to map digits to numbers. That can be done easily in PyDatalog with:
 ```python
-digits2num[A, B] = 10*A + B
-digits2num[A, B, C] = 10*digits2num[A, B] + C
-digits2num[A, B, C, D] = 10*digits2num[A, B, C] + D
-digits2num[A, B, C, D, E] = 10*digits2num[A, B, C, D] + E
-digits2num[A, B, C, D, E, F] = 10*digits2num[A, B, C, D, E] + F
+num[A, B] = 10*A + B
+num[A, B, C] = 10*num[A, B] + C
+num[A, B, C, D] = 10*num[A, B, C] + D
+num[A, B, C, D, E] = 10*num[A, B, C, D] + E
+num[A, B, C, D, E, F] = 10*num[A, B, C, D, E] + F
 ```
 Now we are all set to translate the riddle one constraint after another to PyDatalog. Unfortunately, that's where
 things will go crazy due to leaky abstraction. Of course in theory everything should work but behind the curtain what
@@ -194,17 +193,17 @@ For the upper left, blue corner we can now define the set of all solutions with:
 ```python
 ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) <= (
     # C horizontal
-    A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & prime(digits2num[A2, A3]) &
+    A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & prime(num[A2, A3]) &
     # A horizontal
-    A0.in_(range(1, 10)) & A1.in_(range(1, 10)) & (digits2num[A0, A1] == A2 + A3) &
+    A0.in_(range(1, 10)) & A1.in_(range(1, 10)) & (num[A0, A1] == A2 + A3) &
     # C vertical
-    B2.in_(range(10)) & squared(digits2num[A2, B2]) &
+    B2.in_(range(10)) & squared(num[A2, B2]) &
     # G horizontal
-    B0.in_(range(1, 10)) & B1.in_(range(10)) & divisible(digits2num[B0, B1, B2], digits2num[A1, A0]) &
+    B0.in_(range(1, 10)) & B1.in_(range(10)) & divisible(num[B0, B1, B2], num[A1, A0]) &
     # A vertical
-    C0.in_(range(1, 10)) & squared(digits2num[A0, B0, C0]) &
+    C0.in_(range(1, 10)) & squared(num[A0, B0, C0]) &
     # B vertical
-    C1.in_(range(10)) & D1.in_(range(10)) & squared(digits2num[A1, B1, C1, D1]))
+    C1.in_(range(10)) & D1.in_(range(10)) & squared(num[A1, B1, C1, D1]))
 ```
 The code is pretty much self-explanatory. For instance, the constraint C says that the fields A2 and A3 should form a
 prime number. Additionally, A2 and A3 are first digits of two different numbers in our table which means they can only
@@ -234,29 +233,30 @@ def _():
     factor(X, Y) <= divisible(X, Y)
     factor(X, Y) <= (Y+2 < math.sqrt(X)) & factor(X, Y+2)
 
-    digits2num[A, B] = 10*A + B
-    digits2num[A, B, C] = 10*digits2num[A, B] + C
-    digits2num[A, B, C, D] = 10*digits2num[A, B, C] + D
-    digits2num[A, B, C, D, E] = 10*digits2num[A, B, C, D] + E
-    digits2num[A, B, C, D, E, F] = 10*digits2num[A, B, C, D, E] + F
+    # convert digits to numbers
+    num[A, B] = 10*A + B
+    num[A, B, C] = 10*num[A, B] + C
+    num[A, B, C, D] = 10*num[A, B, C] + D
+    num[A, B, C, D, E] = 10*num[A, B, C, D] + E
+    num[A, B, C, D, E, F] = 10*num[A, B, C, D, E] + F
 
-    # Rows are denoted with A,B,C,D,E,F
-    # Columns are denoted with 0,1,2,3,4,5
+    # rows are denoted with A,B,C,D,E,F
+    # columns are denoted with 0,1,2,3,4,5
 
     # upper left corner
     ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) <= (
         # C horizontal
-        A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & prime(digits2num[A2, A3]) &
+        A2.in_(range(1, 10)) & A3.in_(range(1, 10)) & prime(num[A2, A3]) &
         # A horizontal
-        A0.in_(range(1, 10)) & A1.in_(range(1, 10)) & (digits2num[A0, A1] == A2 + A3) &
+        A0.in_(range(1, 10)) & A1.in_(range(1, 10)) & (num[A0, A1] == A2 + A3) &
         # C vertical
-        B2.in_(range(10)) & squared(digits2num[A2, B2]) &
+        B2.in_(range(10)) & squared(num[A2, B2]) &
         # G horizontal
-        B0.in_(range(1, 10)) & B1.in_(range(10)) & divisible(digits2num[B0, B1, B2], digits2num[A1, A0]) &
+        B0.in_(range(1, 10)) & B1.in_(range(10)) & divisible(num[B0, B1, B2], num[A1, A0]) &
         # A vertical
-        C0.in_(range(1, 10)) & squared(digits2num[A0, B0, C0]) &
+        C0.in_(range(1, 10)) & squared(num[A0, B0, C0]) &
         # B vertical
-        C1.in_(range(10)) & D1.in_(range(10)) & squared(digits2num[A1, B1, C1, D1]))
+        C1.in_(range(10)) & D1.in_(range(10)) & squared(num[A1, B1, C1, D1]))
 
     # upper right corner
     ur(A4, A5, B3, B4, B5, C5) <= (
@@ -265,37 +265,37 @@ def _():
         # H horizontal
         B3.in_(range(1, 10)) & B4.in_(range(10)) & B5.in_(range(10)) & (B3 == B4) & (B4 == B5) &
         # E vertical
-        C5.in_(range(10)) & squared(digits2num[A4, B5]) &
+        C5.in_(range(10)) & squared(num[A4, B5]) &
         # F vertical
-        squared(digits2num[A5, B5, C5]))
+        squared(num[A5, B5, C5]))
 
     # lower left corner
     ll(D0, E0, E1, E2, F0, F1) <= (
         # Q horizontal
-        F0.in_(range(1, 10)) & F1.in_(range(10)) & squared(digits2num[F0, F1]) &
+        F0.in_(range(1, 10)) & F1.in_(range(10)) & squared(num[F0, F1]) &
         # O vertical
-        E1.in_(range(1, 10)) & squared(digits2num[E1, F1]) &
+        E1.in_(range(1, 10)) & squared(num[E1, F1]) &
         # N horizontal
-        E0.in_(range(1, 10)) & E2.in_(range(10)) & divisible(digits2num[E0, E1, E2], digits2num[F0, F1]) &
+        E0.in_(range(1, 10)) & E2.in_(range(10)) & divisible(num[E0, E1, E2], num[F0, F1]) &
         # L vertical
-        D0.in_(range(1, 10)) & squared(digits2num[D0, E0, F0]))
+        D0.in_(range(1, 10)) & squared(num[D0, E0, F0]))
 
     # lower right corner
     lr(A0, A1, A2, A3, B0, B1, B2, C0, C1, C4, D1, D4, D5, E3, E4, E5, F2, F3, F4, F5) <= (
         # fulfill upper left corner in order to have B vertical
         ul(A0, A1, A2, A3, B0, B1, B2, C0, C1, D1) &
         # S horizontal
-        F4.in_(range(1, 10)) & F5.in_(range(10)) & prime(digits2num[F4, F5]) &
+        F4.in_(range(1, 10)) & F5.in_(range(10)) & prime(num[F4, F5]) &
         # M vertical
-        D5.in_(range(1, 10)) & E5.in_(range(10)) & squared(digits2num[D5, E5, F5]) &
+        D5.in_(range(1, 10)) & E5.in_(range(10)) & squared(num[D5, E5, F5]) &
         # P vertical
-        E3.in_(range(1, 10)) & F3.in_(range(10)) & squared(digits2num[E3, F3]) &
+        E3.in_(range(1, 10)) & F3.in_(range(10)) & squared(num[E3, F3]) &
         # P horizontal
-        E4.in_(range(10)) & divisible(digits2num[A1, B1, C1, D1], digits2num[E3, E4, E5]) &
+        E4.in_(range(10)) & divisible(num[A1, B1, C1, D1], num[E3, E4, E5]) &
         # R horizontal
-        F2.in_(range(1, 10)) & squared(digits2num[F2, F3]) &
+        F2.in_(range(1, 10)) & squared(num[F2, F3]) &
         # K vertical
-        C4.in_(range(1, 10)) & D4.in_(range(10)) & squared(digits2num[C4, D4, E4, F4]))
+        C4.in_(range(1, 10)) & D4.in_(range(10)) & squared(num[C4, D4, E4, F4]))
 
     # complete riddle
     riddle(X) <= (
@@ -307,20 +307,20 @@ def _():
         ll(X[3][0], X[4][0], X[4][1], X[4][2], X[5][0], X[5][1]) &
         X[2][2].in_(range(1, 10)) & X[2][3].in_(range(10)) &
         # I horizontal
-        (I == digits2num[X[2][0], X[2][1], X[2][2], X[2][3], X[2][4], X[2][5]]) &
-        (F == digits2num[X[0][5], X[1][5], X[2][5]]) &
-        (K == digits2num[X[2][4], X[3][4], X[4][4], X[5][4]]) &
+        (I == num[X[2][0], X[2][1], X[2][2], X[2][3], X[2][4], X[2][5]]) &
+        (F == num[X[0][5], X[1][5], X[2][5]]) &
+        (K == num[X[2][4], X[3][4], X[4][4], X[5][4]]) &
         (I == F*K) &
         X[3][3].in_(range(1, 10)) &
         # D vertical
-        squared(digits2num[X[0][3], X[1][3], X[2][3], X[3][3]]) &
+        squared(num[X[0][3], X[1][3], X[2][3], X[3][3]]) &
         X[3][2].in_(range(1, 10)) &
         # L horizontal
-        (L == digits2num[X[3][0], X[3][1], X[3][2], X[3][3], X[3][4], X[3][5]]) &
-        (M == digits2num[X[3][5], X[4][5], X[5][5]]) &
+        (L == num[X[3][0], X[3][1], X[3][2], X[3][3], X[3][4], X[3][5]]) &
+        (M == num[X[3][5], X[4][5], X[5][5]]) &
         divisible(L, M) &
         # J vertical
-        squared(digits2num[X[2][2], X[3][2], X[4][2], X[5][2]]))
+        squared(num[X[2][2], X[3][2], X[4][2], X[5][2]]))
 
     print(riddle([(A0, A1, A2, A3, A4, A5), (B0, B1, B2, B3, B4, B5), (C0, C1, C2, C3, C4, C5),
                   (D0, D1, D2, D3, D4, D5), (E0, E1, E2, E3, E4, E5), (F0, F1, F2, F3, F4, F5)]))

@@ -402,7 +402,7 @@ The rule for a square number is stated&nbsp;as:</p>
 </pre></div>
 
 
-<p>It&#8217;s best to read the leftmost <code>&lt;=</code> as <em>if</em>. So the line above states that a number <span class="math">\(X\)</span> is squared if <span class="math">\(\sqrt(X)\in\mathbb{Z}\)</span>. In an analogous manner, we can define a rule if one number is divisible by&nbsp;another:</p>
+<p>It&#8217;s best to read the leftmost <code>&lt;=</code> as <em>if</em>. So the line above states that a number <span class="math">\(X\)</span> is squared if <span class="math">\(\sqrt{X}\in\mathbb{N}\)</span>. In an analogous manner, we can define a rule if one number is divisible by&nbsp;another:</p>
 <div class="highlight"><pre><span></span><span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">divmod</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
@@ -417,9 +417,9 @@ The rule for a square number is stated&nbsp;as:</p>
 
 
 <p>The first two lines add the facts that <span class="math">\(2\)</span> and <span class="math">\(3\)</span> are prime numbers to our knowledge. 
-The third line says that any number <span class="math">\(X\)</span> is a prime number if it is greater than <span class="math">\(3\)</span>, if it is not divisible by <span class="math">\(2\)</span> and if it has not any other factor greater or equal than <span class="math">\(3\)</span>. To express the notion of <em>any other factor greater or equal than 3</em>, we have to apply recursion. From high school we know that in order that find out if an
-odd number is prime, we should check all odd numbers from <span class="math">\(3\)</span> to <span class="math">\(\sqrt(X)\)</span> if any of them is a factor of <span class="math">\(X\)</span>. This is
-exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate <span class="math">\(3\)</span> (as in line 3), the recursion iterates over all odd numbers up to <span class="math">\(\sqrt(X)\)</span>. Easy,&nbsp;right?</p>
+The third line says that any number <span class="math">\(X\)</span> is a prime number if it is greater than <span class="math">\(3\)</span>, if it is not divisible by <span class="math">\(2\)</span> and if it has not any other factor greater or equal than <span class="math">\(3\)</span>. To express the notion of <em>any other factor greater or equal than 3</em>, we have to apply recursion. From high school we know that in order to find out if an
+odd number is prime, we should check all odd numbers from <span class="math">\(3\)</span> to <span class="math">\(\sqrt{X}\)</span> if any of them is a factor of <span class="math">\(X\)</span>. This is
+exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate <span class="math">\(3\)</span> (as in line 3), the recursion iterates over all odd numbers up to <span class="math">\(\sqrt{X}\)</span>. Easy,&nbsp;right?</p>
 <p>Let&#8217;s denote each field in our table with a coordinate where rows are A to F and columns 0 to 5 for easier reference.
 Since each field holds a digit but our rules are defined for numbers we have to map digits to numbers. That can easily
 be done in PyDatalog&nbsp;with:</p>
@@ -461,7 +461,7 @@ prime number. Additionally, A2 and A3 are first digits of two different numbers 
 be 1 to&nbsp;9. </p>
 <p>Having defined all four parts we can just combine them to arrive at the final solution as shown in the code below.
 We have seen that declarative programming can be really powerful in that it improves readability, maintenance and separation
-in programming. The notion behind declarative programming is that for a given task the level of abstaction should be
+in programming. The notion behind declarative programming is that for a given task the level of abstraction should be
 applied allowing to describe the task in a canonical&nbsp;way. </p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">pyDatalog</span> <span class="kn">import</span> <span class="n">pyDatalog</span>
@@ -570,7 +570,7 @@ applied allowing to describe the task in a canonical&nbsp;way. </p>
         <span class="n">squared</span><span class="p">(</span><span class="n">digits2num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">]]))</span>
 
     <span class="k">print</span><span class="p">(</span><span class="n">riddle</span><span class="p">([(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">A4</span><span class="p">,</span> <span class="n">A5</span><span class="p">),</span> <span class="p">(</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">B3</span><span class="p">,</span> <span class="n">B4</span><span class="p">,</span> <span class="n">B5</span><span class="p">),</span> <span class="p">(</span><span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">C3</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">C5</span><span class="p">),</span>
-                 <span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">D2</span><span class="p">,</span> <span class="n">D3</span><span class="p">,</span> <span class="n">D4</span><span class="p">,</span> <span class="n">D5</span><span class="p">),</span> <span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">E3</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">E5</span><span class="p">),</span> <span class="p">(</span><span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">F3</span><span class="p">,</span> <span class="n">F4</span><span class="p">,</span> <span class="n">F5</span><span class="p">)]))</span>
+                  <span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">D2</span><span class="p">,</span> <span class="n">D3</span><span class="p">,</span> <span class="n">D4</span><span class="p">,</span> <span class="n">D5</span><span class="p">),</span> <span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">E3</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">E5</span><span class="p">),</span> <span class="p">(</span><span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">F3</span><span class="p">,</span> <span class="n">F4</span><span class="p">,</span> <span class="n">F5</span><span class="p">)]))</span>
 </pre></div>
 
 
@@ -641,11 +641,11 @@ applied allowing to describe the task in a canonical&nbsp;way. </p>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
-        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
     </ul>
 </section>
     <hr/>

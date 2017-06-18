@@ -153,7 +153,7 @@ The rule for a square number is stated as:
 ```python
 squared(X) <= (math.sqrt(X).is_integer() == True)
 ```
-It's best to read the leftmost ``<=`` as *if*. So the line above states that a number $X$ is squared if $\sqrt(X)\in\mathbb{Z}$. In an analogous manner, we can define a rule if one number is divisible by another:
+It's best to read the leftmost ``<=`` as *if*. So the line above states that a number $X$ is squared if $\sqrt{X}\in\mathbb{N}$. In an analogous manner, we can define a rule if one number is divisible by another:
 ```python
 divisible(X, Y) <= (divmod(X, Y)[1] == 0)
 ```
@@ -166,9 +166,9 @@ factor(X, Y) <= divisible(X, Y)
 factor(X, Y) <= (Y+2 < math.sqrt(X)) & factor(X, Y+2)
 ```
 The first two lines add the facts that $2$ and $3$ are prime numbers to our knowledge. 
-The third line says that any number $X$ is a prime number if it is greater than $3$, if it is not divisible by $2$ and if it has not any other factor greater or equal than $3$. To express the notion of *any other factor greater or equal than 3*, we have to apply recursion. From high school we know that in order that find out if an
-odd number is prime, we should check all odd numbers from $3$ to $\sqrt(X)$ if any of them is a factor of $X$. This is
-exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate $3$ (as in line 3), the recursion iterates over all odd numbers up to $\sqrt(X)$. Easy, right?
+The third line says that any number $X$ is a prime number if it is greater than $3$, if it is not divisible by $2$ and if it has not any other factor greater or equal than $3$. To express the notion of *any other factor greater or equal than 3*, we have to apply recursion. From high school we know that in order to find out if an
+odd number is prime, we should check all odd numbers from $3$ to $\sqrt{X}$ if any of them is a factor of $X$. This is
+exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate $3$ (as in line 3), the recursion iterates over all odd numbers up to $\sqrt{X}$. Easy, right?
 
 Let's denote each field in our table with a coordinate where rows are A to F and columns 0 to 5 for easier reference.
 Since each field holds a digit but our rules are defined for numbers we have to map digits to numbers. That can easily
@@ -212,7 +212,7 @@ be 1 to 9.
 
 Having defined all four parts we can just combine them to arrive at the final solution as shown in the code below.
 We have seen that declarative programming can be really powerful in that it improves readability, maintenance and separation
-in programming. The notion behind declarative programming is that for a given task the level of abstaction should be
+in programming. The notion behind declarative programming is that for a given task the level of abstraction should be
 applied allowing to describe the task in a canonical way. 
  
 ```python
@@ -323,7 +323,7 @@ def _():
         squared(digits2num[X[2][2], X[3][2], X[4][2], X[5][2]]))
 
     print(riddle([(A0, A1, A2, A3, A4, A5), (B0, B1, B2, B3, B4, B5), (C0, C1, C2, C3, C4, C5),
-                 (D0, D1, D2, D3, D4, D5), (E0, E1, E2, E3, E4, E5), (F0, F1, F2, F3, F4, F5)]))
+                  (D0, D1, D2, D3, D4, D5), (E0, E1, E2, E3, E4, E5), (F0, F1, F2, F3, F4, F5)]))
 ```
 
 The last line above tells PyDatalog to just output all digits fulfilling the constraints of our riddle:

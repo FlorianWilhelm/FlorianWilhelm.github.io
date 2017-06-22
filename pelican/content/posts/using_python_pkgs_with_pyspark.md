@@ -261,6 +261,10 @@ print(np.arange(10))
 PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster --num-executors 4 --driver-memory 12g --executor-memory 4g --executor-cores 2 --files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts=1 --py-files pyenv.py test.py
 ```
 
+ToDo:
+- erwaehnen wie man die replication auf der venv erhoeht.
+- unterschied driver und executor erwaehnen
+
 [documentation]: https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5
 [blog]: http://blog.cloudera.com/blog/2016/02/making-python-on-apache-hadoop-easier-with-anaconda-and-cdh/
 [sc.addFile]: http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile

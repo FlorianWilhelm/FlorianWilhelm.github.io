@@ -38,14 +38,14 @@ how to do something and therefore imperative? No, actually not, it really depend
 abstraction that comes with it. 
 
 Let's say we want to do some linear algebra, in particular we want to sum up two n-dimensional
-vectors $a$ and $b$. Since we are in the domain of linear algebra using some CAS, we would expect to be able
+vectors $a$ and $b$. Since we are in the domain of linear algebra using some computer algebra system (CAS), we would expect to be able
 to just declare what we want $c = a + b$. Calculating $c$ with the help of a loop would clearly by imperative in the
 given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
 elements to sum up first. This removes the possibility of our CAS software to choose a native [SIMD][] CPU operation
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the
 [single-level of abstraction principle][] which is highly connected to declarative programming and thinking. 
 If, on the other hand though, our task is to solve a given linear optimization problem, starting to implement a 
-Simplex algorithm on our own with the help of vector operations in order to solve it can be considered imperative. 
+Simplex algorithm on our own with the help of vector operations in order to solve it can also be considered imperative. 
  
 Having realized the importance of the level of abstraction resp. the domain our task lives in, the obvious question is 
 the following one: How do languages like SQL and Prolog or Datalog fit into our picture since they are always stated as 
@@ -56,7 +56,7 @@ By using the relational algebra as toolbox to define queries we have an abstract
 the task at hand but unsuitable for any other task outside that domain. The same observation holds for Prolog and Datalog
 which apply a set of mathematical concepts, most prominently the [Horn clause][], to solve problems in the field of logistic programming.
 At that point, it should also be noted that functional programming can also be considered to be declarative programming.
-Again, the abstraction layer is based again on mathematical concepts with certain possible operations but also restrictions.
+Again, the abstraction layer is based on mathematical concepts with certain possible operations but also restrictions.
 For example a function is typically treated as any other value and can therefore be chained with other functions, passed
 as parameters or even returned from another function. Compared to an imperative language, the most well-known restriction
 is that functions are not allowed to have any side-effects.
@@ -103,6 +103,28 @@ result = A & B
 ```
 Again, we have not only gained readability compared to a version with two nested loops that I skipped here but
 execution will also be much faster since specialised algorithms based on hash tables are applied beneath the abstraction.
+In general, since Python provides so many built-in abstract datatypes, a good advise is to study them thoroughly in order 
+to fully understand what they are capable of. For instance a dictionary seems to be something quite simple but realizing
+that a dictionary is actually a mathematical mapping allows us for instance to write an elegant dispatcher. Let's assume
+first an imperative version:
+```python
+def dispatch(arg, value):
+    if arg == 'optionA':
+        function_a(value)
+    elif arg == 'optionB':
+        function_b(value)
+    elif arg == 'optionC':
+        function_c(value)
+    else:
+        default(value)
+```
+What we actually want to say is that each argument maps to a function which is then called with a certain value like 
+```python
+dispatch = {'optionA': function_a,
+            'optionB': function_b,
+            'optionC': function_c}
+dispatch.get(arg, default)(value)
+```
 
 Another often encounter that is deeply woven into Python is configuration via a Python module. Libraries like Sphinx,
 Python's setuptools and many others use actual Python modules in order to configure certain settings. While this allows for
@@ -112,16 +134,17 @@ advantages. Firstly, any decent editor is able to parse it and therefore will wa
 format maps to Python's dictionary data type and therefore many other libraries (e.g. data validation library like [Voluptuous][])
 which work on dictionaries can be easily applied. C and C++ have a long history of declarative build automation with the 
 help of ``make`` and its declarative ``Makefiles``. Also Rust's build and packaging tool cargo is applying a declarative 
-markup language, namely TOML.
+markup language, namely TOML. The take-away message is plain and simple. Prefer a markup language
+over a Python module for configuration in case you don't need the extra flexibility of a whole programming language.
   
 When it comes to parallel programming in Python declarative programming might also come in handy. Again, everything stands
 and falls with the actual use-case, but let's assume that we have several tasks in the form of pure functions, i.e. functions
-without any side effects. Let's assume some tasks depend on the result of others while others could be potentially executed
-in parallel. Imparatively we could use Python's ``multiprocessing`` module to run certain tasks in parallel, synchronize when
+without any side effects. Furthermore, some tasks depend on the result of others while others could be potentially executed
+in parallel. Imperatively we could use Python's ``multiprocessing`` module to run certain tasks in parallel, synchronize when
 necessary and make sure we don't get confused in the bookkeeping. Thinking about the problem at hand, a declarative programmer
 would realise that a directed acyclic graph ([DAG][]) together with some mathematical concepts like [topological ordering][]
 will form a suitable abstraction layer for a scheduling problem like that. This epiphany would lead him directly to a
-nice tool called [Dask][] that allows to define and run a DAG in declarative way. 
+nice tool called [Dask][] that allows to define and run a DAG in a declarative way. 
 
 At this point you surely got the hang of it. The essence of declarative programming is describing a problem within its 
 domain applying high-level concepts thus focusing more on the *what* and less on the *how*. This allows us to increase the

@@ -126,7 +126,12 @@ in parallel. Imperatively we could use Python&amp;#8217;s &lt;code&gt;multiproce
 necessary and make sure we don&amp;#8217;t get confused in the bookkeeping. Thinking about the problem at hand, a declarative programmer
 would realise that a directed acyclic graph (&lt;a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph"&gt;&lt;span class="caps"&gt;DAG&lt;/span&gt;&lt;/a&gt;) together with some mathematical concepts like &lt;a href="https://en.wikipedia.org/wiki/Topological_sorting"&gt;topological ordering&lt;/a&gt;
 will form a suitable abstraction layer for a scheduling problem like that. This epiphany would lead him directly to a
-nice tool called &lt;a href="http://dask.pydata.org/en/latest/"&gt;Dask&lt;/a&gt; that allows to define and run a &lt;span class="caps"&gt;DAG&lt;/span&gt; in a declarative&amp;nbsp;way. &lt;/p&gt;
+nice tool called &lt;a href="http://dask.pydata.org/en/latest/"&gt;Dask&lt;/a&gt; that allows to define and run a &lt;span class="caps"&gt;DAG&lt;/span&gt; in a declarative way. Also &lt;a href="https://www.tensorflow.org/"&gt;TensorFlow&lt;/a&gt; follows a similar
+approach to provide means for parallel, linear algebra that is mostly used for deep learning. At the same time newer 
+versions also provide another abstraction layer that allows the declaration of neural network layers just like &lt;a href="https://keras.io/"&gt;Keras&lt;/a&gt;.
+Here we can see that larger software packages even provide several abstraction layers built on eachother and let the user
+decide which abstraction is suitable for the task at hand. Another example for this is &lt;a href="https://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt; with its core and
+&lt;span class="caps"&gt;ORM&lt;/span&gt;&amp;nbsp;layers.&lt;/p&gt;
 &lt;p&gt;At this point you surely got the hang of it. The essence of declarative programming is describing a problem within its 
 domain applying high-level concepts thus focusing more on the &lt;em&gt;what&lt;/em&gt; and less on the &lt;em&gt;how&lt;/em&gt;. This allows us to increase the
 readability of our code, quite often reduce the number of programming errors and also increase the performance at least

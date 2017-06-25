@@ -144,7 +144,12 @@ in parallel. Imperatively we could use Python's ``multiprocessing`` module to ru
 necessary and make sure we don't get confused in the bookkeeping. Thinking about the problem at hand, a declarative programmer
 would realise that a directed acyclic graph ([DAG][]) together with some mathematical concepts like [topological ordering][]
 will form a suitable abstraction layer for a scheduling problem like that. This epiphany would lead him directly to a
-nice tool called [Dask][] that allows to define and run a DAG in a declarative way. 
+nice tool called [Dask][] that allows to define and run a DAG in a declarative way. Also [TensorFlow][] follows a similar
+approach to provide means for parallel, linear algebra that is mostly used for deep learning. At the same time newer 
+versions also provide another abstraction layer that allows the declaration of neural network layers just like [Keras][].
+Here we can see that larger software packages even provide several abstraction layers built on eachother and let the user
+decide which abstraction is suitable for the task at hand. Another example for this is [SQLAlchemy][] with its core and
+ORM layers.
 
 At this point you surely got the hang of it. The essence of declarative programming is describing a problem within its 
 domain applying high-level concepts thus focusing more on the *what* and less on the *how*. This allows us to increase the
@@ -391,3 +396,6 @@ Declarative programming means finding the right abstraction level that describes
 [NixOS]: https://nixos.org/
 [Airflow]: https://airflow.incubator.apache.org/
 [Luigi]: http://luigi.readthedocs.io/
+[TensorFlow]: https://www.tensorflow.org/
+[Keras]: https://keras.io/
+[SQLAlchemy]: https://www.sqlalchemy.org/

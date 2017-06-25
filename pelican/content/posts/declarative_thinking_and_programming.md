@@ -1,11 +1,12 @@
 ---
 title: Declarative Thinking and Programming
-date: 2016-07-22 11:15
-modified: 2016-07-22 11:15
+date: 2017-07-25 11:15
+modified: 2017-07-25 11:15
 category: post
 tags: python, programming
 authors: Florian Wilhelm
 status: published
+summary: Declarative Programming is a programming paradigm that focuses on describing *what* should be computed in a problem domain without describing *how* it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday life. 
 ---
 
 # Motivation

@@ -149,7 +149,7 @@ nice tool called [Dask][] that allows to define and run a DAG in a declarative w
 At this point you surely got the hang of it. The essence of declarative programming is describing a problem within its 
 domain applying high-level concepts thus focusing more on the *what* and less on the *how*. This allows us to increase the
 readability of our code, quite often reduce the number of programming errors and also increase the performance at least
-compared to a naive implementation. To conclude this post let's take a look at a fancier example from the logic domain.
+compared to a naive implementation. To conclude this post let's take a look at a fancier example from the domain of logic.
 We want to apply declarative programming to solve one of the [Logelei][] riddles of the renowned german newspaper [Die Zeit]. 
 
 <img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.png"/><br>
@@ -356,6 +356,22 @@ A0 | A1 | A2 | A3 | A4 | A5 | B0 | B1 | B2 | B3 | B4 | B5 | C0 | C1 | C2 | C3 | 
 ---|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|---
 1  | 1  | 4  | 7  | 2  | 2  | 4  | 2  | 9  | 5  | 5  | 5  | 4  | 9  | 5  | 6  | 1  | 6  | 6  | 6  | 1  | 9  | 9  | 1  | 7  | 6  | 8  | 4  | 3  | 2  | 6  | 4  | 4  | 9  | 6  | 1 
 ```
+While this example might look like fun but actually not applicable for real work, this surely is not the case. Microsoft is 
+applying Datalog for instance to check [beliefs about dynamic networks][] and others use it for applications in program
+analysis, security and data integration. In general, systems to resolve constraints and dependencies are used in [NixOS][]
+which got quite some traction over the last years since it allows package and configuration management in a declarative way.
+In a nutshell, it gives you ways to describe what your system should look like which is completely different compared to 
+the usual way where you use for instance ``apt-get install`` to install packages in order to move your current state of
+your system to the desired one. As a user of a Linux system your actual concern is the set of programs or services that
+should be available to you, not so much what needs to be installed to move from one state to another. 
+
+There are many other examples of an imperative design versus a declarative design that solve the same problem,
+for instance the data pipline and workflow tools [Airflow][] versus [Luigi][]. So if your job is to solve a problem with
+the help of a program or framework, make sure to be absolute clear about what you want to accomplish. It often helps to
+put yourself into the role of a user to understand what needs to be declared in order to describe the problem. Only then
+start to think about a theoretical domain that might help you to achieve a declarative level of abstraction for your task.
+Declarative programming means finding the right abstraction level that describes your problem.  
+
 [SIMD]: https://en.wikipedia.org/wiki/SIMD 
 [single-level of abstraction principle]: http://principles-wiki.net/principles:single_level_of_abstraction
 [Logelei]: http://www.zeit.de/2016/52/spiele-logelei-52
@@ -371,3 +387,7 @@ A0 | A1 | A2 | A3 | A4 | A5 | B0 | B1 | B2 | B3 | B4 | B5 | C0 | C1 | C2 | C3 | 
 [Logelei]: http://www.zeit.de/2016/52/spiele-logelei-52
 [Die Zeit]: http://www.zeit.de/
 [PyDatalog]: https://sites.google.com/site/pydatalog/
+[beliefs about dynamic networks]: https://www.microsoft.com/en-us/research/publication/checking-beliefs-in-dynamic-networks/
+[NixOS]: https://nixos.org/
+[Airflow]: https://airflow.incubator.apache.org/
+[Luigi]: http://luigi.readthedocs.io/

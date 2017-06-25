@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Declarative Thinking and Programming - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+
+/*some stuff for output/input prompts*/
+div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
+div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
+div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
+div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
+@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
+div.prompt:empty{padding-top:0;padding-bottom:0}
+div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
+div.inner_cell{width:90%;}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
+div.input_prompt{color:navy;border-top:1px solid transparent;}
+div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
+div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
+div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
+div.output_prompt{color:darkred;}
+
+a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
+h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
+/* end stuff for output/input prompts*/
+
+
+.highlight-ipynb .hll { background-color: #ffffcc }
+.highlight-ipynb  { background: #f8f8f8; }
+.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
+.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
+.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight-ipynb .o { color: #666666 } /* Operator */
+.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
+.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
+.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
+.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
+.highlight-ipynb .go { color: #888888 } /* Generic.Output */
+.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
+.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
+.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
+.highlight-ipynb .m { color: #666666 } /* Literal.Number */
+.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
+.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
+.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
+.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight-ipynb .no { color: #880000 } /* Name.Constant */
+.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
+.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
+.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
+.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
+.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
+.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
+.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
+.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
+.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+div.entry-content {
+  overflow: visible;
+  padding: 8px;
+}
+.input_area {
+  padding: 0.2em;
+}
+
+a.heading-anchor {
+ white-space: normal;
+}
+
+.rendered_html
+code {
+ font-size: .8em;
+}
+
+pre.ipynb {
+  color: black;
+  background: #f7f7f7;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0px;
+  font-size: 13px;
+}
+
+/* remove the prompt div from text cells */
+div.text_cell .prompt {
+    display: none;
+}
+
+/* remove horizontal padding from text cells, */
+/* so it aligns with outer body text */
+div.text_cell_render {
+    padding: 0.5em 0em;
+}
+
+img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+
+div.collapseheader {
+    width=100%;
+    padding: 2px;
+    cursor: pointer;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            },
+            displayAlign: 'center', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+
+<link rel="canonical" href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="python,programming" />
+        <meta name="description" content="Declarative Programming is a programming paradigm that focuses on describing what should be computed in a problem domain without describing how it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday life." />
+
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Declarative Thinking and Programming"/>
+        <meta property="og:url" content="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/"/>
+        <meta property="og:description" content="Declarative Programming is a programming paradigm that focuses on describing what should be computed in a problem domain without describing how it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday life."/>
+        <meta property="article:published_time" content="2017-07-25" />
+            <meta property="article:section" content="post" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="programming" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="http://www.florianwilhelm.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://www.florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://www.florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="http://www.florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+
+
+        <link href="http://www.florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://www.florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/"
+                       rel="bookmark"
+                       title="Permalink to Declarative Thinking and Programming">
+                        Declarative Thinking and&nbsp;Programming
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2017-07-25T11:15:00+02:00"> Jul. 25, 2017</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://www.florianwilhelm.info/tag/python/">python</a>
+        /
+	<a href="http://www.florianwilhelm.info/tag/programming/">programming</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h1>Motivation</h1>
+<p>Before we actually dive into this topic, imagine the following: 
+You just moved to a new place and the time is ripe for a little house-warming dinner with your best friends Alice and Bob.
+Since Alice is really tech-savvy you just send her a digital invitation with date, time and of course your new address
+that she can add to her calendar with a single click. With good old Bob is a bit more difficult, he is having a real 
+struggle with modern <span class="caps">IT</span>. That&#8217;s why you decide to send him an e-mail not only including the time and location but also 
+a suggestion which train to take to your city, details about the trams, stops, the right street and&nbsp;so. </p>
+<p>So let&#8217;s discuss the differences of how you interacted with Alice and Bob. We start by recalling what the actual task was. 
+Your task was to organize a house-warming dinner with your friends. Therefore, your level of abstraction for that 
+particular task should be on an organizing level. By sending the invitation message to Alice you <em>declared</em> that you want
+her to be at your place at a certain time not caring about how she is actually gonna accomplish this. With Bob it&#8217;s 
+a completely different story. You not only declared your intentions but also provided lots of instructions on how to
+accomplish these. By doing so you left the level of organizing a dinner and went down to the task of planning a journey
+and this is not even the worst part. You also made a lot of error-prone assumptions that for instance Bob is gonna 
+take the train to get to your city and not by some online ridesharing community which might have been a lot
+cheaper and&nbsp;faster.</p>
+<h1>Declarative&nbsp;Thinking</h1>
+<p>If we now transfer this example to programming we would describe the way of interaction with Alice as <em>declarative</em> and
+the interaction with Bob as <em>imperative</em>. So in a nutshell, <em>declarative</em> programming is writing code in a way that
+describes <em>what</em> you want to do and not <em>how</em> you want to do it. Sounds simple enough, right? But actually the difference
+between <em>what</em> and <em>how</em> is often not that clear. Is telling someone to take a particular train always telling someone
+how to do something and therefore imperative? No, actually not, it really depends on your actual task and the level of
+abstraction that comes with&nbsp;it. </p>
+<p>Let&#8217;s say we want to do some linear algebra, in particular we want to sum up two n-dimensional
+vectors <span class="math">\(a\)</span> and <span class="math">\(b\)</span>. Since we are in the domain of linear algebra using some computer algebra system (<span class="caps">CAS</span>), we would expect to be able
+to just declare what we want <span class="math">\(c = a + b\)</span>. Calculating <span class="math">\(c\)</span> with the help of a loop would clearly by imperative in the
+given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
+elements to sum up first. This removes the possibility of our <span class="caps">CAS</span> software to choose a native <a href="https://en.wikipedia.org/wiki/SIMD"><span class="caps">SIMD</span></a> <span class="caps">CPU</span> operation
+due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the
+<a href="http://principles-wiki.net/principles:single_level_of_abstraction">single-level of abstraction principle</a> which is highly connected to declarative programming and thinking. 
+If, on the other hand though, our task is to solve a given linear optimization problem, starting to implement a 
+Simplex algorithm on our own with the help of vector operations in order to solve it can also be considered&nbsp;imperative. </p>
+<p>Having realized the importance of the level of abstraction resp. the domain our task lives in, the obvious question is 
+the following one: How do languages like <span class="caps">SQL</span> and Prolog or Datalog fit into our picture since they are always stated as 
+being declarative? The first thing to note actually is that both languages are domain-specific languages (DSLs). 
+Therefore they solely focus on solving problems in a single domain. For <span class="caps">SQL</span> that domain is querying a relational database.
+In order to fulfill this task the mathematical concept of a <a href="https://en.wikipedia.org/wiki/Relational_algebra">relational algebra</a> was established borrowing from set theory.
+By using the relational algebra as toolbox to define queries we have an abstraction layer that is high-level, tailored to 
+the task at hand but unsuitable for any other task outside that domain. The same observation holds for Prolog and Datalog
+which apply a set of mathematical concepts, most prominently the <a href="https://en.wikipedia.org/wiki/Horn_clause">Horn clause</a>, to solve problems in the field of logistic programming.
+At that point, it should also be noted that functional programming can also be considered to be declarative programming.
+Again, the abstraction layer is based on mathematical concepts with certain possible operations but also restrictions.
+For example a function is typically treated as any other value and can therefore be chained with other functions, passed
+as parameters or even returned from another function. Compared to an imperative language, the most well-known restriction
+is that functions are not allowed to have any&nbsp;side-effects.</p>
+<p>Before we start to apply declarative concepts one word of caution about abstractions in general. In a perfect world an
+abstraction layer would completely hide the inner workings beneath it from the user. But even a <span class="caps">DSL</span> like <span class="caps">SQL</span> built on 
+such a well-conceived theoretical foundation as the relational algebra is in practice a bit leaky. This can be experienced
+quite easily when looking at two different but logically equivalent queries differing in performance by orders of magnitude.
+The <em>Law of Leaky Abstractions</em> by Spolsky even states that &#8220;All non-trivial abstractions, to some degree, are leaky.&#8221;
+Beside this caveat, abstractions are still a powerful tool to handle&nbsp;complexity. </p>
+<h1>Declarative&nbsp;Programming</h1>
+<p>After having established some understanding of declarative programming and the general idea behind it, the focus is now
+to apply this to programming with Python. We start with some simple example. Let&#8217;s imagine we want the list of squared
+ numbers from 1 to 10. The obvious approach would&nbsp;be:</p>
+<div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+
+<p>This surely is an imperative way of solving the problem. We have overspecified the problem in the sense that we dictate
+an order of how the solution should be calculated. We basically say in those few lines: &#8220;First square 1 and append the
+result to a list, then square 2 and so on&#8221;. By applying Python&#8217;s list comprehension feature we get much more closer to 
+our actual&nbsp;question:</p>
+<div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>Now we haven&#8217;t specified an ordering which would theoretically even allow the Python interpreter to calculate the result in parallel.
+Besides the list comprehension similar syntax exists for dictionaries and even&nbsp;sets. </p>
+<p>Speaking about sets, the set type might even be the most underappreciated data type in Python&#8217;s standard library. Image you want to check if some sentences in a newly
+published paper exactly match sentences in your paper to prove plagiarism. Of course there a special tools for that but
+assume you have only Python. The naive approach would be to take a sentence from the first paper and compare it to all
+sentences of the other. Since this algorithm would be of complexity <span class="math">\(O(n^2)\)</span> the performance would be quite bad if you want
+to check two extensive papers. So how would one apply declarative thinking here? The first and actual hardest part is to
+realise that we are dealing with a problem from set theory, i.e. we are not interested in the order of sentences nor the
+fact that there might be duplicates. Therefore we can apply set theory as abstraction layer and treat our paper as set <span class="math">\(A\)</span> 
+of sentences and the other as set <span class="math">\(B\)</span>. By doing so we are able to now express what we want in a single declaration <span class="math">\(A\cap B\)</span> or
+equivalently in&nbsp;Python:</p>
+<div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">A</span> <span class="o">&amp;</span> <span class="n">B</span>
+</pre></div>
+
+
+<p>Again, we have not only gained readability compared to a version with two nested loops that I skipped here but
+execution will also be much faster since specialised algorithms based on hash tables are applied beneath the abstraction.
+In general, since Python provides so many built-in abstract datatypes, a good advise is to study them thoroughly in order 
+to fully understand what they are capable of. For instance a dictionary seems to be something quite simple but realizing
+that a dictionary is actually a mathematical mapping allows us for instance to write an elegant dispatcher. Let&#8217;s assume
+first an imperative&nbsp;version:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arg</span> <span class="o">==</span> <span class="s1">&#39;optionA&#39;</span><span class="p">:</span>
+        <span class="n">function_a</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">arg</span> <span class="o">==</span> <span class="s1">&#39;optionB&#39;</span><span class="p">:</span>
+        <span class="n">function_b</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">arg</span> <span class="o">==</span> <span class="s1">&#39;optionC&#39;</span><span class="p">:</span>
+        <span class="n">function_c</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">default</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+
+
+<p>What we actually want to say is that each argument maps to a function which is then called with a certain value&nbsp;like </p>
+<div class="highlight"><pre><span></span><span class="n">dispatch</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;optionA&#39;</span><span class="p">:</span> <span class="n">function_a</span><span class="p">,</span>
+            <span class="s1">&#39;optionB&#39;</span><span class="p">:</span> <span class="n">function_b</span><span class="p">,</span>
+            <span class="s1">&#39;optionC&#39;</span><span class="p">:</span> <span class="n">function_c</span><span class="p">}</span>
+<span class="n">dispatch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">default</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Another often encounter that is deeply woven into Python is configuration via a Python module. Libraries like Sphinx,
+Python&#8217;s setuptools and many others use actual Python modules in order to configure certain settings. While this allows for
+utmost flexibility, their configuration files are often hard to read and error-prone. An declarative approach for configuration
+is the usage of a markup language like for instance <a href="https://en.wikipedia.org/wiki/YAML"><span class="caps">YAML</span></a>. Using <span class="caps">YAML</span> files to configure a Python program has several
+advantages. Firstly, any decent editor is able to parse it and therefore will warn you about syntax errors. Secondly, the
+format maps to Python&#8217;s dictionary data type and therefore many other libraries (e.g. data validation library like <a href="http://alecthomas.github.io/voluptuous/docs/_build/html/index.html">Voluptuous</a>)
+which work on dictionaries can be easily applied. C and C++ have a long history of declarative build automation with the 
+help of <code>make</code> and its declarative <code>Makefiles</code>. Also Rust&#8217;s build and packaging tool cargo is applying a declarative 
+markup language, namely <span class="caps">TOML</span>. The take-away message is plain and simple. Prefer a markup language
+over a Python module for configuration in case you don&#8217;t need the extra flexibility of a whole programming&nbsp;language.</p>
+<p>When it comes to parallel programming in Python declarative programming might also come in handy. Again, everything stands
+and falls with the actual use-case, but let&#8217;s assume that we have several tasks in the form of pure functions, i.e. functions
+without any side effects. Furthermore, some tasks depend on the result of others while others could be potentially executed
+in parallel. Imperatively we could use Python&#8217;s <code>multiprocessing</code> module to run certain tasks in parallel, synchronize when
+necessary and make sure we don&#8217;t get confused in the bookkeeping. Thinking about the problem at hand, a declarative programmer
+would realise that a directed acyclic graph (<a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph"><span class="caps">DAG</span></a>) together with some mathematical concepts like <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological ordering</a>
+will form a suitable abstraction layer for a scheduling problem like that. This epiphany would lead him directly to a
+nice tool called <a href="http://dask.pydata.org/en/latest/">Dask</a> that allows to define and run a <span class="caps">DAG</span> in a declarative&nbsp;way. </p>
+<p>At this point you surely got the hang of it. The essence of declarative programming is describing a problem within its 
+domain applying high-level concepts thus focusing more on the <em>what</em> and less on the <em>how</em>. This allows us to increase the
+readability of our code, quite often reduce the number of programming errors and also increase the performance at least
+compared to a naive implementation. To conclude this post let&#8217;s take a look at a fancier example from the domain of logic.
+We want to apply declarative programming to solve one of the <a href="http://www.zeit.de/2016/52/spiele-logelei-52">Logelei</a> riddles of the renowned german newspaper <a href="http://www.zeit.de/">Die Zeit</a>. </p>
+<p><img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei.png"/><br>
+<strong>horizontal:</strong> <br>
+A: digit sum of horizontal C, C: prime number, E: palindrome, 
+G: multiple of the backward number of horizontal A, 
+H: all digits are equal, I: vertical F times vertical K,
+L: multiple of vertical M, N: multiple of horizontal Q,
+P: vertical B is a multiple, Q: square number,
+R: square number, S: prime&nbsp;number.</p>
+<p><strong>vertical:</strong> <br>
+All numbers are square&nbsp;numbers.</p>
+<p>Solving such a problem with Python&#8217;s common tools and libraries is possible but also quite cumbersome. Since we know
+that this problem is a problem from the domain of formal logic, there is actually no reason to leave this abstraction
+layer. With that in mind, the riddle can just be seen as a set of <em>rules</em> and <em>facts</em>. For instance we know for a fact
+that a number consist of digits 0 to 9 with the first digit being from 1 to 9. An example for a rule would be that
+an integer <span class="math">\(n\)</span> is a square number if and only if there exists an integer <span class="math">\(k\)</span> so that <span class="math">\(k^2=n\)</span>.
+We will use the Python library <a href="https://sites.google.com/site/pydatalog/">PyDatalog</a> to translate the riddle into a proper form so that, after having stated
+all facts and rules, we can just ask for the values of each field of the table and PyDatalog will do the inference based
+on the knowledge we have given. The syntax of PyDatalog might seem a bit strange at first but it is really concise and powerful.
+The rule for a square number is stated&nbsp;as:</p>
+<div class="highlight"><pre><span></span><span class="n">squared</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<p>It&#8217;s best to read the leftmost <code>&lt;=</code> as <em>if</em>. So the line above states that a number <span class="math">\(X\)</span> is squared if <span class="math">\(\sqrt{X}\in\mathbb{N}\)</span>. In an analogous manner, we can define a rule if one number is divisible by another&nbsp;with:</p>
+<div class="highlight"><pre><span></span><span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">divmod</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Defining the rule for a prime number is a bit more&nbsp;tricky:</p>
+<div class="highlight"><pre><span></span><span class="o">+</span><span class="n">prime</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">+</span><span class="n">prime</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">prime</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">Y</span><span class="o">+</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The first two lines add the facts that <span class="math">\(2\)</span> and <span class="math">\(3\)</span> are prime numbers to our knowledge. 
+The third line says that any number <span class="math">\(X\)</span> is a prime number if it is greater than <span class="math">\(3\)</span>, if it is not divisible by <span class="math">\(2\)</span> and if it has not any other factor greater or equal than <span class="math">\(3\)</span>. To express the notion of <em>any other factor greater or equal than 3</em>, we have to apply recursion. From high school we know that in order to find out if an
+odd number is prime, we should check all odd numbers from <span class="math">\(3\)</span> to <span class="math">\(\sqrt{X}\)</span> if any of them is a factor of <span class="math">\(X\)</span>. This is
+exactly what the fifth line does. Here, an upper search boundary is defined and the recursion step itself. Since we start with the factor candidate <span class="math">\(3\)</span> (as in line 3), the recursion iterates over all odd numbers up to <span class="math">\(\sqrt{X}\)</span>. Easy,&nbsp;right?</p>
+<p>Let&#8217;s denote each field in our table with a coordinate where rows are A to F and columns 0 to 5 for easier reference.
+Since each field holds a digit but our rules and many constraints of the riddle are defined for numbers we have to map digits to the corresponding number. This can be done easily in PyDatalog&nbsp;with:</p>
+<div class="highlight"><pre><span></span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">A</span> <span class="o">+</span> <span class="n">B</span>
+<span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span>
+<span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">]</span> <span class="o">+</span> <span class="n">D</span>
+<span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">]</span> <span class="o">+</span> <span class="n">E</span>
+<span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span>
+</pre></div>
+
+
+<p>Now we are all set to translate the riddle one constraint after another to PyDatalog. Unfortunately, that&#8217;s where
+things will go crazy due to leaky abstraction. Of course in theory everything should work but behind the curtain what
+PyDatalog will do is generating and eliminating possible solution candidates and if it does this in the wrong order
+computation could take forever if not some out of memory error bites us first. Putting a bit of thought into the riddle
+first, you could try to reorder the given constraints in a way that the list of solutions fulfilling the constraints stays
+ low at all time. We accomplish this by partitioning the table into four corner parts and define the constraints for each
+ of them separately like shown in the picture&nbsp;below:</p>
+<p><img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/logelei_colored.png"/><br></p>
+<p>For the upper left, blue corner we can now define the set of all solutions&nbsp;with:</p>
+<div class="highlight"><pre><span></span><span class="n">ul</span><span class="p">(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">D1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span>
+    <span class="c1"># C horizontal</span>
+    <span class="n">A2</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">A3</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">prime</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">])</span> <span class="o">&amp;</span>
+    <span class="c1"># A horizontal</span>
+    <span class="n">A0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">A1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">]</span> <span class="o">==</span> <span class="n">A2</span> <span class="o">+</span> <span class="n">A3</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="c1"># C vertical</span>
+    <span class="n">B2</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A2</span><span class="p">,</span> <span class="n">B2</span><span class="p">])</span> <span class="o">&amp;</span>
+    <span class="c1"># G horizontal</span>
+    <span class="n">B0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">B1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">divisible</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">],</span> <span class="n">num</span><span class="p">[</span><span class="n">A1</span><span class="p">,</span> <span class="n">A0</span><span class="p">])</span> <span class="o">&amp;</span>
+    <span class="c1"># A vertical</span>
+    <span class="n">C0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">C0</span><span class="p">])</span> <span class="o">&amp;</span>
+    <span class="c1"># B vertical</span>
+    <span class="n">C1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">D1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A1</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">D1</span><span class="p">]))</span>
+</pre></div>
+
+
+<p>The code is pretty much self-explanatory. For instance, the constraint C says that the fields A2 and A3 should form a
+prime number. Additionally, A2 and A3 are first digits of two different numbers in our table which means they can only
+be 1 to&nbsp;9. </p>
+<p>Having defined all four parts we can just combine them to arrive at the final solution as shown in the code below.
+We have seen that declarative programming can be really powerful in that it improves readability, maintenance and separation
+in programming. The notion behind declarative programming is that for a given task the level of abstraction should be
+applied allowing to describe the task in a canonical&nbsp;way. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">pyDatalog</span> <span class="kn">import</span> <span class="n">pyDatalog</span>
+
+<span class="n">pyDatalog</span><span class="o">.</span><span class="n">create_terms</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
+<span class="n">pyDatalog</span><span class="o">.</span><span class="n">create_terms</span><span class="p">(</span><span class="s1">&#39;divmod&#39;</span><span class="p">)</span>
+
+<span class="nd">@pyDatalog.program</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">():</span>
+    <span class="n">squared</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">divmod</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="o">+</span><span class="n">prime</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="o">+</span><span class="n">prime</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">prime</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">Y</span><span class="o">+</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">factor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># convert digits to number</span>
+    <span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">A</span> <span class="o">+</span> <span class="n">B</span>
+    <span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span>
+    <span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">]</span> <span class="o">+</span> <span class="n">D</span>
+    <span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">]</span> <span class="o">+</span> <span class="n">E</span>
+    <span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">num</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span>
+
+    <span class="c1"># rows are denoted with A, B, C, D, E, F</span>
+    <span class="c1"># columns are denoted with 0, 1, 2, 3, 4, 5</span>
+
+    <span class="c1"># upper left corner</span>
+    <span class="n">ul</span><span class="p">(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">D1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span>
+        <span class="c1"># C horizontal</span>
+        <span class="n">A2</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">A3</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">prime</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># A horizontal</span>
+        <span class="n">A0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">A1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">]</span> <span class="o">==</span> <span class="n">A2</span> <span class="o">+</span> <span class="n">A3</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="c1"># C vertical</span>
+        <span class="n">B2</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A2</span><span class="p">,</span> <span class="n">B2</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># G horizontal</span>
+        <span class="n">B0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">B1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">divisible</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">],</span> <span class="n">num</span><span class="p">[</span><span class="n">A1</span><span class="p">,</span> <span class="n">A0</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># A vertical</span>
+        <span class="n">C0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">C0</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># B vertical</span>
+        <span class="n">C1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">D1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A1</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">D1</span><span class="p">]))</span>
+
+    <span class="c1"># upper right corner</span>
+    <span class="n">ur</span><span class="p">(</span><span class="n">A4</span><span class="p">,</span> <span class="n">A5</span><span class="p">,</span> <span class="n">B3</span><span class="p">,</span> <span class="n">B4</span><span class="p">,</span> <span class="n">B5</span><span class="p">,</span> <span class="n">C5</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span>
+        <span class="c1"># E horizontal</span>
+        <span class="n">A4</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">A5</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">A4</span> <span class="o">==</span> <span class="n">A5</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="c1"># H horizontal</span>
+        <span class="n">B3</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">B4</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">B5</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">B3</span> <span class="o">==</span> <span class="n">B4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">B4</span> <span class="o">==</span> <span class="n">B5</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="c1"># E vertical</span>
+        <span class="n">C5</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A4</span><span class="p">,</span> <span class="n">B5</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># F vertical</span>
+        <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A5</span><span class="p">,</span> <span class="n">B5</span><span class="p">,</span> <span class="n">C5</span><span class="p">]))</span>
+
+    <span class="c1"># lower left corner</span>
+    <span class="n">ll</span><span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span>
+        <span class="c1"># Q horizontal</span>
+        <span class="n">F0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">F1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># O vertical</span>
+        <span class="n">E1</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">E1</span><span class="p">,</span> <span class="n">F1</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># N horizontal</span>
+        <span class="n">E0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">E2</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">divisible</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">],</span> <span class="n">num</span><span class="p">[</span><span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># L vertical</span>
+        <span class="n">D0</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">D0</span><span class="p">,</span> <span class="n">E0</span><span class="p">,</span> <span class="n">F0</span><span class="p">]))</span>
+
+    <span class="c1"># lower right corner</span>
+    <span class="n">lr</span><span class="p">(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">D4</span><span class="p">,</span> <span class="n">D5</span><span class="p">,</span> <span class="n">E3</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">E5</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">F3</span><span class="p">,</span> <span class="n">F4</span><span class="p">,</span> <span class="n">F5</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span>
+        <span class="c1"># fulfill upper left corner in order to have B vertical</span>
+        <span class="n">ul</span><span class="p">(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">D1</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="c1"># S horizontal</span>
+        <span class="n">F4</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">F5</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">prime</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">F4</span><span class="p">,</span> <span class="n">F5</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># M vertical</span>
+        <span class="n">D5</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">E5</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">D5</span><span class="p">,</span> <span class="n">E5</span><span class="p">,</span> <span class="n">F5</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># P vertical</span>
+        <span class="n">E3</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">F3</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">E3</span><span class="p">,</span> <span class="n">F3</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># P horizontal</span>
+        <span class="n">E4</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">divisible</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">A1</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">D1</span><span class="p">],</span> <span class="n">num</span><span class="p">[</span><span class="n">E3</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">E5</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># R horizontal</span>
+        <span class="n">F2</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">F2</span><span class="p">,</span> <span class="n">F3</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="c1"># K vertical</span>
+        <span class="n">C4</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">D4</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">C4</span><span class="p">,</span> <span class="n">D4</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">F4</span><span class="p">]))</span>
+
+    <span class="c1"># complete riddle</span>
+    <span class="n">riddle</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span>
+        <span class="c1"># fulfill all corners and connect them</span>
+        <span class="n">ul</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="n">ur</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">5</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="n">lr</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span>
+           <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">5</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="n">ll</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>
+        <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span>
+        <span class="c1"># I horizontal</span>
+        <span class="p">(</span><span class="n">I</span> <span class="o">==</span> <span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">5</span><span class="p">]])</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">F</span> <span class="o">==</span> <span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">5</span><span class="p">]])</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">K</span> <span class="o">==</span> <span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">4</span><span class="p">]])</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">I</span> <span class="o">==</span> <span class="n">F</span><span class="o">*</span><span class="n">K</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span>
+        <span class="c1"># D vertical</span>
+        <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">]])</span> <span class="o">&amp;</span>
+        <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">&amp;</span>
+        <span class="c1"># L horizontal</span>
+        <span class="p">(</span><span class="n">L</span> <span class="o">==</span> <span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">5</span><span class="p">]])</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">M</span> <span class="o">==</span> <span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">5</span><span class="p">]])</span> <span class="o">&amp;</span>
+        <span class="n">divisible</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="c1"># J vertical</span>
+        <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">]]))</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">riddle</span><span class="p">([(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">A4</span><span class="p">,</span> <span class="n">A5</span><span class="p">),</span> <span class="p">(</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">B3</span><span class="p">,</span> <span class="n">B4</span><span class="p">,</span> <span class="n">B5</span><span class="p">),</span> <span class="p">(</span><span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">C3</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">C5</span><span class="p">),</span>
+                  <span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">D2</span><span class="p">,</span> <span class="n">D3</span><span class="p">,</span> <span class="n">D4</span><span class="p">,</span> <span class="n">D5</span><span class="p">),</span> <span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">E3</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">E5</span><span class="p">),</span> <span class="p">(</span><span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">F3</span><span class="p">,</span> <span class="n">F4</span><span class="p">,</span> <span class="n">F5</span><span class="p">)]))</span>
+</pre></div>
+
+
+<p>The last line above tells PyDatalog to just output all digits fulfilling the constraints of our&nbsp;riddle:</p>
+<div class="highlight"><pre><span></span><span class="n">A0</span> <span class="o">|</span> <span class="n">A1</span> <span class="o">|</span> <span class="n">A2</span> <span class="o">|</span> <span class="n">A3</span> <span class="o">|</span> <span class="n">A4</span> <span class="o">|</span> <span class="n">A5</span> <span class="o">|</span> <span class="n">B0</span> <span class="o">|</span> <span class="n">B1</span> <span class="o">|</span> <span class="n">B2</span> <span class="o">|</span> <span class="n">B3</span> <span class="o">|</span> <span class="n">B4</span> <span class="o">|</span> <span class="n">B5</span> <span class="o">|</span> <span class="n">C0</span> <span class="o">|</span> <span class="n">C1</span> <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span> <span class="n">C3</span> <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span> <span class="n">C5</span> <span class="o">|</span> <span class="n">D0</span> <span class="o">|</span> <span class="n">D1</span> <span class="o">|</span> <span class="n">D2</span> <span class="o">|</span> <span class="n">D3</span> <span class="o">|</span> <span class="n">D4</span> <span class="o">|</span> <span class="n">D5</span> <span class="o">|</span> <span class="n">E0</span> <span class="o">|</span> <span class="n">E1</span> <span class="o">|</span> <span class="n">E2</span> <span class="o">|</span> <span class="n">E3</span> <span class="o">|</span> <span class="n">E4</span> <span class="o">|</span> <span class="n">E5</span> <span class="o">|</span> <span class="n">F0</span> <span class="o">|</span> <span class="n">F1</span> <span class="o">|</span> <span class="n">F2</span> <span class="o">|</span> <span class="n">F3</span> <span class="o">|</span> <span class="n">F4</span> <span class="o">|</span> <span class="n">F5</span>
+<span class="o">---|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|---</span>
+<span class="mi">1</span>  <span class="o">|</span> <span class="mi">1</span>  <span class="o">|</span> <span class="mi">4</span>  <span class="o">|</span> <span class="mi">7</span>  <span class="o">|</span> <span class="mi">2</span>  <span class="o">|</span> <span class="mi">2</span>  <span class="o">|</span> <span class="mi">4</span>  <span class="o">|</span> <span class="mi">2</span>  <span class="o">|</span> <span class="mi">9</span>  <span class="o">|</span> <span class="mi">5</span>  <span class="o">|</span> <span class="mi">5</span>  <span class="o">|</span> <span class="mi">5</span>  <span class="o">|</span> <span class="mi">4</span>  <span class="o">|</span> <span class="mi">9</span>  <span class="o">|</span> <span class="mi">5</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">1</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">1</span>  <span class="o">|</span> <span class="mi">9</span>  <span class="o">|</span> <span class="mi">9</span>  <span class="o">|</span> <span class="mi">1</span>  <span class="o">|</span> <span class="mi">7</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">8</span>  <span class="o">|</span> <span class="mi">4</span>  <span class="o">|</span> <span class="mi">3</span>  <span class="o">|</span> <span class="mi">2</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">4</span>  <span class="o">|</span> <span class="mi">4</span>  <span class="o">|</span> <span class="mi">9</span>  <span class="o">|</span> <span class="mi">6</span>  <span class="o">|</span> <span class="mi">1</span> 
+</pre></div>
+
+
+<p>While this example might look like fun but actually not applicable for real work, this surely is not the case. Microsoft is 
+applying Datalog for instance to check <a href="https://www.microsoft.com/en-us/research/publication/checking-beliefs-in-dynamic-networks/">beliefs about dynamic networks</a> and others use it for applications in program
+analysis, security and data integration. In general, systems to resolve constraints and dependencies are used in <a href="https://nixos.org/">NixOS</a>
+which got quite some traction over the last years since it allows package and configuration management in a declarative way.
+In a nutshell, it gives you ways to describe what your system should look like which is completely different compared to 
+the usual way where you use for instance <code>apt-get install</code> to install packages in order to move your current state of
+your system to the desired one. As a user of a Linux system your actual concern is the set of programs or services that
+should be available to you, not so much what needs to be installed to move from one state to&nbsp;another. </p>
+<p>There are many other examples of an imperative design versus a declarative design that solve the same problem,
+for instance the data pipline and workflow tools <a href="https://airflow.incubator.apache.org/">Airflow</a> versus <a href="http://luigi.readthedocs.io/">Luigi</a>. So if your job is to solve a problem with
+the help of a program or framework, make sure to be absolute clear about what you want to accomplish. It often helps to
+put yourself into the role of a user to understand what needs to be declared in order to describe the problem. Only then
+start to think about a theoretical domain that might help you to achieve a declarative level of abstraction for your task.
+Declarative programming means finding the right abstraction level that describes your&nbsp;problem.  </p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'declarative_thinking_and_programming';
+                var disqus_url = 'http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/blue-yonder/">Blue Yonder</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="http://www.florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/kalman/">kalman</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/programming/">programming</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="http://www.florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="http://www.florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://www.florianwilhelm.info/tag/template/">template</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://www.florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://www.florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://www.florianwilhelm.info/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $("div.collapseheader").click(function () {
+    $header = $(this).children("span").first();
+    $codearea = $(this).children(".input_area");
+    console.log($(this).children());
+    $codearea.slideToggle(500, function () {
+        $header.text(function () {
+            return $codearea.is(":visible") ? "Collapse Code" : "Expand Code";
+        });
+    });
+});
+});
+</script>
+</body>
+</html>

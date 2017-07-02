@@ -43,7 +43,7 @@ to just declare what we want $c = a + b$. Calculating $c$ with the help of a loo
 given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
 elements to sum up first. This removes the possibility of our CAS software to choose a native [SIMD][] CPU operation
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the
-[single-level of abstraction principle][] which is highly connected to declarative programming and thinking. 
+[single-level of abstraction][] as well as the [separation of concerns principle][] which are both highly connected to declarative programming and thinking. 
 If, on the other hand though, our task is to solve a given linear optimization problem, starting to implement a 
 Simplex algorithm on our own with the help of vector operations in order to solve it can also be considered imperative. 
  
@@ -378,7 +378,8 @@ start to think about a theoretical domain that might help you to achieve a decla
 Declarative programming means finding the right abstraction level that describes your problem.  
 
 [SIMD]: https://en.wikipedia.org/wiki/SIMD 
-[single-level of abstraction principle]: http://principles-wiki.net/principles:single_level_of_abstraction
+[single-level of abstraction]: http://principles-wiki.net/principles:single_level_of_abstraction
+[separation of concerns principle]: https://en.wikipedia.org/wiki/Separation_of_concerns
 [Logelei]: http://www.zeit.de/2016/52/spiele-logelei-52
 [topological sorting]: https://en.wikipedia.org/wiki/Topological_sorting
 [Python as a declarative programming language]: http://www.benfrederickson.com/python-as-a-declarative-programming-language/

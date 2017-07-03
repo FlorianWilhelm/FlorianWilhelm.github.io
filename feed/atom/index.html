@@ -28,7 +28,7 @@ to just declare what we want &lt;span class="math"&gt;\(c = a + b\)&lt;/span&gt;
 given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
 elements to sum up first. This removes the possibility of our &lt;span class="caps"&gt;CAS&lt;/span&gt; software to choose a native &lt;a href="https://en.wikipedia.org/wiki/SIMD"&gt;&lt;span class="caps"&gt;SIMD&lt;/span&gt;&lt;/a&gt; &lt;span class="caps"&gt;CPU&lt;/span&gt; operation
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the
-&lt;a href="http://principles-wiki.net/principles:single_level_of_abstraction"&gt;single-level of abstraction principle&lt;/a&gt; which is highly connected to declarative programming and thinking. 
+&lt;a href="http://principles-wiki.net/principles:single_level_of_abstraction"&gt;single-level of abstraction&lt;/a&gt; as well as the &lt;a href="https://en.wikipedia.org/wiki/Separation_of_concerns"&gt;separation of concerns principle&lt;/a&gt; which are both highly connected to declarative programming and thinking. 
 If, on the other hand though, our task is to solve a given linear optimization problem, starting to implement a 
 Simplex algorithm on our own with the help of vector operations in order to solve it can also be considered&amp;nbsp;imperative. &lt;/p&gt;
 &lt;p&gt;Having realized the importance of the level of abstraction resp. the domain our task lives in, the obvious question is 

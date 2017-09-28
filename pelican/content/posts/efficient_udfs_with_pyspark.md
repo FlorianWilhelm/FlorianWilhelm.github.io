@@ -52,9 +52,11 @@ df = sqlContext.table("test")
 display(df.select("id", squared_udf("id").alias("id_squared")))
 ```
  
-Since ``squared`` works on a single row, i.e. entry, of the ``id`` column the ``squared`` function will be called as many times as there are rows in the table ``test``. Since the ``id`` is an integer or long type and therefore a primitive type the translation overhead of a single number is almost neglectable but again we do it as many times as there are rows. Besides UDFs, there seems to be no "official" way of defining an arbitrary UDAF function. Depending on your use-case, this might even a reason to completely discard PySpark as a tool for it.
+Since ``squared`` works on a single row, i.e. entry, of the ``id`` column the ``squared`` function will be called as many times as there are rows in the table ``test``. Since the ``id`` is an integer or long type,  therefore a primitive type, the translation overhead of a single number is almost neglectable but again we do it as many times as there are rows. Alternatively, one could apply ``squared_udf`` with the ``df.withColumn(squared_udf("id"))`` or ``df.rdd.map(squared_udf)`` leading essentially to the same problem. Besides UDFs, there seems to be no "official" way of defining an arbitrary UDAF function. Depending on your use-case, this might even a reason to completely discard PySpark as a tool for it.
  
-The obvious question is how can we tackle the problem of using UD(A)Fs without much of a performance hit? Looking at our little rule set, we see the pattern that if we do something with an overhead we should at least try to do it not so often. This leads directly leads us to the idea that a UD(A)F should do the object translation only a few times by working not on single rows but rather on whole partitions. This functionality is provided by the [RDD][] method ``mapPartitions``. As a short reminder, an Resilient Distributed Dataset (RDD) is the low-level data structures of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``. Putting all ingredients together we can apply an arbitrary Python function to a DataFrame ``df`` by:
+The obvious question is how can we tackle the problem of using UD(A)Fs without much of a performance hit? Looking at our little rule set, we see the pattern that if we do something with an overhead we should at least try to do it not so often. This leads directly leads us to the idea that a UD(A)F should do the object translation only a few times by working not on single rows but rather on whole partitions. This functionality is provided by the [RDD][] method ``mapPartitions``. 
+
+As a short reminder, an Resilient Distributed Dataset (RDD) is the low-level data structures of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``. Putting all ingredients together we can apply an arbitrary Python function to a DataFrame ``df`` by:
 
 ```python
 df.rdd.mapPartitions(my_func).toDF()
@@ -70,6 +72,10 @@ or
 ```python
 df.repartition('country').rdd.mapPartitions(my_func).toDF()
 ```
+
+The following image shows the difference between the application of the presented UDF methods to an RDD of a single partition in terms of the number of Python workers involved as wells as the number of translation operations.
+
+<img width="250px" style="margin-right: 20px; margin-bottom: 20px" src="/images/spark_udaf.png"/><br>
 
 This simply approach solves our main problem by doing the translation of each partition to Python at once, then calling the function ``my_func`` with it and translating back to Scala whatever the function returns. Therefore we have reduced the number of translations to two times (back and forth) the number of partitions and of course we should keep the number of partitions to a reasonable number.
 
@@ -245,7 +251,7 @@ class pandas_udaf(object):
 
 The code is pretty much self-explanatory if you have ever written a Python decorator otherwise you should read about it since it takes some time to wrap your head around it. The only thing that might still raise questions is the usage of ``args[-1]``. This is due to the fact that ``func`` might also be a method of an object. In this case the first argument would be ``self`` but the last argument is in either cases the actual argument that ``mapPartitions`` will pass to us. 
  
-Now having all parts in place we could define our UD(A)F ``my_func`` for instance as:
+Now having all parts in place let's assume the code above resides in the python module ``pyspark_utils.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. But for now we just presume that ``pyspark_utils.py`` as well as all its dependencies like Pandas, Numpy, etc. are accessible by the driver as well as the executors. This allows us to then easily define our UD(A)F ``my_func`` for instance as:
 
 ```python
 import pyspark_utils
@@ -258,37 +264,24 @@ def my_func(df):
     return df.reset_index()
 ```
 
-As this is just an example it is of course not really useful in practice to return some statistics with the help of a UD(A)F that could also be retrieved with basic PySpark functionality but you get the point. We now apply the function to each partition as above with:
+As this is just an example, it is of course not really useful in practice to return some statistics with the help of a UD(A)F that could also be retrieved with basic PySpark functionality but you get the point. We now generate a dummy data frame and apply the function to each partition as above with:
 
 ```python
 import pyspark_utils
 
-
-stats_df = df.repartition('country').rdd.mapPartitions(my_func).toDF()
-```
-
-One should also note that this proposed method allows the definition of a UDF as well as an UDAF since it is up to the function ``my_func`` if it returns a data frame having as many rows as the input data frame (think [Pandas transform][]), a data frame of only a single row or optionally a series (think [Pandas aggregate][]) or a data frame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns. Therefore, we can conclude that the proposed method is not only drastically faster than the official way in case of a UDF, it also even flexible enough to allow the definition of UDAFs.  
-
-```python
-
-VENV_DIR = '/user/fwilhelm/my_venv'
-sc.addFile('./pyspark_utils.py')
-distribute_hdfs_files('hdfs://' + VENV_DIR)
+# make pyspark_utils.py available to the executors
+sc.addFile('./pyspark_utils.py') 
 
 df = sc.parallelize(
     [('DEU', 2, 1.0), ('DEU', 3, 8.0), ('FRA', 2, 6.0), 
      ('FRA', 0, 8.0), ('DEU', 3, 8.0), ('FRA', 1, 3.0)]
     , 1).toDF(['country', 'feature1', 'feature2']).cache()
     
-@pyspark_utils.pandas_udaf(loglevel=logging.DEBUG)
-def my_func2(df):
-    if df.empty:
-        return
-    return df.groupby('country').apply(lambda x: x.drop('country', axis=1).describe()).reset_index()
-    
-stats_df2 = df.repartition('country').rdd.mapPartitions(my_func2).toDF()
-stats_df2.toPandas()
+stats_df = df.repartition('country').rdd.mapPartitions(my_func).toDF()
+print(stats_df.toPandas())
 ```
+
+The code above can be easily tested with the help of a Jupyter notebook with PySpark where the SparkContext ``sc`` is predefined. One should also note that this proposed method allows the definition of a UDF as well as an UDAF since it is up to the function ``my_func`` if it returns a data frame having as many rows as the input data frame (think [Pandas transform][]), a data frame of only a single row or optionally a series (think [Pandas aggregate][]) or a data frame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns. Therefore, we can conclude that the proposed method is not only drastically faster than the official way in case of a UDF, it also even flexible enough to allow the definition of UDAFs.  
 
 
 [PySpark]: https://spark.apache.org/docs/latest/api/python/index.html
@@ -299,7 +292,7 @@ stats_df2.toPandas()
 [SPARK-21190]: https://issues.apache.org/jira/browse/SPARK-21190
 [databricks documentation]: https://docs.databricks.com/spark/latest/spark-sql/udf-in-python.html
 [Spark.ml]: https://spark.apache.org/docs/latest/api/python/pyspark.ml.html
-[DataFrame]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame
+[data frame]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame
 [Row]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row
 [RDD]: https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD
 [Python decorator]: https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator

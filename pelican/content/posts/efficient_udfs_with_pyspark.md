@@ -295,8 +295,6 @@ def my_func(df):
 It is of course not really useful in practice to return some statistics with the help of a UDAF that could also be retrieved with basic PySpark functionality but this is just an example. We now generate a dummy data frame and apply the function to each partition as above with:
 
 ```python
-import pyspark_utils
-
 # make pyspark_utils.py available to the executors
 sc.addFile('./pyspark_utils.py') 
 

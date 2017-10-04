@@ -8,36 +8,52 @@ authors: Florian Wilhelm
 status: draft
 ---
 
-Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it's built on a Java Stack it comes with Python bindings also known as [PySpark][] whose API was heavily influenced by [Pandas][]. With respect to the functionality modern PySpark has about the same functionality as Pandas when it comes to typical ETL and data wrangling, e.g. groupby, aggregations and so on. As a general rule of thumb, one should consider
+Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it's developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as [PySpark][], whose API was heavily influenced by [Pandas][]. With respect to the functionality modern PySpark has about the same functionality as Pandas when it comes to typical ETL and data wrangling, e.g. groupby, aggregations and so on. As a general rule of thumb, one should consider
  an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 GB of memory usage. At that point PySpark might be an option for you that does the job but of course there are others like for instance [Dask][] which won't be addressed in this post. 
   
 If you are new to Spark one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with SQL as an alternative way of defining queries and the other is [Spark MLlib][] for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data sets.
  
 But enough praise for PySpark, there are still some ugly sides as well as rough edges to it and we want to address some of them here, of course, in a constructive way. You might have heard the rumours that PySpark is so much slower compared to Spark with Scala and as it is often the case with rumours, there is a tiny bit of truth to it. But before we start, a deeper understanding of how PySpark does its magic is needed.
  
-PySpark is a wrapper around the actual Spark core written in Scala. That means that when you call a method of a PySpark data frame, somewhere your Python call gets translated into the corresponding Scala call. This is in general extremely fast and the overhead can be neglected as long as you don't call the function millions of times. The more expensive part in terms of execution time though is the translation of complex object arguments that are passed to a function. That means if a Scala object like a list, dictionary or a row needs to be translated into a Python object and vice versa. This translation internally means that the object from one programming language is serialized into a memory location, then copied over to the memory space of the other programming language where it is deserialized again. Technically, it's even a bit more complicated since Scala and Python run in so called Virtual Machines (VMs) but you get the point that it is expensive in terms of execution time. So practically we should keep the number of these translations as low as possible. We can summarize this short low-level excursion with two important insights:
- 
- 1. Function calls are cheap but avoid excessive number of calls,
- 2. Translation of complex objects has a tolerable overhead as long as it happens rarely.
-  
-With modern PySpark versions higher than 2.1, whenever you do data wrangling, like calling ``filter``, ``select``, ``groupby`` and so on, the overhead of the function call is neglectable as we have just learned. The arguments to those functions are mostly simple objects like strings or numbers defining the column name or indices and the costs of their translation to Scale is therefore also neglectable. Okay, so now in which cases do things go south then and when do we hit major performance bumps? Let's say we have a data frame ``df`` of one billion rows with a boolean ``is_sold`` column and we want to filter for rows with sold products. One could accomplish this with the code
-     
+PySpark is a wrapper around the actual Spark core written in Scala. 
+
+Communication between Python and Spark happens on different levels:
+
+ 1. Local communication between Python and the Java SparkContext
+ 2. Data transfer between the distributed data frames in JVM and Python worker memory
+<!---
+3. Data transfer between the distributed data frames in JVM memory and the Python driver PySpark actions and data frame creation from python (e.g.:("PySpark toDF(), c 
+-->
+
+Local communication acts like a JVM remote control from Python. When you start your [SparkSession][http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SparkSession], Spark uses [Py4J][https://www.py4j.org/] for a socket-based communication between our python driver program and the Java SparkContext.
+This means that when you call a method of a PySpark data frame, somewhere your Python call gets translated into the corresponding call on the Scala Spark data frame. This is in general extremely fast and the overhead can be neglected as long as you don't call the function millions of times.
+In PySpark SQL, whenever you do data wrangling, like calling ``filter``, ``select``, ``groupby`` and so on, the overhead of the function call is neglectable as we have just learned. The arguments to those functions are mostly simple objects like strings or numbers defining the column name or indices and the costs of their translation to Scale is therefore also neglectable.
+
+Let's say we have a data frame ``df`` of one billion rows with a boolean ``is_sold`` column and we want to filter for rows with sold products. One could accomplish this with the code
+
+```python
+df.filter(df.is_sold == True)
+```
+In this case the data frame operation and the filter condition will be send to the Java SparkContext, where it gets compiled into the overall query plan. Once the query is executed, the filter condition is evaluated a billion times, without any callback to Python!
+
+Okay, so now in which cases do things go south then and when do we hit major performance bumps? 
+Consider the following lambda function, which implements the same functionality as the previous example:
+
 ```python
 df.filter(lambda x: x.is_sold == True)
 ```
 
-which works but will be extremely slow because we just violated our rules 1 and 2 at the same time! Since ``df`` has one billion rows we need to evaluate our anonymous lambda function one billion times. Therefore, Scala actually calls the Python lambda an excessive number of times clearly violating rule 1. But that's not nearly all, it even gets worse. We pass every row from Scala to Python and do the translation of that complex object also a billion times therefore violating rule 2! The easy solution is do the operation without involving Python at all with:
-   
-```python
-df.filter(df.is_sold == True)
-```   
+This filter condition looks very similar to the previous example. However, it will be extremely slow because it cannot be directly applied to the data frame residing in JVM memory. 
+To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
+What actually happens internally is that at execution time, the data frame will be serialized and piped to Python workers.
+Those Python workers then deserialize the data frame rows and execute our anonymous lambda function on each record. For the resulting rows, the whole serialization/deserialization procedure happens again in the opposite direction.
+Technically, it's even a bit more complicated since a Spark data frame is distributed, but you get the point that it is expensive in terms of execution time due to excessive serialization and deserialization.
 
-In this case our filter condition will be translated one time to Scale where it is then evaluated a billion times really fast, without any callback to Python!
-To give a short summary, as long as we stick to the rules 1 and 2 a PySpark program will be approximately as fast as Spark program based on Scala.
+To give a short summary to this low-level excursion: as long as we avoid excessive data transfer between the JVM and python processes, a PySpark program will be approximately as fast as Spark program based on Scala.
 
-Before we move on, two side notes should also be kept in mind. The first is that what we just learnt not only applies to PySpark but also to Pandas, NumPy and Python in general since all these actually wrap a lot of C/C++ and sometimes even Fortran code. The second remark is that the general problem of object translation at least in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. His [Apache Arrow][] project tries to standardize the way complex objects are stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should avoid making a large number of translations.
+Before we move on, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. His [Apache Arrow][] project tries to standardize the way columnar data is stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should always prefer native Spark expressions whenever possible.
  
-So far we have only talked about avoiding certain operations to keep the performance up. But what if we actually want to implement a User-Defined Function (UDF) or User-Defined Aggregation Function (UDAF)? The [databricks documentation][] explains how to define a UDF in PySpark in a few and easy steps but clearly violating our rules which leads to bad performance in practice: 
+So far we have only talked about avoiding certain operations to keep the performance up. But what if we actually want to implement a User-Defined Function (UDF) or User-Defined Aggregation Function (UDAF) with acceptable performance? The [databricks documentation][] explains how to define a UDF in PySpark in a few and easy steps but clearly violating our rule which leads to bad performance in practice:
  
 ```python
 from pyspark.sql.functions import udf

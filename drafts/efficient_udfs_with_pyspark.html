@@ -142,17 +142,9 @@ div.text_cell_render {
 }
 
 img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
-
-div.collapseheader {
-    width=100%;
-    padding: 2px;
-    cursor: pointer;
-    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 <script type="text/javascript">
 init_mathjax = function() {
     if (window.MathJax) {
@@ -162,7 +154,7 @@ init_mathjax = function() {
                 inlineMath: [ ['$','$'], ["\\(","\\)"] ],
                 displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
             },
-            displayAlign: 'center', // Change this to 'center' to center equations.
+            displayAlign: 'left', // Change this to 'center' to center equations.
             "HTML-CSS": {
                 styles: {'.MathJax_Display': {"margin": 0}}
             }
@@ -277,7 +269,7 @@ Florian Wilhelm            </a>
                 </div>
                 <p>Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it&#8217;s built on a Java Stack it comes with Python bindings also known as <a href="https://spark.apache.org/docs/latest/api/python/index.html">PySpark</a> whose <span class="caps">API</span> was heavily influenced by <a href="http://pandas.pydata.org/">Pandas</a>. With respect to the functionality modern PySpark has about the same functionality as Pandas when it comes to typical <span class="caps">ETL</span> and data wrangling, e.g. groupby, aggregations and so on. As a general rule of thumb, one should consider
  an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 <span class="caps">GB</span> of memory usage. At that point PySpark might be an option for you that does the job but of course there are others like for instance <a href="http://dask.pydata.org/en/latest/index.html">Dask</a> which won&#8217;t be addressed in this&nbsp;post. </p>
-<p>If you are new to Spark one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with <span class="caps">SQL</span> as an alternative way of defining queries and the other is <a href="https://spark.apache.org/docs/latest/api/python/pyspark.ml.html">Spark.ml</a> for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and Scikit-Learn for larger data&nbsp;sets. </p>
+<p>If you are new to Spark one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with <span class="caps">SQL</span> as an alternative way of defining queries and the other is <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark MLlib</a> for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data&nbsp;sets.</p>
 <p>But enough praise for PySpark, there are still some ugly sides as well as rough edges to it and we want to address some of them here, of course, in a constructive way. You might have heard the rumours that PySpark is so much slower compared to Spark with Scala and as it is often the case with rumours, there is a tiny bit of truth to it. But before we start, a deeper understanding of how PySpark does its magic is&nbsp;needed.</p>
 <p>PySpark is a wrapper around the actual Spark core written in Scala. That means that when you call a method of a PySpark data frame, somewhere your Python call gets translated into the corresponding Scala call. This is in general extremely fast and the overhead can be neglected as long as you don&#8217;t call the function millions of times. The more expensive part in terms of execution time though is the translation of complex object arguments that are passed to a function. That means if a Scala object like a list, dictionary or a row needs to be translated into a Python object and vice versa. This translation internally means that the object from one programming language is serialized into a memory location, then copied over to the memory space of the other programming language where it is deserialized again. Technically, it&#8217;s even a bit more complicated since Scala and Python run in so called Virtual Machines (VMs) but you get the point that it is expensive in terms of execution time. So practically we should keep the number of these translations as low as possible. We can summarize this short low-level excursion with two important&nbsp;insights:</p>
 <ol>
@@ -295,8 +287,8 @@ Florian Wilhelm            </a>
 
 
 <p>In this case our filter condition will be translated one time to Scale where it is then evaluated a billion times really fast, without any callback to Python!
-To give a short summery, as long as we stick to the rules 1 and 2 a PySpark program will be approximately as fast as Spark program based on&nbsp;Scala.</p>
-<p>Before we move on, two side notes should also be kept in mind. The first is that what we just learnt not only applies to PySpark but also to Pandas, Numpy and Python in general since all these actually wrap a lot of C/C++ and sometimes even Fortran code. The second remark is that the general problem of object translation at least in the realm of data analytics is currently addressed by the creator of Pandas <a href="http://wesmckinney.com/">Wes McKinney</a>. His <a href="http://arrow.apache.org/">Apache Arrow</a> project tries to standardize the way complex objects are stored in memory so that everyone using Arrow won&#8217;t need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues <a href="https://issues.apache.org/jira/browse/SPARK-13534"><span class="caps">SPARK</span>-13534</a> and <a href="https://issues.apache.org/jira/browse/SPARK-21190"><span class="caps">SPARK</span>-21190</a>, Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should avoid making a large number of&nbsp;translations.</p>
+To give a short summary, as long as we stick to the rules 1 and 2 a PySpark program will be approximately as fast as Spark program based on&nbsp;Scala.</p>
+<p>Before we move on, two side notes should also be kept in mind. The first is that what we just learnt not only applies to PySpark but also to Pandas, NumPy and Python in general since all these actually wrap a lot of C/C++ and sometimes even Fortran code. The second remark is that the general problem of object translation at least in the realm of data analytics is currently addressed by the creator of Pandas <a href="http://wesmckinney.com/">Wes McKinney</a>. His <a href="http://arrow.apache.org/">Apache Arrow</a> project tries to standardize the way complex objects are stored in memory so that everyone using Arrow won&#8217;t need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues <a href="https://issues.apache.org/jira/browse/SPARK-13534"><span class="caps">SPARK</span>-13534</a> and <a href="https://issues.apache.org/jira/browse/SPARK-21190"><span class="caps">SPARK</span>-21190</a>, Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should avoid making a large number of&nbsp;translations.</p>
 <p>So far we have only talked about avoiding certain operations to keep the performance up. But what if we actually want to implement a User-Defined Function (<span class="caps">UDF</span>) or User-Defined Aggregation Function (<span class="caps">UDAF</span>)? The <a href="https://docs.databricks.com/spark/latest/spark-sql/udf-in-python.html">databricks documentation</a> explains how to define a <span class="caps">UDF</span> in PySpark in a few and easy steps but clearly violating our rules which leads to bad performance in&nbsp;practice: </p>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">udf</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">LongType</span>
@@ -314,7 +306,7 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 
 <p>Since <code>squared</code> works on a single row, i.e. entry, of the <code>id</code> column the <code>squared</code> function will be called as many times as there are rows in the table <code>test</code>. Since the values of the <code>id</code> column are of of type integer, therefore a primitive type, the translation overhead of a single number is almost neglectable but again we do it as many times as there are rows. Alternatively, one could apply <code>squared_udf</code> with the <code>df.withColumn(squared_udf("id"))</code> or <code>df.rdd.map(squared_udf)</code> leading essentially to the same problem. Besides UDFs, there seems to be no &#8220;official&#8221; way of defining an arbitrary <span class="caps">UDAF</span> function that would allow us to not operate only on a single row but multiple. Depending on your use-case, this might even be a reason to completely discard PySpark as a viable&nbsp;solution.</p>
 <p>The obvious question is now, how can we tackle the problem of using UDFs without sacrificing too much performance and as an additional benefit even define UDAFs? Looking at our little rule set, we see the pattern that if we do something with an overhead we should at least try to do it not so often. This directly leads us to the idea that a <span class="caps">UDF</span> should do the object translation only a few times by working not on single rows but rather on whole partitions. This functionality is provided by the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> method <code>mapPartitions</code>. </p>
-<p>As a short reminder, an Resilient Distributed Dataset (<span class="caps">RDD</span>) is the low-level data structures of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>. Putting all ingredients together we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> with:</p>
+<p>As a short reminder, an Resilient Distributed Dataset (<span class="caps">RDD</span>) is the low-level data structure of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>. Putting all ingredients together we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> with:</p>
 <div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 </pre></div>
 
@@ -331,8 +323,8 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 
 <p>The following image shows the difference between the application of the presented <span class="caps">UDF</span> methods to an <span class="caps">RDD</span> of a single partition in terms of the number of Python workers involved as wells as the number of translation&nbsp;operations.</p>
 <p><img width="800" style="margin-right: 20px; margin-bottom: 20px" src="/images/spark_udaf.png"/><br></p>
-<p>This simply approach solves our main problem by doing the translation of each partition to Python at once, then calling the function <code>my_func</code> with it and translating back to Scala whatever the function returns. Therefore we have reduced the number of translations to two times (back and forth) the number of partitions and because of that we should keep the number of partitions to a reasonable&nbsp;number.</p>
-<p>Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level <span class="caps">RDD</span> interface our function <code>my_func</code> will be passed an iterator of PySpark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row">Row</a> objects and needs to return them as well. A <code>Row</code> object itself is only a container for the column values in one row as you might have guessed. When we return such a <code>Row</code>, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our <span class="caps">UDF</span>/<span class="caps">UDAF</span> with the help of Pandas, keeping in mind that one partition should hold less than 10 million rows. Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling&#8230; and here we are&nbsp;;-) </p>
+<p>This simple approach solves our main problem by doing the translation of each partition to Python at once, then calling the function <code>my_func</code> with it and translating back to Scala whatever the function returns. Therefore we have reduced the number of translations to two times (back and forth) the number of partitions and because of that we should keep the number of partitions to a reasonable&nbsp;number.</p>
+<p>Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level <span class="caps">RDD</span> interface, our function <code>my_func</code> will be passed an iterator of PySpark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row">Row</a> objects and needs to return them as well. A <code>Row</code> object itself is only a container for the column values in one row, as you might have guessed. When we return such a <code>Row</code>, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our <span class="caps">UDF</span>/<span class="caps">UDAF</span> with the help of Pandas, keeping in mind that one partition should hold less than 10 million rows. Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling&#8230; and here we are&nbsp;;-) </p>
 <p>So first we need to define a nice function that will convert a <code>Row</code> iterator into a Pandas&nbsp;DataFrame:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -472,9 +464,10 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 </pre></div>
 
 
-<p>This looks a bit more complicated but essentially we convert a Pandas Serie to a DataFrame if necessary and handle the edge cases of an empty DataFrame or <code>None</code> as return value. We then convert the DataFrame to records, convert some Numpy data types to the Python equivalent and create an iterator over Row objects from the converted&nbsp;records. </p>
-<p>With these function at hand we can define a <a href="https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator">Python decorator</a> that will allow us to automatically call the functions <code>rows_to_pandas</code> and <code>pandas_to_rows</code> at the right&nbsp;time:</p>
+<p>This looks a bit more complicated but essentially we convert a Pandas Series to a DataFrame if necessary and handle the edge cases of an empty DataFrame or <code>None</code> as return value. We then convert the DataFrame to records, convert some NumPy data types to the Python equivalent and create an iterator over Row objects from the converted&nbsp;records. </p>
+<p>With these functions at hand we can define a <a href="https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator">Python decorator</a> that will allow us to automatically call the functions <code>rows_to_pandas</code> and <code>pandas_to_rows</code> at the right&nbsp;time:</p>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
 
 <span class="k">class</span> <span class="nc">pandas_udaf</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Decorator for PySpark UDAFs using Pandas</span>
@@ -498,9 +491,10 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 </pre></div>
 
 
-<p>The code is pretty much self-explanatory if you have ever written a Python decorator otherwise you should read about it since it takes some time to wrap your head around it. Basically, we set up a default logger, create a Pandas DataFrame from the Row iterator, pass it to our <span class="caps">UDF</span>/<span class="caps">UDAF</span> and convert its return value back to a Row iterator. The only additional thing that might still raise questions is the usage of <code>args[-1]</code>. This is due to the fact that <code>func</code> might also be a method of an object. In this case, the first argument would be <code>self</code> but the last argument is in either cases the actual argument that <code>mapPartitions</code> will pass to us. The code of <code>setup_logger</code> depends on your Spark installation. In case you are using Spark on Apache <a href="https://hortonworks.com/apache/yarn/"><span class="caps">YARN</span></a>, it might look like&nbsp;this:</p>
+<p>The code is pretty much self-explanatory if you have ever written a Python decorator; otherwise, you should read about it since it takes some time to wrap your head around it. Basically, we set up a default logger, create a Pandas DataFrame from the Row iterator, pass it to our <span class="caps">UDF</span>/<span class="caps">UDAF</span> and convert its return value back to a Row iterator. The only additional thing that might still raise questions is the usage of <code>args[-1]</code>. This is due to the fact that <code>func</code> might also be a method of an object. In this case, the first argument would be <code>self</code> but the last argument is in either cases the actual argument that <code>mapPartitions</code> will pass to us. The code of <code>setup_logger</code> depends on your Spark installation. In case you are using Spark on Apache <a href="https://hortonworks.com/apache/yarn/"><span class="caps">YARN</span></a>, it might look like&nbsp;this:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+
 
 <span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">loglevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;pyspark.log&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Setup basic logging for logging on the executor</span>
@@ -523,9 +517,10 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 </pre></div>
 
 
-<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <code>pyspark_utils.py</code>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <code>pyspark_utils.py</code> as well as all its dependencies like Pandas, Numpy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for
+<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <code>pyspark_utils.py</code>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <code>pyspark_utils.py</code> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for
  each country&nbsp;as:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_utils</span>
+
 
 <span class="nd">@pyspark_utils.pandas_udaf</span><span class="p">(</span><span class="n">loglevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">my_func</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
@@ -537,9 +532,7 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 
 
 <p>It is of course not really useful in practice to return some statistics with the help of a <span class="caps">UDAF</span> that could also be retrieved with basic PySpark functionality but this is just an example. We now generate a dummy data frame and apply the function to each partition as above&nbsp;with:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_utils</span>
-
-<span class="c1"># make pyspark_utils.py available to the executors</span>
+<div class="highlight"><pre><span></span><span class="c1"># make pyspark_utils.py available to the executors</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="s1">&#39;./pyspark_utils.py&#39;</span><span class="p">)</span> 
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span>
@@ -552,16 +545,16 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
 </pre></div>
 
 
-<p>The code above can be easily tested with the help of a Jupyter notebook with PySpark where the SparkContext <code>sc</code> is predefined. One should also note that this proposed method allows the definition of a <span class="caps">UDF</span> as well as an <span class="caps">UDAF</span> since it is up to the function <code>my_func</code> if it returns a DataFrame having as many rows as the input data frame (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html">Pandas transform</a>), a DataFrame of only a single row or optionally a Series (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html">Pandas aggregate</a>) or a DataFrame with an arbitrary number of rows (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">Pandas apply</a>) with even varying columns. Therefore, we can conclude that the proposed method is not only faster than the official way in case of a <span class="caps">UDF</span>, it also even flexible enough to allow the definition of&nbsp;UDAFs.  </p>
+<p>The code above can be easily tested with the help of a Jupyter notebook with PySpark where the SparkContext <code>sc</code> is predefined. Overall, this proposed method allows the definition of an <span class="caps">UDF</span> as well as an <span class="caps">UDAF</span> since it is up to the function <code>my_func</code> if it returns (1) a DataFrame having as many rows as the input data frame (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html">Pandas transform</a>), (2) a DataFrame of only a single row or (3) optionally a Series (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html">Pandas aggregate</a>) or a DataFrame with an arbitrary number of rows (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">Pandas apply</a>) with even varying columns. Therefore, we can conclude that the proposed method is not only faster than the official way in case of a <span class="caps">UDF</span>, it also even flexible enough to allow the definition of&nbsp;UDAFs.</p>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
         <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2015/07/howto_write_a_friendly_reminder_bot/">How to write a friendly reminder&nbsp;bot</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/04/leveraging_the_value_of_big_data_with_automated_decision_making/">Leveraging the Value of Big Data with Automated Decision&nbsp;Making</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
     </ul>
 </section>
@@ -601,97 +594,137 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-<!-- Sidebar -->
+
 <section class="well well-sm">
-  <ul class="list-group list-group-flush">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
 
-<!-- Sidebar/Social -->
-<li class="list-group-item">
-  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-  <ul class="list-group" id="social">
-    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
-    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
-    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
-  </ul>
-</li>
-<!-- End Sidebar/Social -->
 
-<!-- Sidebar/Tag Cloud -->
-<li class="list-group-item">
-  <a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-  <ul class="list-group list-inline tagcloud" id="tags">
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/asynchronous/">asynchronous</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/asyncio/">asyncio</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/bayesian/">bayesian</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="http://www.florianwilhelm.info/tag/big-data/">big data</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/blue-yonder/">Blue Yonder</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/bokeh/">bokeh</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/causal-inference/">causal inference</a>
-    </li>
-    <li class="list-group-item tag-3">
-      <a href="http://www.florianwilhelm.info/tag/data-science/">data science</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/event-driven/">event-driven</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/gps/">gps</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/hadoop/">hadoop</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/hive/">hive</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="http://www.florianwilhelm.info/tag/jupyter/">jupyter</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/kalman/">kalman</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="http://www.florianwilhelm.info/tag/machine-learning/">machine-learning</a>
-    </li>
-    <li class="list-group-item tag-3">
-      <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/programming/">programming</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="http://www.florianwilhelm.info/tag/python/">python</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="http://www.florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/scipy/">scipy</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="http://www.florianwilhelm.info/tag/template/">template</a>
-    </li>
-  </ul>
-</li>
-<!-- End Sidebar/Tag Cloud -->
-  </ul>
-</section>
-<!-- End Sidebar -->            </aside>
+
+            <li class="list-group-item"><a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/blue-yonder/">
+                            Blue Yonder
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/causal-inference/">
+                            causal inference
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://www.florianwilhelm.info/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/kalman/">
+                            kalman
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/programming/">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://www.florianwilhelm.info/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/template/">
+                            template
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
         </div>
     </div>
 </div>
@@ -748,19 +781,5 @@ To give a short summery, as long as we stick to the rules 1 and 2 a PySpark prog
     </script>
     <!-- End Google Analytics Code -->
 
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-    $("div.collapseheader").click(function () {
-    $header = $(this).children("span").first();
-    $codearea = $(this).children(".input_area");
-    console.log($(this).children());
-    $codearea.slideToggle(500, function () {
-        $header.text(function () {
-            return $codearea.is(":visible") ? "Collapse Code" : "Expand Code";
-        });
-    });
-});
-});
-</script>
 </body>
 </html>

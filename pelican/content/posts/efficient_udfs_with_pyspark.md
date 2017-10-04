@@ -11,7 +11,7 @@ status: draft
 Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it's built on a Java Stack it comes with Python bindings also known as [PySpark][] whose API was heavily influenced by [Pandas][]. With respect to the functionality modern PySpark has about the same functionality as Pandas when it comes to typical ETL and data wrangling, e.g. groupby, aggregations and so on. As a general rule of thumb, one should consider
  an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 GB of memory usage. At that point PySpark might be an option for you that does the job but of course there are others like for instance [Dask][] which won't be addressed in this post. 
   
-If you are new to Spark one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with SQL as an alternative way of defining queries and the other is [Spark.ml][] for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and Scikit-Learn for larger data sets. 
+If you are new to Spark one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with SQL as an alternative way of defining queries and the other is [Spark MLlib][] for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data sets.
  
 But enough praise for PySpark, there are still some ugly sides as well as rough edges to it and we want to address some of them here, of course, in a constructive way. You might have heard the rumours that PySpark is so much slower compared to Spark with Scala and as it is often the case with rumours, there is a tiny bit of truth to it. But before we start, a deeper understanding of how PySpark does its magic is needed.
  
@@ -33,9 +33,9 @@ df.filter(df.is_sold == True)
 ```   
 
 In this case our filter condition will be translated one time to Scale where it is then evaluated a billion times really fast, without any callback to Python!
-To give a short summery, as long as we stick to the rules 1 and 2 a PySpark program will be approximately as fast as Spark program based on Scala.
+To give a short summary, as long as we stick to the rules 1 and 2 a PySpark program will be approximately as fast as Spark program based on Scala.
 
-Before we move on, two side notes should also be kept in mind. The first is that what we just learnt not only applies to PySpark but also to Pandas, Numpy and Python in general since all these actually wrap a lot of C/C++ and sometimes even Fortran code. The second remark is that the general problem of object translation at least in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. His [Apache Arrow][] project tries to standardize the way complex objects are stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should avoid making a large number of translations.
+Before we move on, two side notes should also be kept in mind. The first is that what we just learnt not only applies to PySpark but also to Pandas, NumPy and Python in general since all these actually wrap a lot of C/C++ and sometimes even Fortran code. The second remark is that the general problem of object translation at least in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. His [Apache Arrow][] project tries to standardize the way complex objects are stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should avoid making a large number of translations.
  
 So far we have only talked about avoiding certain operations to keep the performance up. But what if we actually want to implement a User-Defined Function (UDF) or User-Defined Aggregation Function (UDAF)? The [databricks documentation][] explains how to define a UDF in PySpark in a few and easy steps but clearly violating our rules which leads to bad performance in practice: 
  
@@ -57,7 +57,7 @@ Since ``squared`` works on a single row, i.e. entry, of the ``id`` column the ``
  
 The obvious question is now, how can we tackle the problem of using UDFs without sacrificing too much performance and as an additional benefit even define UDAFs? Looking at our little rule set, we see the pattern that if we do something with an overhead we should at least try to do it not so often. This directly leads us to the idea that a UDF should do the object translation only a few times by working not on single rows but rather on whole partitions. This functionality is provided by the [RDD][] method ``mapPartitions``. 
 
-As a short reminder, an Resilient Distributed Dataset (RDD) is the low-level data structures of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``. Putting all ingredients together we can apply an arbitrary Python function ``my_func`` to a DataFrame ``df`` with:
+As a short reminder, an Resilient Distributed Dataset (RDD) is the low-level data structure of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``. Putting all ingredients together we can apply an arbitrary Python function ``my_func`` to a DataFrame ``df`` with:
 
 ```python
 df.rdd.mapPartitions(my_func).toDF()
@@ -78,9 +78,9 @@ The following image shows the difference between the application of the presente
 
 <img width="800" style="margin-right: 20px; margin-bottom: 20px" src="/images/spark_udaf.png"/><br>
 
-This simply approach solves our main problem by doing the translation of each partition to Python at once, then calling the function ``my_func`` with it and translating back to Scala whatever the function returns. Therefore we have reduced the number of translations to two times (back and forth) the number of partitions and because of that we should keep the number of partitions to a reasonable number.
+This simple approach solves our main problem by doing the translation of each partition to Python at once, then calling the function ``my_func`` with it and translating back to Scala whatever the function returns. Therefore we have reduced the number of translations to two times (back and forth) the number of partitions and because of that we should keep the number of partitions to a reasonable number.
 
-Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level RDD interface our function ``my_func`` will be passed an iterator of PySpark [Row][] objects and needs to return them as well. A ``Row`` object itself is only a container for the column values in one row as you might have guessed. When we return such a ``Row``, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our UDF/UDAF with the help of Pandas, keeping in mind that one partition should hold less than 10 million rows. Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling... and here we are ;-) 
+Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level RDD interface, our function ``my_func`` will be passed an iterator of PySpark [Row][] objects and needs to return them as well. A ``Row`` object itself is only a container for the column values in one row, as you might have guessed. When we return such a ``Row``, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our UDF/UDAF with the help of Pandas, keeping in mind that one partition should hold less than 10 million rows. Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling... and here we are ;-) 
 
 So first we need to define a nice function that will convert a ``Row`` iterator into a Pandas DataFrame:
 
@@ -224,9 +224,9 @@ def pandas_to_rows(df):
     return (row(*elems) for elems in records)
 ```
 
-This looks a bit more complicated but essentially we convert a Pandas Serie to a DataFrame if necessary and handle the edge cases of an empty DataFrame or ``None`` as return value. We then convert the DataFrame to records, convert some Numpy data types to the Python equivalent and create an iterator over Row objects from the converted records. 
+This looks a bit more complicated but essentially we convert a Pandas Series to a DataFrame if necessary and handle the edge cases of an empty DataFrame or ``None`` as return value. We then convert the DataFrame to records, convert some NumPy data types to the Python equivalent and create an iterator over Row objects from the converted records. 
 
-With these function at hand we can define a [Python decorator][] that will allow us to automatically call the functions ``rows_to_pandas`` and ``pandas_to_rows`` at the right time:
+With these functions at hand we can define a [Python decorator][] that will allow us to automatically call the functions ``rows_to_pandas`` and ``pandas_to_rows`` at the right time:
 
 ```python
 from functools import wraps
@@ -252,7 +252,7 @@ class pandas_udaf(object):
         return wrapper
 ```
 
-The code is pretty much self-explanatory if you have ever written a Python decorator otherwise you should read about it since it takes some time to wrap your head around it. Basically, we set up a default logger, create a Pandas DataFrame from the Row iterator, pass it to our UDF/UDAF and convert its return value back to a Row iterator. The only additional thing that might still raise questions is the usage of ``args[-1]``. This is due to the fact that ``func`` might also be a method of an object. In this case, the first argument would be ``self`` but the last argument is in either cases the actual argument that ``mapPartitions`` will pass to us. The code of ``setup_logger`` depends on your Spark installation. In case you are using Spark on Apache [YARN][], it might look like this:
+The code is pretty much self-explanatory if you have ever written a Python decorator; otherwise, you should read about it since it takes some time to wrap your head around it. Basically, we set up a default logger, create a Pandas DataFrame from the Row iterator, pass it to our UDF/UDAF and convert its return value back to a Row iterator. The only additional thing that might still raise questions is the usage of ``args[-1]``. This is due to the fact that ``func`` might also be a method of an object. In this case, the first argument would be ``self`` but the last argument is in either cases the actual argument that ``mapPartitions`` will pass to us. The code of ``setup_logger`` depends on your Spark installation. In case you are using Spark on Apache [YARN][], it might look like this:
 
 ```python
 import os
@@ -278,7 +278,7 @@ def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
                         datefmt="%y/%m/%d %H:%M:%S")
 ```
  
-Now having all parts in place let's assume the code above resides in the python module ``pyspark_utils.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that ``pyspark_utils.py`` as well as all its dependencies like Pandas, Numpy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for
+Now having all parts in place let's assume the code above resides in the python module ``pyspark_utils.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that ``pyspark_utils.py`` as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for
  each country as:
 
 ```python
@@ -307,7 +307,7 @@ stats_df = df.repartition('country').rdd.mapPartitions(my_func).toDF()
 print(stats_df.toPandas())
 ```
 
-The code above can be easily tested with the help of a Jupyter notebook with PySpark where the SparkContext ``sc`` is predefined. One should also note that this proposed method allows the definition of a UDF as well as an UDAF since it is up to the function ``my_func`` if it returns a DataFrame having as many rows as the input data frame (think [Pandas transform][]), a DataFrame of only a single row or optionally a Series (think [Pandas aggregate][]) or a DataFrame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns. Therefore, we can conclude that the proposed method is not only faster than the official way in case of a UDF, it also even flexible enough to allow the definition of UDAFs.  
+The code above can be easily tested with the help of a Jupyter notebook with PySpark where the SparkContext ``sc`` is predefined. Overall, this proposed method allows the definition of an UDF as well as an UDAF since it is up to the function ``my_func`` if it returns (1) a DataFrame having as many rows as the input data frame (think [Pandas transform][]), (2) a DataFrame of only a single row or (3) optionally a Series (think [Pandas aggregate][]) or a DataFrame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns. Therefore, we can conclude that the proposed method is not only faster than the official way in case of a UDF, it also even flexible enough to allow the definition of UDAFs.
 
 
 [PySpark]: https://spark.apache.org/docs/latest/api/python/index.html
@@ -319,7 +319,7 @@ The code above can be easily tested with the help of a Jupyter notebook with PyS
 [SPARK-13534]: https://issues.apache.org/jira/browse/SPARK-13534
 [SPARK-21190]: https://issues.apache.org/jira/browse/SPARK-21190
 [databricks documentation]: https://docs.databricks.com/spark/latest/spark-sql/udf-in-python.html
-[Spark.ml]: https://spark.apache.org/docs/latest/api/python/pyspark.ml.html
+[Spark MLlib]: https://spark.apache.org/docs/latest/ml-guide.html
 [DataFrame]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame
 [Row]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row
 [RDD]: https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD

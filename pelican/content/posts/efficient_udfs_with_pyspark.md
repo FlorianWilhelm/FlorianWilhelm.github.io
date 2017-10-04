@@ -231,6 +231,7 @@ With these functions at hand we can define a [Python decorator][] that will allo
 ```python
 from functools import wraps
 
+
 class pandas_udaf(object):
     """Decorator for PySpark UDAFs using Pandas
 
@@ -258,6 +259,7 @@ The code is pretty much self-explanatory if you have ever written a Python decor
 import os
 import sys
 
+
 def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
     """Setup basic logging for logging on the executor
 
@@ -283,6 +285,7 @@ Now having all parts in place let's assume the code above resides in the python 
 
 ```python
 import pyspark_utils
+
 
 @pyspark_utils.pandas_udaf(loglevel=logging.DEBUG)
 def my_func(df):

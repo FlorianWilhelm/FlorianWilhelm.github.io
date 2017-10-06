@@ -19,7 +19,6 @@ Also, it is not as straightforward as in Pandas to use advanced mathematical fun
 Sooner or later, you walk into a scenario where you want to apply some Pandas or SciPy operations to parts of your distributed data frame in PySpark.
 Unfortunately, there is no built-in mechanism for applying Pandas transformations to PySpark dataframes.
 In fact, this requires a lot of boilerplate code with many error-prone details to consider.
-
 Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling... and here we are ;-)
  
 The remainder of this blog post walks you through the process of writing Pandas UDAFs with PySpark without boilerplate code. In fact we end up using a single Python decorator call to specify our PySpark Pandas function.
@@ -31,9 +30,8 @@ The state of UDAFs in PySpark
 -->
 
 To start with a recap, an aggregation function is a function that operates on a set of rows producing a result, for example a ``sum()`` or ``count()`` function.
-*User-Defined Aggregation Functions* (UDAFs) are typically used for more complex aggregations that are not natively contained within the analytic engine.
+A *User-Defined Aggregation Function* (UDAF) is typically used for more complex aggregations that are not natively contained within the analytic engine.
 This means that we provide some Python code that takes a set of rows and produces an aggregate result.
-
 At the time of writing - with PySpark 2.2 as latest version - there is no "official" way of defining an arbitrary UDAF function.
 Also, the tracking Jira issue [SPARK-10915][] does not indicate that this changes in near future.
 Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.

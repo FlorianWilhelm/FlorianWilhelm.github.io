@@ -31,7 +31,7 @@ The state of UDAFs in PySpark
 -->
 
 To start with a recap, an aggregation function is a function that operates on a set of rows producing a result, for example a ``sum()`` or ``count()`` function.
-User-Defined Aggregation Functions (UDAFs) are typically used for more complex aggregations that are not natively contained within the analytic engine. 
+*User-Defined Aggregation Functions* (UDAFs) are typically used for more complex aggregations that are not natively contained within the analytic engine.
 This means that we provide some Python code that takes a set of rows and produces an aggregate result.
 
 At the time of writing - with PySpark 2.2 as latest version - there is no "official" way of defining an arbitrary UDAF function.
@@ -39,9 +39,8 @@ Also, the tracking Jira issue [SPARK-10915][] does not indicate that this change
 Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.
 However, as you might have guessed from the title of this article, there are always workarounds.
 <!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... -->
-
 This is where the [RDD][] api comes in.
-As a reminder, a Resilient Distributed Dataset (RDD) is the low-level data structure of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``.
+As a reminder, a *Resilient Distributed Dataset* (RDD) is the low-level data structure of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``.
 This RDD api allows us to specify arbitrary Python functions that get executed on the data.
 To give an example for the RDD api, let's say we have a data frame ``df`` of one billion rows with a boolean ``is_sold`` column and we want to filter for rows with sold products. One could accomplish this with the code
 
@@ -90,10 +89,10 @@ At execution time, the Spark workers send our lambda function to those Python wo
 Next, the Spark workers start serializing their RDD partitions and pipe them to the Python workers via sockets, where our ``filter()`` function gets evaluated on each row.
 For the resulting rows, the whole serialization/deserialization procedure happens again in the opposite direction.
 
-Even if this sounded awkward technically to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and forth.
+Even if this sounded awkwardly technical to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and forth.
 
 To give a short summary to this low-level excursion: as long as we avoid all kind of Python UDFs, a PySpark program will be approximately as fast as Spark program based on Scala.
-If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we will do in the next chapter. :-)
+If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we will try to do in the remaining post. :-)
 
 Before we move on, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. His [Apache Arrow][] project tries to standardize the way columnar data is stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever possible.
  

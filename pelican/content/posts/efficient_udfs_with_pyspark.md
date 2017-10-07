@@ -1,5 +1,5 @@
 ---
-title: Efficient UDAFs with PySpark
+title: Efficient UD(A)Fs with PySpark
 date: 2017-06-01 12:30
 modified: 2017-06-01 19:30
 category: article
@@ -8,54 +8,55 @@ authors: Florian Wilhelm
 status: draft
 ---
 
-Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it's developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as [PySpark][], whose API was heavily influenced by [Pandas][]. With respect to the functionality modern PySpark has about the same functionality as Pandas when it comes to typical ETL and data wrangling, e.g. groupby, aggregations and so on. As a general rule of thumb, one should consider
- an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 GB of memory usage. At that point PySpark might be an option for you that does the job but of course there are others like for instance [Dask][] which won't be addressed in this post. 
+Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as [PySpark][], whose API was heavily influenced by [Pandas][].
+With respect to functionality, modern PySpark has about the same capabilities as Pandas when it comes to typical ETL and data wrangling, e.g. groupby, aggregations and so on.
+As a general rule of thumb, one should consider an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 GB of memory usage. At that point PySpark might be an option for you that does the job, but of course there are others like for instance [Dask][] which won't be addressed in this post. 
   
-If you are new to Spark, one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with SQL as an alternative way of defining queries and the other is [Spark MLlib][] for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data sets.
+If you are new to Spark, one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with SQL as an alternative way of defining queries and the other is [Spark MLlib][] for machine learning. Both topics are beyond the scope of this post but should be taken into account if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data sets.
  
 But enough praise for PySpark, there are still some ugly sides as well as rough edges to it and we want to address some of them here, of course, in a constructive way.
-First of all, due to its young age, PySpark lacks quite some features in contrast to Pandas, for example in areas such as reshaping/pivoting or time series.
-Also, it is not as straightforward as in Pandas to use advanced mathematical functions from SciPy within PySpark.
-Sooner or later, you walk into a scenario where you want to apply some Pandas or SciPy operations to parts of your distributed data frame in PySpark.
-Unfortunately, there is no built-in mechanism for applying Pandas transformations to PySpark dataframes.
+First of all, due to its relatively young age, PySpark lacks some features that Pandas provides, for example in areas such as reshaping/pivoting or time series.
+Also, it is not as straightforward to use advanced mathematical functions from SciPy within PySpark.
+That's why sooner or later, you might walk into a scenario where you want to apply some Pandas or SciPy operations to your data frame in PySpark.
+Unfortunately, there is no built-in mechanism for using Pandas transformations in PySpark.
 In fact, this requires a lot of boilerplate code with many error-prone details to consider.
 Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling... and here we are ;-)
  
-The remainder of this blog post walks you through the process of writing Pandas UDAFs with PySpark without boilerplate code. In fact we end up using a single Python decorator call to specify our PySpark Pandas function.
-To give more insights into performance considerations, the post also contains a little journey into the internals of PySpark.
+The remainder of this blog post walks you through the process of writing efficient Pandas UDAFs in PySpark. In fact, we end up abstracting all the necessary boilerplate code into a single Python decorator, which allows us to conveniently specify our PySpark Pandas function.
+To give more insights into performance considerations, this post also contains a little journey into the internals of PySpark.
 
 <!---
 The state of UDAFs in PySpark
 ===========================
 -->
 
-To start with a recap, an aggregation function is a function that operates on a set of rows producing a result, for example a ``sum()`` or ``count()`` function.
-A *User-Defined Aggregation Function* (UDAF) is typically used for more complex aggregations that are not natively contained within the analytic engine.
-This means that we provide some Python code that takes a set of rows and produces an aggregate result.
+To start with a recap, an aggregation function is a function that operates on a set of rows and produces a result, for example a ``sum()`` or ``count()`` function.
+A *User-Defined Aggregation Function* (UDAF) is typically used for more complex aggregations that are not natively shipped with your analysis tool in question.
+In our case, this means we provide some Python code that takes a set of rows and produces an aggregate result.
 At the time of writing - with PySpark 2.2 as latest version - there is no "official" way of defining an arbitrary UDAF function.
 Also, the tracking Jira issue [SPARK-10915][] does not indicate that this changes in near future.
 Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.
-However, as you might have guessed from the title of this article, there are always workarounds.
+However, as you might have guessed from the title of this article, there are workarounds to the rescue.
 <!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... -->
 This is where the [RDD][] api comes in.
 As a reminder, a *Resilient Distributed Dataset* (RDD) is the low-level data structure of Spark and a Spark [DataFrame][] is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying RDD with the help of the ``rdd`` attribute and convert it back with ``toDF()``.
 This RDD api allows us to specify arbitrary Python functions that get executed on the data.
-To give an example for the RDD api, let's say we have a data frame ``df`` of one billion rows with a boolean ``is_sold`` column and we want to filter for rows with sold products. One could accomplish this with the code
+To give an example, let's say we have a data frame ``df`` of one billion rows with a boolean ``is_sold`` column and we want to filter for rows with sold products. One could accomplish this with the code
 
 ```python
 df.rdd.filter(lambda x: x.is_sold == True).toDF()
 ```
 
-Although not explicitly declared as such, the lambda function is essentially a user-defined function (UDF).
-The RDD filter example produces the same result as its high-level dataframe counterpart:
+Although not explicitly declared as such, this lambda function is essentially a user-defined function (UDF).
+For this exact use case, we could also use the more high-level [DataFrame][] ``filter()`` method, producing the same result:
 
 ```python
 df.filter(df.is_sold == True)
 ```
 
-Before we now go into the details on how to implement UDAFs using the RDD api, there is something important to keep in mind which might sound counterintuitive to the title of this post: you should *avoid* all kind of Python UDFs like RDD functions or data frame UDFs in PySpark whenever possible!
+Before we now go into the details on how to implement UDAFs using the RDD api, there is something important to keep in mind which might sound counterintuitive to the title of this post: in PySpark you should *avoid* all kind of Python UDFs - like RDD functions or data frame UDFs - as much as possible!
 Whenever there is a built-in dataframe method available, this will be much faster than its RDD counterpart. 
-To get a deeper understanding of why there is such a substanstial performance difference, we will now take a little detour and explain in more detail what actually happens behind the scenes in those two code snippets.
+To get a better understanding of the substanstial performance difference, we will now take a little detour and investigate what happens behind the scenes in those two filter examples.
 
 <!---
 PySpark Internals
@@ -67,27 +68,28 @@ Communication between Python and Spark happens on different levels:
  3. Data transfer between the distributed data frames in JVM memory and the Python driver PySpark actions and data frame creation from python (e.g.:("PySpark toDF(), c 
 
 Local communication acts like a JVM remote control from Python. 
-When you start your [SparkSession][] in Python, in the background PySpark uses [Py4J][] for a socket-based communication between our actual Python application and the SparkContext running in the JVM.
 -->
 PySpark is actually a wrapper around the Spark core written in Scala. 
-When you call a method of a PySpark data frame, somewhere your Python call gets translated into the corresponding call on the Spark data frame within the SparkContext running in the JVM. This is in general extremely fast and the overhead can be neglected as long as you don't call the function millions of times.
-Now let's get back to our dataframe ``df.filter()`` example.
-In this case the data frame operation and the filter condition will be send to the Java SparkContext, where it gets compiled into an overall optimized query plan.
+When you start your [SparkSession][] in Python, in the background PySpark uses [Py4J][] to launch a JVM and create a Java SparkContext. 
+All PySpark operations, for example our ``df.filter()`` method call, behind the scenes get translated into corresponding calls on the respective Spark data frame object within the JVM SparkContext. This is in general extremely fast and the overhead can be neglected as long as you don't call the function millions of times.
+So in our ``df.filter()`` example, the data frame operation and the filter condition will be send to the Java SparkContext, where it gets compiled into an overall optimized query plan.
 Once the query is executed, the filter condition is evaluated on the distributed data frame within Java, without any callback to Python!
-If we specified that the resulting dataframe should be saved as Hive table, throughout the entire query execution all operations would be performed in a distributed fashion within Java Spark workers, which allows Spark to be very fast for queries on large data sets. 
-<!---
-In PySpark SQL, whenever you do data wrangling, like calling ``filter``, ``select``, ``groupby`` and so on, the overhead of the function call is neglectable as we have just learned. The arguments to those functions are mostly simple objects like strings or numbers defining the column name or indices and the costs of their translation to Scale is therefore also neglectable.
--->
+In case our workflow loads the data frame from Hive and saves the resulting data frame as Hive table, throughout the entire query execution all data operations are performed in a distributed fashion within Java Spark workers, which allows Spark to be very fast for queries on large data sets. 
 Okay, so why is the RDD ``filter()`` method then so much slower?
 The reason is that the lambda function cannot be directly applied to the data frame residing in JVM memory. 
-<!--- To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
+<!--- 
+To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
 -->
 What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
 At execution time, the Spark workers send our lambda function to those Python workers.
 Next, the Spark workers start serializing their RDD partitions and pipe them to the Python workers via sockets, where our ``filter()`` function gets evaluated on each row.
 For the resulting rows, the whole serialization/deserialization procedure happens again in the opposite direction.
 
-Even if this sounded awkwardly technical to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and forth.
+The entire data flow when using arbitrary Python functions in PySpark is also shown in the following image, which has been taken from the old [PySpark Internals][] wiki:
+
+<img src="/images/pyspark_udf_dataflow.png"/><br>
+
+Even if all of this sounded awkwardly technical to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and forth.
 
 To give a short summary to this low-level excursion: as long as we avoid all kind of Python UDFs, a PySpark program will be approximately as fast as Spark program based on Scala.
 If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we will try to do in the remaining post. :-)
@@ -368,6 +370,7 @@ The code above can be easily tested with the help of a Jupyter notebook with PyS
 [DataFrame]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame
 [Row]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row
 [RDD]: https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD
+[PySpark Internals]: https://cwiki.apache.org/confluence/display/SPARK/PySpark+Internals
 [Partitions and Partitioning]: https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-partitions.html
 [Python decorator]: https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator
 [Pandas transform]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html

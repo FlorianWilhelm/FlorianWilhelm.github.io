@@ -325,7 +325,7 @@ def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
                         datefmt=datefmt)
 ```
  
-Now having all parts in place let's assume the code above resides in the python module ``pyspark_udaf.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that ``pyspark_udaf.py`` as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for each country as:
+Now having all parts in place let's assume the code above resides in the python module [pyspark_udaf.py][]. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that [pyspark_udaf.py][] as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for each country as:
 
 ```python
 import pyspark_udaf
@@ -380,3 +380,4 @@ The code above can be easily tested with the help of a Jupyter notebook with PyS
 [Pandas transform]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html
 [Pandas aggregate]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html
 [Pandas apply]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html
+[pyspark_udaf.py]: {filename}/src/pyspark_udaf.py

@@ -94,7 +94,7 @@ Even if all of this sounded awkwardly technical to you, you get the point that e
 To give a short summary to this low-level excursion: as long as we avoid all kind of Python UDFs, a PySpark program will be approximately as fast as Spark program based on Scala.
 If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we will try to do in the remaining post. :-)
 
-Before we move on, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. His [Apache Arrow][] project tries to standardize the way columnar data is stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever possible.
+Before we move on, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. He is also the initiator of the [Apache Arrow][] project which tries to standardize the way columnar data is stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever possible.
  
 <!--
 PySpark UDAFs with Pandas
@@ -355,8 +355,13 @@ stats_df = df.repartition('country').rdd.mapPartitions(my_func).toDF()
 print(stats_df.toPandas())
 ```
 
-The code above can be easily tested with the help of a Jupyter notebook with PySpark where the SparkContext ``sc`` is predefined. Overall, this proposed method allows the definition of an UDF as well as an UDAF since it is up to the function ``my_func`` if it returns (1) a DataFrame having as many rows as the input data frame (think [Pandas transform][]), (2) a DataFrame of only a single row or (3) optionally a Series (think [Pandas aggregate][]) or a DataFrame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns. Therefore, we can conclude that the proposed method is not only faster than the official way in case of a UDF, it also even flexible enough to allow the definition of UDAFs.
+The code above can be easily tested with the help of a Jupyter notebook with PySpark where the [SparkSession][] ``spark`` is predefined.
+Overall, this proposed method allows the definition of an UDF as well as an UDAF since it is up to the function ``my_func`` if it returns (1) a DataFrame having as many rows as the input data frame (think [Pandas transform][]), (2) a DataFrame of only a single row or (3) optionally a Series (think [Pandas aggregate][]) or a DataFrame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns.
+Therefore, this approach should be applicable to a variety of use cases where the built-in PySpark functionality is not sufficient.
 
+To wrap it up, this blog post gives you a template on how to write PySpark UD(A)Fs while abstracting all the boilerplate in a dedicated module.
+We also went down the rabbit hole to explore the technical difficulties the Spark developers face in providing Python bindings to a distributed JVM-based system.
+In this respect we are really looking forward to closer integration of [Apache Arrow][] and Spark in the upcoming Spark 2.3 and future versions.
 
 [PySpark]: https://spark.apache.org/docs/latest/api/python/index.html
 [Pandas]: http://pandas.pydata.org/

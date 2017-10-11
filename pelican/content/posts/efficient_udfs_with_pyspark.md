@@ -307,17 +307,22 @@ def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
         loglevel (int): minimum loglevel for emitting messages
         logfile (str): name of the logfile
     """
+    logformat = "%(asctime)s %(levelname)s %(module)s.%(funcName)s: %(message)s"
+    datefmt = "%y/%m/%d %H:%M:%S"
     try:
         logfile = os.path.join(os.environ['LOG_DIRS'].split(',')[0], logfile)
     except (KeyError, IndexError):
-        print("LOG_DIRS not in environment variables or is empty")
-        return
+        logging.basicConfig(level=loglevel,
+                            stream=sys.stdout, 
+                            format=logformat,
+                            datefmt=datefmt)
+        logger = logging.getLogger(__name__)
+        logger.error("LOG_DIRS is not in environment variables or empty, using {} instead.".format(logfile))
 
-    logformat = "%(asctime)s %(levelname)s %(module)s.%(funcName)s: %(message)s"
     logging.basicConfig(level=loglevel,
                         filename=logfile,
                         format=logformat,
-                        datefmt="%y/%m/%d %H:%M:%S")
+                        datefmt=datefmt)
 ```
  
 Now having all parts in place let's assume the code above resides in the python module ``pyspark_utils.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that ``pyspark_utils.py`` as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for

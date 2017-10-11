@@ -423,7 +423,7 @@ Declarative programming means finding the right abstraction level that describes
 &lt;li&gt;calculate the effect with &lt;span class="math"&gt;\(\hat{y}_1 - \hat{y}_0\)&lt;/span&gt; or &lt;span class="math"&gt;\(\frac{\hat{y}_1}{\hat{y}_0}\)&lt;/span&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;In a real-world big-data problem we often have no control over the experimental setup — we are just left with the data. This happens for instance in observational studies. Imagine for instance the treatment with an experimental drug having strong side-effects that might cure a life-threatening disease. A controlled, randomized experiment where the control groups gets a placebo might be impracticable or even&amp;nbsp;unethical. &lt;/p&gt;
-&lt;p&gt;In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;. According to Pearl&lt;sup id="fnref-pearl2"&gt;&lt;a class="footnote-ref" href="#fn-pearl2"&gt;4&lt;/a&gt;&lt;/sup&gt; by now assuming strong ignorability we are basically assuming that our covariate set &lt;span class="math"&gt;\(X\)&lt;/span&gt; is &lt;em&gt;admissible&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)&lt;/span&gt;. Here, Pearl&amp;#8217;s &lt;span class="math"&gt;\(\mathrm{do}\)&lt;/span&gt;-notation &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))\)&lt;/span&gt; denotes the “causal effect” of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;, i.e. the distribution of &lt;span class="math"&gt;\(Y\)&lt;/span&gt; after setting variable &lt;span class="math"&gt;\(Z\)&lt;/span&gt; to a constant &lt;span class="math"&gt;\(Z = z\)&lt;/span&gt; by external intervention. In practice, the assumption of admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;, so one should always be aware that the entire causal analysis depends on the validity of this&amp;nbsp;assumption. &lt;/p&gt;
+&lt;p&gt;In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;. According to Pearl&lt;sup id="fnref-pearl2"&gt;&lt;a class="footnote-ref" href="#fn-pearl2"&gt;4&lt;/a&gt;&lt;/sup&gt; by now assuming strong ignorability we are basically assuming that our covariate set &lt;span class="math"&gt;\(X\)&lt;/span&gt; is &lt;em&gt;admissible&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)&lt;/span&gt;. Here, Pearl&amp;#8217;s &lt;span class="math"&gt;\(\mathrm{do}\)&lt;/span&gt;-notation &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))\)&lt;/span&gt; denotes the “causal effect” of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;, i.e. the distribution of &lt;span class="math"&gt;\(Y\)&lt;/span&gt; after setting variable &lt;span class="math"&gt;\(Z\)&lt;/span&gt; to a constant &lt;span class="math"&gt;\(Z = z\)&lt;/span&gt; by external intervention. In practice, the assumption of admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies&lt;sup id="fnref2-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;, so one should always be aware that the entire causal analysis depends on the validity of this&amp;nbsp;assumption. &lt;/p&gt;
 &lt;p&gt;So far, we have not only assumed admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; but also a randomized trial for our approach. Therefore, we should check beforehand that &lt;span class="math"&gt;\(X ⫫ Z\)&lt;/span&gt;, (which is a necessary but not sufficient condition), before applying the aforementioned approach. This can be verified by using &lt;span class="math"&gt;\(X\)&lt;/span&gt; to predict &lt;span class="math"&gt;\(Z\)&lt;/span&gt;. If this is not possible, and thus &lt;span class="math"&gt;\(p(z|x) = p(z)\)&lt;/span&gt;, the former approach is viable. But what if &lt;span class="math"&gt;\(Z\)&lt;/span&gt; is not independent of &lt;span class="math"&gt;\(X\)&lt;/span&gt; — as is often the case with real-world data. For instance, dealers of expensive vehicle brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; from our covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;.&lt;/p&gt;
 &lt;h2&gt;Propensity&amp;nbsp;score&lt;/h2&gt;
 &lt;p&gt;By predicting &lt;span class="math"&gt;\(Z\)&lt;/span&gt; based on &lt;span class="math"&gt;\(X\)&lt;/span&gt;, we have estimated the &lt;em&gt;propensity score&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(Z=1|x)\)&lt;/span&gt;. This of course assumes that we have used a classification method that returns probabilities for the classes &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt;. Let &lt;span class="math"&gt;\(e_i=p(Z=1|x_i)\)&lt;/span&gt; be the propensity score of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th observation, i.e. the propensity of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th participant getting the treatment (&lt;span class="math"&gt;\(Z=1\)&lt;/span&gt;). &lt;/p&gt;
@@ -480,8 +480,7 @@ Declarative programming means finding the right abstraction level that describes
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -510,8 +509,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -538,8 +536,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -575,7 +572,11 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -1521,8 +1522,7 @@ AABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -1544,8 +1544,7 @@ AABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -1575,7 +1574,11 @@ AABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -1664,7 +1667,11 @@ AABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -1764,8 +1771,7 @@ AABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -1790,7 +1796,11 @@ AABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -2143,8 +2153,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -2171,7 +2180,11 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;table class="simpletable"&gt;
@@ -2229,8 +2242,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -2258,7 +2270,11 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -2295,8 +2311,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -2326,7 +2341,11 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -2805,8 +2824,7 @@ TkSuQmCC
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -2848,7 +2866,11 @@ TkSuQmCC
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -2964,7 +2986,11 @@ TkSuQmCC
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -3335,7 +3361,11 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[16]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[16]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;table class="simpletable"&gt;
@@ -3393,8 +3423,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -3422,7 +3451,11 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[17]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[17]:&lt;/div&gt;
+
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -3478,7 +3511,11 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -3977,8 +4014,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -3987,8 +4023,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -4022,7 +4057,11 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[20]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[20]:&lt;/div&gt;
+
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -4056,7 +4095,11 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -4105,8 +4148,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -4135,7 +4177,11 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -4582,8 +4628,7 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -4615,7 +4660,11 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -5032,8 +5081,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -5072,7 +5120,11 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[25]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[25]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -5181,8 +5233,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -5211,7 +5262,11 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;table class="simpletable"&gt;
@@ -5269,8 +5324,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -5298,7 +5352,11 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
+
+
 
 
 &lt;div class="output_text output_subarea output_execute_result"&gt;
@@ -5354,7 +5412,11 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -5802,8 +5864,7 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -5834,7 +5895,11 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -6577,8 +6642,7 @@ RU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -6605,8 +6669,7 @@ RU5ErkJggg==
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -6634,7 +6697,11 @@ RU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[32]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[32]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -6732,7 +6799,11 @@ RU5ErkJggg==
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -7085,8 +7156,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
@@ -7113,7 +7183,11 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[34]:&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[34]:&lt;/div&gt;
+
+
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
 &lt;div&gt;
@@ -7211,7 +7285,11 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class="output"&gt;
 
 
-&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
 
 
 &lt;div class="output_png output_subarea "&gt;
@@ -7564,11 +7642,14 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;/div&gt;&lt;/p&gt;
+&lt;/div&gt;
+ 
+
+&lt;/p&gt;
 &lt;h2&gt;Final&amp;nbsp;notes&lt;/h2&gt;
 &lt;p&gt;“With great power comes great responsibility” so they say, and &lt;span class="caps"&gt;IPTW&lt;/span&gt; is surely a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard by which to  estimate a causal effect and should always be preferred. But when reality hits us hard and we have just the data, i.e. no influence on the experiment generating it, we saw that &lt;span class="caps"&gt;IPTW&lt;/span&gt; improves causal inference to some&amp;nbsp;extent. &lt;/p&gt;
 &lt;p&gt;Furthermore, the demonstrated technique relies on several things. First, &lt;span class="math"&gt;\(X\)&lt;/span&gt; needs to be &lt;em&gt;admissible&lt;/em&gt; — which cannot be practically checked. But we &lt;em&gt;can&lt;/em&gt; investigate how the treatment was assigned in our data. In our campaign example, that would mean asking the marketing department about their former strategy when sending vouchers to customers. Then we could verify that the data includes all factors on which their strategy relied. Second, we need an accurate method of estimating the propensity scores for this approach to work. For the sake of simplicity, our demonstration did not check the prediction quality of our machine learning models on a test set, which would be advisable in a real application. The application of machine learning models should always encompass training, validation, test splits and a proper cost&amp;nbsp;functional.&lt;/p&gt;
-&lt;p&gt;That said, propensity score techniques like &lt;span class="caps"&gt;IPTW&lt;/span&gt; can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;propensity score methods introduction&lt;/a&gt; by Peter Austin&lt;sup id="fnref-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;That said, propensity score techniques like &lt;span class="caps"&gt;IPTW&lt;/span&gt; can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;propensity score methods introduction&lt;/a&gt; by Peter Austin&lt;sup id="fnref2-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;h2&gt;PyData meetup&amp;nbsp;talk&lt;/h2&gt;
 &lt;p&gt;A talk about this blog post was presented at PyData meetup in Berlin, April&amp;nbsp;19th:&lt;/p&gt;
 &lt;p&gt;&lt;span class="videobox"&gt;
@@ -7589,13 +7670,13 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 &lt;p&gt;Paul R. Rosenbaum, Donald B. Rubin; &amp;#8220;The Central Role of the Propensity Score in Observational Studies for Causal Effects&amp;#8221;; Biometrika, Vol. 70, No. 1., Apr., 1983, &lt;a href="http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf"&gt;pp. 41-55&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-rose" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn-pearl1"&gt;
-&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf"&gt;pp. 348-352&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf"&gt;pp. 348-352&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn-pearl2"&gt;
 &lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf"&gt;pp. 341-344&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl2" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn-austin"&gt;
-&lt;p&gt;Peter C. Austin; &amp;#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&amp;#8221;; Multivariate Behav Res. 2011 May; 46(3): &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;pp. 399–424&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Peter C. Austin; &amp;#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&amp;#8221;; Multivariate Behav Res. 2011 May; 46(3): &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;pp. 399–424&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;

@@ -4,7 +4,7 @@ date: 2017-06-01 12:30
 modified: 2017-06-01 19:30
 category: article
 tags: spark, python, big data
-authors: Florian Wilhelm
+authors: Florian Wilhelm, Bernhard Schäfer
 status: draft
 ---
 

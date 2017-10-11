@@ -2,7 +2,7 @@
 title: Efficient UD(A)Fs with PySpark
 date: 2017-10-11 12:30
 modified: 2017-10-11 12:30
-category: article
+category: post
 tags: spark, python, big data
 authors: Florian Wilhelm, Bernhard Schäfer
 status: published

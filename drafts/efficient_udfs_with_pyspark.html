@@ -563,7 +563,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 </pre></div>
 
 
-<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <code>pyspark_udaf.py</code>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <code>pyspark_udaf.py</code> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
+<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <a href="http://www.florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <a href="http://www.florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 

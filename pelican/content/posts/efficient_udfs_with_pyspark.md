@@ -353,6 +353,9 @@ print(stats_df.toPandas())
 ```
 
 The code above can be easily tested with the help of a Jupyter notebook with PySpark where the [SparkSession][] ``spark`` is predefined.
+
+## Summary
+
 Overall, this proposed method allows the definition of an UDF as well as an UDAF since it is up to the function ``my_func`` if it returns (1) a DataFrame having as many rows as the input DataFrame (think [Pandas transform][]), (2) a DataFrame of only a single row or (3) optionally a Series (think [Pandas aggregate][]) or a DataFrame with an arbitrary number of rows (think [Pandas apply][]) with even varying columns.
 Therefore, this approach should be applicable to a variety of use cases where the built-in PySpark functionality is not sufficient.
 
@@ -360,7 +363,7 @@ To wrap it up, this blog post gives you a template on how to write PySpark UD(A)
 We also went down the rabbit hole to explore the technical difficulties the Spark developers face in providing Python bindings to a distributed JVM-based system.
 In this respect we are really looking forward to closer integration of [Apache Arrow][] and Spark in the upcoming Spark 2.3 and future versions.
 
-This article was coauthored by my inovex colleague **Bernhard Schäfer**.
+This article was coauthored by my inovex colleague *Bernhard Schäfer*.
 
 [PySpark]: https://spark.apache.org/docs/latest/api/python/index.html
 [Pandas]: http://pandas.pydata.org/

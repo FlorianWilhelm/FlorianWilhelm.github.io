@@ -163,7 +163,7 @@ def pandas_to_rows(df):
 
 
 def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
-    """Setup basic logging for logging on the executor
+    """Setup basic logging for logging on the executor assuming YARN
 
     Args:
         loglevel (int): minimum loglevel for emitting messages

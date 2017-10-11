@@ -325,15 +325,14 @@ def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
                         datefmt=datefmt)
 ```
  
-Now having all parts in place let's assume the code above resides in the python module ``pyspark_utils.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that ``pyspark_utils.py`` as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for
- each country as:
+Now having all parts in place let's assume the code above resides in the python module ``pyspark_udaf.py``. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that ``pyspark_udaf.py`` as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example UDAF ``my_func`` that collects some basic statistics for each country as:
 
 ```python
-import pyspark_utils
+import pyspark_udaf
 import logging
 
 
-@pyspark_utils.pandas_udaf(loglevel=logging.DEBUG)
+@pyspark_udaf.pandas_udaf(loglevel=logging.DEBUG)
 def my_func(df):
     if df.empty:
         return
@@ -344,8 +343,8 @@ def my_func(df):
 It is of course not really useful in practice to return some statistics with the help of a UDAF that could also be retrieved with basic PySpark functionality but this is just an example. We now generate a dummy data frame and apply the function to each partition as above with:
 
 ```python
-# make pyspark_utils.py available to the executors
-sc.addFile('./pyspark_utils.py') 
+# make pyspark_udaf.py available to the executors
+sc.addFile('./pyspark_udaf.py') 
 
 df = sc.parallelize(
     [('DEU', 2, 1.0), ('DEU', 3, 8.0), ('FRA', 2, 6.0), 

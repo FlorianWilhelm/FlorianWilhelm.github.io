@@ -24,7 +24,7 @@ TYPOGRIFY = True
 WITH_FUTURE_DATES = False
 
 THEME = 'themes/pelican-bootstrap3'
-SHOW_ARTICLE_AUTHOR = True
+SHOW_ARTICLE_AUTHOR = False
 JINJA_EXTENSIONS = ['jinja2.ext.i18n']
 
 STATIC_PATHS = ['images', 'documents', 'extras', 'notebooks', 'src']

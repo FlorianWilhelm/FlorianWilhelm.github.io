@@ -1,11 +1,11 @@
 ---
 title: Efficient UD(A)Fs with PySpark
-date: 2017-10-15 12:30
-modified: 2017-10-15 12:30
+date: 2017-10-11 12:30
+modified: 2017-10-11 12:30
 category: article
 tags: spark, python, big data
 authors: Florian Wilhelm, Bernhard Schäfer
-status: draft
+status: published
 ---
 
 Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as [PySpark][], whose API was heavily influenced by [Pandas][].
@@ -359,6 +359,8 @@ Therefore, this approach should be applicable to a variety of use cases where th
 To wrap it up, this blog post gives you a template on how to write PySpark UD(A)Fs while abstracting all the boilerplate in a dedicated module.
 We also went down the rabbit hole to explore the technical difficulties the Spark developers face in providing Python bindings to a distributed JVM-based system.
 In this respect we are really looking forward to closer integration of [Apache Arrow][] and Spark in the upcoming Spark 2.3 and future versions.
+
+This article was coauthored by my inovex colleague **Bernhard Schäfer**.
 
 [PySpark]: https://spark.apache.org/docs/latest/api/python/index.html
 [Pandas]: http://pandas.pydata.org/

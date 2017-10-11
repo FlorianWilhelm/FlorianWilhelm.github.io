@@ -169,13 +169,13 @@ init_mathjax();
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="spark,python,big data" />
-        <meta name="description" content="Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it’s built on a Java Stack it comes with Python bindings also known as PySpark whose API was heavily influenced by Pandas. With respect to the functionality …" />
+        <meta name="description" content="Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as PySpark, whose API was heavily influenced by …" />
 
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Efficient UD(A)Fs with PySpark"/>
         <meta property="og:url" content="http://www.florianwilhelm.info/drafts/efficient_udfs_with_pyspark.html"/>
-        <meta property="og:description" content="Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it’s built on a Java Stack it comes with Python bindings also known as PySpark whose API was heavily influenced by Pandas. With respect to the functionality …"/>
+        <meta property="og:description" content="Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as PySpark, whose API was heavily influenced by …"/>
         <meta property="article:published_time" content="2017-06-01" />
             <meta property="article:section" content="article" />
             <meta property="article:tag" content="spark" />
@@ -267,51 +267,95 @@ Florian Wilhelm            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it&#8217;s built on a Java Stack it comes with Python bindings also known as <a href="https://spark.apache.org/docs/latest/api/python/index.html">PySpark</a> whose <span class="caps">API</span> was heavily influenced by <a href="http://pandas.pydata.org/">Pandas</a>. With respect to the functionality modern PySpark has about the same functionality as Pandas when it comes to typical <span class="caps">ETL</span> and data wrangling, e.g. groupby, aggregations and so on. As a general rule of thumb, one should consider
- an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 <span class="caps">GB</span> of memory usage. At that point PySpark might be an option for you that does the job but of course there are others like for instance <a href="http://dask.pydata.org/en/latest/index.html">Dask</a> which won&#8217;t be addressed in this&nbsp;post. </p>
-<p>If you are new to Spark one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with <span class="caps">SQL</span> as an alternative way of defining queries and the other is <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark MLlib</a> for machine learning. Both topics are beyond the scope of this post but should be considered if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data&nbsp;sets.</p>
-<p>But enough praise for PySpark, there are still some ugly sides as well as rough edges to it and we want to address some of them here, of course, in a constructive way. You might have heard the rumours that PySpark is so much slower compared to Spark with Scala and as it is often the case with rumours, there is a tiny bit of truth to it. But before we start, a deeper understanding of how PySpark does its magic is&nbsp;needed.</p>
-<p>PySpark is a wrapper around the actual Spark core written in Scala. That means that when you call a method of a PySpark data frame, somewhere your Python call gets translated into the corresponding Scala call. This is in general extremely fast and the overhead can be neglected as long as you don&#8217;t call the function millions of times. The more expensive part in terms of execution time though is the translation of complex object arguments that are passed to a function. That means if a Scala object like a list, dictionary or a row needs to be translated into a Python object and vice versa. This translation internally means that the object from one programming language is serialized into a memory location, then copied over to the memory space of the other programming language where it is deserialized again. Technically, it&#8217;s even a bit more complicated since Scala and Python run in so called Virtual Machines (VMs) but you get the point that it is expensive in terms of execution time. So practically we should keep the number of these translations as low as possible. We can summarize this short low-level excursion with two important&nbsp;insights:</p>
-<ol>
-<li>Function calls are cheap but avoid excessive number of&nbsp;calls,</li>
-<li>Translation of complex objects has a tolerable overhead as long as it happens&nbsp;rarely.</li>
-</ol>
-<p>With modern PySpark versions higher than 2.1, whenever you do data wrangling, like calling <code>filter</code>, <code>select</code>, <code>groupby</code> and so on, the overhead of the function call is neglectable as we have just learned. The arguments to those functions are mostly simple objects like strings or numbers defining the column name or indices and the costs of their translation to Scale is therefore also neglectable. Okay, so now in which cases do things go south then and when do we hit major performance bumps? Let&#8217;s say we have a data frame <code>df</code> of one billion rows with a boolean <code>is_sold</code> column and we want to filter for rows with sold products. One could accomplish this with the&nbsp;code</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span>
+                <p>Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (<span class="caps">JVM</span>), it comes with Python bindings also known as <a href="https://spark.apache.org/docs/latest/api/python/index.html">PySpark</a>, whose <span class="caps">API</span> was heavily influenced by <a href="http://pandas.pydata.org/">Pandas</a>.
+With respect to functionality, modern PySpark has about the same capabilities as Pandas when it comes to typical <span class="caps">ETL</span> and data wrangling, e.g. groupby, aggregations and so on.
+As a general rule of thumb, one should consider an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 <span class="caps">GB</span> of memory usage. At that point PySpark might be an option for you that does the job, but of course there are others like for instance <a href="http://dask.pydata.org/en/latest/index.html">Dask</a> which won&#8217;t be addressed in this&nbsp;post. </p>
+<p>If you are new to Spark, one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with <span class="caps">SQL</span> as an alternative way of defining queries and the other is <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark MLlib</a> for machine learning. Both topics are beyond the scope of this post but should be taken into account if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data&nbsp;sets.</p>
+<p>But enough praise for PySpark, there are still some ugly sides as well as rough edges to it and we want to address some of them here, of course, in a constructive way.
+First of all, due to its relatively young age, PySpark lacks some features that Pandas provides, for example in areas such as reshaping/pivoting or time series.
+Also, it is not as straightforward to use advanced mathematical functions from SciPy within PySpark.
+That&#8217;s why sooner or later, you might walk into a scenario where you want to apply some Pandas or SciPy operations to your data frame in PySpark.
+Unfortunately, there is no built-in mechanism for using Pandas transformations in PySpark.
+In fact, this requires a lot of boilerplate code with many error-prone details to consider.
+Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling&#8230; and here we are&nbsp;;-)</p>
+<p>The remainder of this blog post walks you through the process of writing efficient Pandas UDAFs in PySpark. In fact, we end up abstracting all the necessary boilerplate code into a single Python decorator, which allows us to conveniently specify our PySpark Pandas function.
+To give more insights into performance considerations, this post also contains a little journey into the internals of&nbsp;PySpark.</p>
+<!---
+The state of UDAFs in PySpark
+===========================
+-->
+
+<p>To start with a recap, an aggregation function is a function that operates on a set of rows and produces a result, for example a <code>sum()</code> or <code>count()</code> function.
+A <em>User-Defined Aggregation Function</em> (<span class="caps">UDAF</span>) is typically used for more complex aggregations that are not natively shipped with your analysis tool in question.
+In our case, this means we provide some Python code that takes a set of rows and produces an aggregate result.
+At the time of writing - with PySpark 2.2 as latest version - there is no &#8220;official&#8221; way of defining an arbitrary <span class="caps">UDAF</span> function.
+Also, the tracking Jira issue <a href="https://issues.apache.org/jira/browse/SPARK-10915"><span class="caps">SPARK</span>-10915</a> does not indicate that this changes in near future.
+Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.
+However, as you might have guessed from the title of this article, there are workarounds to the rescue.
+<!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... -->
+This is where the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> api comes in.
+As a reminder, a <em>Resilient Distributed Dataset</em> (<span class="caps">RDD</span>) is the low-level data structure of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>.
+This <span class="caps">RDD</span> api allows us to specify arbitrary Python functions that get executed on the data.
+To give an example, let&#8217;s say we have a data frame <code>df</code> of one billion rows with a boolean <code>is_sold</code> column and we want to filter for rows with sold products. One could accomplish this with the&nbsp;code</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 </pre></div>
 
 
-<p>which works but will be extremely slow because we just violated our rules 1 and 2 at the same time! Since <code>df</code> has one billion rows we need to evaluate our anonymous lambda function one billion times. Therefore, Scala actually calls the Python lambda an excessive number of times clearly violating rule 1. But that&#8217;s not nearly all, it even gets worse. We pass every row from Scala to Python and do the translation of that complex object also a billion times therefore violating rule 2! The easy solution is do the operation without involving Python at all&nbsp;with:</p>
+<p>Although not explicitly declared as such, this lambda function is essentially a user-defined function (<span class="caps">UDF</span>).
+For this exact use case, we could also use the more high-level <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> <code>filter()</code> method, producing the same&nbsp;result:</p>
 <div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
 
-<p>In this case our filter condition will be translated one time to Scale where it is then evaluated a billion times really fast, without any callback to Python!
-To give a short summary, as long as we stick to the rules 1 and 2 a PySpark program will be approximately as fast as Spark program based on&nbsp;Scala.</p>
-<p>Before we move on, two side notes should also be kept in mind. The first is that what we just learnt not only applies to PySpark but also to Pandas, NumPy and Python in general since all these actually wrap a lot of C/C++ and sometimes even Fortran code. The second remark is that the general problem of object translation at least in the realm of data analytics is currently addressed by the creator of Pandas <a href="http://wesmckinney.com/">Wes McKinney</a>. His <a href="http://arrow.apache.org/">Apache Arrow</a> project tries to standardize the way complex objects are stored in memory so that everyone using Arrow won&#8217;t need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues <a href="https://issues.apache.org/jira/browse/SPARK-13534"><span class="caps">SPARK</span>-13534</a> and <a href="https://issues.apache.org/jira/browse/SPARK-21190"><span class="caps">SPARK</span>-21190</a>, Spark will make use of Arrow and translation of complex objects like rows and data frames will have next to no overhead. Still, even in that case we should avoid making a large number of&nbsp;translations.</p>
-<p>So far we have only talked about avoiding certain operations to keep the performance up. But what if we actually want to implement a User-Defined Function (<span class="caps">UDF</span>) or User-Defined Aggregation Function (<span class="caps">UDAF</span>)? The <a href="https://docs.databricks.com/spark/latest/spark-sql/udf-in-python.html">databricks documentation</a> explains how to define a <span class="caps">UDF</span> in PySpark in a few and easy steps but clearly violating our rules which leads to bad performance in&nbsp;practice: </p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">udf</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">LongType</span>
+<p>Before we now go into the details on how to implement UDAFs using the <span class="caps">RDD</span> api, there is something important to keep in mind which might sound counterintuitive to the title of this post: in PySpark you should <em>avoid</em> all kind of Python UDFs - like <span class="caps">RDD</span> functions or data frame UDFs - as much as possible!
+Whenever there is a built-in dataframe method available, this will be much faster than its <span class="caps">RDD</span> counterpart. 
+To get a better understanding of the substanstial performance difference, we will now take a little detour and investigate what happens behind the scenes in those two filter&nbsp;examples.</p>
+<!---
+PySpark Internals
+===========================
 
+Communication between Python and Spark happens on different levels:
+ 1. *PySpark Remote Controlling Spark*: Local communication between the PySpark driver and the Java SparkContext
+ 2. *Python UDFs*: Data transfer between the data frames in JVM and the Python workers executing the UDF
+ 3. Data transfer between the distributed data frames in JVM memory and the Python driver PySpark actions and data frame creation from python (e.g.:("PySpark toDF(), c 
 
-<span class="k">def</span> <span class="nf">squared</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span>
+Local communication acts like a JVM remote control from Python. 
+-->
 
+<p>PySpark is actually a wrapper around the Spark core written in Scala. 
+When you start your <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SparkSession">SparkSession</a> in Python, in the background PySpark uses <a href="https://www.py4j.org/">Py4J</a> to launch a <span class="caps">JVM</span> and create a Java SparkContext. 
+All PySpark operations, for example our <code>df.filter()</code> method call, behind the scenes get translated into corresponding calls on the respective Spark data frame object within the <span class="caps">JVM</span> SparkContext. This is in general extremely fast and the overhead can be neglected as long as you don&#8217;t call the function millions of times.
+So in our <code>df.filter()</code> example, the data frame operation and the filter condition will be send to the Java SparkContext, where it gets compiled into an overall optimized query plan.
+Once the query is executed, the filter condition is evaluated on the distributed data frame within Java, without any callback to Python!
+In case our workflow loads the data frame from Hive and saves the resulting data frame as Hive table, throughout the entire query execution all data operations are performed in a distributed fashion within Java Spark workers, which allows Spark to be very fast for queries on large data sets. 
+Okay, so why is the <span class="caps">RDD</span> <code>filter()</code> method then so much slower?
+The reason is that the lambda function cannot be directly applied to the data frame residing in <span class="caps">JVM</span> memory. 
+<!--- 
+To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
+-->
+What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
+At execution time, the Spark workers send our lambda function to those Python workers.
+Next, the Spark workers start serializing their <span class="caps">RDD</span> partitions and pipe them to the Python workers via sockets, where our <code>filter()</code> function gets evaluated on each row.
+For the resulting rows, the whole serialization/deserialization procedure happens again in the opposite&nbsp;direction.</p>
+<p>The entire data flow when using arbitrary Python functions in PySpark is also shown in the following image, which has been taken from the old <a href="https://cwiki.apache.org/confluence/display/SPARK/PySpark+Internals">PySpark Internals</a>&nbsp;wiki:</p>
+<p><img src="/images/pyspark_udf_dataflow.png"/><br></p>
+<p>Even if all of this sounded awkwardly technical to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and&nbsp;forth.</p>
+<p>To give a short summary to this low-level excursion: as long as we avoid all kind of Python UDFs, a PySpark program will be approximately as fast as Spark program based on Scala.
+If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we will try to do in the remaining post.&nbsp;:-)</p>
+<p>Before we move on, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas <a href="http://wesmckinney.com/">Wes McKinney</a>. His <a href="http://arrow.apache.org/">Apache Arrow</a> project tries to standardize the way columnar data is stored in memory so that everyone using Arrow won&#8217;t need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues <a href="https://issues.apache.org/jira/browse/SPARK-13534"><span class="caps">SPARK</span>-13534</a> and <a href="https://issues.apache.org/jira/browse/SPARK-21190"><span class="caps">SPARK</span>-21190</a>, Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever&nbsp;possible.</p>
+<!--
+PySpark UDAFs with Pandas
+===========================
+-->
 
-<span class="n">squared_udf</span> <span class="o">=</span> <span class="n">udf</span><span class="p">(</span><span class="n">squared</span><span class="p">,</span> <span class="n">LongType</span><span class="p">())</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">sqlContext</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">squared_udf</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;id_squared&quot;</span><span class="p">)))</span>
-</pre></div>
-
-
-<p>Since <code>squared</code> works on a single row, i.e. entry, of the <code>id</code> column the <code>squared</code> function will be called as many times as there are rows in the table <code>test</code>. Since the values of the <code>id</code> column are of of type integer, therefore a primitive type, the translation overhead of a single number is almost neglectable but again we do it as many times as there are rows. Alternatively, one could apply <code>squared_udf</code> with the <code>df.withColumn(squared_udf("id"))</code> or <code>df.rdd.map(squared_udf)</code> leading essentially to the same problem. Besides UDFs, there seems to be no &#8220;official&#8221; way of defining an arbitrary <span class="caps">UDAF</span> function that would allow us to not operate only on a single row but multiple. Depending on your use-case, this might even be a reason to completely discard PySpark as a viable&nbsp;solution.</p>
-<p>The obvious question is now, how can we tackle the problem of using UDFs without sacrificing too much performance and as an additional benefit even define UDAFs? Looking at our little rule set, we see the pattern that if we do something with an overhead we should at least try to do it not so often. This directly leads us to the idea that a <span class="caps">UDF</span> should do the object translation only a few times by working not on single rows but rather on whole partitions. This functionality is provided by the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> method <code>mapPartitions</code>. </p>
-<p>As a short reminder, an Resilient Distributed Dataset (<span class="caps">RDD</span>) is the low-level data structure of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>. Putting all ingredients together we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> with:</p>
+<p>As mentioned before our detour into the internals of PySpark, for defining an arbitrary <span class="caps">UDAF</span> function we need an operation that allows us to operate on multiple rows and produce one or multiple resulting rows.
+This functionality is provided by the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> method <code>mapPartitions</code>, where we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> partition&nbsp;with:</p>
 <div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 </pre></div>
 
 
-<p>In most cases we would want to control the number of partitions, like 100, or even group by a column, let&#8217;s say <code>country</code>, in which case we would&nbsp;write:</p>
+<p>If you want to further read up on RDDs and partitions, you can checkout the chapter <a href="https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-partitions.html">Partitions and Partitioning</a> of the excellent <em>Mastering Apache Spark 2</em> book by Jacek Laskowski.
+In most cases we would want to control the number of partitions, like 100, or even group by a column, let&#8217;s say <code>country</code>, in which case we would&nbsp;write:</p>
 <div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 </pre></div>
 
@@ -321,10 +365,7 @@ To give a short summary, as long as we stick to the rules 1 and 2 a PySpark prog
 </pre></div>
 
 
-<p>The following image shows the difference between the application of the presented <span class="caps">UDF</span> methods to an <span class="caps">RDD</span> of a single partition in terms of the number of Python workers involved as wells as the number of translation&nbsp;operations.</p>
-<p><img width="800" style="margin-right: 20px; margin-bottom: 20px" src="/images/spark_udaf.png"/><br></p>
-<p>This simple approach solves our main problem by doing the translation of each partition to Python at once, then calling the function <code>my_func</code> with it and translating back to Scala whatever the function returns. Therefore we have reduced the number of translations to two times (back and forth) the number of partitions and because of that we should keep the number of partitions to a reasonable&nbsp;number.</p>
-<p>Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level <span class="caps">RDD</span> interface, our function <code>my_func</code> will be passed an iterator of PySpark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row">Row</a> objects and needs to return them as well. A <code>Row</code> object itself is only a container for the column values in one row, as you might have guessed. When we return such a <code>Row</code>, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our <span class="caps">UDF</span>/<span class="caps">UDAF</span> with the help of Pandas, keeping in mind that one partition should hold less than 10 million rows. Therefore we make a wish to the coding fairy, cross two fingers that someone else already solved this and start googling&#8230; and here we are&nbsp;;-) </p>
+<p>Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level <span class="caps">RDD</span> interface, our function <code>my_func</code> will be passed an iterator of PySpark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row">Row</a> objects and needs to return them as well. A <code>Row</code> object itself is only a container for the column values in one row, as you might have guessed. When we return such a <code>Row</code>, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our <span class="caps">UDF</span>/<span class="caps">UDAF</span> with the help of Pandas, keeping in mind that one partition should hold less than 10 million&nbsp;rows.</p>
 <p>So first we need to define a nice function that will convert a <code>Row</code> iterator into a Pandas&nbsp;DataFrame:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -503,26 +544,31 @@ To give a short summary, as long as we stick to the rules 1 and 2 a PySpark prog
 <span class="sd">        loglevel (int): minimum loglevel for emitting messages</span>
 <span class="sd">        logfile (str): name of the logfile</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logformat</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(module)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+    <span class="n">datefmt</span> <span class="o">=</span> <span class="s2">&quot;%y/%m/</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">logfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LOG_DIRS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logfile</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;LOG_DIRS not in environment variables or is empty&quot;</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">loglevel</span><span class="p">,</span>
+                            <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> 
+                            <span class="n">format</span><span class="o">=</span><span class="n">logformat</span><span class="p">,</span>
+                            <span class="n">datefmt</span><span class="o">=</span><span class="n">datefmt</span><span class="p">)</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;LOG_DIRS is not in environment variables or empty, using {} instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logfile</span><span class="p">))</span>
 
-    <span class="n">logformat</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(module)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">loglevel</span><span class="p">,</span>
                         <span class="n">filename</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span>
                         <span class="n">format</span><span class="o">=</span><span class="n">logformat</span><span class="p">,</span>
-                        <span class="n">datefmt</span><span class="o">=</span><span class="s2">&quot;%y/%m/</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+                        <span class="n">datefmt</span><span class="o">=</span><span class="n">datefmt</span><span class="p">)</span>
 </pre></div>
 
 
-<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <code>pyspark_utils.py</code>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <code>pyspark_utils.py</code> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for
- each country&nbsp;as:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_utils</span>
+<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <a href="http://www.florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <a href="http://www.florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 
-<span class="nd">@pyspark_utils.pandas_udaf</span><span class="p">(</span><span class="n">loglevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="nd">@pyspark_udaf.pandas_udaf</span><span class="p">(</span><span class="n">loglevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">my_func</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span>
@@ -532,8 +578,8 @@ To give a short summary, as long as we stick to the rules 1 and 2 a PySpark prog
 
 
 <p>It is of course not really useful in practice to return some statistics with the help of a <span class="caps">UDAF</span> that could also be retrieved with basic PySpark functionality but this is just an example. We now generate a dummy data frame and apply the function to each partition as above&nbsp;with:</p>
-<div class="highlight"><pre><span></span><span class="c1"># make pyspark_utils.py available to the executors</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="s1">&#39;./pyspark_utils.py&#39;</span><span class="p">)</span> 
+<div class="highlight"><pre><span></span><span class="c1"># make pyspark_udaf.py available to the executors</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="s1">&#39;./pyspark_udaf.py&#39;</span><span class="p">)</span> 
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span>
     <span class="p">[(</span><span class="s1">&#39;DEU&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;DEU&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;FRA&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">),</span> 
@@ -551,10 +597,10 @@ To give a short summary, as long as we stick to the rules 1 and 2 a PySpark prog
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/04/leveraging_the_value_of_big_data_with_automated_decision_making/">Leveraging the Value of Big Data with Automated Decision&nbsp;Making</a></li>
-        <li><a href="http://www.florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
     </ul>
 </section>

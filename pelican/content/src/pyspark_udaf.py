@@ -179,7 +179,7 @@ def setup_logger(loglevel=logging.INFO, logfile="pyspark.log"):
                             format=logformat,
                             datefmt=datefmt)
         logger = logging.getLogger(__name__)
-        logger.error("LOG_DIRS is not in environment variables or empty, using {} instead.".format(logfile))
+        logger.error("LOG_DIRS is not in environment variables or empty, using STDOUT instead.")
 
     logging.basicConfig(level=loglevel,
                         filename=logfile,

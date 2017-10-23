@@ -5,56 +5,56 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/archives.html</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/tags.html</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/categories.html</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/404-not-found/</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/410-gone/</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/500-error/</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/about/</loc>
-<lastmod>2017-10-12T09:20:08-00:00</lastmod>
+<lastmod>2017-10-23T18:58:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -69,6 +69,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/</loc>
 <lastmod>2017-07-25T11:15:00+02:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/2017/07/which_car_fits_my_life/</loc>
+<lastmod>2017-07-02T18:00:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -187,7 +194,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/category/talk/</loc>
-<lastmod>2016-07-22T11:15:00+00:09</lastmod>
+<lastmod>2017-07-02T18:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -221,14 +228,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/scikit-learn/</loc>
-<lastmod>2017-06-17T18:00:00+00:09</lastmod>
+<loc>http://www.florianwilhelm.info/tag/machine-learning/</loc>
+<lastmod>2017-07-02T18:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/machine-learning/</loc>
+<loc>http://www.florianwilhelm.info/tag/recommendation-system/</loc>
+<lastmod>2017-07-02T18:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/scikit-learn/</loc>
 <lastmod>2017-06-17T18:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>

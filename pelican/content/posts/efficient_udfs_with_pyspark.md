@@ -363,7 +363,7 @@ To wrap it up, this blog post gives you a template on how to write PySpark UD(A)
 We also went down the rabbit hole to explore the technical difficulties the Spark developers face in providing Python bindings to a distributed JVM-based system.
 In this respect we are really looking forward to closer integration of [Apache Arrow][] and Spark in the upcoming Spark 2.3 and future versions.
 
-This article was coauthored by my inovex colleague *Bernhard Schäfer*.
+This article was coauthored by my inovex colleague *Bernhard Schäfer* and was also published on the [inovex blog][].
 
 [PySpark]: https://spark.apache.org/docs/latest/api/python/index.html
 [Pandas]: http://pandas.pydata.org/
@@ -388,3 +388,4 @@ This article was coauthored by my inovex colleague *Bernhard Schäfer*.
 [Pandas aggregate]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html
 [Pandas apply]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html
 [pyspark_udaf.py]: {filename}/src/pyspark_udaf.py
+[inovex blog]: https://www.inovex.de/blog/

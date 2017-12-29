@@ -3,7 +3,7 @@ title: Using Python packages with PySpark
 date: 2017-06-01 12:30
 modified: 2017-06-01 19:30
 category: article
-tags: spark, python 
+tags: spark, python, production
 authors: Florian Wilhelm
 status: draft
 ---
@@ -273,3 +273,24 @@ ToDo:
 [SPARK-16367]: https://issues.apache.org/jira/browse/SPARK-16367
 [virtualenv]: https://virtualenv.pypa.io/en/stable/
 [conda]: https://conda.io/docs/intro.html
+
+
+
+```python
+17/10/16 09:01:41 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/monkey.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp3019861664343394710.tmp
+17/10/16 09:01:42 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/msvc.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp445035189056040521.tmp
+17/10/16 09:01:42 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/namespaces.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp7793235992674656634.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/package_index.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp6781084544681609696.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/py26compat.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp8768907866875545192.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/py27compat.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp829494871114433661.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/py31compat.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp6429354488562794884.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/py33compat.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp5117886574805787520.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/py36compat.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp696156835681758986.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/sandbox.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp3609628508002798111.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/script (dev).tmpl to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp4267162028247811916.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/script.tmpl to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp8644342590871886186.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/site-patch.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp4409440928622133996.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/ssl_support.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp6855231276625909069.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/unicode_utils.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp1280669822013434575.tmp
+17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/version.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcac
+```

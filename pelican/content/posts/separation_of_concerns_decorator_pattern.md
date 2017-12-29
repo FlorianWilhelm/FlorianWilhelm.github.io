@@ -114,3 +114,26 @@ def throttle(calls, seconds=1):
 
     return wraps
 ```
+
+
+def make_batches(iterable, size):
+    """Iterate over batches of given size instead of single items in iterator
+
+    Args:
+        iterable: iterator or iterable structure
+        size: size of batch, use -1 for no batch at all
+
+    Returns:
+        iterator
+    """
+    it = iter(iterable)
+    if size == -1:
+        yield it
+    else:
+        while True:
+            chunk_it = itertools.islice(it, size)
+            try:
+                first_el = next(chunk_it)
+            except StopIteration:
+                return
+            yield itertools.chain((first_el,), chunk_it)

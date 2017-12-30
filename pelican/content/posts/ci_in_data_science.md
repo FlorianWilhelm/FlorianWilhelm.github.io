@@ -79,6 +79,10 @@ package within a second.
 
 # Continuous Integration
 
+<figure>
+<img class="noZoom" src="/images/ci_build_publish.png" alt="Building and publishing a package">
+<figcaption>The probability mass function of a discrete binomial distribution with shape parameters n=10 and p=0.7</figcaption>
+</figure>
 
 # Conclusion
 

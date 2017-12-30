@@ -1,5 +1,5 @@
 ---
-title: Continuous Integration in Data Science
+title: Data Science in Production: Packaging and Continuous Integration
 date: 2017-04-15 18:00
 modified: 2017-06-17 18:00
 category: post
@@ -25,7 +25,7 @@ to it. This is the first in a series of posts about *data science in production*
 focuses on aspects of modern software engineering like *packaging*, *versioning* as
 well as *continuous integration* in general.
 
-# Scripts versus Packages
+# Packages vs. Scripts
 
 Being a data scientist does not free you from proper software engineering. Of course
 most models start with a simple script or a Jupyter notebook maybe, just the essence
@@ -73,15 +73,70 @@ composed of many specialised tools. Besides [setuptools][] and [setuptools_scm][
 is [sphinx][] for documentation, testing tools like [pytest][] and [tox][] as well as many other
 little helpers to consider when setting up a Python package. Already scared off of Python packaging?
 
-Luckily there is one tool to rule them all, [PyScaffold][], which provides a proper Python 
-package within a second.
+## PyScaffold
 
+Luckily there is one tool to rule them all, [PyScaffold][], which provides a proper Python 
+package within a second. It is installed easily with
+```shell
+pip install pyscaffold
+```
+or 
+```shell
+conda install pyscaffold
+```
+if you prefer [conda][] over [pip][]. Generating now a project `Scikit-AI` with a package `skai` is just 
+matter of typing a single command:
+```shell
+putup Scikit-AI -p skai
+```
+This will create a git repository `Scikit-AI` including a fully configured `setup.py` that can be configured easily
+and in a descriptive way by modifying `setup.cfg`. The typical Python package structure is provided including
+subfolders such as `docs` for [sphinx][] documentation, `tests` for unit testing as well as a `src`
+subfolder including the actual Python package `skai`. Also [setuptools_scm][] is integrated
+and other features can be activates optionally like support for [Travis][], [Gitlab][], [tox][], [pre-commit][]
+and many more.
+
+An example of a more advanced usage of PyScaffold is
+```shell
+putup Scikit-AI -p skai --travis --tox -d "Scientific AI library with a twist" -u "http://sky.net/"
+```
+where also example configuration files for Travis and tox will be created. Additionally provided short description
+with the flag `-d` is used where appropriate as is the url passed by `-u`. As usual with shell commands,
+`putup --help` provides information about the various arguments.
+
+## Versioning
+
+Having a proper Python package already gives us the possibility to ship something that can be installed by others
+easily including its dependencies of course. But if you want to move fast also the deployment of your new model
+package needs to be as much automized as possible. You want to make sure that bug fixes end up in production
+automatically while new features need to be manually approved. 
+
+For this reason [Semantic Versioning][] was developed which basically says that a version number is MAJOR.MINOR.PATCH 
+and you increment the:
+
+1. MAJOR version when you make incompatible API changes,
+2. MINOR version when you add functionality in a backwards-compatible manner, and
+3. PATCH version when you make backwards-compatible bug fixes.
+
+This programming language independent concept also made its way into Python's official version identification [PEP440][].
+Besides MAJOR, MINOR and PATCH the version number is also extended by semantics identifying development, post and pre 
+releases. A package that was set up with PyScaffold uses the information from git to generate a [PEP440][] compatible
+version identifier. A developer just needs to follow the conventions of [Semantic Versioning][] when tagging a release
+with git. 
+
+Versioning becomes even more important when your company develops many interdependent packages. The effort of sticking to the simple conventions of [Semantic Versioning][] right from the start is just a small price to pay compared to the myriad of pains in the [dependency hell] you will otherwise end up long-term. 
 
 # Continuous Integration
 
+
 <figure>
-<img class="noZoom" src="/images/ci_build_publish.png" alt="Building and publishing a package">
-<figcaption>The probability mass function of a discrete binomial distribution with shape parameters n=10 and p=0.7</figcaption>
+<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package" height="120%" width="120%">
+<figcaption><strong>Figure 1:</strong> Jenkins <em>Job A</em> clones source code repository, builds the software package and pushes
+it into the <em>unstable index</em> of the artefact store. If these steps succeed Jenkins <em>Job B</em>
+is triggered which installs the package from the artefact store and its dependencies into a clean environment.
+The source code reposistory is then cloned in order to run the unit tests against the installed package. If all 
+unit tests pass the package is pushed into the <em>testing index</em> of the artefact store and optionally
+to the <em>stable index</em> if the version is a stable release.</figcaption>
 </figure>
 
 # Conclusion
@@ -102,9 +157,15 @@ ToDo:
 [pip]: https://pip.pypa.io/
 [conda]: https://conda.io/
 [packaging tutorial]: https://packaging.python.org/tutorials/distributing-packages/
+[setuptools]: https://setuptools.readthedocs.io/
 [setuptools_scm]: https://github.com/pypa/setuptools_scm
 [sphinx]: http://www.sphinx-doc.org/
 [pytest]: https://docs.pytest.org/
 [tox]: https://tox.readthedocs.io/
 [PyScaffold]: http://pyscaffold.org/
-
+[Travis]: https://travis-ci.org/
+[Gitlab]: https://gitlab.com/
+[pre-commit]: http://pre-commit.com/
+[Semantic Versioning]: https://semver.org/
+[PEP440]: https://www.python.org/dev/peps/pep-0440/
+[dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell

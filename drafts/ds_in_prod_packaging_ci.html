@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>“Which car fits my life?” - mobile.de’s approach to recommendations - Florian Wilhelm</title>
+    <title>Data Science in Production: Packaging and Continuous Integration - Florian Wilhelm</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -165,22 +165,22 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 
-<link rel="canonical" href="/2017/07/which_car_fits_my_life/">
+<link rel="canonical" href="/drafts/ds_in_prod_packaging_ci.html">
 
         <meta name="author" content="Florian Wilhelm" />
-        <meta name="keywords" content="machine-learning,python,recommendation system" />
-        <meta name="description" content="At mobile.de, Germany’s biggest car marketplace, a dedicated team of data engineers and scientists, supported by the IT project house inovex is responsible for creating intelligent data products. Driven by our company slogan “Find the car that fits your life”, we focus on personalised recommendations to address several …" />
+        <meta name="keywords" content="python,data science,production" />
+        <meta name="description" content="Motivation A common pattern in most data science projects I participated in is that it’s all fun and games until someone wants to put it into production. From that point in time on no one will any longer give you a pat on the back for a high accuracy …" />
 
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="“Which car fits my life?” - mobile.de’s approach to recommendations"/>
-        <meta property="og:url" content="/2017/07/which_car_fits_my_life/"/>
-        <meta property="og:description" content="At mobile.de, Germany’s biggest car marketplace, a dedicated team of data engineers and scientists, supported by the IT project house inovex is responsible for creating intelligent data products. Driven by our company slogan “Find the car that fits your life”, we focus on personalised recommendations to address several …"/>
-        <meta property="article:published_time" content="2017-07-02" />
-            <meta property="article:section" content="talk" />
-            <meta property="article:tag" content="machine-learning" />
+        <meta property="og:title" content="Data Science in Production: Packaging and Continuous Integration"/>
+        <meta property="og:url" content="/drafts/ds_in_prod_packaging_ci.html"/>
+        <meta property="og:description" content="Motivation A common pattern in most data science projects I participated in is that it’s all fun and games until someone wants to put it into production. From that point in time on no one will any longer give you a pat on the back for a high accuracy …"/>
+        <meta property="article:published_time" content="2018-01-15" />
+            <meta property="article:section" content="post" />
             <meta property="article:tag" content="python" />
-            <meta property="article:tag" content="recommendation system" />
+            <meta property="article:tag" content="data science" />
+            <meta property="article:tag" content="production" />
             <meta property="article:author" content="Florian Wilhelm" />
 
     <meta name="twitter:card" content="summary">
@@ -199,8 +199,8 @@ init_mathjax();
 
 
 
-        <link href="/feeds/talk.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Florian Wilhelm talk ATOM Feed"/>
+        <link href="/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
 
 </head>
 <body>
@@ -238,10 +238,10 @@ Florian Wilhelm            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/2017/07/which_car_fits_my_life/"
+                    <a href="/drafts/ds_in_prod_packaging_ci.html"
                        rel="bookmark"
-                       title="Permalink to “Which car fits my life?” - mobile.de’s approach to recommendations">
-                        “Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations
+                       title="Permalink to Data Science in Production: Packaging and Continuous Integration">
+                        Data Science in Production: Packaging and Continuous&nbsp;Integration
                     </a>
                 </h1>
             </header>
@@ -251,7 +251,7 @@ Florian Wilhelm            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2017-07-02T18:00:00+02:00"> Jul. 02, 2017</time>
+        <i class="fa fa-calendar"></i><time datetime="2018-01-15T18:00:00+01:00"> Jan. 15, 2018</time>
     </span>
 
 
@@ -259,34 +259,191 @@ Florian Wilhelm            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/machine-learning/">machine-learning</a>
-        /
 	<a href="/tag/python/">python</a>
         /
-	<a href="/tag/recommendation-system/">recommendation system</a>
+	<a href="/tag/data-science/">data science</a>
+        /
+	<a href="/tag/production/">production</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>At mobile.de, Germany’s biggest car marketplace, a dedicated team of data engineers and scientists, supported by the <span class="caps">IT</span> project house inovex is responsible for creating intelligent data products. Driven by our company slogan “Find the car that fits your life”, we focus on personalised recommendations to address several user needs. Thereby we improve customer experience during browsing as well as finding the perfect offering. In an introduction to recommendation systems, we briefly mention the traditional approaches for recommendation engines, thereby motivating the need for sophisticated approaches. In particular, we explain the different concepts including collaborative and content-based filtering as well as hybrid approaches and general matrix factorisation methods. This is followed by a deep dive into the implementation and architecture at mobile.de that comprises ElasticSearch, Cassandra and Mahout. We explain how Python and Java is used simultaneously to create and serve&nbsp;recommendations.</p>
-<p>By presenting our car-model recommender that suggests similar car models of different brands as a concrete use-case, we reiterate on key-aspects during modelling and implementation. In particular, we present a matrix factorisation library that we used and share our experiences with it. We conclude by a brief demonstration of our results and discuss the improvements we achieved in terms of key performance indicators. Furthermore, we use our use case to exemplify the usage of deep learning for recommendations, comparing it with other traditional approaches and hence providing a brief account of the future of recommendation&nbsp;engines.</p>
-<p>This talk was presented at <a href="https://pydata.org/berlin2017/schedule/presentation/33/">PyData 2017 Berlin</a> and <a href="https://www.codetalks.de/de/2017/programm/which-car-fits-my-life-mobile-de-s-approach-to-recommendations">code.talks 2017</a>. The slides are are available on <a href="https://www.slideshare.net/FlorianWilhelm2/which-car-fits-my-life-pydata-berlin-2017">SlideShare</a>.</p>
-<p><span class="videobox">
-                <iframe width="800" height="500"
-                    src='https://www.youtube.com/embed/v7MBunqwBSY'
-                    frameborder='0' webkitAllowFullScreen mozallowfullscreen
-                    allowFullScreen>
-                </iframe>
-            </span></p>
+                <h1>Motivation</h1>
+<p>A common pattern in most data science projects I participated in is that it&#8217;s all 
+fun and games until someone wants to put it into production. From that point in time on
+no one will any longer give you a pat on the back for a high accuracy and smart
+algorithm. All of a sudden the crucial question is how to deploy your model,
+which version, how can updates be rolled out, which requirements are needed and so&nbsp;on.</p>
+<p>The worst case in such a moment is to realize that up until now the glorious proof of concept
+model is not an application but rather a stew of Python/R scripts which were deployed 
+by cloning a git repo and run by some Jenkins jobs with a dash of&nbsp;Bash.</p>
+<p>Bringing data science to production is a hot topic right now and there are many facets 
+to it. This is the first in a series of posts about <em>data science in production</em> and
+focuses on aspects of modern software engineering like <em>packaging</em>, <em>versioning</em> as
+well as <em>Continuous Integration</em> in&nbsp;general.</p>
+<h1>Packages vs.&nbsp;Scripts</h1>
+<p>Being a data scientist does not free you from proper software engineering. Of course
+most models start with a simple script or a Jupyter notebook maybe, just the essence
+of the your idea to test it quickly. But as your model evolves, the number of lines
+of code grow, it&#8217;s always a good idea to think about the structure of your code and to
+move away from writing simple scripts to proper applications or&nbsp;libraries. </p>
+<p>In case of a Python model, that means grouping functionality into different modules 
+<a href="https://en.wikipedia.org/wiki/Separation_of_concerns">separating different concerns</a> which could be organised in Python packages on a higher
+level. Maybe certain parts of the model are even so general that they could be packaged 
+into an own library for greater reusability also for other projects. In the context
+of Python, a bundle of software to be installed like a library or application is denoted 
+with the term <em>package</em>. Another synonym is <em>distribution</em> which is easily to be confused with
+a Linux distribution. Therefore the term package is more commonly used although there is an
+ambiguity with the kind of package you import in your Python source code (i.e. a container of&nbsp;modules).</p>
+<p>So what is now the key difference between a bunch of Python scripts with some modules 
+and a proper package? A Python package adheres a certain structure and thus can be shipped and 
+installed by others. Simple as it sounds this is a major advantage over having just some Python 
+modules inside a repository. With a package it is possible
+to make distinct code releases with different versions that can be stored for later reference. 
+Dependencies like <em>numpy</em> and <em>scikit-learn</em> can be specified and dependency resolution is automated
+by tools like <a href="https://pip.pypa.io/">pip</a> and <a href="https://conda.io/">conda</a>. Why is this so important? When bugs in production occur 
+it&#8217;s incredibly useful to know which state of your code actually is in production. Is it still
+version 0.9 or already 1.0? Did the bug also occur in the last release? Most debugging starts
+with reproducing the bug locally on your machine. But what if the release is already half a 
+year old and there where major changes in its requirements? Maybe the bug is caused by one of
+its dependencies? If your package also includes its dependencies with pinned versions 
+restoring the exact some state as in production but inside a local <a href="https://virtualenv.pypa.io/">virtualenv</a> or <a href="https://conda.io/">conda</a> environment 
+will be a matter of&nbsp;seconds.</p>
+<h1>Packaging and&nbsp;Versioning</h1>
+<p>Python&#8217;s history of packaging has had its dark times but nowadays things have pretty much settled 
+and now there only one obvious tool left to do it, namely <a href="https://setuptools.readthedocs.io/">setuptools</a>. 
+A Python <a href="https://packaging.python.org/tutorials/distributing-packages/">packaging tutorial</a> explains the various steps needed to set up a proper <code>setup.py</code>
+but it takes a long time to really master the subtleties of Python packaging and even then it
+is quite cumbersome. This is the reason many developers refrain from building Python packages.
+Another reason is that even if you have a proper Python package set up, proper versioning is
+still a manual and thus error-prone process. Therefore the tool <a href="https://github.com/pypa/setuptools_scm">setuptools_scm</a> exists which
+draws the current version automatically from git so a new release is as simple as creating a new tag.
+Following the famous Unix principle &#8220;Do one thing and do it well&#8221; also a Python package is
+composed of many specialised tools. Besides <a href="https://setuptools.readthedocs.io/">setuptools</a> and <a href="https://github.com/pypa/setuptools_scm">setuptools_scm</a> there 
+is <a href="http://www.sphinx-doc.org/">sphinx</a> for documentation, testing tools like <a href="https://docs.pytest.org/">pytest</a> and <a href="https://tox.readthedocs.io/">tox</a> as well as many other
+little helpers to consider when setting up a Python package. Already scared off of Python packaging?
+Hold your breath, there is no reason to&nbsp;be.</p>
+<h2>PyScaffold</h2>
+<p>Luckily there is one tool to rule them all, <a href="http://pyscaffold.org/">PyScaffold</a>, which provides a proper Python 
+package within a second. It is installed easily&nbsp;with</p>
+<div class="highlight"><pre><span></span>pip install pyscaffold
+</pre></div>
+
+
+<p>or </p>
+<div class="highlight"><pre><span></span>conda install pyscaffold
+</pre></div>
+
+
+<p>if you prefer <a href="https://conda.io/">conda</a> over <a href="https://pip.pypa.io/">pip</a>. Generating now a project <code>Scikit-AI</code> with a package <code>skai</code> is just 
+matter of typing a single&nbsp;command:</p>
+<div class="highlight"><pre><span></span>putup Scikit-AI -p skai
+</pre></div>
+
+
+<p>This will create a git repository <code>Scikit-AI</code> including a fully configured <code>setup.py</code> that can be configured easily
+and in a descriptive way by modifying <code>setup.cfg</code>. The typical Python package structure is provided including
+subfolders such as <code>docs</code> for <a href="http://www.sphinx-doc.org/">sphinx</a> documentation, <code>tests</code> for unit testing as well as a <code>src</code>
+subfolder including the actual Python package <code>skai</code>. Also <a href="https://github.com/pypa/setuptools_scm">setuptools_scm</a> is integrated
+and other features can be activates optionally like support for <a href="https://travis-ci.org/">Travis</a>, <a href="https://gitlab.com/">Gitlab</a>, <a href="https://tox.readthedocs.io/">tox</a>, <a href="http://pre-commit.com/">pre-commit</a>
+and many&nbsp;more.</p>
+<p>An example of a more advanced usage of PyScaffold&nbsp;is</p>
+<div class="highlight"><pre><span></span>putup Scikit-AI -p skai --travis --tox -d <span class="s2">&quot;Scientific AI library with a twist&quot;</span> -u <span class="s2">&quot;http://sky.net/&quot;</span>
+</pre></div>
+
+
+<p>where also example configuration files for Travis and tox will be created. The additionally provided short description
+with the flag <code>-d</code> is used where appropriate as is the url passed by <code>-u</code>. As usual with shell commands,
+<code>putup --help</code> provides information about the various&nbsp;arguments.</p>
+<h2>Versioning</h2>
+<p>Having a proper Python package already gives us the possibility to ship something that can be installed by others
+easily including its dependencies of course. But if you want to move fast also the deployment of your new model
+package needs to be as much automated as possible. You want to make sure that bug fixes end up in production
+automatically while new features need to be manually&nbsp;approved. </p>
+<p>For this reason <a href="https://semver.org/">Semantic Versioning</a> was developed which basically says that a version number is composed of
+<span class="caps">MAJOR</span>.<span class="caps">MINOR</span>.<span class="caps">PATCH</span> and you increment&nbsp;the:</p>
+<ol>
+<li><span class="caps">MAJOR</span> version when you make incompatible <span class="caps">API</span>&nbsp;changes,</li>
+<li><span class="caps">MINOR</span> version when you add functionality in a backwards-compatible manner,&nbsp;and</li>
+<li><span class="caps">PATCH</span> version when you make backwards-compatible bug&nbsp;fixes.</li>
+</ol>
+<p>This programming language independent concept also made its way into Python&#8217;s official version identification <a href="https://www.python.org/dev/peps/pep-0440/"><span class="caps">PEP440</span></a>.
+Besides <span class="caps">MAJOR</span>, <span class="caps">MINOR</span> and <span class="caps">PATCH</span> the version number is also extended by semantics identifying development, post and pre 
+releases. A package that was set up with PyScaffold uses the information from git to generate a <a href="https://www.python.org/dev/peps/pep-0440/"><span class="caps">PEP440</span></a> compatible,
+semantic  version identifier. A developer just needs to follow the conventions of <a href="https://semver.org/">Semantic Versioning</a> when tagging a
+release with&nbsp;git. </p>
+<p>Versioning becomes even more important when your company develops many interdependent packages. The effort of sticking
+to the simple conventions of <a href="https://semver.org/">Semantic Versioning</a> right from the start is just a small price to pay compared to 
+the myriad of pains in the <a href="https://en.wikipedia.org/wiki/Dependency_hell">dependency hell</a> you will otherwise end up in long-term. Believe me on that&nbsp;one.</p>
+<h1>Continuous&nbsp;Integration</h1>
+<p>Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (<span class="caps">CI</span>)
+process. For this purpose a common choice is <a href="https://jenkins-ci.org/">Jenkins</a> especially for proprietary software since it can be installed
+on premise. Besides the <span class="caps">CI</span> tool there is also a place needed to store the built packages. The term <em>artefact store</em> is
+used commonly for a service that offers a way to store and install packages from. In the Python world the 
+Python Package Index (<a href="https://pypi.python.org">PyPI</a>) is the official artefact store to publish open source packages. For companies the
+on-premise equivalent is <a href="https://devpi.net/">devpi</a>&nbsp;that:</p>
+<ul>
+<li>acts as a PyPI&nbsp;mirror, </li>
+<li>allows uploading, testing and staging with private&nbsp;indexes,</li>
+<li>has a nice web interface for&nbsp;searching,</li>
+<li>allows uploading and browsing the Sphinx documentation of&nbsp;packages,</li>
+<li>has user management&nbsp;and</li>
+<li>features Jenkins&nbsp;integration.</li>
+</ul>
+<p>If all you care about is Python then devpi is the right artefact store for you. For most companies Java is used
+and <a href="http://www.sonatype.org/nexus/">Nexus</a> often serves thereby as artefact store. In this case it might be more advantageous to use Nexus also for
+storing Python packages which is available since version 3.0 to avoid the complexity of establishing another&nbsp;service.</p>
+<p>In highly polylingual environments with many languages like Python, R, Java and C/C++ this will lead to many different
+artefact stores and various different ways of installing artefacts. A unified approach is provided by <a href="https://conda.io/">conda</a> since
+conda packages can be built for <a href="https://conda.io/docs/user-guide/tutorials/build-postgis.html">general code projects</a>. The on-premise artefact store provided by <a href="https://anaconda.org/">Anaconda</a> is
+called <a href="https://docs.anaconda.com/anaconda-repository/">anaconda-repository</a> and is part of the proprietary enterprise server. Whenever a unified approach to storing and
+installing artefacts of different languages is a major concern, <a href="https://anaconda.org/">Anaconda</a> might be a viable&nbsp;solution.</p>
+<p>Common to all artifact stores is the availability of different <em>indices</em> (or <em>channels</em> in conda) to organize artefacts. 
+It is a good practice to have different indices to describe the maturity of the contained packages like <em>unstable</em>,
+<em>testing</em> and <em>stable</em>. This convention is flexible since it allows you to test things that might still be buggy but
+also allows for automation since production is able to pull any <span class="caps">PATCH</span> increment from the stable index&nbsp;automatically.</p>
+<p>With this components in mind we can establish an automated <span class="caps">CI</span> process. Upon a new commit on a central git repository 
+the <em>packaging</em> Jenkins job clones the repo and builds the package, e.g. with <code>python setup.py bdist_wheel</code>. If this is
+successful the package is uploaded to the <em>unstable</em> index of the artefact store. Upon the successful completion of the
+packaging job a second Jenkins job for <em>testing</em> is triggered. The reason for packaging and publishing before running
+any kind of unit tests is that already during the packaging can be major flaws that a typical unit test could never
+find. For instance, missing data files that are in the repo but not specified in the package, missing or wrong
+dependencies and so on. Therefore it is important to run unit tests always against the package installed in a clean
+environment and that is exactly what the testing job does. After having set up a fresh environment with <a href="https://virtualenv.pypa.io/">virtualenv</a>
+or <a href="https://conda.io/">conda</a> the just published package is installed from the artefact store. 
+If this succeeds the git repo is cloned into a subfolder providing
+the unit tests (in the <code>tests</code> subfolder). These unit tests are then executed and check the installed package. In case
+that all tests pass the package is moved from the <em>unstable</em> index to the <em>testing</em> index. In case the commit was
+tagged as a stable release and thus the package&#8217;s version is stable according to <a href="https://www.python.org/dev/peps/pep-0440/"><span class="caps">PEP440</span></a> it is moved into the
+ <em>stable</em> index. Figure 1 illustrates the complete&nbsp;process.</p>
+<figure>
+<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package" height="120%" width="120%">
+<figcaption><strong>Figure 1:</strong> The <em>packaging</em> job clones source code repository, builds the software package and pushes
+it into the <em>unstable</em> index of the artefact store. If these steps succeed the <em>testing</em> job
+is triggered which installs the package from the artefact store and its dependencies into a clean environment.
+The source code reposistory is then cloned in order to run the unit tests against the installed package. If all 
+unit tests pass the package is moved into the <em>testing</em> index of the artefact store or optionally
+to the <em>stable</em> index if the version is a stable release.</figcaption>
+</figure>
+
+<h1>Conclusion</h1>
+<p>It is clear that packaging, versioning and <span class="caps">CI</span> are just one aspect of how to bring Data Science in production. 
+Follow-up posts will shed some light on other aspects.
+Nevertheless these are quite important but often their benefits are underestimated. We have seen that proper packaging is
+crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
+of rolling out patches and in the organisation of deployment. The advantages of Continous Integration are quite obvious
+and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
+we have seen that a minimal <span class="caps">CI</span> setup is easy to accomplish. All together they build an important corner stone of
+Data Science in&nbsp;production.</p>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
-        <li><a href="/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
-        <li><a href="/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
-        <li><a href="/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
+        <li><a href="/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
         <li><a href="/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
+        <li><a href="/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
+        <li><a href="/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
+        <li><a href="/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
     </ul>
 </section>
     <hr/>
@@ -298,8 +455,8 @@ Florian Wilhelm            </a>
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
-                    var disqus_identifier = 'which_car_fits_my_life';
-                var disqus_url = '/2017/07/which_car_fits_my_life/';
+                    var disqus_identifier = 'ds_in_prod_packaging_ci';
+                var disqus_url = '/drafts/ds_in_prod_packaging_ci.html';
 
             var disqus_config = function () {
                 this.language = "en";

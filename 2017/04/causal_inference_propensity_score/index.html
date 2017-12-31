@@ -165,7 +165,7 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 
-<link rel="canonical" href="/2017/04/causal_inference_propensity_score/">
+<link rel="canonical" href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/">
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="scikit-learn,machine-learning,python,causal inference" />
@@ -174,7 +174,7 @@ init_mathjax();
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Causal Inference and Propensity Score Methods"/>
-        <meta property="og:url" content="/2017/04/causal_inference_propensity_score/"/>
+        <meta property="og:url" content="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/"/>
         <meta property="og:description" content="In the field of machine learning and particularly in supervised learning, correlation is crucial to predict the target variable with the help of the feature variables. Rarely do we think about causation and the actual effect of a single feature variable or covariate on the target or response. Some even …"/>
         <meta property="article:published_time" content="2017-04-15" />
             <meta property="article:section" content="post, talk" />
@@ -187,20 +187,20 @@ init_mathjax();
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
-    <meta name="twitter:domain" content="">
+    <meta name="twitter:domain" content="http://www.florianwilhelm.info">
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://www.florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-        <link href="/theme/css/typogrify.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
-
+    <link href="http://www.florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="http://www.florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-        <link href="/feeds/post-talk.atom.xml" type="application/atom+xml" rel="alternate"
+
+
+        <link href="http://www.florianwilhelm.info/feeds/post-talk.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post, talk ATOM Feed"/>
 
 </head>
@@ -215,7 +215,7 @@ init_mathjax();
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://www.florianwilhelm.info/" class="navbar-brand">
 Florian Wilhelm            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -224,7 +224,7 @@ Florian Wilhelm            </a>
                     <li><a href="/about/">About me</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://www.florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -239,7 +239,7 @@ Florian Wilhelm            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/2017/04/causal_inference_propensity_score/"
+                    <a href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/"
                        rel="bookmark"
                        title="Permalink to Causal Inference and Propensity Score Methods">
                         Causal Inference and Propensity Score&nbsp;Methods
@@ -260,13 +260,13 @@ Florian Wilhelm            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/scikit-learn/">scikit-learn</a>
+	<a href="http://www.florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
         /
-	<a href="/tag/machine-learning/">machine-learning</a>
+	<a href="http://www.florianwilhelm.info/tag/machine-learning/">machine-learning</a>
         /
-	<a href="/tag/python/">python</a>
+	<a href="http://www.florianwilhelm.info/tag/python/">python</a>
         /
-	<a href="/tag/causal-inference/">causal inference</a>
+	<a href="http://www.florianwilhelm.info/tag/causal-inference/">causal inference</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -303,7 +303,7 @@ Florian Wilhelm            </a>
 <p><span class="caps">IPTW</span> is based on a simple intuition. For a randomized trial with <span class="math">\(p(Z=1)=k\)</span> the propensity score would be equal for all patients, i.e. <span class="math">\(e_i=\frac{1}{k}\)</span> and thus <span class="math">\(w_i=k\)</span>. In a nonrandomized trial, we would assign low weights to samples where the assignment of treatment matches our expectation and high weights otherwise. By doing so, we draw the attention of the machine learning algorithm to the observations where the effect of treatment is most prevalent, i.e. least confounded with the&nbsp;covariates.</p>
 <h2>Python&nbsp;implementation</h2>
 <p>We can set up a synthetic experiment to demonstrate and evaluate this method with the help of Python and Scikit-Learn. A synthetic experiment is appropriate to address the fundamental problem of causal inference described above. With real data, we  don&#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we derive a model that describes the relationship of <span class="math">\(X\)</span> to <span class="math">\(Y\)</span> as well as the effect of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>. We use this model to generate observational data where for each sample <span class="math">\(x_i\)</span> we either have <span class="math">\(Z=1\)</span> or <span class="math">\(Z=0\)</span> and thus incomplete information in our data. Our task is now to estimate the effect of <span class="math">\(Z\)</span> with the help of the generated&nbsp;data.</p>
-<p>The following portion of this article is available for <a href="/notebooks/causal_inference_propensity_score.ipynb">download</a> as a Jupyter&nbsp;notebook.</p>
+<p>The following portion of this article is available for <a href="http://www.florianwilhelm.info/notebooks/causal_inference_propensity_score.ipynb">download</a> as a Jupyter&nbsp;notebook.</p>
 <p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -7603,11 +7603,11 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
-        <li><a href="/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
-        <li><a href="/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
-        <li><a href="/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
+        <li><a href="http://www.florianwilhelm.info/2014/06/podcast_predictive_analytics/">Podcast about Predictive&nbsp;Analytics</a></li>
     </ul>
 </section>
     <hr/>
@@ -7620,7 +7620,7 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'causal_inference_propensity_score';
-                var disqus_url = '/2017/04/causal_inference_propensity_score/';
+                var disqus_url = 'http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -7659,125 +7659,125 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 
 
 
-            <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+            <li class="list-group-item"><a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group list-inline tagcloud" id="tags">
                     <li class="list-group-item tag-4">
-                        <a href="/tag/asynchronous/">
+                        <a href="http://www.florianwilhelm.info/tag/asynchronous/">
                             asynchronous
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/asyncio/">
+                        <a href="http://www.florianwilhelm.info/tag/asyncio/">
                             asyncio
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/bayesian/">
+                        <a href="http://www.florianwilhelm.info/tag/bayesian/">
                             bayesian
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/big-data/">
+                        <a href="http://www.florianwilhelm.info/tag/big-data/">
                             big data
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/blue-yonder/">
+                        <a href="http://www.florianwilhelm.info/tag/blue-yonder/">
                             Blue Yonder
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/bokeh/">
+                        <a href="http://www.florianwilhelm.info/tag/bokeh/">
                             bokeh
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/causal-inference/">
+                        <a href="http://www.florianwilhelm.info/tag/causal-inference/">
                             causal inference
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="/tag/data-science/">
+                        <a href="http://www.florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/event-driven/">
+                        <a href="http://www.florianwilhelm.info/tag/event-driven/">
                             event-driven
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/google-hangouts/">
+                        <a href="http://www.florianwilhelm.info/tag/google-hangouts/">
                             google hangouts
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/gps/">
+                        <a href="http://www.florianwilhelm.info/tag/gps/">
                             gps
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/hadoop/">
+                        <a href="http://www.florianwilhelm.info/tag/hadoop/">
                             hadoop
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/hive/">
+                        <a href="http://www.florianwilhelm.info/tag/hive/">
                             hive
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/jupyter/">
+                        <a href="http://www.florianwilhelm.info/tag/jupyter/">
                             jupyter
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/kalman/">
+                        <a href="http://www.florianwilhelm.info/tag/kalman/">
                             kalman
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/machine-learning/">
+                        <a href="http://www.florianwilhelm.info/tag/machine-learning/">
                             machine-learning
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="/tag/predictive-analytics/">
+                        <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">
                             predictive analytics
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/programming/">
+                        <a href="http://www.florianwilhelm.info/tag/programming/">
                             programming
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="/tag/python/">
+                        <a href="http://www.florianwilhelm.info/tag/python/">
                             python
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/recommendation-system/">
+                        <a href="http://www.florianwilhelm.info/tag/recommendation-system/">
                             recommendation system
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/scikit-learn/">
+                        <a href="http://www.florianwilhelm.info/tag/scikit-learn/">
                             scikit-learn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/scipy/">
+                        <a href="http://www.florianwilhelm.info/tag/scipy/">
                             scipy
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/spark/">
+                        <a href="http://www.florianwilhelm.info/tag/spark/">
                             spark
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/template/">
+                        <a href="http://www.florianwilhelm.info/tag/template/">
                             template
                         </a>
                     </li>
@@ -7802,13 +7802,13 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">

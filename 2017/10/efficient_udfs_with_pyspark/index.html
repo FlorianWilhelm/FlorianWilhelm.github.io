@@ -165,7 +165,7 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 
-<link rel="canonical" href="/2017/10/efficient_udfs_with_pyspark/">
+<link rel="canonical" href="http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="spark,python,big data" />
@@ -174,7 +174,7 @@ init_mathjax();
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Efficient UD(A)Fs with PySpark"/>
-        <meta property="og:url" content="/2017/10/efficient_udfs_with_pyspark/"/>
+        <meta property="og:url" content="http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"/>
         <meta property="og:description" content="Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (JVM), it comes with Python bindings also known as PySpark, whose API was heavily influenced by …"/>
         <meta property="article:published_time" content="2017-10-11" />
             <meta property="article:section" content="post" />
@@ -186,20 +186,20 @@ init_mathjax();
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
-    <meta name="twitter:domain" content="">
+    <meta name="twitter:domain" content="http://www.florianwilhelm.info">
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://www.florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-        <link href="/theme/css/typogrify.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
-
+    <link href="http://www.florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="http://www.florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-        <link href="/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+
+
+        <link href="http://www.florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post ATOM Feed"/>
 
 </head>
@@ -214,7 +214,7 @@ init_mathjax();
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://www.florianwilhelm.info/" class="navbar-brand">
 Florian Wilhelm            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -223,7 +223,7 @@ Florian Wilhelm            </a>
                     <li><a href="/about/">About me</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://www.florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -238,7 +238,7 @@ Florian Wilhelm            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/2017/10/efficient_udfs_with_pyspark/"
+                    <a href="http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"
                        rel="bookmark"
                        title="Permalink to Efficient UD(A)Fs with PySpark">
                         Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark
@@ -259,11 +259,11 @@ Florian Wilhelm            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/spark/">spark</a>
+	<a href="http://www.florianwilhelm.info/tag/spark/">spark</a>
         /
-	<a href="/tag/python/">python</a>
+	<a href="http://www.florianwilhelm.info/tag/python/">python</a>
         /
-	<a href="/tag/big-data/">big data</a>
+	<a href="http://www.florianwilhelm.info/tag/big-data/">big data</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -556,7 +556,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 </pre></div>
 
 
-<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <a href="/src/pyspark_udaf.py">pyspark_udaf.py</a>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <a href="/src/pyspark_udaf.py">pyspark_udaf.py</a> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
+<p>Now having all parts in place let&#8217;s assume the code above resides in the python module <a href="http://www.florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <a href="http://www.florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -597,11 +597,11 @@ In this respect we are really looking forward to closer integration of <a href="
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
-        <li><a href="/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
-        <li><a href="/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
-        <li><a href="/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
+        <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
     </ul>
 </section>
     <hr/>
@@ -614,7 +614,7 @@ In this respect we are really looking forward to closer integration of <a href="
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'efficient_udfs_with_pyspark';
-                var disqus_url = '/2017/10/efficient_udfs_with_pyspark/';
+                var disqus_url = 'http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -653,125 +653,125 @@ In this respect we are really looking forward to closer integration of <a href="
 
 
 
-            <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+            <li class="list-group-item"><a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group list-inline tagcloud" id="tags">
                     <li class="list-group-item tag-4">
-                        <a href="/tag/asynchronous/">
+                        <a href="http://www.florianwilhelm.info/tag/asynchronous/">
                             asynchronous
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/asyncio/">
+                        <a href="http://www.florianwilhelm.info/tag/asyncio/">
                             asyncio
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/bayesian/">
+                        <a href="http://www.florianwilhelm.info/tag/bayesian/">
                             bayesian
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/big-data/">
+                        <a href="http://www.florianwilhelm.info/tag/big-data/">
                             big data
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/blue-yonder/">
+                        <a href="http://www.florianwilhelm.info/tag/blue-yonder/">
                             Blue Yonder
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/bokeh/">
+                        <a href="http://www.florianwilhelm.info/tag/bokeh/">
                             bokeh
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/causal-inference/">
+                        <a href="http://www.florianwilhelm.info/tag/causal-inference/">
                             causal inference
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="/tag/data-science/">
+                        <a href="http://www.florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/event-driven/">
+                        <a href="http://www.florianwilhelm.info/tag/event-driven/">
                             event-driven
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/google-hangouts/">
+                        <a href="http://www.florianwilhelm.info/tag/google-hangouts/">
                             google hangouts
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/gps/">
+                        <a href="http://www.florianwilhelm.info/tag/gps/">
                             gps
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/hadoop/">
+                        <a href="http://www.florianwilhelm.info/tag/hadoop/">
                             hadoop
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/hive/">
+                        <a href="http://www.florianwilhelm.info/tag/hive/">
                             hive
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/jupyter/">
+                        <a href="http://www.florianwilhelm.info/tag/jupyter/">
                             jupyter
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/kalman/">
+                        <a href="http://www.florianwilhelm.info/tag/kalman/">
                             kalman
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/machine-learning/">
+                        <a href="http://www.florianwilhelm.info/tag/machine-learning/">
                             machine-learning
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="/tag/predictive-analytics/">
+                        <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">
                             predictive analytics
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/programming/">
+                        <a href="http://www.florianwilhelm.info/tag/programming/">
                             programming
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="/tag/python/">
+                        <a href="http://www.florianwilhelm.info/tag/python/">
                             python
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/recommendation-system/">
+                        <a href="http://www.florianwilhelm.info/tag/recommendation-system/">
                             recommendation system
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="/tag/scikit-learn/">
+                        <a href="http://www.florianwilhelm.info/tag/scikit-learn/">
                             scikit-learn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/scipy/">
+                        <a href="http://www.florianwilhelm.info/tag/scipy/">
                             scipy
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/spark/">
+                        <a href="http://www.florianwilhelm.info/tag/spark/">
                             spark
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="/tag/template/">
+                        <a href="http://www.florianwilhelm.info/tag/template/">
                             template
                         </a>
                     </li>
@@ -796,13 +796,13 @@ In this respect we are really looking forward to closer integration of <a href="
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://www.florianwilhelm.info/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">

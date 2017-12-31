@@ -61,7 +61,7 @@ will be a matter of seconds.
 # Packaging and Versioning
 
 Python's history of packaging has had its dark times but nowadays things have pretty much settled 
-and now there only one obvious tool left to do it, namely [setuptools][]. 
+and now there is only one obvious tool left to do it, namely [setuptools][]. 
 A Python [packaging tutorial][] explains the various steps needed to set up a proper ``setup.py``
 but it takes a long time to really master the subtleties of Python packaging and even then it
 is quite cumbersome. This is the reason many developers refrain from building Python packages.
@@ -145,9 +145,9 @@ on-premise equivalent is [devpi][] that:
 * has user management and
 * features Jenkins integration.
 
-If all you care about is Python then devpi is the right artefact store for you. For most companies Java is used
+If all you care about is Python then devpi is the right artefact store for you. In most companies also Java is used
 and [Nexus][] often serves thereby as artefact store. In this case it might be more advantageous to use Nexus also for
-storing Python packages which is available since version 3.0 to avoid the complexity of establishing another service.
+storing Python packages which is available since version 3.0 to avoid the complexity of maintaining another service.
 
 In highly polylingual environments with many languages like Python, R, Java and C/C++ this will lead to many different
 artefact stores and various different ways of installing artefacts. A unified approach is provided by [conda][] since
@@ -193,8 +193,14 @@ Nevertheless these are quite important but often their benefits are underestimat
 crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
 of rolling out patches and in the organisation of deployment. The advantages of Continous Integration are quite obvious
 and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
-we have seen that a minimal CI setup is easy to accomplish. All together they build an important corner stone of
+we have seen that a minimal CI setup is easy to accomplish. All together they build a fundamental corner stone of
 Data Science in production.
+
+Some good talks around this topic were held by [Sebastian Neubauer][], one of the proclaimed
+DevOps rock stars of Python in production. The talks [A Pythonic Approach to CI][] and 
+[There should be one obvious way to bring Python into production][] perfectly complement this post and are even fun 
+to watch.
+
 
 [devpi]: https://doc.devpi.net
 [separating different concerns]: https://en.wikipedia.org/wiki/Separation_of_concerns
@@ -221,3 +227,6 @@ Data Science in production.
 [anaconda-repository]: https://docs.anaconda.com/anaconda-repository/
 [general code projects]: https://conda.io/docs/user-guide/tutorials/build-postgis.html
 [virtualenv]: https://virtualenv.pypa.io/
+[There should be one obvious way to bring Python into production]: https://www.youtube.com/watch?v=hnQKsxKjCUo
+[A Pythonic Approach to CI]: https://www.youtube.com/watch?v=Ad9qSbrfnvk
+[Sebastian Neubauer]: https://www.linkedin.com/in/sebastian-neubauer-16626a79/

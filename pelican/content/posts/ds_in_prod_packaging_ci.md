@@ -133,7 +133,11 @@ the myriad of pains in the [dependency hell] you will otherwise end up in long-t
 
 Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (CI)
 process. For this purpose a common choice is [Jenkins][] especially for proprietary software since it can be installed
-on premise. Besides the CI tool there is also a place needed to store the built packages. The term *artefact store* is
+on premise. 
+
+## Artefact Store
+
+Besides the CI tool there is also a place needed to store the built packages. The term *artefact store* is
 used commonly for a service that offers a way to store and install packages from. In the Python world the 
 Python Package Index ([PyPI][]) is the official artefact store to publish open source packages. For companies the
 on-premise equivalent is [devpi][] that:
@@ -146,7 +150,7 @@ on-premise equivalent is [devpi][] that:
 * features Jenkins integration.
 
 If all you care about is Python then devpi is the right artefact store for you. In most companies also Java is used
-and [Nexus][] often serves thereby as artefact store. In this case it might be more advantageous to use Nexus also for
+and [Nexus][] often serves thereby already as artefact store. In this case it might be more advantageous to use Nexus also for
 storing Python packages which is available since version 3.0 to avoid the complexity of maintaining another service.
 
 In highly polylingual environments with many languages like Python, R, Java and C/C++ this will lead to many different
@@ -155,10 +159,27 @@ conda packages can be built for [general code projects][]. The on-premise artefa
 called [anaconda-repository][] and is part of the proprietary enterprise server. Whenever a unified approach to storing and
 installing artefacts of different languages is a major concern, [Anaconda][] might be a viable solution.
 
+## Indices and Channels
+
 Common to all artifact stores is the availability of different *indices* (or *channels* in conda) to organize artefacts. 
 It is a good practice to have different indices to describe the maturity of the contained packages like *unstable*,
-*testing* and *stable*. This convention is flexible since it allows you to test things that might still be buggy but
-also allows for automation since production is able to pull any PATCH increment from the stable index automatically.
+*testing* and *stable*. This complements the automatic [PEP440][] versioning with [PyScaffold][] since it allows us to 
+tell a development version which passed the unit tests (*testing*) from a development version which did not (*unstable*).  
+Since [pip][] by default installs only stable releases, e.g. `1.0` but not `1.0b3`, while the `--pre` flag 
+is needed to install unstable releases the differentiation between *testing* and *stable* indices is not absolutely 
+necessary. Still for organisational reasons, having an *testing* index as input for QA and a *stable* index that really
+only holds releases that passed the whole QA process is a good idea. Also [conda][] does not seem to provide an equivalent
+to the ``-pre`` flag and different channels need to be used.
+
+One should also note that git allows to tag a single commit several times which will lead to different versions of the
+Python package having the same content. This gives means to the following convention: Let's say there was a bug in version
+`1.2` and after two commits the bug seems to be fixed. The automatically inferred version number by PyScaffold
+will be `1.2.post0.pre2-gHASH`. Being happy with her fix the developer tags the commit with `1.2.1rc1` (first release
+candidate of version 1.2.1). Since all unit tests pass this patch will end up in the *testing* index where QA can put it to the
+acid test. After that, the same commit will be tagged and signed by QA with name `1.2.1` which results in a new package
+that can be moved to the *stable* index automatically.
+
+## Automated CI Processs
 
 With this components in mind we can establish an automated CI process. Upon a new commit on a central git repository 
 the *packaging* Jenkins job clones the repo and builds the package, e.g. with `python setup.py bdist_wheel`. If this is
@@ -197,7 +218,7 @@ we have seen that a minimal CI setup is easy to accomplish. All together they bu
 Data Science in production.
 
 Some good talks around this topic were held by [Sebastian Neubauer][], one of the proclaimed
-DevOps rock stars of Python in production. The talks [A Pythonic Approach to CI][] and 
+DevOps rock stars of Python in production. His talks [A Pythonic Approach to CI][] and 
 [There should be one obvious way to bring Python into production][] perfectly complement this post and are even fun 
 to watch.
 

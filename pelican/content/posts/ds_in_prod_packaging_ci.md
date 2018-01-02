@@ -197,7 +197,7 @@ tagged as a stable release and thus the package's version is stable according to
  *stable* index. Figure 1 illustrates the complete process.
 
 <figure>
-<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package" height="120%" width="120%">
+<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package">
 <figcaption><strong>Figure 1:</strong> The <em>packaging</em> job clones source code repository, builds the software package and pushes
 it into the <em>unstable</em> index of the artefact store. If these steps succeed the <em>testing</em> job
 is triggered which installs the package from the artefact store and its dependencies into a clean environment.

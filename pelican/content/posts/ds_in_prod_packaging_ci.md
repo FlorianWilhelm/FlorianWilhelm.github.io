@@ -86,7 +86,7 @@ or
 conda install pyscaffold
 ```
 if you prefer [conda][] over [pip][]. Generating now a project `Scikit-AI` with a package `skai` is just 
-matter of typing a single command:
+a matter of typing a single command:
 ```shell
 putup Scikit-AI -p skai
 ```
@@ -197,13 +197,15 @@ tagged as a stable release and thus the package's version is stable according to
  *stable* index. Figure 1 illustrates the complete process.
 
 <figure>
-<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package">
+<p align="center">
+<img class="noZoom" src="/images/ci_build_publish.png" alt="Building and publishing a package">
 <figcaption><strong>Figure 1:</strong> The <em>packaging</em> job clones source code repository, builds the software package and pushes
 it into the <em>unstable</em> index of the artefact store. If these steps succeed the <em>testing</em> job
 is triggered which installs the package from the artefact store and its dependencies into a clean environment.
 The source code reposistory is then cloned in order to run the unit tests against the installed package. If all 
 unit tests pass the package is moved into the <em>testing</em> index of the artefact store or optionally
 to the <em>stable</em> index if the version is a stable release.</figcaption>
+</p>
 </figure>
 
 # Conclusion
@@ -217,7 +219,7 @@ and promoted a lot by the DevOps culture in recent years. Also Data Science can 
 we have seen that a minimal CI setup is easy to accomplish. All together they build a fundamental corner stone of
 Data Science in production.
 
-Some good talks around this topic were held by [Sebastian Neubauer][], one of the proclaimed
+Some good talks around this topic were held by [Sebastian Neubauer][], one of the acclaimed
 DevOps rock stars of Python in production. His talks [A Pythonic Approach to CI][] and 
 [There should be one obvious way to bring Python into production][] perfectly complement this post and are even fun 
 to watch.

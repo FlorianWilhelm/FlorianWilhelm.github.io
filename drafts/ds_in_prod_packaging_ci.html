@@ -377,7 +377,9 @@ the myriad of pains in the <a href="https://en.wikipedia.org/wiki/Dependency_hel
 <h1>Continuous&nbsp;Integration</h1>
 <p>Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (<span class="caps">CI</span>)
 process. For this purpose a common choice is <a href="https://jenkins-ci.org/">Jenkins</a> especially for proprietary software since it can be installed
-on premise. Besides the <span class="caps">CI</span> tool there is also a place needed to store the built packages. The term <em>artefact store</em> is
+on&nbsp;premise. </p>
+<h2>Artefact&nbsp;Store</h2>
+<p>Besides the <span class="caps">CI</span> tool there is also a place needed to store the built packages. The term <em>artefact store</em> is
 used commonly for a service that offers a way to store and install packages from. In the Python world the 
 Python Package Index (<a href="https://pypi.python.org">PyPI</a>) is the official artefact store to publish open source packages. For companies the
 on-premise equivalent is <a href="https://devpi.net/">devpi</a>&nbsp;that:</p>
@@ -390,17 +392,31 @@ on-premise equivalent is <a href="https://devpi.net/">devpi</a>&nbsp;that:</p>
 <li>features Jenkins&nbsp;integration.</li>
 </ul>
 <p>If all you care about is Python then devpi is the right artefact store for you. In most companies also Java is used
-and <a href="http://www.sonatype.org/nexus/">Nexus</a> often serves thereby as artefact store. In this case it might be more advantageous to use Nexus also for
+and <a href="http://www.sonatype.org/nexus/">Nexus</a> often serves thereby already as artefact store. In this case it might be more advantageous to use Nexus also for
 storing Python packages which is available since version 3.0 to avoid the complexity of maintaining another&nbsp;service.</p>
 <p>In highly polylingual environments with many languages like Python, R, Java and C/C++ this will lead to many different
 artefact stores and various different ways of installing artefacts. A unified approach is provided by <a href="https://conda.io/">conda</a> since
 conda packages can be built for <a href="https://conda.io/docs/user-guide/tutorials/build-postgis.html">general code projects</a>. The on-premise artefact store provided by <a href="https://anaconda.org/">Anaconda</a> is
 called <a href="https://docs.anaconda.com/anaconda-repository/">anaconda-repository</a> and is part of the proprietary enterprise server. Whenever a unified approach to storing and
 installing artefacts of different languages is a major concern, <a href="https://anaconda.org/">Anaconda</a> might be a viable&nbsp;solution.</p>
+<h2>Indices and&nbsp;Channels</h2>
 <p>Common to all artifact stores is the availability of different <em>indices</em> (or <em>channels</em> in conda) to organize artefacts. 
 It is a good practice to have different indices to describe the maturity of the contained packages like <em>unstable</em>,
-<em>testing</em> and <em>stable</em>. This convention is flexible since it allows you to test things that might still be buggy but
-also allows for automation since production is able to pull any <span class="caps">PATCH</span> increment from the stable index&nbsp;automatically.</p>
+<em>testing</em> and <em>stable</em>. This complements the automatic <a href="https://www.python.org/dev/peps/pep-0440/"><span class="caps">PEP440</span></a> versioning with <a href="http://pyscaffold.org/">PyScaffold</a> since it allows us to 
+tell a development version which passed the unit tests (<em>testing</em>) from a development version which did not (<em>unstable</em>).<br>
+Since <a href="https://pip.pypa.io/">pip</a> by default installs only stable releases, e.g. <code>1.0</code> but not <code>1.0b3</code>, while the <code>--pre</code> flag 
+is needed to install unstable releases the differentiation between <em>testing</em> and <em>stable</em> indices is not absolutely 
+necessary. Still for organisational reasons, having an <em>testing</em> index as input for <span class="caps">QA</span> and a <em>stable</em> index that really
+only holds releases that passed the whole <span class="caps">QA</span> process is a good idea. Also <a href="https://conda.io/">conda</a> does not seem to provide an equivalent
+to the <code>-pre</code> flag and different channels need to be&nbsp;used.</p>
+<p>One should also note that git allows to tag a single commit several times which will lead to different versions of the
+Python package having the same content. This gives means to the following convention: Let&#8217;s say there was a bug in version
+<code>1.2</code> and after two commits the bug seems to be fixed. The automatically inferred version number by PyScaffold
+will be <code>1.2.post0.pre2-gHASH</code>. Being happy with her fix the developer tags the commit with <code>1.2.1rc1</code> (first release
+candidate of version 1.2.1). Since all unit tests pass this patch will end up in the <em>testing</em> index where <span class="caps">QA</span> can put it to the
+acid test. After that, the same commit will be tagged and signed by <span class="caps">QA</span> with name <code>1.2.1</code> which results in a new package
+that can be moved to the <em>stable</em> index&nbsp;automatically.</p>
+<h2>Automated <span class="caps">CI</span>&nbsp;Processs</h2>
 <p>With this components in mind we can establish an automated <span class="caps">CI</span> process. Upon a new commit on a central git repository 
 the <em>packaging</em> Jenkins job clones the repo and builds the package, e.g. with <code>python setup.py bdist_wheel</code>. If this is
 successful the package is uploaded to the <em>unstable</em> index of the artefact store. Upon the successful completion of the
@@ -416,7 +432,7 @@ that all tests pass the package is moved from the <em>unstable</em> index to the
 tagged as a stable release and thus the package&#8217;s version is stable according to <a href="https://www.python.org/dev/peps/pep-0440/"><span class="caps">PEP440</span></a> it is moved into the
  <em>stable</em> index. Figure 1 illustrates the complete&nbsp;process.</p>
 <figure>
-<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package" height="120%" width="120%">
+<img class="noZoom" align="center" src="/images/ci_build_publish.png" alt="Building and publishing a package">
 <figcaption><strong>Figure 1:</strong> The <em>packaging</em> job clones source code repository, builds the software package and pushes
 it into the <em>unstable</em> index of the artefact store. If these steps succeed the <em>testing</em> job
 is triggered which installs the package from the artefact store and its dependencies into a clean environment.
@@ -435,7 +451,7 @@ and promoted a lot by the DevOps culture in recent years. Also Data Science can 
 we have seen that a minimal <span class="caps">CI</span> setup is easy to accomplish. All together they build a fundamental corner stone of
 Data Science in&nbsp;production.</p>
 <p>Some good talks around this topic were held by <a href="https://www.linkedin.com/in/sebastian-neubauer-16626a79/">Sebastian Neubauer</a>, one of the proclaimed
-DevOps rock stars of Python in production. The talks <a href="https://www.youtube.com/watch?v=Ad9qSbrfnvk">A Pythonic Approach to <span class="caps">CI</span></a> and 
+DevOps rock stars of Python in production. His talks <a href="https://www.youtube.com/watch?v=Ad9qSbrfnvk">A Pythonic Approach to <span class="caps">CI</span></a> and 
 <a href="https://www.youtube.com/watch?v=hnQKsxKjCUo">There should be one obvious way to bring Python into production</a> perfectly complement this post and are even fun 
 to&nbsp;watch.</p>
             </div>

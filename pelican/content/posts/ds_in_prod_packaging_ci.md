@@ -62,10 +62,11 @@ will be a matter of seconds.
 
 Python's history of packaging has had its dark times but nowadays things have pretty much settled 
 and now there is only one obvious tool left to do it, namely [setuptools][]. 
-A Python [packaging tutorial][] explains the various steps needed to set up a proper ``setup.py``
+An official Python [packaging tutorial][] and many user articles like [Alice in Python projectland][] 
+explain the various steps needed to set up a proper ``setup.py``
 but it takes a long time to really master the subtleties of Python packaging and even then it
 is quite cumbersome. This is the reason many developers refrain from building Python packages.
-Another reason is that even if you have a proper Python package set up, proper versioning is
+Another reason is that even if you have a correct Python package set up, proper versioning is
 still a manual and thus error-prone process. Therefore the tool [setuptools_scm][] exists which
 draws the current version automatically from git so a new release is as simple as creating a new tag.
 Following the famous Unix principle "Do one thing and do it well" also a Python package is
@@ -253,3 +254,4 @@ to watch.
 [There should be one obvious way to bring Python into production]: https://www.youtube.com/watch?v=hnQKsxKjCUo
 [A Pythonic Approach to CI]: https://www.youtube.com/watch?v=Ad9qSbrfnvk
 [Sebastian Neubauer]: https://www.linkedin.com/in/sebastian-neubauer-16626a79/
+[Alice in Python projectland]: http://veekaybee.github.io/2017/09/26/python-packaging/

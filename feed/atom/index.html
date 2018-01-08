@@ -141,7 +141,7 @@ Since &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt; by default installs onl
 is needed to install unstable releases the differentiation between &lt;em&gt;testing&lt;/em&gt; and &lt;em&gt;stable&lt;/em&gt; indices is not absolutely 
 necessary. Still for organisational reasons, having an &lt;em&gt;testing&lt;/em&gt; index as input for &lt;span class="caps"&gt;QA&lt;/span&gt; and a &lt;em&gt;stable&lt;/em&gt; index that really
 only holds releases that passed the whole &lt;span class="caps"&gt;QA&lt;/span&gt; process is a good idea. Also &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; does not seem to provide an equivalent
-to the &lt;code&gt;-pre&lt;/code&gt; flag and different channels need to be&amp;nbsp;used.&lt;/p&gt;
+to the &lt;code&gt;--pre&lt;/code&gt; flag and thus different channels need to be&amp;nbsp;used.&lt;/p&gt;
 &lt;p&gt;One should also note that git allows to tag a single commit several times which will lead to different versions of the
 Python package having the same content. This gives means to the following convention: Let&amp;#8217;s say there was a bug in version
 &lt;code&gt;1.2&lt;/code&gt; and after two commits the bug seems to be fixed. The automatically inferred version number by PyScaffold
@@ -537,7 +537,7 @@ how to do something and therefore imperative? No, actually not, it really depend
 abstraction that comes with&amp;nbsp;it. &lt;/p&gt;
 &lt;p&gt;Let&amp;#8217;s say we want to do some linear algebra, in particular we want to sum up two n-dimensional
 vectors &lt;span class="math"&gt;\(a\)&lt;/span&gt; and &lt;span class="math"&gt;\(b\)&lt;/span&gt;. Since we are in the domain of linear algebra using some computer algebra system (&lt;span class="caps"&gt;CAS&lt;/span&gt;), we would expect to be able
-to just declare what we want &lt;span class="math"&gt;\(c = a + b\)&lt;/span&gt;. Calculating &lt;span class="math"&gt;\(c\)&lt;/span&gt; with the help of a loop would clearly by imperative in the
+to just declare what we want &lt;span class="math"&gt;\(c = a + b\)&lt;/span&gt;. Calculating &lt;span class="math"&gt;\(c\)&lt;/span&gt; with the help of a loop would clearly be imperative in the
 given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
 elements to sum up first. This removes the possibility of our &lt;span class="caps"&gt;CAS&lt;/span&gt; software to choose a native &lt;a href="https://en.wikipedia.org/wiki/SIMD"&gt;&lt;span class="caps"&gt;SIMD&lt;/span&gt;&lt;/a&gt; &lt;span class="caps"&gt;CPU&lt;/span&gt; operation
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the

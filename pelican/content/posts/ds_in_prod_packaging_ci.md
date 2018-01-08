@@ -171,7 +171,7 @@ Since [pip][] by default installs only stable releases, e.g. `1.0` but not `1.0b
 is needed to install unstable releases the differentiation between *testing* and *stable* indices is not absolutely 
 necessary. Still for organisational reasons, having an *testing* index as input for QA and a *stable* index that really
 only holds releases that passed the whole QA process is a good idea. Also [conda][] does not seem to provide an equivalent
-to the ``-pre`` flag and different channels need to be used.
+to the ``--pre`` flag and thus different channels need to be used.
 
 One should also note that git allows to tag a single commit several times which will lead to different versions of the
 Python package having the same content. This gives means to the following convention: Let's say there was a bug in version

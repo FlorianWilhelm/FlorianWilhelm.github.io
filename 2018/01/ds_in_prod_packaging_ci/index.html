@@ -409,7 +409,7 @@ Since <a href="https://pip.pypa.io/">pip</a> by default installs only stable rel
 is needed to install unstable releases the differentiation between <em>testing</em> and <em>stable</em> indices is not absolutely 
 necessary. Still for organisational reasons, having an <em>testing</em> index as input for <span class="caps">QA</span> and a <em>stable</em> index that really
 only holds releases that passed the whole <span class="caps">QA</span> process is a good idea. Also <a href="https://conda.io/">conda</a> does not seem to provide an equivalent
-to the <code>-pre</code> flag and different channels need to be&nbsp;used.</p>
+to the <code>--pre</code> flag and thus different channels need to be&nbsp;used.</p>
 <p>One should also note that git allows to tag a single commit several times which will lead to different versions of the
 Python package having the same content. This gives means to the following convention: Let&#8217;s say there was a bug in version
 <code>1.2</code> and after two commits the bug seems to be fixed. The automatically inferred version number by PyScaffold

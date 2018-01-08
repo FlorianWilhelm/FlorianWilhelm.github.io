@@ -289,7 +289,7 @@ how to do something and therefore imperative? No, actually not, it really depend
 abstraction that comes with&nbsp;it. </p>
 <p>Let&#8217;s say we want to do some linear algebra, in particular we want to sum up two n-dimensional
 vectors <span class="math">\(a\)</span> and <span class="math">\(b\)</span>. Since we are in the domain of linear algebra using some computer algebra system (<span class="caps">CAS</span>), we would expect to be able
-to just declare what we want <span class="math">\(c = a + b\)</span>. Calculating <span class="math">\(c\)</span> with the help of a loop would clearly by imperative in the
+to just declare what we want <span class="math">\(c = a + b\)</span>. Calculating <span class="math">\(c\)</span> with the help of a loop would clearly be imperative in the
 given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
 elements to sum up first. This removes the possibility of our <span class="caps">CAS</span> software to choose a native <a href="https://en.wikipedia.org/wiki/SIMD"><span class="caps">SIMD</span></a> <span class="caps">CPU</span> operation
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the

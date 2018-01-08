@@ -39,7 +39,7 @@ abstraction that comes with it.
 
 Let's say we want to do some linear algebra, in particular we want to sum up two n-dimensional
 vectors $a$ and $b$. Since we are in the domain of linear algebra using some computer algebra system (CAS), we would expect to be able
-to just declare what we want $c = a + b$. Calculating $c$ with the help of a loop would clearly by imperative in the
+to just declare what we want $c = a + b$. Calculating $c$ with the help of a loop would clearly be imperative in the
 given context. The downsides of using a loop for this are manifold. Firstly, we would define an implicit order of which
 elements to sum up first. This removes the possibility of our CAS software to choose a native [SIMD][] CPU operation
 due to our over-specification of how to do it. Secondly, our code becomes much less readable and we are violating the

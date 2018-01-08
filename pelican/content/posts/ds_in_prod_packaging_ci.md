@@ -1,11 +1,12 @@
 ---
-title: Data Science in Production: Packaging and Continuous Integration
+title: Data Science in Production: Packaging, Versioning and Continuous Integration
 date: 2018-01-08 12:00
 modified: 2018-01-08 12:00
 category: post
 tags: python, data science, production
 authors: Florian Wilhelm
 status: published
+summary: A common pattern in most data science projects I participated in is that it's all fun and games until someone wants to put it into production. All of a sudden the crucial question is how to deploy your model, which version, how can updates be rolled out, which requirements are needed and ...
 ---
 
 # Motivation

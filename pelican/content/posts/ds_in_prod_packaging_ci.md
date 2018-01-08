@@ -1,11 +1,11 @@
 ---
 title: Data Science in Production: Packaging and Continuous Integration
-date: 2018-01-15 18:00
-modified: 2018-01-15 18:00
+date: 2018-01-08 12:00
+modified: 2018-01-08 12:00
 category: post
 tags: python, data science, production
 authors: Florian Wilhelm
-status: draft
+status: published
 ---
 
 # Motivation

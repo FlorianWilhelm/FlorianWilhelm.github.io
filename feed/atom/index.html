@@ -1,5 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2017-10-11T12:30:00+02:00</updated><entry><title>Efficient UD(A)Fs with PySpark</title><link href="http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/" rel="alternate"></link><published>2017-10-11T12:30:00+02:00</published><updated>2017-10-11T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2017-10-11:/2017/10/efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (&lt;span class="caps"&gt;JVM&lt;/span&gt;), it comes with Python bindings also known as &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt;, whose &lt;span class="caps"&gt;API&lt;/span&gt; was heavily influenced by …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (&lt;span class="caps"&gt;JVM&lt;/span&gt;), it comes with Python bindings also known as &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt;, whose &lt;span class="caps"&gt;API&lt;/span&gt; was heavily influenced by &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2018-01-08T12:00:00+01:00</updated><entry><title>Data Science in Production: Packaging and Continuous Integration</title><link href="http://www.florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/" rel="alternate"></link><published>2018-01-08T12:00:00+01:00</published><updated>2018-01-08T12:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2018-01-08:/2018/01/ds_in_prod_packaging_ci/</id><summary type="html">&lt;h1&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all 
+fun and games until someone wants to put it into production. From that point in time on
+no one will any longer give you a pat on the back for a high accuracy …&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all 
+fun and games until someone wants to put it into production. From that point in time on
+no one will any longer give you a pat on the back for a high accuracy and smart
+algorithm. All of a sudden the crucial question is how to deploy your model,
+which version, how can updates be rolled out, which requirements are needed and so&amp;nbsp;on.&lt;/p&gt;
+&lt;p&gt;The worst case in such a moment is to realize that up until now the glorious proof of concept
+model is not an application but rather a stew of Python/R scripts which were deployed 
+by cloning a git repo and run by some Jenkins jobs with a dash of&amp;nbsp;Bash.&lt;/p&gt;
+&lt;p&gt;Bringing data science to production is a hot topic right now and there are many facets 
+to it. This is the first in a series of posts about &lt;em&gt;data science in production&lt;/em&gt; and
+focuses on aspects of modern software engineering like &lt;em&gt;packaging&lt;/em&gt;, &lt;em&gt;versioning&lt;/em&gt; as
+well as &lt;em&gt;Continuous Integration&lt;/em&gt; in&amp;nbsp;general.&lt;/p&gt;
+&lt;h1&gt;Packages vs.&amp;nbsp;Scripts&lt;/h1&gt;
+&lt;p&gt;Being a data scientist does not free you from proper software engineering. Of course
+most models start with a simple script or a Jupyter notebook maybe, just the essence
+of the your idea to test it quickly. But as your model evolves, the number of lines
+of code grow, it&amp;#8217;s always a good idea to think about the structure of your code and to
+move away from writing simple scripts to proper applications or&amp;nbsp;libraries. &lt;/p&gt;
+&lt;p&gt;In case of a Python model, that means grouping functionality into different modules 
+&lt;a href="https://en.wikipedia.org/wiki/Separation_of_concerns"&gt;separating different concerns&lt;/a&gt; which could be organised in Python packages on a higher
+level. Maybe certain parts of the model are even so general that they could be packaged 
+into an own library for greater reusability also for other projects. In the context
+of Python, a bundle of software to be installed like a library or application is denoted 
+with the term &lt;em&gt;package&lt;/em&gt;. Another synonym is &lt;em&gt;distribution&lt;/em&gt; which is easily to be confused with
+a Linux distribution. Therefore the term package is more commonly used although there is an
+ambiguity with the kind of package you import in your Python source code (i.e. a container of&amp;nbsp;modules).&lt;/p&gt;
+&lt;p&gt;So what is now the key difference between a bunch of Python scripts with some modules 
+and a proper package? A Python package adheres a certain structure and thus can be shipped and 
+installed by others. Simple as it sounds this is a major advantage over having just some Python 
+modules inside a repository. With a package it is possible
+to make distinct code releases with different versions that can be stored for later reference. 
+Dependencies like &lt;em&gt;numpy&lt;/em&gt; and &lt;em&gt;scikit-learn&lt;/em&gt; can be specified and dependency resolution is automated
+by tools like &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt; and &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt;. Why is this so important? When bugs in production occur 
+it&amp;#8217;s incredibly useful to know which state of your code actually is in production. Is it still
+version 0.9 or already 1.0? Did the bug also occur in the last release? Most debugging starts
+with reproducing the bug locally on your machine. But what if the release is already half a 
+year old and there where major changes in its requirements? Maybe the bug is caused by one of
+its dependencies? If your package also includes its dependencies with pinned versions 
+restoring the exact some state as in production but inside a local &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; environment 
+will be a matter of&amp;nbsp;seconds.&lt;/p&gt;
+&lt;h1&gt;Packaging and&amp;nbsp;Versioning&lt;/h1&gt;
+&lt;p&gt;Python&amp;#8217;s history of packaging has had its dark times but nowadays things have pretty much settled 
+and now there is only one obvious tool left to do it, namely &lt;a href="https://setuptools.readthedocs.io/"&gt;setuptools&lt;/a&gt;. 
+An official Python &lt;a href="https://packaging.python.org/tutorials/distributing-packages/"&gt;packaging tutorial&lt;/a&gt; and many user articles like &lt;a href="http://veekaybee.github.io/2017/09/26/python-packaging/"&gt;Alice in Python projectland&lt;/a&gt; 
+explain the various steps needed to set up a proper &lt;code&gt;setup.py&lt;/code&gt;
+but it takes a long time to really master the subtleties of Python packaging and even then it
+is quite cumbersome. This is the reason many developers refrain from building Python packages.
+Another reason is that even if you have a correct Python package set up, proper versioning is
+still a manual and thus error-prone process. Therefore the tool &lt;a href="https://github.com/pypa/setuptools_scm"&gt;setuptools_scm&lt;/a&gt; exists which
+draws the current version automatically from git so a new release is as simple as creating a new tag.
+Following the famous Unix principle &amp;#8220;Do one thing and do it well&amp;#8221; also a Python package is
+composed of many specialised tools. Besides &lt;a href="https://setuptools.readthedocs.io/"&gt;setuptools&lt;/a&gt; and &lt;a href="https://github.com/pypa/setuptools_scm"&gt;setuptools_scm&lt;/a&gt; there 
+is &lt;a href="http://www.sphinx-doc.org/"&gt;sphinx&lt;/a&gt; for documentation, testing tools like &lt;a href="https://docs.pytest.org/"&gt;pytest&lt;/a&gt; and &lt;a href="https://tox.readthedocs.io/"&gt;tox&lt;/a&gt; as well as many other
+little helpers to consider when setting up a Python package. Already scared off of Python packaging?
+Hold your breath, there is no reason to&amp;nbsp;be.&lt;/p&gt;
+&lt;h2&gt;PyScaffold&lt;/h2&gt;
+&lt;p&gt;Luckily there is one tool to rule them all, &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt;, which provides a proper Python 
+package within a second. It is installed easily&amp;nbsp;with&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pyscaffold
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;or &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install pyscaffold
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;if you prefer &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; over &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt;. Generating now a project &lt;code&gt;Scikit-AI&lt;/code&gt; with a package &lt;code&gt;skai&lt;/code&gt; is just 
+a matter of typing a single&amp;nbsp;command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup Scikit-AI -p skai
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will create a git repository &lt;code&gt;Scikit-AI&lt;/code&gt; including a fully configured &lt;code&gt;setup.py&lt;/code&gt; that can be configured easily
+and in a descriptive way by modifying &lt;code&gt;setup.cfg&lt;/code&gt;. The typical Python package structure is provided including
+subfolders such as &lt;code&gt;docs&lt;/code&gt; for &lt;a href="http://www.sphinx-doc.org/"&gt;sphinx&lt;/a&gt; documentation, &lt;code&gt;tests&lt;/code&gt; for unit testing as well as a &lt;code&gt;src&lt;/code&gt;
+subfolder including the actual Python package &lt;code&gt;skai&lt;/code&gt;. Also &lt;a href="https://github.com/pypa/setuptools_scm"&gt;setuptools_scm&lt;/a&gt; is integrated
+and other features can be activates optionally like support for &lt;a href="https://travis-ci.org/"&gt;Travis&lt;/a&gt;, &lt;a href="https://gitlab.com/"&gt;Gitlab&lt;/a&gt;, &lt;a href="https://tox.readthedocs.io/"&gt;tox&lt;/a&gt;, &lt;a href="http://pre-commit.com/"&gt;pre-commit&lt;/a&gt;
+and many&amp;nbsp;more.&lt;/p&gt;
+&lt;p&gt;An example of a more advanced usage of PyScaffold&amp;nbsp;is&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup Scikit-AI -p skai --travis --tox -d &lt;span class="s2"&gt;&amp;quot;Scientific AI library with a twist&amp;quot;&lt;/span&gt; -u &lt;span class="s2"&gt;&amp;quot;http://sky.net/&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;where also example configuration files for Travis and tox will be created. The additionally provided short description
+with the flag &lt;code&gt;-d&lt;/code&gt; is used where appropriate as is the url passed by &lt;code&gt;-u&lt;/code&gt;. As usual with shell commands,
+&lt;code&gt;putup --help&lt;/code&gt; provides information about the various&amp;nbsp;arguments.&lt;/p&gt;
+&lt;h2&gt;Versioning&lt;/h2&gt;
+&lt;p&gt;Having a proper Python package already gives us the possibility to ship something that can be installed by others
+easily including its dependencies of course. But if you want to move fast also the deployment of your new model
+package needs to be as much automated as possible. You want to make sure that bug fixes end up in production
+automatically while new features need to be manually&amp;nbsp;approved. &lt;/p&gt;
+&lt;p&gt;For this reason &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; was developed which basically says that a version number is composed of
+&lt;span class="caps"&gt;MAJOR&lt;/span&gt;.&lt;span class="caps"&gt;MINOR&lt;/span&gt;.&lt;span class="caps"&gt;PATCH&lt;/span&gt; and you increment&amp;nbsp;the:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;span class="caps"&gt;MAJOR&lt;/span&gt; version when you make incompatible &lt;span class="caps"&gt;API&lt;/span&gt;&amp;nbsp;changes,&lt;/li&gt;
+&lt;li&gt;&lt;span class="caps"&gt;MINOR&lt;/span&gt; version when you add functionality in a backwards-compatible manner,&amp;nbsp;and&lt;/li&gt;
+&lt;li&gt;&lt;span class="caps"&gt;PATCH&lt;/span&gt; version when you make backwards-compatible bug&amp;nbsp;fixes.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This programming language independent concept also made its way into Python&amp;#8217;s official version identification &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt;.
+Besides &lt;span class="caps"&gt;MAJOR&lt;/span&gt;, &lt;span class="caps"&gt;MINOR&lt;/span&gt; and &lt;span class="caps"&gt;PATCH&lt;/span&gt; the version number is also extended by semantics identifying development, post and pre 
+releases. A package that was set up with PyScaffold uses the information from git to generate a &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; compatible,
+semantic  version identifier. A developer just needs to follow the conventions of &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; when tagging a
+release with&amp;nbsp;git. &lt;/p&gt;
+&lt;p&gt;Versioning becomes even more important when your company develops many interdependent packages. The effort of sticking
+to the simple conventions of &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; right from the start is just a small price to pay compared to 
+the myriad of pains in the &lt;a href="https://en.wikipedia.org/wiki/Dependency_hell"&gt;dependency hell&lt;/a&gt; you will otherwise end up in long-term. Believe me on that&amp;nbsp;one.&lt;/p&gt;
+&lt;h1&gt;Continuous&amp;nbsp;Integration&lt;/h1&gt;
+&lt;p&gt;Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (&lt;span class="caps"&gt;CI&lt;/span&gt;)
+process. For this purpose a common choice is &lt;a href="https://jenkins-ci.org/"&gt;Jenkins&lt;/a&gt; especially for proprietary software since it can be installed
+on&amp;nbsp;premise. &lt;/p&gt;
+&lt;h2&gt;Artefact&amp;nbsp;Store&lt;/h2&gt;
+&lt;p&gt;Besides the &lt;span class="caps"&gt;CI&lt;/span&gt; tool there is also a place needed to store the built packages. The term &lt;em&gt;artefact store&lt;/em&gt; is
+used commonly for a service that offers a way to store and install packages from. In the Python world the 
+Python Package Index (&lt;a href="https://pypi.python.org"&gt;PyPI&lt;/a&gt;) is the official artefact store to publish open source packages. For companies the
+on-premise equivalent is &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt;&amp;nbsp;that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;acts as a PyPI&amp;nbsp;mirror, &lt;/li&gt;
+&lt;li&gt;allows uploading, testing and staging with private&amp;nbsp;indexes,&lt;/li&gt;
+&lt;li&gt;has a nice web interface for&amp;nbsp;searching,&lt;/li&gt;
+&lt;li&gt;allows uploading and browsing the Sphinx documentation of&amp;nbsp;packages,&lt;/li&gt;
+&lt;li&gt;has user management&amp;nbsp;and&lt;/li&gt;
+&lt;li&gt;features Jenkins&amp;nbsp;integration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If all you care about is Python then devpi is the right artefact store for you. In most companies also Java is used
+and &lt;a href="http://www.sonatype.org/nexus/"&gt;Nexus&lt;/a&gt; often serves thereby already as artefact store. In this case it might be more advantageous to use Nexus also for
+storing Python packages which is available since version 3.0 to avoid the complexity of maintaining another&amp;nbsp;service.&lt;/p&gt;
+&lt;p&gt;In highly polylingual environments with many languages like Python, R, Java and C/C++ this will lead to many different
+artefact stores and various different ways of installing artefacts. A unified approach is provided by &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; since
+conda packages can be built for &lt;a href="https://conda.io/docs/user-guide/tutorials/build-postgis.html"&gt;general code projects&lt;/a&gt;. The on-premise artefact store provided by &lt;a href="https://anaconda.org/"&gt;Anaconda&lt;/a&gt; is
+called &lt;a href="https://docs.anaconda.com/anaconda-repository/"&gt;anaconda-repository&lt;/a&gt; and is part of the proprietary enterprise server. Whenever a unified approach to storing and
+installing artefacts of different languages is a major concern, &lt;a href="https://anaconda.org/"&gt;Anaconda&lt;/a&gt; might be a viable&amp;nbsp;solution.&lt;/p&gt;
+&lt;h2&gt;Indices and&amp;nbsp;Channels&lt;/h2&gt;
+&lt;p&gt;Common to all artifact stores is the availability of different &lt;em&gt;indices&lt;/em&gt; (or &lt;em&gt;channels&lt;/em&gt; in conda) to organize artefacts. 
+It is a good practice to have different indices to describe the maturity of the contained packages like &lt;em&gt;unstable&lt;/em&gt;,
+&lt;em&gt;testing&lt;/em&gt; and &lt;em&gt;stable&lt;/em&gt;. This complements the automatic &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; versioning with &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; since it allows us to 
+tell a development version which passed the unit tests (&lt;em&gt;testing&lt;/em&gt;) from a development version which did not (&lt;em&gt;unstable&lt;/em&gt;).&lt;br&gt;
+Since &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt; by default installs only stable releases, e.g. &lt;code&gt;1.0&lt;/code&gt; but not &lt;code&gt;1.0b3&lt;/code&gt;, while the &lt;code&gt;--pre&lt;/code&gt; flag 
+is needed to install unstable releases the differentiation between &lt;em&gt;testing&lt;/em&gt; and &lt;em&gt;stable&lt;/em&gt; indices is not absolutely 
+necessary. Still for organisational reasons, having an &lt;em&gt;testing&lt;/em&gt; index as input for &lt;span class="caps"&gt;QA&lt;/span&gt; and a &lt;em&gt;stable&lt;/em&gt; index that really
+only holds releases that passed the whole &lt;span class="caps"&gt;QA&lt;/span&gt; process is a good idea. Also &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; does not seem to provide an equivalent
+to the &lt;code&gt;-pre&lt;/code&gt; flag and different channels need to be&amp;nbsp;used.&lt;/p&gt;
+&lt;p&gt;One should also note that git allows to tag a single commit several times which will lead to different versions of the
+Python package having the same content. This gives means to the following convention: Let&amp;#8217;s say there was a bug in version
+&lt;code&gt;1.2&lt;/code&gt; and after two commits the bug seems to be fixed. The automatically inferred version number by PyScaffold
+will be &lt;code&gt;1.2.post0.pre2-gHASH&lt;/code&gt;. Being happy with her fix the developer tags the commit with &lt;code&gt;1.2.1rc1&lt;/code&gt; (first release
+candidate of version 1.2.1). Since all unit tests pass this patch will end up in the &lt;em&gt;testing&lt;/em&gt; index where &lt;span class="caps"&gt;QA&lt;/span&gt; can put it to the
+acid test. After that, the same commit will be tagged and signed by &lt;span class="caps"&gt;QA&lt;/span&gt; with name &lt;code&gt;1.2.1&lt;/code&gt; which results in a new package
+that can be moved to the &lt;em&gt;stable&lt;/em&gt; index&amp;nbsp;automatically.&lt;/p&gt;
+&lt;h2&gt;Automated &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;nbsp;Processs&lt;/h2&gt;
+&lt;p&gt;With this components in mind we can establish an automated &lt;span class="caps"&gt;CI&lt;/span&gt; process. Upon a new commit on a central git repository 
+the &lt;em&gt;packaging&lt;/em&gt; Jenkins job clones the repo and builds the package, e.g. with &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt;. If this is
+successful the package is uploaded to the &lt;em&gt;unstable&lt;/em&gt; index of the artefact store. Upon the successful completion of the
+packaging job a second Jenkins job for &lt;em&gt;testing&lt;/em&gt; is triggered. The reason for packaging and publishing before running
+any kind of unit tests is that already during the packaging can be major flaws that a typical unit test could never
+find. For instance, missing data files that are in the repo but not specified in the package, missing or wrong
+dependencies and so on. Therefore it is important to run unit tests always against the package installed in a clean
+environment and that is exactly what the testing job does. After having set up a fresh environment with &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;
+or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; the just published package is installed from the artefact store. 
+If this succeeds the git repo is cloned into a subfolder providing
+the unit tests (in the &lt;code&gt;tests&lt;/code&gt; subfolder). These unit tests are then executed and check the installed package. In case
+that all tests pass the package is moved from the &lt;em&gt;unstable&lt;/em&gt; index to the &lt;em&gt;testing&lt;/em&gt; index. In case the commit was
+tagged as a stable release and thus the package&amp;#8217;s version is stable according to &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; it is moved into the
+ &lt;em&gt;stable&lt;/em&gt; index. Figure 1 illustrates the complete&amp;nbsp;process.&lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/ci_build_publish.png" alt="Building and publishing a package"&gt;
+&lt;figcaption&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; The &lt;em&gt;packaging&lt;/em&gt; job clones source code repository, builds the software package and pushes
+it into the &lt;em&gt;unstable&lt;/em&gt; index of the artefact store. If these steps succeed the &lt;em&gt;testing&lt;/em&gt; job
+is triggered which installs the package from the artefact store and its dependencies into a clean environment.
+The source code reposistory is then cloned in order to run the unit tests against the installed package. If all 
+unit tests pass the package is moved into the &lt;em&gt;testing&lt;/em&gt; index of the artefact store or optionally
+to the &lt;em&gt;stable&lt;/em&gt; index if the version is a stable release.&lt;/figcaption&gt;
+&lt;/p&gt;
+&lt;/figure&gt;
+
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;It is clear that packaging, versioning and &lt;span class="caps"&gt;CI&lt;/span&gt; are just one aspect of how to bring Data Science in production. 
+Follow-up posts will shed some light on other aspects.
+Nevertheless these are quite important but often their benefits are underestimated. We have seen that proper packaging is
+crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
+of rolling out patches and in the organisation of deployment. The advantages of Continous Integration are quite obvious
+and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
+we have seen that a minimal &lt;span class="caps"&gt;CI&lt;/span&gt; setup is easy to accomplish. All together they build a fundamental corner stone of
+Data Science in&amp;nbsp;production.&lt;/p&gt;
+&lt;p&gt;Some good talks around this topic were held by &lt;a href="https://www.linkedin.com/in/sebastian-neubauer-16626a79/"&gt;Sebastian Neubauer&lt;/a&gt;, one of the acclaimed
+DevOps rock stars of Python in production. His talks &lt;a href="https://www.youtube.com/watch?v=Ad9qSbrfnvk"&gt;A Pythonic Approach to &lt;span class="caps"&gt;CI&lt;/span&gt;&lt;/a&gt; and 
+&lt;a href="https://www.youtube.com/watch?v=hnQKsxKjCUo"&gt;There should be one obvious way to bring Python into production&lt;/a&gt; perfectly complement this post and are even fun 
+to&amp;nbsp;watch.&lt;/p&gt;</content><category term="python"></category><category term="data science"></category><category term="production"></category></entry><entry><title>Efficient UD(A)Fs with PySpark</title><link href="http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/" rel="alternate"></link><published>2017-10-11T12:30:00+02:00</published><updated>2017-10-11T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2017-10-11:/2017/10/efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (&lt;span class="caps"&gt;JVM&lt;/span&gt;), it comes with Python bindings also known as &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt;, whose &lt;span class="caps"&gt;API&lt;/span&gt; was heavily influenced by …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Nowadays, Spark surely is one of the most prevalent technologies in the fields of data science and big data. Luckily, even though it is developed in Scala and runs in the Java Virtual Machine (&lt;span class="caps"&gt;JVM&lt;/span&gt;), it comes with Python bindings also known as &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt;, whose &lt;span class="caps"&gt;API&lt;/span&gt; was heavily influenced by &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;.
 With respect to functionality, modern PySpark has about the same capabilities as Pandas when it comes to typical &lt;span class="caps"&gt;ETL&lt;/span&gt; and data wrangling, e.g. groupby, aggregations and so on.
 As a general rule of thumb, one should consider an alternative to Pandas whenever the data set has more than 10,000,000 rows which, depending on the number of columns and data types, translates to about 5-10 &lt;span class="caps"&gt;GB&lt;/span&gt; of memory usage. At that point PySpark might be an option for you that does the job, but of course there are others like for instance &lt;a href="http://dask.pydata.org/en/latest/index.html"&gt;Dask&lt;/a&gt; which won&amp;#8217;t be addressed in this&amp;nbsp;post. &lt;/p&gt;
 &lt;p&gt;If you are new to Spark, one important thing to note is that Spark has two remarkable features besides its programmatic data wrangling capabilities. One is that Spark comes with &lt;span class="caps"&gt;SQL&lt;/span&gt; as an alternative way of defining queries and the other is &lt;a href="https://spark.apache.org/docs/latest/ml-guide.html"&gt;Spark MLlib&lt;/a&gt; for machine learning. Both topics are beyond the scope of this post but should be taken into account if you are considering PySpark as an alternative to Pandas and scikit-learn for larger data&amp;nbsp;sets.&lt;/p&gt;
@@ -8067,240 +8259,4 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="scikit-learn"></category><category term="machine-learning"></category><category term="python"></category><category term="causal inference"></category></entry><entry><title>Hive UDFs and UDAFs with Python</title><link href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/" rel="alternate"></link><published>2016-10-23T11:00:00+02:00</published><updated>2017-04-26T11:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2016-10-23:/2016/10/python_udf_in_hive/</id><summary type="html">&lt;p&gt;Sometimes the analytical power of &lt;a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF"&gt;built-in Hive functions&lt;/a&gt; is just not enough.
-In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
-for transformations and even aggregations which are therefore called User-Defined
-Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
-UDFs and UDAFs …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Sometimes the analytical power of &lt;a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF"&gt;built-in Hive functions&lt;/a&gt; is just not enough.
-In this case it is possible to write hand-tailored User-Defined Functions (UDFs)
-for transformations and even aggregations which are therefore called User-Defined
-Aggregation Functions (UDAFs). In this post we focus on how to write sophisticated
-UDFs and UDAFs in Python. By sophisticated we mean that our &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs should
-also be able to leverage external libraries like Numpy, Scipy, Pandas etc.
-This makes things a lot more complicated since we have to provide not only some
-Python script but also a full-blown virtual environment including the external
-libraries since they may not be available on the cluster nodes.
-Therefore, in this tutorial we require only that a basic installation of Python
-is available on the data nodes of the Hive&amp;nbsp;cluster.&lt;/p&gt;
-&lt;h2&gt;General&amp;nbsp;information&lt;/h2&gt;
-&lt;p&gt;To keep the idea behind &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs short, only some general notes are mentioned here.
-With the help of the &lt;a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Transform"&gt;Transform/Map-Reduce syntax&lt;/a&gt;, i.e. &lt;code&gt;TRANSFORM&lt;/code&gt;, it is
-possible to plug in your own custom mappers and reducers. This is where we gonna hook
-in our Python script. A &lt;span class="caps"&gt;UDF&lt;/span&gt; is basically only a transformation done by a mapper
-meaning that each row should be mapped to exactly one row. A &lt;span class="caps"&gt;UDAF&lt;/span&gt; on the
-other hand allows us to transform a group of rows into one or more rows, meaning that we
-can reduce the number of input rows to a single output row by some custom
-aggregation. We can control if the script is run in a mapper or reducer step
-by the way we formulate our HiveQL query. The statements &lt;code&gt;DISTRIBUTE BY&lt;/code&gt; and
-&lt;code&gt;CLUSTER BY&lt;/code&gt; allow us to indicate that we want to actually perform an aggregation.
-HiveQL feeds the data to the Python script or any other custom script by using
-the standard input and reads the result from its standard out. All messages from
-standard error are ignored and can therefore be used for debugging.
-Since a &lt;span class="caps"&gt;UDAF&lt;/span&gt; is more complex than a &lt;span class="caps"&gt;UDF&lt;/span&gt; and actually can be seen as a generalization
-of it, the development of a &lt;span class="caps"&gt;UDAF&lt;/span&gt; is demonstrated&amp;nbsp;here.   &lt;/p&gt;
-&lt;h2&gt;Overview and a little&amp;nbsp;task&lt;/h2&gt;
-&lt;p&gt;In order to not get lost in the details, here is what we want to achieve from
-a high-level&amp;nbsp;perspective.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Set up small example Hive table within some&amp;nbsp;database.&lt;/li&gt;
-&lt;li&gt;Create a virtual environment and upload it to Hive&amp;#8217;s distributed&amp;nbsp;cache.&lt;/li&gt;
-&lt;li&gt;Write the actual &lt;span class="caps"&gt;UDAF&lt;/span&gt; as Python script and a little helper shell&amp;nbsp;script.&lt;/li&gt;
-&lt;li&gt;Write a HiveQL query that feeds our example table into the Python&amp;nbsp;script.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Our dummy data consists of different types of vehicles (car or bike) and a price. For
-each category we want to calculate the mean and the standard deviation with the help
-of Pandas to keep things simple. It should not be necessary to mention that this
-task can be handled in HiveQL directly, so this is really only for&amp;nbsp;demonstration.&lt;/p&gt;
-&lt;h2&gt;1. Setting up our dummy&amp;nbsp;table&lt;/h2&gt;
-&lt;p&gt;With the following query we generate our sample&amp;nbsp;data:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;DATABASE&lt;/span&gt; &lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="n"&gt;USE&lt;/span&gt; &lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="nb"&gt;INT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt; &lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;price&lt;/span&gt; &lt;span class="nb"&gt;FLOAT&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;car&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;car&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;car&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;car&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;69&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;bike&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1426&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;bike&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;bike&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1234&lt;/span&gt;&lt;span class="p"&gt;.);&lt;/span&gt;
-&lt;span class="k"&gt;INSERT&lt;/span&gt; &lt;span class="k"&gt;INTO&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;VALUES&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;bike&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;null&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Note that the last row even contains a null value that we need to handle&amp;nbsp;later.&lt;/p&gt;
-&lt;h2&gt;2. Creating and uploading a virtual&amp;nbsp;environment&lt;/h2&gt;
-&lt;p&gt;In order to prepare a proper virtual environment we need to execute the following
-steps on an &lt;span class="caps"&gt;OS&lt;/span&gt; that is binary compatible to the &lt;span class="caps"&gt;OS&lt;/span&gt; on the Hive cluster. Typically
-any recent 64bit Linux distribution will&amp;nbsp;do.&lt;/p&gt;
-&lt;p&gt;We start by creating an empty virtual environment&amp;nbsp;with:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;virtualenv &amp;#8212;no-site-packages -p /usr/bin/python3&amp;nbsp;venv&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;assuming that &lt;code&gt;virtualenv&lt;/code&gt; was already installed with the help of pip. Note that
-we explicitly ask for Python 3. Who uses Python 2 these days&amp;nbsp;anyhow?&lt;/p&gt;
-&lt;p&gt;The problem with the &lt;code&gt;activate&lt;/code&gt; script of a virtual environment is that 
-its path is hard-coded. We change that by replacing the&amp;nbsp;line &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;VIRTUAL_ENV&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;your/path/to/venv&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;with&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;HERE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt; dirname &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;BASH_SOURCE&lt;/span&gt;&lt;span class="p"&gt;[0]&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;pwd&lt;/span&gt; &lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
-&lt;span class="nv"&gt;VIRTUAL_ENV&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt; readlink -f &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HERE&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/../&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;in &lt;code&gt;./venv/bin/activate&lt;/code&gt;. Additionally, we replace in &lt;code&gt;pip&lt;/code&gt; the shebang line, i.e.&amp;nbsp;replacing&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/your/path/to/venv/venv/bin/python3&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;with&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/usr/bin/env python&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This will help us later when we call &lt;code&gt;pip list&lt;/code&gt; for debugging&amp;nbsp;reasons.&lt;/p&gt;
-&lt;p&gt;We activate the virtual environment and install Pandas in&amp;nbsp;it.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;source&amp;nbsp;venv/bin/activate&lt;/p&gt;
-&lt;p&gt;pip install numpy&amp;nbsp;pandas&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;This should install Pandas and all its dependencies into our virtual environment.
-No we package the virtual environment for later deployment in the distributed&amp;nbsp;cache:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;cd&amp;nbsp;venv&lt;/p&gt;
-&lt;p&gt;tar cvfhz ../venv.tgz&amp;nbsp;./&lt;/p&gt;
-&lt;p&gt;cd&amp;nbsp;..&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Be aware that the archive was created with the actual content at its root so
-when unpacking there will be no directory holding the actual content. We also
-used the parameter &lt;code&gt;h&lt;/code&gt; to package linked&amp;nbsp;files.&lt;/p&gt;
-&lt;p&gt;Now we push the archive to &lt;span class="caps"&gt;HDFS&lt;/span&gt; so that later Hive&amp;#8217;s data nodes will be able to
-find&amp;nbsp;it:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;hdfs dfs -put venv.tgz&amp;nbsp;/tmp&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;The directory &lt;code&gt;/tmp&lt;/code&gt; should be changed accordingly. One should also note that
-in principle the same procedure should also be possible with conda environments. In
-practice though, it might be a bit more involved since the activation of a conda
-environment (what we need to do later) assumes an installation of at least
-miniconda which might not be available on the data&amp;nbsp;nodes.&lt;/p&gt;
-&lt;h2&gt;3. Writing and uploading the&amp;nbsp;scripts&lt;/h2&gt;
-&lt;p&gt;We start by writing a simple Python script &lt;code&gt;udaf.py&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;groupby&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;operator&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;itemgetter&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-
-&lt;span class="n"&gt;SEP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;NULL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;N&amp;#39;&lt;/span&gt;
-
-&lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;read_input&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input_data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;input_data&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SEP&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stream&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;read_input&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdin&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;itemgetter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
-        &lt;span class="n"&gt;_logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Reading group {}...&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="n"&gt;group&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rowid&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nan&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;price&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;NULL&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;price&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-                 &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;rowid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;price&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-        &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;vtype&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="n"&gt;output&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;()]&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SEP&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The script should be pretty much self-explanatory. We read from the standard
-input with the help of a generator that strips and splits the lines by the
-separator &lt;code&gt;\t&lt;/code&gt;. At any point we want to avoid to have more data in memory as
-needed to perform the actual computation. We use the &lt;code&gt;groupby&lt;/code&gt; function that
-is shipped with Python to iterate over our two types of vehicles. For each group
-we convert the read values to their respective data types and at that point
-also take care of &lt;code&gt;null&lt;/code&gt; values which are encoded as &lt;code&gt;\N&lt;/code&gt;. After this preprocessing
-we finally feed everything into a Pandas dataframe, do our little mean and standard
-deviation calculations and print everything as a tabular separated list.
-It should also be noted that we set up a logger at the beginning which writes
-everything to standard error. This really helps a lot with debugging and should
-be used. For demonstration purposes the vehicle type of the group currently
-processed is&amp;nbsp;printed.&lt;/p&gt;
-&lt;p&gt;At this point we would actually be done if it wasn&amp;#8217;t for the fact that we are
-importing external libraries like Pandas. So if we ran this Python script directly
-as &lt;span class="caps"&gt;UDAF&lt;/span&gt; we would see import errors if Pandas is not installed on all cluster nodes.
-But in the spirit of David Wheeler&amp;#8217;s &amp;#8220;All problems in computer science can be
-solved by another level of indirection.&amp;#8221; we just write a little helper script
-called &lt;code&gt;udaf.sh&lt;/code&gt; that does this job for us and calls the Python script&amp;nbsp;afterwards.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class="nb"&gt;set&lt;/span&gt; -e
-&lt;span class="o"&gt;(&lt;/span&gt;&amp;gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Begin of script&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;source&lt;/span&gt; ./venv.tgz/bin/activate
-&lt;span class="o"&gt;(&lt;/span&gt;&amp;gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Activated venv&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;&amp;gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt; pip list --format&lt;span class="o"&gt;=&lt;/span&gt;columns --no-cache-dir&lt;span class="o"&gt;)&lt;/span&gt;
-python udaf.py
-&lt;span class="o"&gt;(&lt;/span&gt;&amp;gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;End of script&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Again we use standard error to trace what the script is currently doing.
-Furthermore, we use &lt;code&gt;pip list&lt;/code&gt; to output the content of the virtual environment
-for debugging reasons.
-With the help of &lt;code&gt;chmod u+x&lt;/code&gt; we make the script executable and now all that&amp;#8217;s
-left is to push both files somewhere on &lt;span class="caps"&gt;HDFS&lt;/span&gt; for the cluster to&amp;nbsp;find:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;hdfs dfs -put udaf.py&amp;nbsp;/tmp&lt;/p&gt;
-&lt;p&gt;hdfs dfs -put udaf.sh&amp;nbsp;/tmp&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;4. Writing the actual HiveQL&amp;nbsp;query&lt;/h2&gt;
-&lt;p&gt;After we are all prepared and set we can write the actual HiveQL&amp;nbsp;query:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;DELETE&lt;/span&gt; &lt;span class="n"&gt;ARCHIVE&lt;/span&gt; &lt;span class="n"&gt;hdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;///&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;venv&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;ADD&lt;/span&gt; &lt;span class="n"&gt;ARCHIVE&lt;/span&gt; &lt;span class="n"&gt;hdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;///&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;venv&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;DELETE&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="n"&gt;hdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;///&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;udaf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;ADD&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="n"&gt;hdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;///&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;udaf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;DELETE&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="n"&gt;hdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;///&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;udaf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;ADD&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="n"&gt;hdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;///&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;udaf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="n"&gt;USE&lt;/span&gt; &lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="k"&gt;TRANSFORM&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;price&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;USING&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;udaf.sh&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt; &lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mean&lt;/span&gt; &lt;span class="nb"&gt;FLOAT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="nb"&gt;FLOAT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-  &lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="k"&gt;CLUSTER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;TEMP_TABLE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;At first we add the zipped virtual environment to the distributed cache that
-will be automatically unpacked for us due to the &lt;code&gt;ADD ARCHIVE&lt;/code&gt; command.
-Then we upload the Python and helper script. To make sure the current version
-in the cache is actually the latest, so in case changes are made, we
-prepended &lt;code&gt;DELETE&lt;/code&gt; statements before each &lt;code&gt;ADD&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The actual query now calls &lt;code&gt;TRANSFORM&lt;/code&gt; with the three input column we expect
-in our Python script. After the &lt;code&gt;USING&lt;/code&gt; statement our helper script is provided
-as the actual &lt;span class="caps"&gt;UDAF&lt;/span&gt; seen by HiveQL. This is followed by &lt;code&gt;AS&lt;/code&gt; defining the names
-and types of the output&amp;nbsp;columns.&lt;/p&gt;
-&lt;p&gt;At this point we need to make sure that the script is executed in a reducer step.
-We assure this by defining a subselect that reads from our &lt;code&gt;foo&lt;/code&gt; table and clusters
-by the &lt;code&gt;vtype&lt;/code&gt;. &lt;code&gt;CLUSTER BY&lt;/code&gt; which is a shortcut for &lt;code&gt;DISTRIBUTE BY&lt;/code&gt; followed by
-&lt;code&gt;SORT BY&lt;/code&gt; asserts that rows having the same &lt;code&gt;vtype&lt;/code&gt; column are also located on
-the same reducer. Furthermore, the implicit &lt;code&gt;SORT BY&lt;/code&gt; orders within a reducer
-the rows with respect to the &lt;code&gt;vtype&lt;/code&gt; column. The overall result are consecutive
-partitions of a given vehicle type (car and bike in our case) whereas each partition resides
-on a single reducer. Finally, our script is fed the whole data on a single reducer
-and needs to figure out itself where one partition ends and another one starts
-(what we did with &lt;code&gt;itertools.groupby&lt;/code&gt;).&lt;/p&gt;
-&lt;h2&gt;Finally&lt;/h2&gt;
-&lt;p&gt;Since our little task is now accomplished, it should also be noted that there
-are some more Python libraries one should know when working with Hive.
-To actually execute the HiveQL query we have written with the help of Python, there
-is &lt;a href="https://github.com/cloudera/impyla"&gt;impyla&lt;/a&gt; by Cloudera with supports Python 3 in contrast to &lt;a href="https://github.com/dropbox/PyHive"&gt;PyHive&lt;/a&gt; by Dropbox.
-In order to work with &lt;span class="caps"&gt;HDFS&lt;/span&gt; the best library around is &lt;a href="https://hdfs3.readthedocs.io/"&gt;hdfs3&lt;/a&gt;. That would
-for instance allow us to push changes in &lt;code&gt;udaf.py&lt;/code&gt; automatically with a Python&amp;nbsp;script.&lt;/p&gt;
-&lt;p&gt;Have fun hacking Hive with the power of&amp;nbsp;Python!&lt;/p&gt;</content><category term="python"></category><category term="hadoop"></category><category term="hive"></category><category term="big data"></category></entry></feed>
+&lt;/script&gt;</content><category term="scikit-learn"></category><category term="machine-learning"></category><category term="python"></category><category term="causal inference"></category></entry></feed>

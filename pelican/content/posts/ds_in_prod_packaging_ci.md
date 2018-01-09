@@ -30,7 +30,7 @@ well as *Continuous Integration* in general.
 
 Being a data scientist does not free you from proper software engineering. Of course
 most models start with a simple script or a Jupyter notebook maybe, just the essence
-of the your idea to test it quickly. But as your model evolves, the number of lines
+of your idea to test it quickly. But as your model evolves, the number of lines
 of code grow, it's always a good idea to think about the structure of your code and to
 move away from writing simple scripts to proper applications or libraries. 
 
@@ -54,9 +54,9 @@ it's incredibly useful to know which state of your code actually is in productio
 version 0.9 or already 1.0? Did the bug also occur in the last release? Most debugging starts
 with reproducing the bug locally on your machine. But what if the release is already half a 
 year old and there where major changes in its requirements? Maybe the bug is caused by one of
-its dependencies? If your package also includes its dependencies with pinned versions 
-restoring the exact some state as in production but inside a local [virtualenv][] or [conda][] environment 
-will be a matter of seconds.
+its dependencies? If your package also includes its dependencies with pinned versions, 
+restoring the exact same state as in production but inside a local [virtualenv][] or [conda][] 
+environment will be a matter of seconds.
 
 
 # Packaging and Versioning
@@ -212,14 +212,15 @@ to the <em>stable</em> index if the version is a stable release.</figcaption>
 
 # Conclusion
 
-It is clear that packaging, versioning and CI are just one aspect of how to bring Data Science in production. 
-Follow-up posts will shed some light on other aspects.
-Nevertheless these are quite important but often their benefits are underestimated. We have seen that proper packaging is
+It is clear that packaging, versioning and CI are just one aspect of how to bring Data Science in production
+and follow-up posts will shed some light on other aspects.
+Whereas these aspects are quite important, their benefits are often underestimated. We have seen that proper packaging is
 crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
 of rolling out patches and in the organisation of deployment. The advantages of Continuous Integration are quite obvious
 and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
 we have seen that a minimal CI setup is easy to accomplish. All together they build a fundamental corner stone of
-Data Science in production.
+Data Science in production. Bringing data science to production plays a crucial part in many projects at [inovex][]
+since the added value of data science only shows in production.
 
 Some good talks around this topic were held by [Sebastian Neubauer][], one of the acclaimed
 DevOps rock stars of Python in production. His talks [A Pythonic Approach to CI][] and 
@@ -256,3 +257,4 @@ to watch.
 [A Pythonic Approach to CI]: https://www.youtube.com/watch?v=Ad9qSbrfnvk
 [Sebastian Neubauer]: https://www.linkedin.com/in/sebastian-neubauer-16626a79/
 [Alice in Python projectland]: http://veekaybee.github.io/2017/09/26/python-packaging/
+[inovex]: https://www.inovex.de/en/

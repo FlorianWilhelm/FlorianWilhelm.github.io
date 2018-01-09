@@ -15,7 +15,7 @@ well as &lt;em&gt;Continuous Integration&lt;/em&gt; in&amp;nbsp;general.&lt;/p&g
 &lt;h1&gt;Packages vs.&amp;nbsp;Scripts&lt;/h1&gt;
 &lt;p&gt;Being a data scientist does not free you from proper software engineering. Of course
 most models start with a simple script or a Jupyter notebook maybe, just the essence
-of the your idea to test it quickly. But as your model evolves, the number of lines
+of your idea to test it quickly. But as your model evolves, the number of lines
 of code grow, it&amp;#8217;s always a good idea to think about the structure of your code and to
 move away from writing simple scripts to proper applications or&amp;nbsp;libraries. &lt;/p&gt;
 &lt;p&gt;In case of a Python model, that means grouping functionality into different modules 
@@ -37,9 +37,9 @@ it&amp;#8217;s incredibly useful to know which state of your code actually is in
 version 0.9 or already 1.0? Did the bug also occur in the last release? Most debugging starts
 with reproducing the bug locally on your machine. But what if the release is already half a 
 year old and there where major changes in its requirements? Maybe the bug is caused by one of
-its dependencies? If your package also includes its dependencies with pinned versions 
-restoring the exact some state as in production but inside a local &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; environment 
-will be a matter of&amp;nbsp;seconds.&lt;/p&gt;
+its dependencies? If your package also includes its dependencies with pinned versions, 
+restoring the exact same state as in production but inside a local &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; 
+environment will be a matter of&amp;nbsp;seconds.&lt;/p&gt;
 &lt;h1&gt;Packaging and&amp;nbsp;Versioning&lt;/h1&gt;
 &lt;p&gt;Python&amp;#8217;s history of packaging has had its dark times but nowadays things have pretty much settled 
 and now there is only one obvious tool left to do it, namely &lt;a href="https://setuptools.readthedocs.io/"&gt;setuptools&lt;/a&gt;. 
@@ -177,14 +177,15 @@ to the &lt;em&gt;stable&lt;/em&gt; index if the version is a stable release.&lt;
 &lt;/figure&gt;
 
 &lt;h1&gt;Conclusion&lt;/h1&gt;
-&lt;p&gt;It is clear that packaging, versioning and &lt;span class="caps"&gt;CI&lt;/span&gt; are just one aspect of how to bring Data Science in production. 
-Follow-up posts will shed some light on other aspects.
-Nevertheless these are quite important but often their benefits are underestimated. We have seen that proper packaging is
+&lt;p&gt;It is clear that packaging, versioning and &lt;span class="caps"&gt;CI&lt;/span&gt; are just one aspect of how to bring Data Science in production
+and follow-up posts will shed some light on other aspects.
+Whereas these aspects are quite important, their benefits are often underestimated. We have seen that proper packaging is
 crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
 of rolling out patches and in the organisation of deployment. The advantages of Continuous Integration are quite obvious
 and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
 we have seen that a minimal &lt;span class="caps"&gt;CI&lt;/span&gt; setup is easy to accomplish. All together they build a fundamental corner stone of
-Data Science in&amp;nbsp;production.&lt;/p&gt;
+Data Science in production. Bringing data science to production plays a crucial part in many projects at &lt;a href="https://www.inovex.de/en/"&gt;inovex&lt;/a&gt;
+since the added value of data science only shows in&amp;nbsp;production.&lt;/p&gt;
 &lt;p&gt;Some good talks around this topic were held by &lt;a href="https://www.linkedin.com/in/sebastian-neubauer-16626a79/"&gt;Sebastian Neubauer&lt;/a&gt;, one of the acclaimed
 DevOps rock stars of Python in production. His talks &lt;a href="https://www.youtube.com/watch?v=Ad9qSbrfnvk"&gt;A Pythonic Approach to &lt;span class="caps"&gt;CI&lt;/span&gt;&lt;/a&gt; and 
 &lt;a href="https://www.youtube.com/watch?v=hnQKsxKjCUo"&gt;There should be one obvious way to bring Python into production&lt;/a&gt; perfectly complement this post and are even fun 

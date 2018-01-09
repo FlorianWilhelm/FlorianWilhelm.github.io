@@ -63,7 +63,7 @@ package within a second. It is installed easily&amp;nbsp;with&lt;/p&gt;
 
 
 &lt;p&gt;or &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install pyscaffold
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install -c conda-forge pyscaffold
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -181,7 +181,7 @@ to the &lt;em&gt;stable&lt;/em&gt; index if the version is a stable release.&lt;
 Follow-up posts will shed some light on other aspects.
 Nevertheless these are quite important but often their benefits are underestimated. We have seen that proper packaging is
 crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
-of rolling out patches and in the organisation of deployment. The advantages of Continous Integration are quite obvious
+of rolling out patches and in the organisation of deployment. The advantages of Continuous Integration are quite obvious
 and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
 we have seen that a minimal &lt;span class="caps"&gt;CI&lt;/span&gt; setup is easy to accomplish. All together they build a fundamental corner stone of
 Data Science in&amp;nbsp;production.&lt;/p&gt;

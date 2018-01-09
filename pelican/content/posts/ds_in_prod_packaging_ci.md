@@ -85,7 +85,7 @@ pip install pyscaffold
 ```
 or 
 ```shell
-conda install pyscaffold
+conda install -c conda-forge pyscaffold
 ```
 if you prefer [conda][] over [pip][]. Generating now a project `Scikit-AI` with a package `skai` is just 
 a matter of typing a single command:
@@ -216,7 +216,7 @@ It is clear that packaging, versioning and CI are just one aspect of how to brin
 Follow-up posts will shed some light on other aspects.
 Nevertheless these are quite important but often their benefits are underestimated. We have seen that proper packaging is
 crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
-of rolling out patches and in the organisation of deployment. The advantages of Continous Integration are quite obvious
+of rolling out patches and in the organisation of deployment. The advantages of Continuous Integration are quite obvious
 and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
 we have seen that a minimal CI setup is easy to accomplish. All together they build a fundamental corner stone of
 Data Science in production.

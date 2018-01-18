@@ -9,7 +9,7 @@ status: published
 summary: A common pattern in most data science projects I participated in is that it's all fun and games until someone wants to put it into production. All of a sudden the crucial question is how to deploy your model, which version, how can updates be rolled out, which requirements are needed and ...
 ---
 
-# Motivation
+## Motivation
 
 A common pattern in most data science projects I participated in is that it's all 
 fun and games until someone wants to put it into production. From that point in time on
@@ -26,7 +26,7 @@ to it. This is the first in a series of posts about *data science in production*
 focuses on aspects of modern software engineering like *packaging*, *versioning* as
 well as *Continuous Integration* in general.
 
-# Packages vs. Scripts
+## Packages vs. Scripts
 
 Being a data scientist does not free you from proper software engineering. Of course
 most models start with a simple script or a Jupyter notebook maybe, just the essence
@@ -59,7 +59,7 @@ restoring the exact same state as in production but inside a local [virtualenv][
 environment will be a matter of seconds.
 
 
-# Packaging and Versioning
+## Packaging and Versioning
 
 Python's history of packaging has had its dark times but nowadays things have pretty much settled 
 and now there is only one obvious tool left to do it, namely [setuptools][]. 
@@ -76,7 +76,7 @@ is [sphinx][] for documentation, testing tools like [pytest][] and [tox][] as we
 little helpers to consider when setting up a Python package. Already scared off of Python packaging?
 Hold your breath, there is no reason to be.
 
-## PyScaffold
+### PyScaffold
 
 Luckily there is one tool to rule them all, [PyScaffold][], which provides a proper Python 
 package within a second. It is installed easily with
@@ -107,7 +107,7 @@ where also example configuration files for Travis and tox will be created. The a
 with the flag `-d` is used where appropriate as is the url passed by `-u`. As usual with shell commands,
 `putup --help` provides information about the various arguments.
 
-## Versioning
+### Versioning
 
 Having a proper Python package already gives us the possibility to ship something that can be installed by others
 easily including its dependencies of course. But if you want to move fast also the deployment of your new model
@@ -131,13 +131,13 @@ Versioning becomes even more important when your company develops many interdepe
 to the simple conventions of [Semantic Versioning][] right from the start is just a small price to pay compared to 
 the myriad of pains in the [dependency hell] you will otherwise end up in long-term. Believe me on that one.
 
-# Continuous Integration
+## Continuous Integration
 
 Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (CI)
 process. For this purpose a common choice is [Jenkins][] especially for proprietary software since it can be installed
 on premise. 
 
-## Artefact Store
+### Artefact Store
 
 Besides the CI tool there is also a place needed to store the built packages. The term *artefact store* is
 used commonly for a service that offers a way to store and install packages from. In the Python world the 
@@ -161,7 +161,7 @@ conda packages can be built for [general code projects][]. The on-premise artefa
 called [anaconda-repository][] and is part of the proprietary enterprise server. Whenever a unified approach to storing and
 installing artefacts of different languages is a major concern, [Anaconda][] might be a viable solution.
 
-## Indices and Channels
+### Indices and Channels
 
 Common to all artifact stores is the availability of different *indices* (or *channels* in conda) to organize artefacts. 
 It is a good practice to have different indices to describe the maturity of the contained packages like *unstable*,
@@ -181,7 +181,7 @@ candidate of version 1.2.1). Since all unit tests pass this patch will end up in
 acid test. After that, the same commit will be tagged and signed by QA with name `1.2.1` which results in a new package
 that can be moved to the *stable* index automatically.
 
-## Automated CI Processs
+### Automated CI Process
 
 With this components in mind we can establish an automated CI process. Upon a new commit on a central git repository 
 the *packaging* Jenkins job clones the repo and builds the package, e.g. with `python setup.py bdist_wheel`. If this is
@@ -210,7 +210,7 @@ to the <em>stable</em> index if the version is a stable release.</figcaption>
 </p>
 </figure>
 
-# Conclusion
+## Conclusion
 
 It is clear that packaging, versioning and CI are just one aspect of how to bring Data Science in production
 and follow-up posts will shed some light on other aspects.

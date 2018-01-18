@@ -294,3 +294,21 @@ ToDo:
 17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/unicode_utils.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcache/application_1506607653040_28748/spark-cba2d06c-17c3-4bdc-8822-4c9e580082a0/-12144712641508143654572_cache/fetchFileTemp1280669822013434575.tmp
 17/10/16 09:01:43 INFO util.Utils: Fetching hdfs://nameservice1/user/mo-hadoop-uc-perso/venv/v1.0.x/setuptools/version.py to /data/dn01/yarn/usercache/mo-hadoop-uc-perso/appcac
 ```
+
+
+Siehe auch die Praesentation des Hadoop summits
+
+dann auch handling von config files mit 
+
+def spark_files_path(path='./'):
+    """Given a file path return the actual filepath as stored with SparkFiles
+
+    Args:
+        path (str): conical path as used to push a file
+
+    Returns:
+        str: actual path where the file was stored
+    """
+    return os.path.join(SparkFiles.getRootDirectory(), path)
+
+

@@ -9,7 +9,7 @@ status: published
 summary: Declarative Programming is a programming paradigm that focuses on describing *what* should be computed in a problem domain without describing *how* it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday life. 
 ---
 
-# Motivation
+## Motivation
 
 Before we actually dive into this topic, imagine the following: 
 You just moved to a new place and the time is ripe for a little house-warming dinner with your best friends Alice and Bob.
@@ -28,7 +28,7 @@ and this is not even the worst part. You also made a lot of error-prone assumpti
 take the train to get to your city and not by some online ridesharing community which might have been a lot
 cheaper and faster.
 
-# Declarative Thinking
+## Declarative Thinking
 
 If we now transfer this example to programming we would describe the way of interaction with Alice as *declarative* and
 the interaction with Bob as *imperative*. So in a nutshell, *declarative* programming is writing code in a way that
@@ -69,7 +69,7 @@ The *Law of Leaky Abstractions* by Spolsky even states that "All non-trivial abs
 Beside this caveat, abstractions are still a powerful tool to handle complexity. 
 
 
-# Declarative Programming
+## Declarative Programming
  
 After having established some understanding of declarative programming and the general idea behind it, the focus is now
 to apply this to programming with Python. We start with some simple example. Let's imagine we want the list of squared

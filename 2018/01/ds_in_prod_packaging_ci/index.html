@@ -267,7 +267,7 @@ Florian Wilhelm            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <h1>Motivation</h1>
+                <h2>Motivation</h2>
 <p>A common pattern in most data science projects I participated in is that it&#8217;s all 
 fun and games until someone wants to put it into production. From that point in time on
 no one will any longer give you a pat on the back for a high accuracy and smart
@@ -280,7 +280,7 @@ by cloning a git repo and run by some Jenkins jobs with a dash of&nbsp;Bash.</p>
 to it. This is the first in a series of posts about <em>data science in production</em> and
 focuses on aspects of modern software engineering like <em>packaging</em>, <em>versioning</em> as
 well as <em>Continuous Integration</em> in&nbsp;general.</p>
-<h1>Packages vs.&nbsp;Scripts</h1>
+<h2>Packages vs.&nbsp;Scripts</h2>
 <p>Being a data scientist does not free you from proper software engineering. Of course
 most models start with a simple script or a Jupyter notebook maybe, just the essence
 of your idea to test it quickly. But as your model evolves, the number of lines
@@ -308,7 +308,7 @@ year old and there where major changes in its requirements? Maybe the bug is cau
 its dependencies? If your package also includes its dependencies with pinned versions, 
 restoring the exact same state as in production but inside a local <a href="https://virtualenv.pypa.io/">virtualenv</a> or <a href="https://conda.io/">conda</a> 
 environment will be a matter of&nbsp;seconds.</p>
-<h1>Packaging and&nbsp;Versioning</h1>
+<h2>Packaging and&nbsp;Versioning</h2>
 <p>Python&#8217;s history of packaging has had its dark times but nowadays things have pretty much settled 
 and now there is only one obvious tool left to do it, namely <a href="https://setuptools.readthedocs.io/">setuptools</a>. 
 An official Python <a href="https://packaging.python.org/tutorials/distributing-packages/">packaging tutorial</a> and many user articles like <a href="http://veekaybee.github.io/2017/09/26/python-packaging/">Alice in Python projectland</a> 
@@ -323,7 +323,7 @@ composed of many specialised tools. Besides <a href="https://setuptools.readthed
 is <a href="http://www.sphinx-doc.org/">sphinx</a> for documentation, testing tools like <a href="https://docs.pytest.org/">pytest</a> and <a href="https://tox.readthedocs.io/">tox</a> as well as many other
 little helpers to consider when setting up a Python package. Already scared off of Python packaging?
 Hold your breath, there is no reason to&nbsp;be.</p>
-<h2>PyScaffold</h2>
+<h3>PyScaffold</h3>
 <p>Luckily there is one tool to rule them all, <a href="http://pyscaffold.org/">PyScaffold</a>, which provides a proper Python 
 package within a second. It is installed easily&nbsp;with</p>
 <div class="highlight"><pre><span></span>pip install pyscaffold
@@ -355,7 +355,7 @@ and many&nbsp;more.</p>
 <p>where also example configuration files for Travis and tox will be created. The additionally provided short description
 with the flag <code>-d</code> is used where appropriate as is the url passed by <code>-u</code>. As usual with shell commands,
 <code>putup --help</code> provides information about the various&nbsp;arguments.</p>
-<h2>Versioning</h2>
+<h3>Versioning</h3>
 <p>Having a proper Python package already gives us the possibility to ship something that can be installed by others
 easily including its dependencies of course. But if you want to move fast also the deployment of your new model
 package needs to be as much automated as possible. You want to make sure that bug fixes end up in production
@@ -375,11 +375,11 @@ release with&nbsp;git. </p>
 <p>Versioning becomes even more important when your company develops many interdependent packages. The effort of sticking
 to the simple conventions of <a href="https://semver.org/">Semantic Versioning</a> right from the start is just a small price to pay compared to 
 the myriad of pains in the <a href="https://en.wikipedia.org/wiki/Dependency_hell">dependency hell</a> you will otherwise end up in long-term. Believe me on that&nbsp;one.</p>
-<h1>Continuous&nbsp;Integration</h1>
+<h2>Continuous&nbsp;Integration</h2>
 <p>Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (<span class="caps">CI</span>)
 process. For this purpose a common choice is <a href="https://jenkins-ci.org/">Jenkins</a> especially for proprietary software since it can be installed
 on&nbsp;premise. </p>
-<h2>Artefact&nbsp;Store</h2>
+<h3>Artefact&nbsp;Store</h3>
 <p>Besides the <span class="caps">CI</span> tool there is also a place needed to store the built packages. The term <em>artefact store</em> is
 used commonly for a service that offers a way to store and install packages from. In the Python world the 
 Python Package Index (<a href="https://pypi.python.org">PyPI</a>) is the official artefact store to publish open source packages. For companies the
@@ -400,7 +400,7 @@ artefact stores and various different ways of installing artefacts. A unified ap
 conda packages can be built for <a href="https://conda.io/docs/user-guide/tutorials/build-postgis.html">general code projects</a>. The on-premise artefact store provided by <a href="https://anaconda.org/">Anaconda</a> is
 called <a href="https://docs.anaconda.com/anaconda-repository/">anaconda-repository</a> and is part of the proprietary enterprise server. Whenever a unified approach to storing and
 installing artefacts of different languages is a major concern, <a href="https://anaconda.org/">Anaconda</a> might be a viable&nbsp;solution.</p>
-<h2>Indices and&nbsp;Channels</h2>
+<h3>Indices and&nbsp;Channels</h3>
 <p>Common to all artifact stores is the availability of different <em>indices</em> (or <em>channels</em> in conda) to organize artefacts. 
 It is a good practice to have different indices to describe the maturity of the contained packages like <em>unstable</em>,
 <em>testing</em> and <em>stable</em>. This complements the automatic <a href="https://www.python.org/dev/peps/pep-0440/"><span class="caps">PEP440</span></a> versioning with <a href="http://pyscaffold.org/">PyScaffold</a> since it allows us to 
@@ -417,7 +417,7 @@ will be <code>1.2.post0.pre2-gHASH</code>. Being happy with her fix the develope
 candidate of version 1.2.1). Since all unit tests pass this patch will end up in the <em>testing</em> index where <span class="caps">QA</span> can put it to the
 acid test. After that, the same commit will be tagged and signed by <span class="caps">QA</span> with name <code>1.2.1</code> which results in a new package
 that can be moved to the <em>stable</em> index&nbsp;automatically.</p>
-<h2>Automated <span class="caps">CI</span>&nbsp;Processs</h2>
+<h3>Automated <span class="caps">CI</span>&nbsp;Process</h3>
 <p>With this components in mind we can establish an automated <span class="caps">CI</span> process. Upon a new commit on a central git repository 
 the <em>packaging</em> Jenkins job clones the repo and builds the package, e.g. with <code>python setup.py bdist_wheel</code>. If this is
 successful the package is uploaded to the <em>unstable</em> index of the artefact store. Upon the successful completion of the
@@ -444,7 +444,7 @@ to the <em>stable</em> index if the version is a stable release.</figcaption>
 </p>
 </figure>
 
-<h1>Conclusion</h1>
+<h2>Conclusion</h2>
 <p>It is clear that packaging, versioning and <span class="caps">CI</span> are just one aspect of how to bring Data Science in production
 and follow-up posts will shed some light on other aspects.
 Whereas these aspects are quite important, their benefits are often underestimated. We have seen that proper packaging is

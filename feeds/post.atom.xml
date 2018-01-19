@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2018-01-08T12:00:00+01:00</updated><entry><title>Data Science in Production: Packaging, Versioning and Continuous Integration</title><link href="http://www.florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/" rel="alternate"></link><published>2018-01-08T12:00:00+01:00</published><updated>2018-01-08T12:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2018-01-08:/2018/01/ds_in_prod_packaging_ci/</id><summary type="html">&lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all fun and games until someone wants to put it into production. All of a sudden the crucial question is how to deploy your model, which version, how can updates be rolled out, which requirements are needed and&amp;nbsp;&amp;#8230;&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Motivation&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2018-01-08T12:00:00+01:00</updated><entry><title>Data Science in Production: Packaging, Versioning and Continuous Integration</title><link href="http://www.florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/" rel="alternate"></link><published>2018-01-08T12:00:00+01:00</published><updated>2018-01-08T12:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2018-01-08:/2018/01/ds_in_prod_packaging_ci/</id><summary type="html">&lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all fun and games until someone wants to put it into production. All of a sudden the crucial question is how to deploy your model, which version, how can updates be rolled out, which requirements are needed and&amp;nbsp;&amp;#8230;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all 
 fun and games until someone wants to put it into production. From that point in time on
 no one will any longer give you a pat on the back for a high accuracy and smart
@@ -12,7 +12,7 @@ by cloning a git repo and run by some Jenkins jobs with a dash of&amp;nbsp;Bash.
 to it. This is the first in a series of posts about &lt;em&gt;data science in production&lt;/em&gt; and
 focuses on aspects of modern software engineering like &lt;em&gt;packaging&lt;/em&gt;, &lt;em&gt;versioning&lt;/em&gt; as
 well as &lt;em&gt;Continuous Integration&lt;/em&gt; in&amp;nbsp;general.&lt;/p&gt;
-&lt;h1&gt;Packages vs.&amp;nbsp;Scripts&lt;/h1&gt;
+&lt;h2&gt;Packages vs.&amp;nbsp;Scripts&lt;/h2&gt;
 &lt;p&gt;Being a data scientist does not free you from proper software engineering. Of course
 most models start with a simple script or a Jupyter notebook maybe, just the essence
 of your idea to test it quickly. But as your model evolves, the number of lines
@@ -40,7 +40,7 @@ year old and there where major changes in its requirements? Maybe the bug is cau
 its dependencies? If your package also includes its dependencies with pinned versions, 
 restoring the exact same state as in production but inside a local &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; 
 environment will be a matter of&amp;nbsp;seconds.&lt;/p&gt;
-&lt;h1&gt;Packaging and&amp;nbsp;Versioning&lt;/h1&gt;
+&lt;h2&gt;Packaging and&amp;nbsp;Versioning&lt;/h2&gt;
 &lt;p&gt;Python&amp;#8217;s history of packaging has had its dark times but nowadays things have pretty much settled 
 and now there is only one obvious tool left to do it, namely &lt;a href="https://setuptools.readthedocs.io/"&gt;setuptools&lt;/a&gt;. 
 An official Python &lt;a href="https://packaging.python.org/tutorials/distributing-packages/"&gt;packaging tutorial&lt;/a&gt; and many user articles like &lt;a href="http://veekaybee.github.io/2017/09/26/python-packaging/"&gt;Alice in Python projectland&lt;/a&gt; 
@@ -55,7 +55,7 @@ composed of many specialised tools. Besides &lt;a href="https://setuptools.readt
 is &lt;a href="http://www.sphinx-doc.org/"&gt;sphinx&lt;/a&gt; for documentation, testing tools like &lt;a href="https://docs.pytest.org/"&gt;pytest&lt;/a&gt; and &lt;a href="https://tox.readthedocs.io/"&gt;tox&lt;/a&gt; as well as many other
 little helpers to consider when setting up a Python package. Already scared off of Python packaging?
 Hold your breath, there is no reason to&amp;nbsp;be.&lt;/p&gt;
-&lt;h2&gt;PyScaffold&lt;/h2&gt;
+&lt;h3&gt;PyScaffold&lt;/h3&gt;
 &lt;p&gt;Luckily there is one tool to rule them all, &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt;, which provides a proper Python 
 package within a second. It is installed easily&amp;nbsp;with&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pyscaffold
@@ -87,7 +87,7 @@ and many&amp;nbsp;more.&lt;/p&gt;
 &lt;p&gt;where also example configuration files for Travis and tox will be created. The additionally provided short description
 with the flag &lt;code&gt;-d&lt;/code&gt; is used where appropriate as is the url passed by &lt;code&gt;-u&lt;/code&gt;. As usual with shell commands,
 &lt;code&gt;putup --help&lt;/code&gt; provides information about the various&amp;nbsp;arguments.&lt;/p&gt;
-&lt;h2&gt;Versioning&lt;/h2&gt;
+&lt;h3&gt;Versioning&lt;/h3&gt;
 &lt;p&gt;Having a proper Python package already gives us the possibility to ship something that can be installed by others
 easily including its dependencies of course. But if you want to move fast also the deployment of your new model
 package needs to be as much automated as possible. You want to make sure that bug fixes end up in production
@@ -107,11 +107,11 @@ release with&amp;nbsp;git. &lt;/p&gt;
 &lt;p&gt;Versioning becomes even more important when your company develops many interdependent packages. The effort of sticking
 to the simple conventions of &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; right from the start is just a small price to pay compared to 
 the myriad of pains in the &lt;a href="https://en.wikipedia.org/wiki/Dependency_hell"&gt;dependency hell&lt;/a&gt; you will otherwise end up in long-term. Believe me on that&amp;nbsp;one.&lt;/p&gt;
-&lt;h1&gt;Continuous&amp;nbsp;Integration&lt;/h1&gt;
+&lt;h2&gt;Continuous&amp;nbsp;Integration&lt;/h2&gt;
 &lt;p&gt;Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (&lt;span class="caps"&gt;CI&lt;/span&gt;)
 process. For this purpose a common choice is &lt;a href="https://jenkins-ci.org/"&gt;Jenkins&lt;/a&gt; especially for proprietary software since it can be installed
 on&amp;nbsp;premise. &lt;/p&gt;
-&lt;h2&gt;Artefact&amp;nbsp;Store&lt;/h2&gt;
+&lt;h3&gt;Artefact&amp;nbsp;Store&lt;/h3&gt;
 &lt;p&gt;Besides the &lt;span class="caps"&gt;CI&lt;/span&gt; tool there is also a place needed to store the built packages. The term &lt;em&gt;artefact store&lt;/em&gt; is
 used commonly for a service that offers a way to store and install packages from. In the Python world the 
 Python Package Index (&lt;a href="https://pypi.python.org"&gt;PyPI&lt;/a&gt;) is the official artefact store to publish open source packages. For companies the
@@ -132,7 +132,7 @@ artefact stores and various different ways of installing artefacts. A unified ap
 conda packages can be built for &lt;a href="https://conda.io/docs/user-guide/tutorials/build-postgis.html"&gt;general code projects&lt;/a&gt;. The on-premise artefact store provided by &lt;a href="https://anaconda.org/"&gt;Anaconda&lt;/a&gt; is
 called &lt;a href="https://docs.anaconda.com/anaconda-repository/"&gt;anaconda-repository&lt;/a&gt; and is part of the proprietary enterprise server. Whenever a unified approach to storing and
 installing artefacts of different languages is a major concern, &lt;a href="https://anaconda.org/"&gt;Anaconda&lt;/a&gt; might be a viable&amp;nbsp;solution.&lt;/p&gt;
-&lt;h2&gt;Indices and&amp;nbsp;Channels&lt;/h2&gt;
+&lt;h3&gt;Indices and&amp;nbsp;Channels&lt;/h3&gt;
 &lt;p&gt;Common to all artifact stores is the availability of different &lt;em&gt;indices&lt;/em&gt; (or &lt;em&gt;channels&lt;/em&gt; in conda) to organize artefacts. 
 It is a good practice to have different indices to describe the maturity of the contained packages like &lt;em&gt;unstable&lt;/em&gt;,
 &lt;em&gt;testing&lt;/em&gt; and &lt;em&gt;stable&lt;/em&gt;. This complements the automatic &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; versioning with &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; since it allows us to 
@@ -149,7 +149,7 @@ will be &lt;code&gt;1.2.post0.pre2-gHASH&lt;/code&gt;. Being happy with her fix 
 candidate of version 1.2.1). Since all unit tests pass this patch will end up in the &lt;em&gt;testing&lt;/em&gt; index where &lt;span class="caps"&gt;QA&lt;/span&gt; can put it to the
 acid test. After that, the same commit will be tagged and signed by &lt;span class="caps"&gt;QA&lt;/span&gt; with name &lt;code&gt;1.2.1&lt;/code&gt; which results in a new package
 that can be moved to the &lt;em&gt;stable&lt;/em&gt; index&amp;nbsp;automatically.&lt;/p&gt;
-&lt;h2&gt;Automated &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;nbsp;Processs&lt;/h2&gt;
+&lt;h3&gt;Automated &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;nbsp;Process&lt;/h3&gt;
 &lt;p&gt;With this components in mind we can establish an automated &lt;span class="caps"&gt;CI&lt;/span&gt; process. Upon a new commit on a central git repository 
 the &lt;em&gt;packaging&lt;/em&gt; Jenkins job clones the repo and builds the package, e.g. with &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt;. If this is
 successful the package is uploaded to the &lt;em&gt;unstable&lt;/em&gt; index of the artefact store. Upon the successful completion of the
@@ -176,7 +176,7 @@ to the &lt;em&gt;stable&lt;/em&gt; index if the version is a stable release.&lt;
 &lt;/p&gt;
 &lt;/figure&gt;
 
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;It is clear that packaging, versioning and &lt;span class="caps"&gt;CI&lt;/span&gt; are just one aspect of how to bring Data Science in production
 and follow-up posts will shed some light on other aspects.
 Whereas these aspects are quite important, their benefits are often underestimated. We have seen that proper packaging is
@@ -513,7 +513,7 @@ Therefore, this approach should be applicable to a variety of use cases where th
 &lt;p&gt;To wrap it up, this blog post gives you a template on how to write PySpark &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs while abstracting all the boilerplate in a dedicated module.
 We also went down the rabbit hole to explore the technical difficulties the Spark developers face in providing Python bindings to a distributed &lt;span class="caps"&gt;JVM&lt;/span&gt;-based system.
 In this respect we are really looking forward to closer integration of &lt;a href="http://arrow.apache.org/"&gt;Apache Arrow&lt;/a&gt; and Spark in the upcoming Spark 2.3 and future&amp;nbsp;versions.&lt;/p&gt;
-&lt;p&gt;This article was coauthored by my inovex colleague &lt;em&gt;Bernhard Schäfer&lt;/em&gt; and was also published on the &lt;a href="https://www.inovex.de/blog/"&gt;inovex blog&lt;/a&gt;.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="big data"></category></entry><entry><title>Declarative Thinking and Programming</title><link href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/" rel="alternate"></link><published>2017-07-25T11:15:00+02:00</published><updated>2017-07-25T11:15:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2017-07-25:/2017/07/declarative_thinking_and_programming/</id><summary type="html">&lt;p&gt;Declarative Programming is a programming paradigm that focuses on describing &lt;em&gt;what&lt;/em&gt; should be computed in a problem domain without describing &lt;em&gt;how&lt;/em&gt; it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday&amp;nbsp;life.&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;This article was coauthored by my inovex colleague &lt;em&gt;Bernhard Schäfer&lt;/em&gt; and was also published on the &lt;a href="https://www.inovex.de/blog/"&gt;inovex blog&lt;/a&gt;.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="big data"></category></entry><entry><title>Declarative Thinking and Programming</title><link href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/" rel="alternate"></link><published>2017-07-25T11:15:00+02:00</published><updated>2017-07-25T11:15:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2017-07-25:/2017/07/declarative_thinking_and_programming/</id><summary type="html">&lt;p&gt;Declarative Programming is a programming paradigm that focuses on describing &lt;em&gt;what&lt;/em&gt; should be computed in a problem domain without describing &lt;em&gt;how&lt;/em&gt; it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday&amp;nbsp;life.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;Before we actually dive into this topic, imagine the following: 
 You just moved to a new place and the time is ripe for a little house-warming dinner with your best friends Alice and Bob.
 Since Alice is really tech-savvy you just send her a digital invitation with date, time and of course your new address
@@ -529,7 +529,7 @@ accomplish these. By doing so you left the level of organizing a dinner and went
 and this is not even the worst part. You also made a lot of error-prone assumptions that for instance Bob is gonna 
 take the train to get to your city and not by some online ridesharing community which might have been a lot
 cheaper and&amp;nbsp;faster.&lt;/p&gt;
-&lt;h1&gt;Declarative&amp;nbsp;Thinking&lt;/h1&gt;
+&lt;h2&gt;Declarative&amp;nbsp;Thinking&lt;/h2&gt;
 &lt;p&gt;If we now transfer this example to programming we would describe the way of interaction with Alice as &lt;em&gt;declarative&lt;/em&gt; and
 the interaction with Bob as &lt;em&gt;imperative&lt;/em&gt;. So in a nutshell, &lt;em&gt;declarative&lt;/em&gt; programming is writing code in a way that
 describes &lt;em&gt;what&lt;/em&gt; you want to do and not &lt;em&gt;how&lt;/em&gt; you want to do it. Sounds simple enough, right? But actually the difference
@@ -564,7 +564,7 @@ such a well-conceived theoretical foundation as the relational algebra is in pra
 quite easily when looking at two different but logically equivalent queries differing in performance by orders of magnitude.
 The &lt;em&gt;Law of Leaky Abstractions&lt;/em&gt; by Spolsky even states that &amp;#8220;All non-trivial abstractions, to some degree, are leaky.&amp;#8221;
 Beside this caveat, abstractions are still a powerful tool to handle&amp;nbsp;complexity. &lt;/p&gt;
-&lt;h1&gt;Declarative&amp;nbsp;Programming&lt;/h1&gt;
+&lt;h2&gt;Declarative&amp;nbsp;Programming&lt;/h2&gt;
 &lt;p&gt;After having established some understanding of declarative programming and the general idea behind it, the focus is now
 to apply this to programming with Python. We start with some simple example. Let&amp;#8217;s imagine we want the list of squared
  numbers from 1 to 10. The obvious approach would&amp;nbsp;be:&lt;/p&gt;

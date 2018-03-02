@@ -43,7 +43,7 @@ activate_env.py /my_venvs/venv
 And here is how ``activate_env.py`` looks like:
 ```python
 """
-Bootstrap file for running the `my_pyspark_app` on Spark
+Bootstrapping an isolated environment for `my_pyspark_app` on Spark
 """
 import os
 import sys
@@ -132,7 +132,7 @@ It is actually easier than it looks. In the ``main`` function we initialize the 
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/pyspark_venv.png" alt="Isolated environment with PySpark">
-<figcaption><strong>Figure:</strong>Executing <em>spark-submit</em> uploads our <em>activate_env.py</em> module and starts a Spark driver process. Thereafter, <em>activate_env.py</em> bootstraps our <em>venv</em> environment on the Spark driver as well as on the executors. Finally, <em>activate_env.py</em> relinquishes control to <em>my_pyspark_app</em>.</figcaption>
+<figcaption><strong>Figure:</strong> Executing <em>spark-submit</em> uploads our <em>activate_env.py</em> module and starts a Spark driver process. Thereafter, <em>activate_env.py</em> bootstraps our <em>venv</em> environment on the Spark driver as well as on the executors. Finally, <em>activate_env.py</em> relinquishes control to <em>my_pyspark_app</em>.</figcaption>
 </p>
 </figure>
 

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Managing isolated Environments with PySpark - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+
+/*some stuff for output/input prompts*/
+div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
+div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
+div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
+div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
+@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
+div.prompt:empty{padding-top:0;padding-bottom:0}
+div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
+div.inner_cell{width:90%;}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
+div.input_prompt{color:navy;border-top:1px solid transparent;}
+div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
+div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
+div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
+div.output_prompt{color:darkred;}
+
+a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
+h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
+/* end stuff for output/input prompts*/
+
+
+.highlight-ipynb .hll { background-color: #ffffcc }
+.highlight-ipynb  { background: #f8f8f8; }
+.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
+.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
+.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight-ipynb .o { color: #666666 } /* Operator */
+.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
+.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
+.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
+.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
+.highlight-ipynb .go { color: #888888 } /* Generic.Output */
+.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
+.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
+.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
+.highlight-ipynb .m { color: #666666 } /* Literal.Number */
+.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
+.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
+.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
+.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight-ipynb .no { color: #880000 } /* Name.Constant */
+.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
+.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
+.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
+.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
+.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
+.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
+.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
+.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
+.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+div.entry-content {
+  overflow: visible;
+  padding: 8px;
+}
+.input_area {
+  padding: 0.2em;
+}
+
+a.heading-anchor {
+ white-space: normal;
+}
+
+.rendered_html
+code {
+ font-size: .8em;
+}
+
+pre.ipynb {
+  color: black;
+  background: #f7f7f7;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0px;
+  font-size: 13px;
+}
+
+/* remove the prompt div from text cells */
+div.text_cell .prompt {
+    display: none;
+}
+
+/* remove horizontal padding from text cells, */
+/* so it aligns with outer body text */
+div.text_cell_render {
+    padding: 0.5em 0em;
+}
+
+img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+</style>
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+
+<link rel="canonical" href="http://www.florianwilhelm.info/drafts/isolated_environments_with_pyspark.html">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="spark,python,production" />
+        <meta name="description" content="With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how …" />
+
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Managing isolated Environments with PySpark"/>
+        <meta property="og:url" content="http://www.florianwilhelm.info/drafts/isolated_environments_with_pyspark.html"/>
+        <meta property="og:description" content="With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how …"/>
+        <meta property="article:published_time" content="2018-03-01" />
+            <meta property="article:section" content="article" />
+            <meta property="article:tag" content="spark" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="production" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="http://www.florianwilhelm.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://www.florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://www.florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="http://www.florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+
+
+        <link href="http://www.florianwilhelm.info/feeds/article.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm article ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://www.florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://www.florianwilhelm.info/drafts/isolated_environments_with_pyspark.html"
+                       rel="bookmark"
+                       title="Permalink to Managing isolated Environments with PySpark">
+                        Managing isolated Environments with&nbsp;PySpark
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2018-03-01T12:30:00+01:00"> Mar. 01, 2018</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://www.florianwilhelm.info/tag/spark/">spark</a>
+        /
+	<a href="http://www.florianwilhelm.info/tag/python/">python</a>
+        /
+	<a href="http://www.florianwilhelm.info/tag/production/">production</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how to count&nbsp;words. </p>
+<p>In contrast to that, resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in an isolated environment with PySpark are scarce. A nice exception to that is a <a href="https://developerzen.com/best-practices-writing-production-grade-pyspark-jobs-cb688ac4d20f">blog post by Eran Kampf</a>.</p>
+<p>For most Spark/Hadoop distributions, in my case Cloudera, the best-practise according to Cloudera&#8217;s <a href="https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5">documentation</a> and two blog posts by post by <a href="http://blog.cloudera.com/blog/2016/02/making-python-on-apache-hadoop-easier-with-anaconda-and-cdh/">Juliet Hougland et al.</a> and <a href="http://blog.cloudera.com/blog/2015/09/how-to-prepare-your-apache-hadoop-cluster-for-pyspark-jobs/">Juliet Hougland</a> seems to be that you (or rather a sysadmin) sets up a dedicated virtual environment (with <a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> or <a href="https://conda.io/docs/intro.html">conda</a>) on all nodes of your cluster. This virtual environment can then be used by your PySpark application. The drawback of this approach are as severe as obvious. Either your data scientists have permission to access the actual cluster hosts or the Cloudera Manager Admin Console with all implications following from this or your sysadmins have a lot of fun setting up hundreds of virtual environments on a daily&nbsp;basis. </p>
+<p>Therefore, we need to empower the data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues (<a href="https://issues.apache.org/jira/browse/SPARK-13587"><span class="caps">SPARK</span>-13587</a> <span class="amp">&amp;</span> <a href="https://issues.apache.org/jira/browse/SPARK-16367"><span class="caps">SPARK</span>-16367</a>) suggest solutions but none are implemented yet. The most matured solution is actually <a href="https://github.com/nteract/coffee_boat">coffee boat</a> which is still in beta and not meant for production. Therefore, we want to present a simple but viable solution for this problem that we have in production for more than a&nbsp;year.</p>
+<p>So how can we distribute Python modules and whole packages on our executors? Luckily, PySpark provides the functions <a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile">sc.addFile</a> and <a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addPyFile">sc.addPyFile</a> which allow us to upload files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without&nbsp;those. </p>
+<p>At first sight this looks pretty bad but thanks to the simplicity of the wheel format it&#8217;s not so bad at all. So here is what we do in a nutshell: We create a directory named <code>venv</code> which will serve us as isolated environment and copy the wheel files of all our dependencies into it. Then we unpack the wheel files with <code>unzip</code> since they are just normal zip files with a strange suffix. After this we copy the <code>venv</code> directory to some <span class="caps">HDFS</span> location and run <code>sc.addFile</code> from PySpark for the directory every time we run our&nbsp;application.</p>
+<p>Let&#8217;s go through this in more details. Since wheel files contain compiled code they are dependent on the exact Python version and platform. For us this means that when we create the <code>venv</code> environment locally we have to make sure that we use the same platform and Python version. Let&#8217;s say we are running Cloudera cdh5.11.0 which ships Python 3.4. That means on a Linux system we would first create an Anaconda environment with the exact same&nbsp;version.</p>
+<div class="highlight"><pre><span></span>conda create -n py34 <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.4
+<span class="nb">source</span> activate py34
+</pre></div>
+
+
+<p>Having activated the environment, we just use <code>pip download</code> to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, <code>pip</code> will download a source-based <code>tar.gz</code> file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type <code>python setup.py bdist_wheel</code>. A wheel file should now reside in the <code>dist</code> folder. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. <code>python3-dev</code> and <code>unixodbc-dev</code>.   </p>
+<p>Now we unpack those wheel files in the <code>venv</code> directory, push it to <span class="caps">HDFS</span>, e.g. <code>/my_venvs/venv</code>, using <code>hdfs dfs -put ...</code> and make sure that the files are readable by anyone. Now we call <code>sc.addFile</code> on every file in <code>/my_venvs/venv</code> and subsequently importing Pandas fori instance inside a Python <span class="caps">UDF</span> on PySpark will work since <code>PYTHONPATH</code> will be automatically&nbsp;set.</p>
+<p>If our Python application itself is also nicely structured as a Python package (maybe using <a href="http://pyscaffold.org/">PyScaffold</a>) we can also push it to <code>/my_venvs/venv</code>. This allows us to split the code that sets ups the environment on PySpark with <code>sc.addFile</code> from our actual application. Let&#8217;s say our actual PySpark application is a Python package called <code>my_pyspark_app</code>. The boilerplate code to bootstrap <code>my_pyspark_app</code>, i.e. to activate the isolated environment on Spark, will be in the module <code>activate_env.py</code>. When we submit our Spark job will specify this module and specify the environment as argument,&nbsp;e.g.:</p>
+<div class="highlight"><pre><span></span><span class="nv">PYSPARK_PYTHON</span><span class="o">=</span>python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster <span class="se">\</span>
+--num-executors <span class="m">4</span> --driver-memory 12g --executor-memory 4g --executor-cores <span class="m">1</span> <span class="se">\</span>
+--files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts<span class="o">=</span><span class="m">1</span> <span class="se">\</span>
+activate_env.py /my_venvs/venv
+</pre></div>
+
+
+<p>And here is how <code>activate_env.py</code> looks&nbsp;like:</p>
+<div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Bootstrapping an isolated environment for `my_pyspark_app` on Spark</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">pyspark.context</span> <span class="kn">import</span> <span class="n">SparkContext</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">list_path_names</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List files and directories in an HDFS path</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): HDFS path to directory</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [str]: list of file/directory names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+    <span class="c1"># low-level access to hdfs driver</span>
+    <span class="n">hadoop</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">_gateway</span><span class="o">.</span><span class="n">jvm</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">hadoop</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">hadoop</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">hadoop</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">hadoop</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">FileSystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">listStatus</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">path_status</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="k">for</span> <span class="n">path_status</span> <span class="ow">in</span> <span class="n">status</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">distribute_hdfs_files</span><span class="p">(</span><span class="n">hdfs_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Distributes recursively a given directory in HDFS to Spark</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hdfs_path (str): path to directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">path_name</span> <span class="ow">in</span> <span class="n">list_path_names</span><span class="p">(</span><span class="n">hdfs_path</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hdfs_path</span><span class="p">,</span> <span class="n">path_name</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Distributing {}...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">sc</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main entry point allowing external calls</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      args ([str]): command line parameter list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># setup logging for driver</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+
+    <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting up...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create the singleton instance</span>
+    <span class="n">spark</span> <span class="o">=</span> <span class="p">(</span><span class="n">SparkSession</span>
+             <span class="o">.</span><span class="n">builder</span>
+             <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;My PySpark App in its own environment&quot;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span>
+             <span class="o">.</span><span class="n">getOrCreate</span><span class="p">())</span>
+
+    <span class="c1"># For simplicity we assume that the first argument is the environment on HDFS</span>
+    <span class="n">VENV_DIR</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># make sure we have the latest version available on HDFS</span>
+    <span class="n">distribute_hdfs_files</span><span class="p">(</span><span class="s1">&#39;hdfs://&#39;</span> <span class="o">+</span> <span class="n">VENV_DIR</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">my_pyspark_app</span> <span class="kn">import</span> <span class="n">main</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry point for console_scripts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+
+<p>It is actually easier than it looks. In the <code>main</code> function we initialize the <code>SparkSession</code> the first time so that later calls to the session builder will use this instance. Thereafter, the passed path argument when doing the <code>spark-submit</code> is extracted. Subsequently, this is passed to <code>distribute_hdfs_files</code> which calls <code>sc.addFile</code> recursively on every file to set up the isolated environment on the driver and executors. After this we are`able to import our <code>my_pyspark_app</code> package and call for instance its <code>main</code> method. The following graphic illustrates the whole&nbsp;concept: </p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/pyspark_venv.png" alt="Isolated environment with PySpark">
+<figcaption><strong>Figure:</strong> Executing <em>spark-submit</em> uploads our <em>activate_env.py</em> module and starts a Spark driver process. Thereafter, <em>activate_env.py</em> bootstraps our <em>venv</em> environment on the Spark driver as well as on the executors. Finally, <em>activate_env.py</em> relinquishes control to <em>my_pyspark_app</em>.</figcaption>
+</p>
+</figure>
+
+<p>Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without admin rights. Since the explained method also works with <a href="http://jupyter.org/">Jupyter</a> this is not only useful for production but also for proof-of-concepts. That being said, we still hope that there will be soon an official solution by the Spark project&nbsp;itself.</p>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
+        <li><a href="http://www.florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
+        <li><a href="http://www.florianwilhelm.info/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'isolated_environments_with_pyspark';
+                var disqus_url = 'http://www.florianwilhelm.info/drafts/isolated_environments_with_pyspark.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="http://www.florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/blue-yonder/">
+                            Blue Yonder
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/causal-inference/">
+                            causal inference
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/kalman/">
+                            kalman
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://www.florianwilhelm.info/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/production/">
+                            production
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/programming/">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://www.florianwilhelm.info/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/recommendation-system/">
+                            recommendation system
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://www.florianwilhelm.info/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/spark/">
+                            spark
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://www.florianwilhelm.info/tag/template/">
+                            template
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2018 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://www.florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://www.florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://www.florianwilhelm.info/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>

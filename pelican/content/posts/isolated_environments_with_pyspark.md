@@ -8,18 +8,28 @@ authors: Florian Wilhelm
 status: draft
 ---
 
-With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it. Fortunately with PySpark, official Python support for Spark is available and easy to use with millions of tutorials on the web explaining you how to count words. 
+With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it.
+Fortunately, it is easy to get started with PySpark - the official Python API for Spark - due to millions of word count tutorials on the web. 
 
 In contrast to that, resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in an isolated environment with PySpark are scarce. A nice exception to that is a [blog post by Eran Kampf][].
 
-For most Spark/Hadoop distributions, in my case Cloudera, the best-practise according to Cloudera's [documentation][] and two blog posts by post by [Juliet Hougland et al.][] and [Juliet Hougland][] seems to be that you (or rather a sysadmin) sets up a dedicated virtual environment (with [virtualenv][] or [conda][]) on all nodes of your cluster. This virtual environment can then be used by your PySpark application. The drawback of this approach are as severe as obvious. Either your data scientists have permission to access the actual cluster hosts or the Cloudera Manager Admin Console with all implications following from this or your sysadmins have a lot of fun setting up hundreds of virtual environments on a daily basis. 
+<!-- fuer mich gibt es 2 von Cloudera empfohlene Ansaetze:
+1. data scientists/sysadmins haben ssh zugriff auf alle knoten und installieren sich dort venvs selbst
+2. ueber cloudera manager wird einmalig das anaconda parcel installiert. das hat zur folge dass alle anwendungen genau diese version nutzen muessen, d.h. es gibt keinerlei isolated environments
+-->
+For most Spark/Hadoop distributions, in my case Cloudera, the best-practise according to Cloudera's [documentation][] and two blog posts by post by [Juliet Hougland et al.][] and [Juliet Hougland][] seems to be that you (or rather a sysadmin) sets up a dedicated virtual environment (with [virtualenv][] or [conda][]) on all nodes of your cluster. This virtual environment can then be used by your PySpark application. The drawbacks of this approach are as severe as obvious. Either your data scientists have permission to access the actual cluster hosts or the Cloudera Manager Admin Console with all implications following from this or your sysadmins have a lot of fun setting up hundreds of virtual environments on a daily basis. 
 
-Therefore, we need to empower the data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues ([SPARK-13587][] & [SPARK-16367][]) suggest solutions but none are implemented yet. The most matured solution is actually [coffee boat] which is still in beta and not meant for production. Therefore, we want to present a simple but viable solution for this problem that we have in production for more than a year.
+Therefore, we need to empower the data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues ([SPARK-13587][] & [SPARK-16367][]) suggest solutions, but none of them have been integrated yet. The most mature solution is actually [coffee boat], which is still in beta and not meant for production. Therefore, we want to present a simple but viable solution for this problem that we have been using in production for more than a year.
 
 So how can we distribute Python modules and whole packages on our executors? Luckily, PySpark provides the functions [sc.addFile][] and [sc.addPyFile][] which allow us to upload files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without those. 
 
 At first sight this looks pretty bad but thanks to the simplicity of the wheel format it's not so bad at all. So here is what we do in a nutshell: We create a directory named ``venv`` which will serve us as isolated environment and copy the wheel files of all our dependencies into it. Then we unpack the wheel files with ``unzip`` since they are just normal zip files with a strange suffix. After this we copy the ``venv`` directory to some HDFS location and run ``sc.addFile`` from PySpark for the directory every time we run our application.
 
+<!-- afaik bringt CDH keine eigene Python Version mit.
+Mit PYSPARK_PYTHON=python3.4 nutzt er vielmehr die Python 3.4 Version des Betriebssystems, die im PATH liegt (vmtl. löst das auf /bin/python3.4 o.Ä. auf.
+In der Regel werden Hadoop Edge und Data nodes gleich gemanaged, d.h. haben ein identisches OS + packages. 
+Daher kann man schauen welche python3 versionen dort installiert sind.
+-->
 Let's go through this in more details. Since wheel files contain compiled code they are dependent on the exact Python version and platform. For us this means that when we create the ``venv`` environment locally we have to make sure that we use the same platform and Python version. Let's say we are running Cloudera cdh5.11.0 which ships Python 3.4. That means on a Linux system we would first create an Anaconda environment with the exact same version.
 
 ```bash
@@ -29,9 +39,9 @@ source activate py34
 
 Having activated the environment, we just use ``pip download`` to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, ``pip`` will download a source-based ``tar.gz`` file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type ``python setup.py bdist_wheel``. A wheel file should now reside in the `dist` folder. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. ``python3-dev`` and ``unixodbc-dev``.   
 
-Now we unpack those wheel files in the ``venv`` directory, push it to HDFS, e.g. ``/my_venvs/venv``, using ``hdfs dfs -put ...`` and make sure that the files are readable by anyone. Now we call ``sc.addFile`` on every file in ``/my_venvs/venv`` and subsequently importing Pandas fori instance inside a Python UDF on PySpark will work since ``PYTHONPATH`` will be automatically set.
+Now we unpack those wheel files in the ``venv`` directory, push it to HDFS, e.g. ``/my_venvs/venv``, using ``hdfs dfs -put ...`` and make sure that the files are readable by anyone. Now we call ``sc.addFile`` on every file in ``/my_venvs/venv`` and subsequently importing Pandas for instance inside a Python UDF on PySpark will work since ``PYTHONPATH`` will be automatically set.
 
-If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to split the code that sets ups the environment on PySpark with ``sc.addFile`` from our actual application. Let's say our actual PySpark application is a Python package called ``my_pyspark_app``. The boilerplate code to bootstrap ``my_pyspark_app``, i.e. to activate the isolated environment on Spark, will be in the module ``activate_env.py``. When we submit our Spark job will specify this module and specify the environment as argument, e.g.:
+If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to split the code that sets ups the environment on PySpark with ``sc.addFile`` from our actual application. Let's say our actual PySpark application is a Python package called ``my_pyspark_app``. The boilerplate code to bootstrap ``my_pyspark_app``, i.e. to activate the isolated environment on Spark, will be in the module ``activate_env.py``. When we submit our Spark job we will specify this module and specify the environment as an argument, e.g.:
 
 ```bash
 PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster \
@@ -127,16 +137,16 @@ if __name__ == "__main__":
     run()
 ```
 
-It is actually easier than it looks. In the ``main`` function we initialize the ``SparkSession`` the first time so that later calls to the session builder will use this instance. Thereafter, the passed path argument when doing the ``spark-submit`` is extracted. Subsequently, this is passed to ``distribute_hdfs_files`` which calls ``sc.addFile`` recursively on every file to set up the isolated environment on the driver and executors. After this we are`able to import our ``my_pyspark_app`` package and call for instance its ``main`` method. The following graphic illustrates the whole concept: 
+It is actually easier than it looks. In the ``main`` function we initialize the ``SparkSession`` the first time so that later calls to the session builder will use this instance. Thereafter, the passed path argument when doing the ``spark-submit`` is extracted. Subsequently, this is passed to ``distribute_hdfs_files`` which calls ``sc.addFile`` recursively on every file to set up the isolated environment on the driver and executors. After this we are able to import our ``my_pyspark_app`` package and call for instance its ``main`` method. The following graphic illustrates the whole concept: 
 
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/pyspark_venv.png" alt="Isolated environment with PySpark">
-<figcaption><strong>Figure:</strong> Executing <em>spark-submit</em> uploads our <em>activate_env.py</em> module and starts a Spark driver process. Thereafter, <em>activate_env.py</em> bootstraps our <em>venv</em> environment on the Spark driver as well as on the executors. Finally, <em>activate_env.py</em> relinquishes control to <em>my_pyspark_app</em>.</figcaption>
+<figcaption><strong>Figure:</strong> Executing <em>spark-submit</em> uploads our <em>activate_env.py</em> module and starts a Spark driver process. Thereafter, <em>activate_env.py</em> is executed within the driver and bootstraps our <em>venv</em> environment on the Spark driver as well as on the executors. Finally, <em>activate_env.py</em> relinquishes control to <em>my_pyspark_app</em>.</figcaption>
 </p>
 </figure>
 
-Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without admin rights. Since the explained method also works with [Jupyter][] this is not only useful for production but also for proof-of-concepts. That being said, we still hope that there will be soon an official solution by the Spark project itself.
+Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without admin rights. Since the explained method also works with [Jupyter][] this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project itself.
 
 
 [documentation]: https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5

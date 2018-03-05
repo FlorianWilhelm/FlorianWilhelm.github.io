@@ -19,9 +19,9 @@ For most Spark/Hadoop distributions, which is Cloudera in my case, there are bas
  
  2. Your sysadmins install Anaconda Parcels using the Cloudera Manager Admin Console to provide the most popular Python packages in a one size fits all fashion for all your data scientists as described in a [Cloudera blog post]. 
 
-Both options have drawbacks which are as severe as obvious. Do you really want to let a bunch of data scientists run processes on your cluster and fill up the local hard-drive? The second option is not even a real isolated environment since all your applications would use the same libraries and maybe break with an update to a newer version.   
+Both options have drawbacks which are as severe as obvious. Do you really want to let a bunch of data scientists run processes on your cluster and fill up the local hard-drives? The second option is not even a real isolated environment at all since all your applications would use the same libraries and maybe break after an update of a library.   
 
-Therefore, we need to empower the data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues ([SPARK-13587][] & [SPARK-16367][]) suggest solutions, but none of them have been integrated yet. The most mature solution is actually [coffee boat], which is still in beta and not meant for production. Therefore, we want to present here a simple but viable solution for this problem that we have been using in production for more than a year.
+Therefore, we need to empower our data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues ([SPARK-13587][] & [SPARK-16367][]) suggest solutions, but none of them have been integrated yet. The most mature solution is actually [coffee boat], which is still in beta and not meant for production. Therefore, we want to present here a simple but viable solution for this problem that we have been using in production for more than a year.
 
 So how can we distribute Python modules and whole packages on our executors? Luckily, PySpark provides the functions [sc.addFile][] and [sc.addPyFile][] which allow us to upload files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without those. 
 
@@ -29,22 +29,23 @@ At first sight this looks pretty bad but thanks to the simplicity of the wheel f
 
 ## Generating the environment 
 
-In order to create our aforementioned environment we start by creating a directory that will contain our isolated environment, e.g. ``venv``, on our local Linux machine. We will now populate this directory with wheel files of all libraries that our PySpark application uses. Since wheel files contain compiled code they are dependent on the exact Python version and platform. 
-For us this means we have to make sure that we use the same platform and Python version locally as we gonna use on the Spark cluster. In my case the cluster runs Ubuntu Trusty Linux with Python 3.4. To replicate that locally it's best to use an Anaconda environment:
+In order to create our aforementioned environment we start by creating a directory that will contain our isolated environment, e.g. ``venv``, on our local Linux machine. Then we will populate this directory with the wheel files of all libraries that our PySpark application uses. Since wheel files contain compiled code they are dependent on the exact Python version and platform. 
+For us this means we have to make sure that we use the same platform and Python version locally as we gonna use on the Spark cluster. In my case the cluster runs Ubuntu Trusty Linux with Python 3.4. To replicate this locally it's best to use a conda environment:
 
 ```bash
 conda create -n py34 python=3.4
 source activate py34
 ```
-Having activated the environment, we just use ``pip download`` to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, ``pip`` will download a source-based ``tar.gz`` file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type ``python setup.py bdist_wheel``. A wheel file should now reside in the `dist` folder. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. ``python3-dev`` and ``unixodbc-dev``.   
+Having activated the conda environment, we just use ``pip download`` to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, ``pip`` will download a source-based ``tar.gz`` file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type ``python setup.py bdist_wheel``. A wheel file should now reside in the `dist` subdirectory. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. ``python3-dev`` and ``unixodbc-dev``.   
 
-Now we copy the wheel files of all our PySpark application's dependencies into the ``venv`` directory. Then we unpack them with ``unzip`` since they are just normal zip files with a strange suffix. Finally, we push everything to HDFS, e.g. ``/my_venvs/venv``, using ``hdfs dfs -put ./venv /my_venvs/venv`` and make sure that the files are readable by anyone.
+Now we copy the wheel files of all our PySpark application's dependencies into the ``venv`` directory. After that, we unpack them with ``unzip`` since they are just normal zip files with a strange suffix. Finally, we push everything to HDFS, e.g. ``/my_venvs/venv``, using ``hdfs dfs -put ./venv /my_venvs/venv`` and make sure that the files are readable by anyone.
 
 ## Bootstrapping the environment
 
-When our PySpark application runs the first thing we do is calling ``sc.addFile`` on every file in ``/my_venvs/venv``. Since this will also set the ``PYTHONPATH`` correctly, importing any library wit put into ``venv`` will just work. If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to split the code that sets ups the environment on PySpark with ``sc.addFile`` from our actual application. 
+When our PySpark application runs the first thing we do is calling ``sc.addFile`` on every file in ``/my_venvs/venv``. Since this will also set the ``PYTHONPATH`` correctly, importing any library which resides in ``venv`` will just work. If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to roll full-blown PySpark applications and nicely separates the boilerplate code that bootstraps our isolated environment from it.
 
-Let's say our actual PySpark application is a Python package called ``my_pyspark_app``. The boilerplate code to bootstrap ``my_pyspark_app``, i.e. to activate the isolated environment on Spark, will be in the module ``activate_env.py``. When we submit our Spark job we will specify this module and specify the environment as an argument, e.g.:
+ 
+Let's assume our PySpark application is a Python package called ``my_pyspark_app``. The boilerplate code to bootstrap ``my_pyspark_app``, i.e. to activate the isolated environment on Spark, will be in the module ``activate_env.py``. When we submit our Spark job we will specify this module and specify the environment as an argument, e.g.:
 
 ```bash
 PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster \
@@ -53,7 +54,7 @@ PYSPARK_PYTHON=python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode
 activate_env.py /my_venvs/venv
 ```
 
-Easy and quite flexible! We are even able to change from one environment to another by just passing another HDFS directory. And here is how ``activate_env.py`` which does the actual heavy lifting with ``sc.addFile`` looks like:
+Easy and quite flexible! We are even able to change from one environment to another by just passing another HDFS directory. Here is how ``activate_env.py`` which does the actual heavy lifting with ``sc.addFile`` looks like:
 
 ```python
 """

@@ -251,7 +251,7 @@ Florian Wilhelm            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2017-10-11T12:30:00+02:00"> Okt. 11, 2017</time>
+        <i class="fa fa-calendar"></i><time datetime="2017-10-11T12:30:00+02:00"> Oct. 11, 2017</time>
     </span>
 
 
@@ -339,7 +339,7 @@ the actual <code>filter()</code> can be applied to the result&nbsp;set.</p>
 <p><img src="/images/pyspark_udf_dataflow.png"/><br></p>
 <p>Even if all of this sounded awkwardly technical to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and&nbsp;forth.</p>
 <p>To give a short summary to this low-level excursion: as long as we avoid all kind of Python UDFs, a PySpark program will be approximately as fast as Spark program based on Scala.
-If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what show in the remaining post. Before we move on though, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas <a href="http://wesmckinney.com/">Wes McKinney</a>. He is also the initiator of the <a href="http://arrow.apache.org/">Apache Arrow</a> project which tries to standardize the way columnar data is stored in memory so that everyone using Arrow won&#8217;t need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues <a href="https://issues.apache.org/jira/browse/SPARK-13534"><span class="caps">SPARK</span>-13534</a> and <a href="https://issues.apache.org/jira/browse/SPARK-21190"><span class="caps">SPARK</span>-21190</a>, Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever&nbsp;possible.</p>
+If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we show in the remaining post. Before we move on though, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas <a href="http://wesmckinney.com/">Wes McKinney</a>. He is also the initiator of the <a href="http://arrow.apache.org/">Apache Arrow</a> project which tries to standardize the way columnar data is stored in memory so that everyone using Arrow won&#8217;t need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues <a href="https://issues.apache.org/jira/browse/SPARK-13534"><span class="caps">SPARK</span>-13534</a> and <a href="https://issues.apache.org/jira/browse/SPARK-21190"><span class="caps">SPARK</span>-21190</a>, Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever&nbsp;possible.</p>
 <h1>PySpark UDAFs with&nbsp;Pandas</h1>
 <p>As mentioned before our detour into the internals of PySpark, for defining an arbitrary <span class="caps">UDAF</span> function we need an operation that allows us to operate on multiple rows and produce one or multiple resulting rows.
 This functionality is provided by the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> method <code>mapPartitions</code>, where we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> partition&nbsp;with:</p>
@@ -458,6 +458,8 @@ In most cases we would want to control the number of partitions, like 100, or ev
 <span class="sd">        Iterator over lists of row values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dtype_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">(),</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">(),</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                  <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                  <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                  <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
@@ -597,11 +599,11 @@ In this respect we are really looking forward to closer integration of <a href="
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="http://www.florianwilhelm.info/2018/03/isolated_environments_with_pyspark/">Managing isolated Environments with&nbsp;PySpark</a></li>
         <li><a href="http://www.florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
         <li><a href="http://www.florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
         <li><a href="http://www.florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
         <li><a href="http://www.florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
-        <li><a href="http://www.florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
     </ul>
 </section>
     <hr/>
@@ -740,7 +742,7 @@ In this respect we are really looking forward to closer integration of <a href="
                             predictive analytics
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
+                    <li class="list-group-item tag-3">
                         <a href="http://www.florianwilhelm.info/tag/production/">
                             production
                         </a>
@@ -770,7 +772,7 @@ In this respect we are really looking forward to closer integration of <a href="
                             scipy
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
+                    <li class="list-group-item tag-3">
                         <a href="http://www.florianwilhelm.info/tag/spark/">
                             spark
                         </a>

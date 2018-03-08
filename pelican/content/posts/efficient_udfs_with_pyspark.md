@@ -1,7 +1,7 @@
 ---
 title: Efficient UD(A)Fs with PySpark
 date: 2017-10-11 12:30
-modified: 2017-10-11 12:30
+modified: 2018-03-08 12:30
 category: post
 tags: spark, python, big data
 authors: Florian Wilhelm, Bernhard Schäfer
@@ -93,7 +93,7 @@ The entire data flow when using arbitrary Python functions in PySpark is also sh
 Even if all of this sounded awkwardly technical to you, you get the point that executing Python functions in a distributed Java system is very expensive in terms of execution time due to excessive copying of data back and forth.
 
 To give a short summary to this low-level excursion: as long as we avoid all kind of Python UDFs, a PySpark program will be approximately as fast as Spark program based on Scala.
-If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what show in the remaining post. Before we move on though, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. He is also the initiator of the [Apache Arrow][] project which tries to standardize the way columnar data is stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever possible.
+If we cannot avoid UDFs, we should at least try to make them as efficient as possible, which is what we show in the remaining post. Before we move on though, one side note should be kept in mind. The general problem of accessing data frames from different programming languages in the realm of data analytics is currently addressed by the creator of Pandas [Wes McKinney][]. He is also the initiator of the [Apache Arrow][] project which tries to standardize the way columnar data is stored in memory so that everyone using Arrow won't need to do the cumbersome object translation by serialization and deserialization anymore. Hopefully with version 2.3, as shown in the issues [SPARK-13534][] and [SPARK-21190][], Spark will make use of Arrow, which should drastically speed up our Python UDFs. Still, even in that case we should always prefer built-in Spark functions whenever possible.
  
 # PySpark UDAFs with Pandas
 
@@ -222,6 +222,8 @@ def convert_dtypes(rows):
         Iterator over lists of row values
     """
     dtype_map = {pd.Timestamp: lambda x: x.to_pydatetime(),
+                 np.datetime64: lambda x: pd.Timestamp(x).to_pydatetime(),
+                 np.bool_: lambda x: bool(x),
                  np.int8: lambda x: int(x),
                  np.int16: lambda x: int(x),
                  np.int32: lambda x: int(x),

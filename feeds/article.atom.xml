@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - article</title><link href="http://www.florianwilhelm.info/" rel="alternate"></link><link href="http://www.florianwilhelm.info/feeds/article.atom.xml" rel="self"></link><id>http://www.florianwilhelm.info/</id><updated>2018-03-08T15:10:00+01:00</updated><entry><title>Managing isolated Environments with PySpark</title><link href="http://www.florianwilhelm.info/2018/03/isolated_environments_with_pyspark/" rel="alternate"></link><published>2018-03-08T15:10:00+01:00</published><updated>2018-03-08T15:10:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:www.florianwilhelm.info,2018-03-08:/2018/03/isolated_environments_with_pyspark/</id><summary type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+&lt;p&gt;With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it.
+Fortunately, it is easy to get started with &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html"&gt;PySpark&lt;/a&gt; - the official Python &lt;span class="caps"&gt;API&lt;/span&gt; for Spark - due to millions of word count tutorials on …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+&lt;p&gt;With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it.
+Fortunately, it is easy to get started with &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html"&gt;PySpark&lt;/a&gt; - the official Python &lt;span class="caps"&gt;API&lt;/span&gt; for Spark - due to millions of word count tutorials on the web. In contrast to that, resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in an isolated environment with PySpark are scarce. A nice exception to that is a &lt;a href="https://developerzen.com/best-practices-writing-production-grade-pyspark-jobs-cb688ac4d20f"&gt;blog post by Eran Kampf&lt;/a&gt;. Being able to install your own Python libraries is especially important if you want to write User-Defined-Functions (UDFs) as explained in the blog post &lt;a href="{filename}/efficient_udfs_with_pyspark.md"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For most Spark/Hadoop distributions, which is Cloudera in my case, there are basically two options for managing isolated&amp;nbsp;environments:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;You give all your data scientists &lt;span class="caps"&gt;SSH&lt;/span&gt; access to all your cluster&amp;#8217;s nodes and let them do whatever they want like installing virtual environments with &lt;a href="https://virtualenv.pypa.io/en/stable/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/docs/intro.html"&gt;conda&lt;/a&gt; as detailed in the &lt;a href="https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5"&gt;Cloudera documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Your sysadmins install Anaconda Parcels using the Cloudera Manager Admin Console to provide the most popular Python packages in a one size fits all fashion for all your data scientists as described in a &lt;a href="http://blog.cloudera.com/blog/2016/02/making-python-on-apache-hadoop-easier-with-anaconda-and-cdh/"&gt;Cloudera blog post&lt;/a&gt;. &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Both options have drawbacks which are as severe as obvious. Do you really want to let a bunch of data scientists run processes on your cluster and fill up the local hard-drives? The second option is not even a real isolated environment at all since all your applications would use the same libraries and maybe break after an update of a&amp;nbsp;library.   &lt;/p&gt;
+&lt;p&gt;Therefore, we need to empower our data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues (&lt;a href="https://issues.apache.org/jira/browse/SPARK-13587"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-13587&lt;/a&gt; &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; &lt;a href="https://issues.apache.org/jira/browse/SPARK-16367"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-16367&lt;/a&gt;) suggest solutions, but none of them have been integrated yet. The most mature solution is actually &lt;a href="https://github.com/nteract/coffee_boat"&gt;coffee boat&lt;/a&gt;, which is still in beta and not meant for production. Therefore, we want to present here a simple but viable solution for this problem that we have been using in production for more than a&amp;nbsp;year.&lt;/p&gt;
+&lt;p&gt;So how can we distribute Python modules and whole packages on our executors? Luckily, PySpark provides the functions &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile"&gt;sc.addFile&lt;/a&gt; and &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addPyFile"&gt;sc.addPyFile&lt;/a&gt; which allow us to upload files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without&amp;nbsp;those. &lt;/p&gt;
+&lt;p&gt;At first sight this looks pretty bad but thanks to the simplicity of the wheel format it&amp;#8217;s not so bad at all. So here is what we do in a nutshell: For a given PySpark application, we will create an isolated environment on &lt;span class="caps"&gt;HDFS&lt;/span&gt; with the help of wheel files. When submitting our PySpark application, we copy the content of our environment to the driver and executors using &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile"&gt;sc.addFile&lt;/a&gt;. Simple but&amp;nbsp;effective.&lt;/p&gt;
+&lt;h2&gt;Generating the&amp;nbsp;environment&lt;/h2&gt;
+&lt;p&gt;In order to create our aforementioned environment we start by creating a directory that will contain our isolated environment, e.g. &lt;code&gt;venv&lt;/code&gt;, on our local Linux machine. Then we will populate this directory with the wheel files of all libraries that our PySpark application uses. Since wheel files contain compiled code they are dependent on the exact Python version and platform. 
+For us this means we have to make sure that we use the same platform and Python version locally as we gonna use on the Spark cluster. In my case the cluster runs Ubuntu Trusty Linux with Python 3.4. To replicate this locally it&amp;#8217;s best to use a conda&amp;nbsp;environment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda create -n py34 &lt;span class="nv"&gt;python&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.4
+&lt;span class="nb"&gt;source&lt;/span&gt; activate py34
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Having activated the conda environment, we just use &lt;code&gt;pip download&lt;/code&gt; to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, &lt;code&gt;pip&lt;/code&gt; will download a source-based &lt;code&gt;tar.gz&lt;/code&gt; file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt;. A wheel file should now reside in the &lt;code&gt;dist&lt;/code&gt; subdirectory. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. &lt;code&gt;python3-dev&lt;/code&gt; and &lt;code&gt;unixodbc-dev&lt;/code&gt;.   &lt;/p&gt;
+&lt;p&gt;Now we copy the wheel files of all our PySpark application&amp;#8217;s dependencies into the &lt;code&gt;venv&lt;/code&gt; directory. After that, we unpack them with &lt;code&gt;unzip&lt;/code&gt; since they are just normal zip files with a strange suffix. Finally, we push everything to &lt;span class="caps"&gt;HDFS&lt;/span&gt;, e.g. &lt;code&gt;/my_venvs/venv&lt;/code&gt;, using &lt;code&gt;hdfs dfs -put ./venv /my_venvs/venv&lt;/code&gt; and make sure that the files are readable by&amp;nbsp;anyone.&lt;/p&gt;
+&lt;h2&gt;Bootstrapping the&amp;nbsp;environment&lt;/h2&gt;
+&lt;p&gt;When our PySpark application runs the first thing we do is calling &lt;code&gt;sc.addFile&lt;/code&gt; on every file in &lt;code&gt;/my_venvs/venv&lt;/code&gt;. Since this will also set the &lt;code&gt;PYTHONPATH&lt;/code&gt; correctly, importing any library which resides in &lt;code&gt;venv&lt;/code&gt; will just work. If our Python application itself is also nicely structured as a Python package (maybe using &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt;) we can also push it to &lt;code&gt;/my_venvs/venv&lt;/code&gt;. This allows us to roll full-blown PySpark applications and nicely separate the boilerplate code that bootstraps our isolated environment from&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s assume our PySpark application is a Python package called &lt;code&gt;my_pyspark_app&lt;/code&gt;. The boilerplate code to bootstrap &lt;code&gt;my_pyspark_app&lt;/code&gt;, i.e. to activate the isolated environment on Spark, will be in the module &lt;code&gt;activate_env.py&lt;/code&gt;. When we submit our Spark job we will specify this module and specify the environment as an argument,&amp;nbsp;e.g.:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;PYSPARK_PYTHON&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster &lt;span class="se"&gt;\&lt;/span&gt;
+--num-executors &lt;span class="m"&gt;4&lt;/span&gt; --driver-memory 12g --executor-memory 4g --executor-cores &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+--files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+activate_env.py /my_venvs/venv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Easy and quite flexible! We are even able to change from one environment to another by just passing another &lt;span class="caps"&gt;HDFS&lt;/span&gt; directory. Here is how &lt;code&gt;activate_env.py&lt;/code&gt; which does the actual heavy lifting with &lt;code&gt;sc.addFile&lt;/code&gt; looks&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;Bootstrapping an isolated environment for `my_pyspark_app` on Spark&lt;/span&gt;
+&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.context&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkContext&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+
+&lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;list_path_names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;List files and directories in an HDFS path&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        path (str): HDFS path to directory&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;        [str]: list of file/directory names&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkContext&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="c1"&gt;# low-level access to hdfs driver&lt;/span&gt;
+    &lt;span class="n"&gt;hadoop&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_gateway&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jvm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hadoop&lt;/span&gt;
+    &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hadoop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hadoop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Configuration&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hadoop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileSystem&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listStatus&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path_status&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getPath&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getName&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;path_status&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;distribute_hdfs_files&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hdfs_path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Distributes recursively a given directory in HDFS to Spark&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        hdfs_path (str): path to directory&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkContext&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;path_name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;list_path_names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hdfs_path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hdfs_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path_name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;_logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distributing {}...&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addFile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;recursive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Main entry point allowing external calls&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;      args ([str]): command line parameter list&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="c1"&gt;# setup logging for driver&lt;/span&gt;
+    &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DEBUG&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stream&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;_logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Starting up...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Create the singleton instance&lt;/span&gt;
+    &lt;span class="n"&gt;spark&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SparkSession&lt;/span&gt;
+             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;
+             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;appName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;My PySpark App in its own environment&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;enableHiveSupport&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# For simplicity we assume that the first argument is the environment on HDFS&lt;/span&gt;
+    &lt;span class="n"&gt;VENV_DIR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="c1"&gt;# make sure we have the latest version available on HDFS&lt;/span&gt;
+    &lt;span class="n"&gt;distribute_hdfs_files&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hdfs://&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;VENV_DIR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;my_pyspark_app&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:])&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;run&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Entry point for console_scripts&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:])&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It is actually easier than it looks. In the &lt;code&gt;main&lt;/code&gt; function we initialize the &lt;code&gt;SparkSession&lt;/code&gt; the first time so that later calls to the session builder will use this instance. Thereafter, the passed path argument when doing the &lt;code&gt;spark-submit&lt;/code&gt; is extracted. Subsequently, this is passed to &lt;code&gt;distribute_hdfs_files&lt;/code&gt; which calls &lt;code&gt;sc.addFile&lt;/code&gt; recursively on every file to set up the isolated environment on the driver and executors. After this we are able to import our &lt;code&gt;my_pyspark_app&lt;/code&gt; package and call for instance its &lt;code&gt;main&lt;/code&gt; method. The following graphic illustrates the whole&amp;nbsp;concept: &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/pyspark_venv.png" alt="Isolated environment with PySpark"&gt;
+&lt;figcaption&gt;&lt;strong&gt;Figure:&lt;/strong&gt; Executing &lt;em&gt;spark-submit&lt;/em&gt; uploads our &lt;em&gt;activate_env.py&lt;/em&gt; module and starts a Spark driver process. Thereafter, &lt;em&gt;activate_env.py&lt;/em&gt; is executed within the driver and bootstraps our &lt;em&gt;venv&lt;/em&gt; environment on the Spark driver as well as on the executors. Finally, &lt;em&gt;activate_env.py&lt;/em&gt; relinquishes control to &lt;em&gt;my_pyspark_app&lt;/em&gt;.&lt;/figcaption&gt;
+&lt;/p&gt;
+&lt;/figure&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without admin rights. Since the explained method also works with &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt; this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project&amp;nbsp;itself.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="production"></category></entry></feed>

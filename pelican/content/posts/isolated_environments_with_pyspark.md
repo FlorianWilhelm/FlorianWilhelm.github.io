@@ -1,19 +1,20 @@
 ---
 title: Managing isolated Environments with PySpark
-date: 2018-03-01 12:30
-modified: 2018-03-01 19:30
-category: article
+date: 2018-03-08 15:10
+modified: 2018-03-08 15:10
+category: post
 tags: spark, python, production
 authors: Florian Wilhelm
-status: draft
+status: published
+summary: The Spark data processing platform becomes more and more important for data scientists using Python. PySpark - the official Python API for Spark - makes it easy to get started but managing applications and their dependencies in isolated environments is no easy task.
 ---
 
 ## Motivation
 
 With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it.
-Fortunately, it is easy to get started with [PySpark][] - the official Python API for Spark - due to millions of word count tutorials on the web. In contrast to that, resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in an isolated environment with PySpark are scarce. A nice exception to that is a [blog post by Eran Kampf][]. Being able to install your own Python libraries is especially important if you want to write User-Defined-Functions (UDFs) as explained in the blog post [Efficient UD(A)Fs with PySpark]({filename}/efficient_udfs_with_pyspark.md).
+Fortunately, it is easy to get started with [PySpark][] - the official Python API for Spark - due to millions of word count tutorials on the web. In contrast to that, resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in an isolated environment with PySpark are scarce. A nice exception to that is a [blog post by Eran Kampf][]. Being able to install your own Python libraries is especially important if you want to write User-Defined-Functions (UDFs) as explained in the blog post [Efficient UD(A)Fs with PySpark]({filename}efficient_udfs_with_pyspark.md).
 
-For most Spark/Hadoop distributions, which is Cloudera in my case, there are basically two options for managing isolated environemts:
+For most Spark/Hadoop distributions, which is Cloudera in my case, there are basically two options for managing isolated environments:
 
  1. You give all your data scientists SSH access to all your cluster's nodes and let them do whatever they want like installing virtual environments with [virtualenv][] or [conda][] as detailed in the [Cloudera documentation][].
  
@@ -42,7 +43,7 @@ Now we copy the wheel files of all our PySpark application's dependencies into t
 
 ## Bootstrapping the environment
 
-When our PySpark application runs the first thing we do is calling ``sc.addFile`` on every file in ``/my_venvs/venv``. Since this will also set the ``PYTHONPATH`` correctly, importing any library which resides in ``venv`` will just work. If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to roll full-blown PySpark applications and nicely separates the boilerplate code that bootstraps our isolated environment from it.
+When our PySpark application runs the first thing we do is calling ``sc.addFile`` on every file in ``/my_venvs/venv``. Since this will also set the ``PYTHONPATH`` correctly, importing any library which resides in ``venv`` will just work. If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to roll full-blown PySpark applications and nicely separate the boilerplate code that bootstraps our isolated environment from it.
 
  
 Let's assume our PySpark application is a Python package called ``my_pyspark_app``. The boilerplate code to bootstrap ``my_pyspark_app``, i.e. to activate the isolated environment on Spark, will be in the module ``activate_env.py``. When we submit our Spark job we will specify this module and specify the environment as an argument, e.g.:

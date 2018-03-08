@@ -5,56 +5,63 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/archives.html</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/tags.html</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/categories.html</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/404-not-found/</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/410-gone/</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/500-error/</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://www.florianwilhelm.info/about/</loc>
-<lastmod>2018-03-05T19:01:41-00:00</lastmod>
+<lastmod>2018-03-08T15:27:24-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/2018/03/isolated_environments_with_pyspark/</loc>
+<lastmod>2018-03-08T15:10:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -68,7 +75,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/</loc>
-<lastmod>2017-10-11T12:30:00+02:00</lastmod>
+<lastmod>2018-03-08T12:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -180,7 +187,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://www.florianwilhelm.info/category/post/</loc>
-<lastmod>2018-01-08T12:00:00+00:09</lastmod>
+<lastmod>2018-03-08T15:10:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -207,8 +214,22 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>http://www.florianwilhelm.info/tag/spark/</loc>
+<lastmod>2018-03-08T15:10:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>http://www.florianwilhelm.info/tag/python/</loc>
-<lastmod>2018-01-08T12:00:00+00:09</lastmod>
+<lastmod>2018-03-08T15:10:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://www.florianwilhelm.info/tag/production/</loc>
+<lastmod>2018-03-08T15:10:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -221,22 +242,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://www.florianwilhelm.info/tag/production/</loc>
-<lastmod>2018-01-08T12:00:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://www.florianwilhelm.info/tag/spark/</loc>
-<lastmod>2017-10-11T12:30:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://www.florianwilhelm.info/tag/big-data/</loc>
-<lastmod>2017-10-11T12:30:00+00:09</lastmod>
+<lastmod>2018-03-08T12:30:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

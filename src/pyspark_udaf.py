@@ -34,10 +34,18 @@ import logging
 from itertools import chain
 from functools import wraps
 
+import pyspark
+from pyspark import SparkFiles
+from pyspark.context import SparkContext
+from pyspark.sql import SparkSession
 import numpy as np
 import pandas as pd
 from pyspark.sql.types import Row
 
+
+__author__ = "Florian Wilhelm"
+__copyright__ = "Florian Wilhelm"
+__license__ = "MIT"
 
 _logger = logging.getLogger(__name__)
 
@@ -123,6 +131,8 @@ def convert_dtypes(rows):
         Iterator over lists of row values
     """
     dtype_map = {pd.Timestamp: lambda x: x.to_pydatetime(),
+                 np.datetime64: lambda x: pd.Timestamp(x).to_pydatetime(),
+                 np.bool_: lambda x: bool(x),
                  np.int8: lambda x: int(x),
                  np.int16: lambda x: int(x),
                  np.int32: lambda x: int(x),
@@ -206,3 +216,83 @@ class pandas_udaf(object):
             df = func(*args)
             return pandas_to_rows(df)
         return wrapper
+
+##########################
+# Other useful functions #
+##########################
+
+
+def pandas_to_spark(df):
+    """Converts Pandas dataframe to Spark dataframe
+
+    Args:
+        df: Pandas dataframe
+
+    Returns:
+        PySpark dataframe
+    """
+    sess = SparkSession.builder.getOrCreate()
+    return sess.createDataFrame(pandas_to_rows(df))
+
+
+def driver_logger(name=None):
+    """Get logger of Spark driver process
+
+    Args:
+        name (str): logger name
+
+    Returns:
+        Spark driver logger
+    """
+    log4jLogger = SparkContext.getOrCreate()._jvm.org.apache.log4j
+    return log4jLogger.LogManager.getLogger(name)
+
+
+def loglevels():
+    """Retrieves access to the different log levels
+
+    Returns:
+        Object holding the log levels
+    """
+    log4jLogger = SparkContext.getOrCreate()._jvm.org.apache.log4j
+    return log4jLogger.Level
+
+
+def silence_logger():
+    """Silences the most unnecessary logs by Spark
+    """
+    org_logger = driver_logger('org')
+    akka_logger = driver_logger('akka')
+    levels = loglevels()
+    org_logger.setLevel(levels.ERROR)
+    akka_logger.setLevel(levels.ERROR)
+
+
+def spark_config():
+    """Returns Spark config
+
+    Returns:
+        dict: Spark config
+    """
+    return dict(SparkContext.getOrCreate()._conf.getAll())
+
+
+def is_spark_running():
+    """Check if currently PySpark is running
+
+    Returns:
+        bool: if pyspark context is running
+    """
+    return pyspark.SparkContext._active_spark_context is not None
+
+
+def spark_files_path(path='./'):
+    """Given a file path return the actual file path as stored with SparkFiles
+
+    Args:
+        path (str): conical path as used to push a file
+
+    Returns:
+        str: actual path where the file was stored
+    """
+    return os.path.join(SparkFiles.getRootDirectory(), path)

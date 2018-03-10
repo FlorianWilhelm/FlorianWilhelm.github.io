@@ -43,7 +43,7 @@ Now we copy the wheel files of all our PySpark application's dependencies into t
 
 ## Bootstrapping the environment
 
-When our PySpark application runs the first thing we do is calling ``sc.addFile`` on every file in ``/my_venvs/venv``. Since this will also set the ``PYTHONPATH`` correctly, importing any library which resides in ``venv`` will just work. If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to roll full-blown PySpark applications and nicely separate the boilerplate code that bootstraps our isolated environment from it.
+When our PySpark application runs the first thing we do is calling ``sc.addFile`` on every file in ``/my_venvs/venv``. Since this will also set the ``PYTHONPATH`` correctly, importing any library which resides in ``venv`` will just work. If our Python application itself is also nicely structured as a Python package (maybe using [PyScaffold][]) we can also push it to ``/my_venvs/venv``. This allows us to roll a full-blown PySpark application and nicely separate the boilerplate code that bootstraps our isolated environment from it.
 
  
 Let's assume our PySpark application is a Python package called ``my_pyspark_app``. The boilerplate code to bootstrap ``my_pyspark_app``, i.e. to activate the isolated environment on Spark, will be in the module ``activate_env.py``. When we submit our Spark job we will specify this module and specify the environment as an argument, e.g.:
@@ -154,7 +154,7 @@ It is actually easier than it looks. In the ``main`` function we initialize the 
 
 ## Conclusion
 
-Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without admin rights. Since the explained method also works with [Jupyter][] this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project itself.
+Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without access to the cluster's nodes. Since the explained method also works with [Jupyter][] this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project itself.
 
 
 [PySpark]: http://spark.apache.org/docs/latest/api/python/pyspark.html

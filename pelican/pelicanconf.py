@@ -10,7 +10,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 
 AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
-SITEURL = 'http://www.florianwilhelm.info'
+SITEURL = 'https://www.florianwilhelm.info'
 # SITEURL = ''
 
 PATH = 'content'

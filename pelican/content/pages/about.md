@@ -40,3 +40,4 @@ in the Hadoop stack including Hive and Spark as well as R.
 If you want to know more, please read all about my professional details in my
 [résumé]({filename}/documents/Resume.pdf) or on
 [LinkedIn](https://de.linkedin.com/in/florian-wilhelm-621ba834).
+A selection of my talks can be found on [YouTube](https://www.youtube.com/playlist?list=PLbwNllFeVTzoXFzwWP7oTNOxrwuP_rEip).

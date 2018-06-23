@@ -2,7 +2,7 @@
 title: Declarative Thinking and Programming
 date: 2017-07-25 11:15
 modified: 2017-07-25 11:15
-category: post
+category: post, talk
 tags: python, programming
 authors: Florian Wilhelm
 status: published
@@ -376,6 +376,11 @@ the help of a program or framework, make sure to be absolute clear about what yo
 put yourself into the role of a user to understand what needs to be declared in order to describe the problem. Only then
 start to think about a theoretical domain that might help you to achieve a declarative level of abstraction for your task.
 Declarative programming means finding the right abstraction level that describes your problem.  
+
+A talk covering this blog post was presented at the EuroPython 2017:
+
+{% youtube 3QtAlB3NZII 800 500 %}
+
 
 [SIMD]: https://en.wikipedia.org/wiki/SIMD 
 [single-level of abstraction]: http://principles-wiki.net/principles:single_level_of_abstraction

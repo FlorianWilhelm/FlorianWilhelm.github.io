@@ -50,7 +50,7 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  sequential recommender with an LSTM representation. If you raise your eyebrow due to the usage of a inner product
  then be aware that [low-rank approximations] have been and still are one of the most successful building blocks
  of a recommender system. An alternative would be to replace the inner product with a deep feed forward network but
- in most likely this would also only just learn to perform an approximation to a inner product. A recent paper
+ in most likely this would also only just learn to perform an approximation of an inner product. A recent paper
  [Latent Cross: Making Use of Context in Recurrent Recommender Systems] by Google also emphasizes the power of learning
  low-rank relations with the help of inner products.
  
@@ -59,13 +59,13 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
 <img class="noZoom" src="/images/mLSTM.png" alt="mLSTM">
 <figcaption><strong>Figure 1:</strong> At timestep $t$ the item $i_t$ is embedded and fed into an LSTM together with
  cell state $C_{t-1}$ and $h_{t-1}$ of the last timestep which yields a new presentation $h_t$. The inner product of 
- $h_t$ with the embedding of the potential next item $e_{i_{t+1}}$ yields a value corresponding to how likely the user
+ $h_t$ with the embedding of the potential next item $e_{i_{t+1}}$ yields a scalar value corresponding to how likely the user
  would interact with $i_{t+1}$.</figcaption>
 </p>
 </figure>
         
-* Structure of sequential recommender as in Spotlight
-* picture? 
+What we want to do is basically replacing the LSTM part of Spotlight's sequential recommender with an mLSTM. 
+But before we do that the obvious question is why? Let's recap the formulae of an [LSTM implementation] from PyTorch:
 
 \begin{split}\begin{array}{ll}
 i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) \\
@@ -76,19 +76,21 @@ c_t = f_t * c_{(t-1)} + i_t * g_t \\
 h_t = o_t * \tanh(c_t)
 \end{array}\end{split}
 
-* g flexible input-dependent
-transitions
-* easier to recover from mistakes
-* The relative magnitude of Whhht−1 to Whxxt will need to be large for the RNN to be
-able to use long range dependencies, and the resulting possible hidden state vectors will therefore
-be highly correlated across the possible inputs, limiting the width of the tree and making it harder
-for the RNN to form distinct hidden representations for different sequences of inputs. However, if
-the RNN has flexible input-dependent transition functions, the tree will be able to grow wider more
-quickly, giving the RNN the flexibility to represent more probability distributions.
-
-
+where $i_t$ denotes the input gate, $f_t$ the forget gate and $o_t$ the output gate at timestep $t$. If we look at
+those lines again we can see a lot of terms in the form $W_{**} x_t + W_{**} h_{(t-1)}$ neglecting the biases $b_*$ for a
+moment. Thus a lot of an LSTM's inner working depend on the addition of the transformed input with the transformed hidden
+state. So what happens if a trained LSTM with thus fixed $W_{**}$ encounters some unexpected, completely surprising input
+$x_t$? This might disturb the cell state $c_t$ leading to pertubated future $h_t$ and it might take a long time for the
+LSTM to recover from that singular surprising input. The paper [Multiplicative LSTM for sequence modelling] now argues
+that "RNN architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
+from surprising inputs". By allowing the hidden state to react flexibly on the new input by changing it's magnitude it might be
+able to recover from mistakes faster. The quite vague formulation of *input-dependent transition functions* is then 
+actually achieved in a quite simple way. In an mLSTM the hidden state $h_{t-1}$ is transformed in a multiplicative way
+using the input $x_t$ into an intermediate state $m_t$ before it is used in a plain LSTM as before. Eventually, there
+is only a single equation to be prepended to the equations of an LSTM:
+  
 \begin{split}\begin{array}{ll}
-m_t = (W_{im} x_t + b_{im}) \hadamard{} ( W_{hm} h_{(t-1)} + b_{hm}) \\
+m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{(t-1)} + b_{hm}) \\
 i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{mi} m_t + b_{mi}) \\
 f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{mf} m_t + b_{mf}) \\
 g_t = \tanh(W_{ig} x_t + b_{ig} + W_{mc} m_t + b_{mg}) \\
@@ -97,9 +99,23 @@ c_t = f_t * c_{(t-1)} + i_t * g_t \\
 h_t = o_t * \tanh(c_t)
 \end{array}\end{split}
 
+The element-wise multiplication ($\odot$) allows $m_t$ to flexible change it's value with respect to $h_{t-1}$ and $x_t$.
+On a more theoretical note, if you picture the hidden states of an LSTM as a tree depending on the inputs at each timestep
+then the number of all possible states at timestep $t$ will be much larger for an mLSTM compared to an LSTM. Therefore, 
+the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
+according to the paper.
+
+The paper focuses only on NLP tasks but since surprising inputs are also a concern in sequential recommender systems,
+the self-evident idea is to evaluate if mLSTMs excel in recommender tasks.
+
 ## Implementation
 
-* inspired by Mixture-of-tastes Models for Representing Users with Diverse Interests by Maciej Kula
+Everyone seems to love [PyTorch] for it's beautiful API and I totally consent. For our task all we have to do is create
+a new class or module in PyTorch's jargon that inherits most bits from a base RNN module `RNNBase` and 
+overwrites the `forward` method according to our needs.  
+
+
+
 * Die Variablennamen noch anpassen wie oben
 
 ```python
@@ -150,7 +166,8 @@ class mLSTM(RNNBase):
 
         return torch.cat(steps, dim=1)
 ```
-
+* inspired by Mixture-of-tastes Models for Representing Users with Diverse Interests by Maciej Kula
+Before we actually start implementing of mLSTMs it's always good to familiarize oneself with the library we are using.
 
 ## Evaluation
 

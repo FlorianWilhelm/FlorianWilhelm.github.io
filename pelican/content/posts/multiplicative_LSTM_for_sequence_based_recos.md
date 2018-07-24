@@ -35,7 +35,7 @@ to the [vanishing gradient problem] and thus are able to capture long-term relat
 explanations of LSTMs in Colah's post [Understanding LSTM Networks] and more general about the power of RNNs in the 
 article [The Unreasonable Effectiveness of Recurrent Neural Networks]. 
 More recently, also Gated Recurrent Units (GRUs) which have a simplified structure compared to LSTMs are also used 
-in sequential prediction tasks with similar results. Spotlight provides a sequential recommender based on LSTMs and 
+in sequential prediction tasks with occasionally superior results. [Spotlight] provides a sequential recommender based on LSTMs and 
 the quite renowned [GRU4Rec] model uses GRUs but in general it's not possible to state that one always outperforms the other.
 
 So given these ingredients, how do we now construct a sequential recommender? Let's assume on every timestep 
@@ -47,7 +47,7 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  with the embedding $e_{i_{t+1}}$ plus an item bias for varying item popularity to retrieve an output $p_{t+1}$. 
  This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
  Figure 1 illustrates our sequential recommender model and this is what's actually happening inside Spotlight's 
- sequential recommender with an LSTM representation. If you raise your eyebrow due to the usage of a inner product
+ sequential recommender with an LSTM representation. If you raise your eyebrow due to the usage of an inner product
  then be aware that [low-rank approximations] have been and still are one of the most successful building blocks
  of a recommender system. An alternative would be to replace the inner product with a deep feed forward network but
  in most likely this would also only just learn to perform an approximation of an inner product. A recent paper
@@ -65,7 +65,7 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
 </figure>
         
 What we want to do is basically replacing the LSTM part of Spotlight's sequential recommender with an mLSTM. 
-But before we do that the obvious question is why? Let's recap the formulae of an [LSTM implementation] from PyTorch:
+But before we do that the obvious question is why? Let's recap the formulae of the [LSTM implementation] of PyTorch:
 
 \begin{split}\begin{array}{ll}
 i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) \\
@@ -78,7 +78,7 @@ h_t = o_t * \tanh(c_t)
 
 where $i_t$ denotes the input gate, $f_t$ the forget gate and $o_t$ the output gate at timestep $t$. If we look at
 those lines again we can see a lot of terms in the form $W_{**} x_t + W_{**} h_{(t-1)}$ neglecting the biases $b_*$ for a
-moment. Thus a lot of an LSTM's inner working depend on the addition of the transformed input with the transformed hidden
+moment. Thus a lot of an LSTM's inner workings depend on the addition of the transformed input with the transformed hidden
 state. So what happens if a trained LSTM with thus fixed $W_{**}$ encounters some unexpected, completely surprising input
 $x_t$? This might disturb the cell state $c_t$ leading to pertubated future $h_t$ and it might take a long time for the
 LSTM to recover from that singular surprising input. The paper [Multiplicative LSTM for sequence modelling] now argues
@@ -110,13 +110,18 @@ the self-evident idea is to evaluate if mLSTMs excel in recommender tasks.
 
 ## Implementation
 
-Everyone seems to love [PyTorch] for it's beautiful API and I totally consent. For our task all we have to do is create
-a new class or module in PyTorch's jargon that inherits most bits from a base RNN module `RNNBase` and 
-overwrites the `forward` method according to our needs.  
+Everyone seems to love [PyTorch] for it's beautiful API and I totally consent. For me its beauty lies in its simplicity. 
+Every elementary building block of a neural network like a linear transformation is called a *Module* in PyTorch. A
+Module is just a class that inherits from `Module` and implements a `forward` method that does the transformation
+with the help of tensor operations. A more complex neural network is again just a `Module` and uses the 
+[composition principle] to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
+found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
+to TensorFlow where you are either stuck on the level of low-level tensor operations or the composition of layers. 
 
+For our task, we gonna need an `mLSTM` module and luckily PyTorch provides `RNNBase`, a base class for custom RNNs.
+So all we have to do is to write a module that inherits from `RNNBase`, defines additional parameters and implements
+the mLSTM equations inside of `forward`: 
 
-
-* Die Variablennamen noch anpassen wie oben
 
 ```python
 import math
@@ -134,14 +139,14 @@ class mLSTM(RNNBase):
                  num_layers=1, bias=bias, batch_first=True,
                  dropout=0, bidirectional=False)
 
-        w_mx = torch.Tensor(hidden_size, input_size)
-        w_mh = torch.Tensor(hidden_size, hidden_size)
-        b_mx = torch.Tensor(hidden_size)
-        b_mh = torch.Tensor(hidden_size)
-        self.w_mx = Parameter(w_mx)
-        self.b_mx = Parameter(b_mx)
-        self.w_mh = Parameter(w_mh)
-        self.b_mh = Parameter(b_mh)
+        w_im = torch.Tensor(hidden_size, input_size)
+        w_hm = torch.Tensor(hidden_size, hidden_size)
+        b_im = torch.Tensor(hidden_size)
+        b_hm = torch.Tensor(hidden_size)
+        self.w_im = Parameter(w_im)
+        self.b_im = Parameter(b_im)
+        self.w_hm = Parameter(w_hm)
+        self.b_hm = Parameter(b_hm)
 
         self.lstm_cell = LSTMCell(input_size, hidden_size, bias)
         self.reset_parameters()
@@ -151,23 +156,42 @@ class mLSTM(RNNBase):
         for weight in self.parameters():
             weight.data.uniform_(-stdv, stdv)
 
-    def forward(self, input, hx=None):
+    def forward(self, input, hx):
         n_batch, n_seq, n_feat = input.size()
-
-        assert hx is not None
 
         hx, cx = hx
         steps = [cx.unsqueeze(1)]
         for seq in range(n_seq):
-            mx = F.linear(input[:, seq, :], self.w_mx, self.b_mx) * F.linear(hx, self.w_mh, self.b_mh)
+            mx = F.linear(input[:, seq, :], self.w_im, self.b_im) * F.linear(hx, self.w_hm, self.b_hm)
             hx = (mx, cx)
             hx, cx = self.lstm_cell(input[:, seq, :], hx)
             steps.append(cx.unsqueeze(1))
 
         return torch.cat(steps, dim=1)
 ```
+
+The code is pretty much self-explainartory. We inherit from `RNNBase` and initialize the additional parameters we need for the calculation of $m_t$
+in `__init__`. In `forward` we use those parameters to calculate $m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{(t-1)} + b_{hm})$ with the help of `F.linear` and pass it to an ordinary `LSTMCell`. We collect the results for each timestep
+in our sequence in `steps` and return it as concatenated tensor. 
+
+The [Spotlight] library also follows a modular concept of components that can be easily plugged together and replaced.
+It has only five components:
+ 
+ 1. **embedding layers** to map item ids to dense vectors,
+ 2. **user/item representations** which take embedding layers to calculate latent representations and the score for an 
+    user/item pair, 
+ 3. **interactions** allowing to easily access the usr/item interactions and their explicit/implicit feedback,
+ 4. **losses** defining the objective for the recommendation task,
+ 5. **models** which take user/item representations, the user/item interactions and a given loss to train the network.  
+
+Due to this modular layout, we only need to write a new user/item representation module called `mLSTMNet`. Since this
+is straight-forward I leave it to you to take a look at the source code in the mlstm4reco repository.
+
 * inspired by Mixture-of-tastes Models for Representing Users with Diverse Interests by Maciej Kula
 Before we actually start implementing of mLSTMs it's always good to familiarize oneself with the library we are using.
+
+A final note about the [mlstm4reco][Github repo] package itself. 
+
 
 ## Evaluation
 
@@ -189,10 +213,12 @@ Before we actually start implementing of mLSTMs it's always good to familiarize 
 | Amazon        | LSTM  | 0.2629        | 0.2642    | 2.85e-3       | 224           | 128           | 2.42e-11| 50       |
 | Amazon        | mLSTM | 0.3061        | 0.3123    | 2.48e-3       | 144           | 120           | 4.53e-11| 50       |
 
-Comparing the test performance For Movielens 10m it's 7.96% more, for Movielens 1m it's 5.30% more and for Amazon it's 18.19% more.
+Comparing the test performance For for Movielens 1m it's 5.30% Movielens 10m it's 7.96% more,  more and for Amazon it's 18.19% more.
 
 ## Conclusion
 
+[TensorFlow]: URL HERE!
+[composition principle]: URL HERE!
 [low-rank approximations]: https://en.wikipedia.org/wiki/Low-rank_approximation
 [GRU4Rec]: https://github.com/hidasib/GRU4Rec
 [vanishing gradient problem]: https://en.wikipedia.org/wiki/Vanishing_gradient_problem

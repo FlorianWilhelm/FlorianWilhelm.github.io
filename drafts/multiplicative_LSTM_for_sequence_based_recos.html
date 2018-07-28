@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Multiplicative LSTM for sequence-based Recommendations - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+
+/*some stuff for output/input prompts*/
+div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
+div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
+div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
+div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
+@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
+div.prompt:empty{padding-top:0;padding-bottom:0}
+div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
+div.inner_cell{width:90%;}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
+div.input_prompt{color:navy;border-top:1px solid transparent;}
+div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
+div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
+div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
+div.output_prompt{color:darkred;}
+
+a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
+h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
+/* end stuff for output/input prompts*/
+
+
+.highlight-ipynb .hll { background-color: #ffffcc }
+.highlight-ipynb  { background: #f8f8f8; }
+.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
+.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
+.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight-ipynb .o { color: #666666 } /* Operator */
+.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
+.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
+.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
+.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
+.highlight-ipynb .go { color: #888888 } /* Generic.Output */
+.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
+.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
+.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
+.highlight-ipynb .m { color: #666666 } /* Literal.Number */
+.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
+.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
+.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
+.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight-ipynb .no { color: #880000 } /* Name.Constant */
+.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
+.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
+.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
+.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
+.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
+.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
+.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
+.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
+.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+div.entry-content {
+  overflow: visible;
+  padding: 8px;
+}
+.input_area {
+  padding: 0.2em;
+}
+
+a.heading-anchor {
+ white-space: normal;
+}
+
+.rendered_html
+code {
+ font-size: .8em;
+}
+
+pre.ipynb {
+  color: black;
+  background: #f7f7f7;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0px;
+  font-size: 13px;
+}
+
+/* remove the prompt div from text cells */
+div.text_cell .prompt {
+    display: none;
+}
+
+/* remove horizontal padding from text cells, */
+/* so it aligns with outer body text */
+div.text_cell_render {
+    padding: 0.5em 0em;
+}
+
+img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            },
+            displayAlign: 'center', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+
+<link rel="canonical" href="https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="python,data science,deep learning,recommendation-system" />
+        <meta name="description" content="Motivation Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant …" />
+
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Multiplicative LSTM for sequence-based Recommendations"/>
+        <meta property="og:url" content="https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html"/>
+        <meta property="og:description" content="Motivation Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant …"/>
+        <meta property="article:published_time" content="2018-08-01" />
+            <meta property="article:section" content="post" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="data science" />
+            <meta property="article:tag" content="deep learning" />
+            <meta property="article:tag" content="recommendation-system" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="https://florianwilhelm.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="https://florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+
+
+        <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html"
+                       rel="bookmark"
+                       title="Permalink to Multiplicative LSTM for sequence-based Recommendations">
+                        Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommendations
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2018-08-01T18:00:00+02:00"> Aug. 01, 2018</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/python/">python</a>
+        /
+	<a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+        /
+	<a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
+        /
+	<a href="https://florianwilhelm.info/tag/recommendation-system/">recommendation-system</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>Motivation</h2>
+<p>Recommender Systems support the decision making processes of customers with personalized suggestions. 
+They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
+social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
+of a relevant recommendation. Which user interaction occurred just before we want to provide a recommendation?
+How many interactions ago did the user interact with an item like this one?
+Traditional user-item recommenders often neglect the dimension of time completely. 
+This means that many traditional recommenders find for each user a latent representation based on the user&#8217;s
+historical item interactions without any notion of recency and sequence of interactions. To also incorporate 
+this kind of contextual information about interactions, sequence-based recommenders were developed. 
+With the advent of deep learning quite a few of them are nowadays based on <a href="https://en.wikipedia.org/wiki/Recurrent_neural_network">Recurrent Neural Networks</a>&nbsp;(RNNs).</p>
+<p>Whenever I want to dig deeper into a topic like sequence-based recommenders I follow a few simple steps:
+First of all, to learn something I directly need to apply it otherwise learning things doesn&#8217;t work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the <a href="https://en.wikipedia.org/wiki/SMART_criteria"><span class="caps">SMART</span> citeria</a> a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the&nbsp;outcome.</p>
+<p>Actually, this blog post is the outcome of several things I wanted to familiarize myself more and try&nbsp;out:</p>
+<ol>
+<li><a href="https://pytorch.org/">PyTorch</a>, since this framework is used in a large fraction of recent publications about deep&nbsp;learning,</li>
+<li><a href="https://github.com/maciejkula/spotlight">Spotlight</a>, since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality&nbsp;implemented,</li>
+<li>applying a paper about <a href="https://arxiv.org/abs/1609.07959">Multiplicative <span class="caps">LSTM</span> for sequence modelling</a> to recommender systems and see how that performs compared to traditional&nbsp;LSTMs.</li>
+</ol>
+<p>Since Spotlight is based on PyTorch and multiplicative LSTMs (mLSTMs) are not yet implemented in PyTorch the task of evaluating mLSTMs vs. LSTMs inherently addresses all those points outlined above. The goal is set, so let&#8217;s get&nbsp;going!</p>
+<h2>Theory</h2>
+<p>Long short-term memory architectures (LSTMs) are maybe the most common incarnations of RNNs since they don&#8217;t adhere 
+to the <a href="https://en.wikipedia.org/wiki/Vanishing_gradient_problem">vanishing gradient problem</a> and thus are able to capture long-term relationships in a sequence. You can find a great
+explanation of LSTMs in Colah&#8217;s post <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding <span class="caps">LSTM</span> Networks</a> and more general about the power of RNNs in the 
+article <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/">The Unreasonable Effectiveness of Recurrent Neural Networks</a>. 
+More recently, also Gated Recurrent Units (GRUs) which have a simplified structure compared to LSTMs are also used 
+in sequential prediction tasks with occasionally superior results. <a href="https://github.com/maciejkula/spotlight">Spotlight</a> provides a sequential recommender based on LSTMs and 
+the quite renowned <a href="https://github.com/hidasib/GRU4Rec">GRU4Rec</a> model uses GRUs but in general it&#8217;s not possible to state that one always outperforms the&nbsp;other.</p>
+<p>So given these ingredients, how do we now construct a sequential recommender? Let&#8217;s assume on every timestep 
+<span class="math">\(t\in\{1,\ldots,T\}\)</span> a user has interacted with an item <span class="math">\(i_t\)</span>. The basic idea is now to feed these interactions into
+ an <span class="caps">LSTM</span> up to the time <span class="math">\(t\)</span> in order to get a representation of the user&#8217;s preferences <span class="math">\(h_t\)</span> and use these to state
+ if the user might like or dislike the next item <span class="math">\(i_{t+1}\)</span>. The other elements of the model are what one would also do
+ in a non-sequential recommender like one-hot encoding of the items and embedding them in a dense vector representation <span class="math">\(e_{i_t}\)</span>
+ which is then feed into the <span class="caps">LSTM</span>. We can then just use the output <span class="math">\(h_t\)</span> of the <span class="caps">LSTM</span> and calculate the inner product (<span class="math">\(\bigotimes\)</span>) 
+ with the embedding <span class="math">\(e_{i_{t+1}}\)</span> plus an item bias for varying item popularity to retrieve an output <span class="math">\(p_{t+1}\)</span>. 
+ This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
+ Figure 1 illustrates our sequential recommender model and this is what&#8217;s actually happening inside Spotlight&#8217;s 
+ sequential recommender with an <span class="caps">LSTM</span> representation. If you raise your eyebrow due to the usage of an inner product
+ then be aware that <a href="https://en.wikipedia.org/wiki/Low-rank_approximation">low-rank approximations</a> have been and still are one of the most successful building blocks
+ of a recommender system. An alternative would be to replace the inner product with a deep feed forward network but
+ to quite some extent, this would also just learn to perform an approximation of an inner product. A recent paper
+ <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf">Latent Cross: Making Use of Context in Recurrent Recommender Systems</a> by Google also emphasizes the power of learning
+ low-rank relations with the help of inner&nbsp;products.</p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/mLSTM.png" alt="mLSTM">
+<figcaption><strong>Figure 1:</strong> At timestep $t$ the item $i_t$ is embedded and fed into an <span class="caps">LSTM</span> together with
+ cell state $C_{t-1}$ and $h_{t-1}$ of the last timestep which yields a new presentation $h_t$. The inner product of 
+ $h_t$ with the embedding of the potential next item $e_{i_{t+1}}$ yields a scalar value corresponding to how likely the user
+ would interact with $i_{t+1}$.</figcaption>
+</p>
+</figure>
+
+<p>What we want to do is basically replacing the <span class="caps">LSTM</span> part of Spotlight&#8217;s sequential recommender with an mLSTM. 
+But before we do that the obvious question is why? Let&#8217;s recap the formulae of the <a href="http://pytorch.org/docs/0.3.1/nn.html?highlight=lstm#torch.nn.LSTM"><span class="caps">LSTM</span> implementation</a> of&nbsp;PyTorch:</p>
+<div class="math">\begin{split}\begin{array}{ll}
+i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{t-1} + b_{hi}) \\
+f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{t-1} + b_{hf}) \\
+g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hc} h_{t-1} + b_{hg}) \\
+o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{ho} h_{t-1} + b_{ho}) \\
+c_t = f_t * c_{t-1} + i_t * g_t \\
+h_t = o_t * \tanh(c_t)
+\end{array}\end{split}</div>
+<p>
+<br></p>
+<p>where <span class="math">\(i_t\)</span> denotes the input gate, <span class="math">\(f_t\)</span> the forget gate and <span class="math">\(o_t\)</span> the output gate at timestep <span class="math">\(t\)</span>. If we look at
+those lines again we can see a lot of terms in the form of <span class="math">\(W_{**} x_t + W_{**} h_{t-1}\)</span> neglecting the biases <span class="math">\(b_*\)</span> for a
+moment. Thus a lot of an <span class="caps">LSTM</span>&#8217;s inner workings depend on the addition of the transformed input with the transformed hidden
+state. So what happens if a trained <span class="caps">LSTM</span> with thus fixed <span class="math">\(W_{**}\)</span> encounters some unexpected, completely surprising input
+<span class="math">\(x_t\)</span>? This might disturb the cell state <span class="math">\(c_t\)</span> leading to pertubated future <span class="math">\(h_t\)</span> and it might take a long time for the
+<span class="caps">LSTM</span> to recover from that singular surprising input. The paper <a href="https://arxiv.org/abs/1609.07959">Multiplicative <span class="caps">LSTM</span> for sequence modelling</a> now argues
+that &#8220;<span class="caps">RNN</span> architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
+from surprising inputs&#8221;. By allowing the hidden state to react flexibly on the new input by changing it&#8217;s magnitude it might be
+able to recover from mistakes faster. The quite vague formulation of <em>input-dependent transition functions</em> is then 
+actually achieved in a quite simple way. In an mLSTM the hidden state <span class="math">\(h_{t-1}\)</span> is transformed in a multiplicative way
+using the input <span class="math">\(x_t\)</span> into an intermediate state <span class="math">\(m_t\)</span> before it is used in a plain <span class="caps">LSTM</span> as before. Eventually, there
+is only a single equation to be prepended to the equations of an <span class="caps">LSTM</span>:</p>
+<div class="math">\begin{split}\begin{array}{ll}
+m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm}) \\
+i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{mi} m_t + b_{mi}) \\
+f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{mf} m_t + b_{mf}) \\
+g_t = \tanh(W_{ig} x_t + b_{ig} + W_{mc} m_t + b_{mg}) \\
+o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{mo} m_t + b_{mo}) \\
+c_t = f_t * c_{t-1} + i_t * g_t \\
+h_t = o_t * \tanh(c_t)
+\end{array}\end{split}</div>
+<p>
+<br></p>
+<p>The element-wise multiplication (<span class="math">\(\odot\)</span>) allows <span class="math">\(m_t\)</span> to flexible change it&#8217;s value with respect to <span class="math">\(h_{t-1}\)</span> and <span class="math">\(x_t\)</span>.
+On a more theoretical note, if you picture the hidden states of an <span class="caps">LSTM</span> as a tree depending on the inputs at each timestep
+then the number of all possible states at timestep <span class="math">\(t\)</span> will be much larger for an mLSTM compared to an <span class="caps">LSTM</span>. Therefore, 
+the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
+according to the&nbsp;paper.</p>
+<p>The paper focuses only on <span class="caps">NLP</span> tasks but since surprising inputs are also a concern in sequential recommender systems,
+the self-evident idea is to evaluate if mLSTMs excel in recommender&nbsp;tasks.</p>
+<h2>Implementation</h2>
+<p>Everyone seems to love <a href="https://pytorch.org/">PyTorch</a> for it&#8217;s beautiful <span class="caps">API</span> and I totally consent. For me its beauty lies in its simplicity. 
+Every elementary building block of a neural network like a linear transformation is called a <em>Module</em> in PyTorch. A
+Module is just a class that inherits from <code>Module</code> and implements a <code>forward</code> method that does the transformation
+with the help of tensor operations. A more complex neural network is again just a <code>Module</code> and uses the 
+<a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">composition principle</a> to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
+found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
+to TensorFlow where you are either stuck on the level of low-level tensor operations or the composition of&nbsp;layers. </p>
+<p>For our task, we gonna need an <code>mLSTM</code> module and luckily PyTorch provides <code>RNNBase</code>, a base class for custom RNNs.
+So all we have to do is to write a module that inherits from <code>RNNBase</code>, defines additional parameters and implements
+the mLSTM equations inside of <code>forward</code>: </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">torch.nn.modules.rnn</span> <span class="kn">import</span> <span class="n">RNNBase</span><span class="p">,</span> <span class="n">LSTMCell</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">functional</span> <span class="k">as</span> <span class="n">F</span>
+
+
+<span class="k">class</span> <span class="nc">mLSTM</span><span class="p">(</span><span class="n">RNNBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">mLSTM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;LSTM&#39;</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="n">input_size</span><span class="p">,</span>
+                 <span class="n">num_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="n">w_im</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">input_size</span><span class="p">)</span>
+        <span class="n">w_hm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="n">b_im</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="n">b_hm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_im</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">w_im</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_im</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">b_im</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_hm</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">w_hm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_hm</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">b_hm</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lstm_cell</span> <span class="o">=</span> <span class="n">LSTMCell</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stdv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">stdv</span><span class="p">,</span> <span class="n">stdv</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">):</span>
+        <span class="n">n_batch</span><span class="p">,</span> <span class="n">n_seq</span><span class="p">,</span> <span class="n">n_feat</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+        <span class="n">hx</span><span class="p">,</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">hx</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">cx</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_seq</span><span class="p">):</span>
+            <span class="n">mx</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="nb">input</span><span class="p">[:,</span> <span class="n">seq</span><span class="p">,</span> <span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_im</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_im</span><span class="p">)</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">hx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_hm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_hm</span><span class="p">)</span>
+            <span class="n">hx</span> <span class="o">=</span> <span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">cx</span><span class="p">)</span>
+            <span class="n">hx</span><span class="p">,</span> <span class="n">cx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm_cell</span><span class="p">(</span><span class="nb">input</span><span class="p">[:,</span> <span class="n">seq</span><span class="p">,</span> <span class="p">:],</span> <span class="n">hx</span><span class="p">)</span>
+            <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cx</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The code is pretty much self-explanatory. We inherit from <code>RNNBase</code> and initialize the additional parameters we need for the calculation of <span class="math">\(m_t\)</span>
+in <code>__init__</code>. In <code>forward</code> we use those parameters to calculate <span class="math">\(m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})\)</span> with the help of <code>F.linear</code> and pass it to an ordinary <code>LSTMCell</code>. We collect the results for each timestep
+in our sequence in <code>steps</code> and return it as concatenated&nbsp;tensor. </p>
+<p>The <a href="https://github.com/maciejkula/spotlight">Spotlight</a> library also follows a modular concept of components that can be easily plugged together and replaced.
+It has only five&nbsp;components:</p>
+<ol>
+<li><strong>embedding layers</strong> which map item ids to dense&nbsp;vectors,</li>
+<li><strong>user/item representations</strong> which take embedding layers to calculate latent representations and the score for an 
+    user/item&nbsp;pair, </li>
+<li><strong>interactions</strong> which give easy access to the usr/item interactions and their explicit/implicit&nbsp;feedback,</li>
+<li><strong>losses</strong> which define the objective for the recommendation&nbsp;task,</li>
+<li><strong>models</strong> which take user/item representations, the user/item interactions and a given loss to train the&nbsp;network.  </li>
+</ol>
+<p>Due to this modular layout, we only need to write a new user/item representation module called <code>mLSTMNet</code>. Since this
+is straight-forward I leave it to you to take a look at the source code in my <a href="https://github.com/FlorianWilhelm/mlstm4reco">mlstm4reco</a> repository.
+At this point I should mentioned that the whole layout of the repository was strongly inspired by Maciej Kula&#8217;s 
+<a href="https://arxiv.org/abs/1711.08379">Mixture-of-tastes Models for Representing Users with Diverse Interests</a> paper and the accompanying <a href="https://github.com/maciejkula/mixture">source code</a>.
+My implementation also follows his advise of using an automatic hyperparameter optimisation for my own model and the
+baseline model for comparison. This avoids quite a common bias in research when people put more effort in hand-tuning
+their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
+Using a tool like <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> for hyperparameter optimisation is quite easy and mitigates this bias to some extent at&nbsp;least.</p>
+<h2>Evaluation</h2>
+<p>To compare Spotlight&#8217;s <a href="https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit">ImplicitSequenceModel</a> with an <span class="caps">LSTM</span> to an mLSTM user representation,
+<a href="https://github.com/FlorianWilhelm/mlstm4reco">mlstm4reco</a> repository provides an <code>run.py</code> script in the <code>experiments</code> folder which takes several
+command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
+For me it&#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
+log which parameters were used to generate the&nbsp;results. </p>
+<p>For the evaluation matrix below I ran each experiment 200 times to give <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> enough chances to find good 
+hyperparameters for the number of epochs (<code>n_iter</code>), number of embeddings (<code>embedding_dim</code>), l2-regularisation (<code>l2</code>),
+batch size (<code>batch_size</code>) and learning rate (<code>learn_rate</code>). 
+Each of our two models with <em>lstm</em> and <em>mlstm</em> representation were applied to three datasets, 
+the <a href="https://grouplens.org/datasets/movielens/">MovieLens</a> 1m and 10m datasets as well as the <a href="https://snap.stanford.edu/data/amazon-meta.html">Amazon</a> dataset. To run 200 experiments with the mlstm 
+model on the Movielens 10m dataset the command would be <code>./run.py -m mlstm -n 200 10m</code>.</p>
+<p>In each experiment the data is split into a training, validation and test set where training is used to fit the model,
+validation to find the right hyperparameters and test for the final evaluation after all parameters are determined. 
+The performance of the models is measured with the help of the <a href="https://en.wikipedia.org/wiki/Mean_reciprocal_rank">mean reciprocal rank</a> (<span class="caps">MRR</span>)&nbsp;score:</p>
+<table>
+<thead>
+<tr>
+<th align="right">dataset</th>
+<th align="right">type</th>
+<th align="right">validation</th>
+<th align="right">test</th>
+<th align="right">learn_rate</th>
+<th align="right">batch_size</th>
+<th align="right">embedding_dim</th>
+<th align="right">l2</th>
+<th align="right">n_iter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">Movielens 1m</td>
+<td align="right"><span class="caps">LSTM</span></td>
+<td align="right">0.1199</td>
+<td align="right">0.1317</td>
+<td align="right">1.93e-2</td>
+<td align="right">208</td>
+<td align="right">112</td>
+<td align="right">6.01e-06</td>
+<td align="right">50</td>
+</tr>
+<tr>
+<td align="right">Movielens 1m</td>
+<td align="right">mLSTM</td>
+<td align="right">0.1275</td>
+<td align="right">0.1386</td>
+<td align="right">1.25e-2</td>
+<td align="right">240</td>
+<td align="right">120</td>
+<td align="right">5.90e-06</td>
+<td align="right">40</td>
+</tr>
+<tr>
+<td align="right">Movielens 10m</td>
+<td align="right"><span class="caps">LSTM</span></td>
+<td align="right">0.1090</td>
+<td align="right">0.1033</td>
+<td align="right">4.19e-3</td>
+<td align="right">224</td>
+<td align="right">120</td>
+<td align="right">2.43e-07</td>
+<td align="right">50</td>
+</tr>
+<tr>
+<td align="right">Movielens 10m</td>
+<td align="right">mLSTM</td>
+<td align="right">0.1142</td>
+<td align="right">0.1115</td>
+<td align="right">4.50e-3</td>
+<td align="right">224</td>
+<td align="right">128</td>
+<td align="right">1.12e-06</td>
+<td align="right">45</td>
+</tr>
+<tr>
+<td align="right">Amazon</td>
+<td align="right"><span class="caps">LSTM</span></td>
+<td align="right">0.2629</td>
+<td align="right">0.2642</td>
+<td align="right">2.85e-3</td>
+<td align="right">224</td>
+<td align="right">128</td>
+<td align="right">2.42e-11</td>
+<td align="right">50</td>
+</tr>
+<tr>
+<td align="right">Amazon</td>
+<td align="right">mLSTM</td>
+<td align="right">0.3061</td>
+<td align="right">0.3123</td>
+<td align="right">2.48e-3</td>
+<td align="right">144</td>
+<td align="right">120</td>
+<td align="right">4.53e-11</td>
+<td align="right">50</td>
+</tr>
+</tbody>
+</table>
+<p>If we compare the test results of the Movielens 1m dataset, it&#8217;s an improvement of 5.30% when using mLSTM over <span class="caps">LSTM</span> 
+representation, for Movilens 10m it&#8217;s 7.96% more and for Amazon it&#8217;s even 18.19%&nbsp;more. </p>
+<h2>Conclusion</h2>
+<p>The performance improvements of using an mLSTM over an <span class="caps">LSTM</span> user representation are quite good but nothing spectacular.
+They give us at least some indication that mLSTMs achieve superior results for sequential recommendation tasks. In order to 
+further underpin this first assessment one could test with more datasets and also check other evaluation 
+metrics besides <span class="caps">MRR</span>. I leave this to a dedicated reader, so if you have are interested, please let me know and share your
+results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
+sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side&nbsp;project!</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
+        <li><a href="https://florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
+        <li><a href="https://florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
+        <li><a href="https://florianwilhelm.info/2018/03/isolated_environments_with_pyspark/">Managing isolated Environments with&nbsp;PySpark</a></li>
+        <li><a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'multiplicative_LSTM_for_sequence_based_recos';
+                var disqus_url = 'https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/blue-yonder/">
+                            Blue Yonder
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/causal-inference/">
+                            causal inference
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/kalman/">
+                            kalman
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/production/">
+                            production
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/programming/">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://florianwilhelm.info/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/recommendation-system/">
+                            recommendation system
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/spark/">
+                            spark
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/template/">
+                            template
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2018 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
+</body>
+</html>

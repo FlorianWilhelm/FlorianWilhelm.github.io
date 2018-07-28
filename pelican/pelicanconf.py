@@ -15,6 +15,15 @@ SITEURL = 'https://florianwilhelm.info'
 
 PATH = 'content'
 MARKUP = ('md',)
+MARKDOWN = {
+    'extension_configs': {
+        'markdown.extensions.codehilite': {'css_class': 'highlight'},
+        'markdown.extensions.extra': {},
+        'markdown.extensions.meta': {},
+        'markdown.extensions.tables': {},
+    },
+    'output_format': 'html5',
+}
 TIMEZONE = 'Europe/Paris'
 DEFAULT_LANG = u'en'
 OUTPUT_PATH = os.path.join(__location__, '../')

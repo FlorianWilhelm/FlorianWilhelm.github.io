@@ -25,17 +25,18 @@ Whenever I want to dig deeper into a topic like sequence-based recommenders I fo
 First of all, to learn something I directly need to apply it otherwise learning things doesn't work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the [SMART citeria] a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the outcome.
 
 Actually, this blog post is the outcome of several things I wanted to familiarize myself more and try out:
-1) [PyTorch], since this framework is used in a large fraction of publications about deep learning,
-2) [Spotlight], since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality implemented,
-3) applying a paper about [Multiplicative LSTM for sequence modelling] to recommender systems and see how that performs compared to traditional LSTMs.
+
+ 1. [PyTorch], since this framework is used in a large fraction of recent publications about deep learning,
+ 2. [Spotlight], since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality implemented,
+ 3. applying a paper about [Multiplicative LSTM for sequence modelling] to recommender systems and see how that performs compared to traditional LSTMs.
  
 Since Spotlight is based on PyTorch and multiplicative LSTMs (mLSTMs) are not yet implemented in PyTorch the task of evaluating mLSTMs vs. LSTMs inherently addresses all those points outlined above. The goal is set, so let's get going!
 
 ## Theory
 
-Long short-term memory architecture (LSTM)s are maybe the most common incarnations of RNNs since they don't adhere 
-to the [vanishing gradient problem] and thus are able to capture long-term relationships in a sequence. Find a great
-explanations of LSTMs in Colah's post [Understanding LSTM Networks] and more general about the power of RNNs in the 
+Long short-term memory architectures (LSTMs) are maybe the most common incarnations of RNNs since they don't adhere 
+to the [vanishing gradient problem] and thus are able to capture long-term relationships in a sequence. You can find a great
+explanation of LSTMs in Colah's post [Understanding LSTM Networks] and more general about the power of RNNs in the 
 article [The Unreasonable Effectiveness of Recurrent Neural Networks]. 
 More recently, also Gated Recurrent Units (GRUs) which have a simplified structure compared to LSTMs are also used 
 in sequential prediction tasks with occasionally superior results. [Spotlight] provides a sequential recommender based on LSTMs and 
@@ -53,7 +54,7 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  sequential recommender with an LSTM representation. If you raise your eyebrow due to the usage of an inner product
  then be aware that [low-rank approximations] have been and still are one of the most successful building blocks
  of a recommender system. An alternative would be to replace the inner product with a deep feed forward network but
- in most likely this would also only just learn to perform an approximation of an inner product. A recent paper
+ to quite some extent, this would also just learn to perform an approximation of an inner product. A recent paper
  [Latent Cross: Making Use of Context in Recurrent Recommender Systems] by Google also emphasizes the power of learning
  low-rank relations with the help of inner products.
  
@@ -71,16 +72,17 @@ What we want to do is basically replacing the LSTM part of Spotlight's sequentia
 But before we do that the obvious question is why? Let's recap the formulae of the [LSTM implementation] of PyTorch:
 
 \begin{split}\begin{array}{ll}
-i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) \\
-f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{(t-1)} + b_{hf}) \\
-g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hc} h_{(t-1)} + b_{hg}) \\
-o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{ho} h_{(t-1)} + b_{ho}) \\
-c_t = f_t * c_{(t-1)} + i_t * g_t \\
+i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{t-1} + b_{hi}) \\
+f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{t-1} + b_{hf}) \\
+g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hc} h_{t-1} + b_{hg}) \\
+o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{ho} h_{t-1} + b_{ho}) \\
+c_t = f_t * c_{t-1} + i_t * g_t \\
 h_t = o_t * \tanh(c_t)
 \end{array}\end{split}
+<br>
 
 where $i_t$ denotes the input gate, $f_t$ the forget gate and $o_t$ the output gate at timestep $t$. If we look at
-those lines again we can see a lot of terms in the form $W_{**} x_t + W_{**} h_{(t-1)}$ neglecting the biases $b_*$ for a
+those lines again we can see a lot of terms in the form of $W_{**} x_t + W_{**} h_{t-1}$ neglecting the biases $b_*$ for a
 moment. Thus a lot of an LSTM's inner workings depend on the addition of the transformed input with the transformed hidden
 state. So what happens if a trained LSTM with thus fixed $W_{**}$ encounters some unexpected, completely surprising input
 $x_t$? This might disturb the cell state $c_t$ leading to pertubated future $h_t$ and it might take a long time for the
@@ -93,14 +95,15 @@ using the input $x_t$ into an intermediate state $m_t$ before it is used in a pl
 is only a single equation to be prepended to the equations of an LSTM:
   
 \begin{split}\begin{array}{ll}
-m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{(t-1)} + b_{hm}) \\
+m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm}) \\
 i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{mi} m_t + b_{mi}) \\
 f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{mf} m_t + b_{mf}) \\
 g_t = \tanh(W_{ig} x_t + b_{ig} + W_{mc} m_t + b_{mg}) \\
 o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{mo} m_t + b_{mo}) \\
-c_t = f_t * c_{(t-1)} + i_t * g_t \\
+c_t = f_t * c_{t-1} + i_t * g_t \\
 h_t = o_t * \tanh(c_t)
 \end{array}\end{split}
+<br>
 
 The element-wise multiplication ($\odot$) allows $m_t$ to flexible change it's value with respect to $h_{t-1}$ and $x_t$.
 On a more theoretical note, if you picture the hidden states of an LSTM as a tree depending on the inputs at each timestep
@@ -174,32 +177,32 @@ class mLSTM(RNNBase):
 ```
 
 The code is pretty much self-explanatory. We inherit from `RNNBase` and initialize the additional parameters we need for the calculation of $m_t$
-in `__init__`. In `forward` we use those parameters to calculate $m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{(t-1)} + b_{hm})$ with the help of `F.linear` and pass it to an ordinary `LSTMCell`. We collect the results for each timestep
+in `__init__`. In `forward` we use those parameters to calculate $m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})$ with the help of `F.linear` and pass it to an ordinary `LSTMCell`. We collect the results for each timestep
 in our sequence in `steps` and return it as concatenated tensor. 
 
 The [Spotlight] library also follows a modular concept of components that can be easily plugged together and replaced.
 It has only five components:
  
- 1. **embedding layers** to map item ids to dense vectors,
+ 1. **embedding layers** which map item ids to dense vectors,
  2. **user/item representations** which take embedding layers to calculate latent representations and the score for an 
     user/item pair, 
- 3. **interactions** allowing to easily access the usr/item interactions and their explicit/implicit feedback,
- 4. **losses** defining the objective for the recommendation task,
+ 3. **interactions** which give easy access to the usr/item interactions and their explicit/implicit feedback,
+ 4. **losses** which define the objective for the recommendation task,
  5. **models** which take user/item representations, the user/item interactions and a given loss to train the network.  
 
 Due to this modular layout, we only need to write a new user/item representation module called `mLSTMNet`. Since this
 is straight-forward I leave it to you to take a look at the source code in my [mlstm4reco][Github repo] repository.
 At this point I should mentioned that the whole layout of the repository was strongly inspired by Maciej Kula's 
-[Mixture-of-tastes Models for Representing Users with Diverse Interests] paper and the accompanying source code.
-My implementation also follows his advise of using an automatic hyperparameter optimisation for your own model and the
-baseline model you are comparing with. This avoids quite a common bias in research when people put more effort in hand-
-tuning their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
+[Mixture-of-tastes Models for Representing Users with Diverse Interests] paper and the accompanying [source code][mixture repo].
+My implementation also follows his advise of using an automatic hyperparameter optimisation for my own model and the
+baseline model for comparison. This avoids quite a common bias in research when people put more effort in hand-tuning
+their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
 Using a tool like [HyperOpt] for hyperparameter optimisation is quite easy and mitigates this bias to some extent at least.
  
  
 ## Evaluation
 
-To compare Spotlight's [ImplicitSequenceModel] with an LSTM to an mLSTM user representation
+To compare Spotlight's [ImplicitSequenceModel] with an LSTM to an mLSTM user representation, the
 [mlstm4reco][Github repo] repository provides an `run.py` script in the `experiments` folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
 For me it's just one aspect of proper and reproducible research since it avoids errors and you can also easily
@@ -225,6 +228,7 @@ The performance of the models is measured with the help of the [mean reciprocal 
 | Amazon        | LSTM  | 0.2629        | 0.2642    | 2.85e-3       | 224           | 128           | 2.42e-11| 50       |
 | Amazon        | mLSTM | 0.3061        | 0.3123    | 2.48e-3       | 144           | 120           | 4.53e-11| 50       |
 
+
 If we compare the test results of the Movielens 1m dataset, it's an improvement of 5.30% when using mLSTM over LSTM 
 representation, for Movilens 10m it's 7.96% more and for Amazon it's even 18.19% more. 
 
@@ -245,7 +249,7 @@ sequential recommenders and with the help of PyTorch, Spotlight I am looking for
 [vanishing gradient problem]: https://en.wikipedia.org/wiki/Vanishing_gradient_problem
 [HyperOpt]: http://hyperopt.github.io/hyperopt/
 [LSTM implementation]: http://pytorch.org/docs/0.3.1/nn.html?highlight=lstm#torch.nn.LSTM
-[SMART criteria]: https://en.wikipedia.org/wiki/SMART_criteria
+[SMART citeria]: https://en.wikipedia.org/wiki/SMART_criteria
 [PyTorch]: https://pytorch.org/
 [Spotlight]: https://github.com/maciejkula/spotlight
 [Github repo]: https://github.com/FlorianWilhelm/mlstm4reco
@@ -259,3 +263,4 @@ sequential recommenders and with the help of PyTorch, Spotlight I am looking for
 [MovieLens]: https://grouplens.org/datasets/movielens/
 [Amazon]: https://snap.stanford.edu/data/amazon-meta.html
 [mean reciprocal rank]: https://en.wikipedia.org/wiki/Mean_reciprocal_rank
+[Latent Cross: Making Use of Context in Recurrent Recommender Systems]: https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf

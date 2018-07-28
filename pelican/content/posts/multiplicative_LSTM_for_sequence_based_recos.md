@@ -1,9 +1,9 @@
 ---
 title: Multiplicative LSTM for sequence-based Recommendations
-date: 2017-04-15 18:00
-modified: 2017-06-17 18:00
+date: 2018-08-01 18:00
+modified: 2018-08-01 18:00
 category: post
-tags: python, data science, deep learning
+tags: python, data science, deep learning, recommendation-system
 authors: Florian Wilhelm
 status: draft
 ---
@@ -12,21 +12,24 @@ status: draft
 
 Recommender Systems support the decision making processes of customers with personalized suggestions. 
 They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
-social media, or entertainment. Quite often the dimension of times plays a dominant role in the generation
-of a relevant recommendation. Traditional user-item recommenders neglect the sequential nature of this dimension. 
-This means that many of these traditional recommenders find for each user a latent representation based on the user's
+social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
+of a relevant recommendation. Which user interaction occurred just before we want to provide a recommendation?
+How many interactions ago did the user interact with an item like this one?
+Traditional user-item recommenders often neglect the dimension of time completely. 
+This means that many traditional recommenders find for each user a latent representation based on the user's
 historical item interactions without any notion of recency and sequence of interactions. To also incorporate 
-this kind of contextual information about interactions, sequence-based recommenders were developed and quite a few of them are based on Recurrent Neural Networks (RNNs).
+this kind of contextual information about interactions, sequence-based recommenders were developed. 
+With the advent of deep learning quite a few of them are nowadays based on [Recurrent Neural Networks] (RNNs).
  
 Whenever I want to dig deeper into a topic like sequence-based recommenders I follow a few simple steps:
-First of all, to learn something I directly need to apply it otherwise learning things doesnt work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the [SMART citeria] a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is that the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the outcome which I hope works ;-) 
+First of all, to learn something I directly need to apply it otherwise learning things doesn't work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the [SMART citeria] a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the outcome.
 
 Actually, this blog post is the outcome of several things I wanted to familiarize myself more and try out:
 1) [PyTorch], since this framework is used in a large fraction of publications about deep learning,
 2) [Spotlight], since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality implemented,
 3) applying a paper about [Multiplicative LSTM for sequence modelling] to recommender systems and see how that performs compared to traditional LSTMs.
  
-Since Spotlight is based on PyTorch and multiplicative LSTMs (mLSTMs) are not yet implemented in PyTorch the task of evaluating mLSTMs vs. LSTMs inherently addresses all those points outlined above. So let's get going!
+Since Spotlight is based on PyTorch and multiplicative LSTMs (mLSTMs) are not yet implemented in PyTorch the task of evaluating mLSTMs vs. LSTMs inherently addresses all those points outlined above. The goal is set, so let's get going!
 
 ## Theory
 
@@ -234,7 +237,7 @@ metrics besides MRR. I leave this to a dedicated reader, so if you have are inte
 results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
 sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project!
 
-
+[Recurrent Neural Networks]: https://en.wikipedia.org/wiki/Recurrent_neural_network
 [TensorFlow]: https://www.tensorflow.org/
 [composition principle]: https://en.wikipedia.org/wiki/Composition_over_inheritance
 [low-rank approximations]: https://en.wikipedia.org/wiki/Low-rank_approximation

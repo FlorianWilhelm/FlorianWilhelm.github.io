@@ -170,7 +170,7 @@ class mLSTM(RNNBase):
         return torch.cat(steps, dim=1)
 ```
 
-The code is pretty much self-explainartory. We inherit from `RNNBase` and initialize the additional parameters we need for the calculation of $m_t$
+The code is pretty much self-explanatory. We inherit from `RNNBase` and initialize the additional parameters we need for the calculation of $m_t$
 in `__init__`. In `forward` we use those parameters to calculate $m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{(t-1)} + b_{hm})$ with the help of `F.linear` and pass it to an ordinary `LSTMCell`. We collect the results for each timestep
 in our sequence in `steps` and return it as concatenated tensor. 
 
@@ -185,24 +185,33 @@ It has only five components:
  5. **models** which take user/item representations, the user/item interactions and a given loss to train the network.  
 
 Due to this modular layout, we only need to write a new user/item representation module called `mLSTMNet`. Since this
-is straight-forward I leave it to you to take a look at the source code in the mlstm4reco repository.
-
-* inspired by Mixture-of-tastes Models for Representing Users with Diverse Interests by Maciej Kula
-Before we actually start implementing of mLSTMs it's always good to familiarize oneself with the library we are using.
-
-A final note about the [mlstm4reco][Github repo] package itself. 
-
-
+is straight-forward I leave it to you to take a look at the source code in my [mlstm4reco][Github repo] repository.
+At this point I should mentioned that the whole layout of the repository was strongly inspired by Maciej Kula's 
+[Mixture-of-tastes Models for Representing Users with Diverse Interests] paper and the accompanying source code.
+My implementation also follows his advise of using an automatic hyperparameter optimisation for your own model and the
+baseline model you are comparing with. This avoids quite a common bias in research when people put more effort in hand-
+tuning their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
+Using a tool like [HyperOpt] for hyperparameter optimisation is quite easy and mitigates this bias to some extent at least.
+ 
+ 
 ## Evaluation
 
-* Hyperparameter Search
-"""Umschreiben
-﻿Our results are robust to hyperparameter optimization. Figure 1 plots the maximum test MRR achieved by each algorithm as a func- tion of the number of elapsed hyperparameter search iterations. Both baseline and mixture models benefit from hyperparameter tuning. All algorithms converge to their optimum performance rela- tively quickly, suggesting a degree of robustness to hyperparameter choices. Mixture-LSTM and Embedding Mixture models quickly outperform their baseline counterparts, and maintain a stable per- formance lead thereafter (with the exception of the factorization Movielens experiments). This lends support to our belief that the mixture models’ superior accuracy reflects their greater capacity to model the recommendation problem well, rather than being an artifact of the experimental procedure or researcher bias.
-5.3
-"""
+To compare Spotlight's [ImplicitSequenceModel] with an LSTM to an mLSTM user representation
+[mlstm4reco][Github repo] repository provides an `run.py` script in the `experiments` folder which takes several
+command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
+For me it's just one aspect of proper and reproducible research since it avoids errors and you can also easily
+log which parameters were used to generate the results. 
 
-* Wieviele Runs wurden gemacht, muessten 200 gewesen sein ./run.py -m mlstm -n 200 10m
+For the evaluation matrix below I ran each experiment 200 times to give [HyperOpt] enough chances to find good 
+hyperparameters for the number of epochs (`n_iter`), number of embeddings (`embedding_dim`), l2-regularisation (`l2`),
+batch size (`batch_size`) and learning rate (`learn_rate`). 
+Each of our two models with *lstm* and *mlstm* representation were applied to three datasets, 
+the [MovieLens] 1m and 10m datasets as well as the [Amazon] dataset. To run 200 experiments with the mlstm 
+model on the Movielens 10m dataset the command would be `./run.py -m mlstm -n 200 10m`.
 
+In each experiment the data is split into a training, validation and test set where training is used to fit the model,
+validation to find the right hyperparameters and test for the final evaluation after all parameters are determined. 
+The performance of the models is measured with the help of the [mean reciprocal rank] (MRR) score:
 
 |dataset        | type  | validation    | test      | learn_rate    | batch_size    |embedding_dim  | l2      | n_iter   |  
 | --:           | --:   | --:           | --:       | --:           | --:           | --:           | --:     | --:      |
@@ -213,12 +222,21 @@ A final note about the [mlstm4reco][Github repo] package itself.
 | Amazon        | LSTM  | 0.2629        | 0.2642    | 2.85e-3       | 224           | 128           | 2.42e-11| 50       |
 | Amazon        | mLSTM | 0.3061        | 0.3123    | 2.48e-3       | 144           | 120           | 4.53e-11| 50       |
 
-Comparing the test performance For for Movielens 1m it's 5.30% Movielens 10m it's 7.96% more,  more and for Amazon it's 18.19% more.
+If we compare the test results of the Movielens 1m dataset, it's an improvement of 5.30% when using mLSTM over LSTM 
+representation, for Movilens 10m it's 7.96% more and for Amazon it's even 18.19% more. 
 
 ## Conclusion
 
-[TensorFlow]: URL HERE!
-[composition principle]: URL HERE!
+The performance improvements of using an mLSTM over an LSTM user representation are quite good but nothing spectacular.
+They give us at least some indication that mLSTMs achieve superior results for sequential recommendation tasks. In order to 
+further underpin this first assessment one could test with more datasets and also check other evaluation 
+metrics besides MRR. I leave this to a dedicated reader, so if you have are interested, please let me know and share your
+results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
+sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project!
+
+
+[TensorFlow]: https://www.tensorflow.org/
+[composition principle]: https://en.wikipedia.org/wiki/Composition_over_inheritance
 [low-rank approximations]: https://en.wikipedia.org/wiki/Low-rank_approximation
 [GRU4Rec]: https://github.com/hidasib/GRU4Rec
 [vanishing gradient problem]: https://en.wikipedia.org/wiki/Vanishing_gradient_problem
@@ -233,3 +251,8 @@ Comparing the test performance For for Movielens 1m it's 5.30% Movielens 10m it'
 [Multiplicative LSTM for sequence modelling]: https://arxiv.org/abs/1609.07959
 [Mixture-of-tastes Models for Representing Users with Diverse Interests]: https://arxiv.org/abs/1711.08379
 [mixture repo]: https://github.com/maciejkula/mixture
+[HyperOpt]: http://hyperopt.github.io/hyperopt/
+[ImplicitSequenceModel]: https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit
+[MovieLens]: https://grouplens.org/datasets/movielens/
+[Amazon]: https://snap.stanford.edu/data/amazon-meta.html
+[mean reciprocal rank]: https://en.wikipedia.org/wiki/Mean_reciprocal_rank

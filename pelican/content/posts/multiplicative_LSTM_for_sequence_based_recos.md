@@ -204,7 +204,9 @@ To compare Spotlight's [ImplicitSequenceModel] with an LSTM to an mLSTM user rep
 [mlstm4reco][Github repo] repository provides an `run.py` script in the `experiments` folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
 But for me it's just one aspect of proper and reproducible research since it avoids errors and you can also easily
-log which parameters were used to generate the results. 
+log which parameters were used to generate the results. I also used [PyScaffold] to set up proper Python package
+scaffold within seconds. This allows me to properly install the `mlstm4reco` package and import its functionality wherever
+I want without messing around with the PYTHONPATH environment variable which one should never do anyway. 
 
 For the evaluation matrix below I ran each experiment 200 times to give [HyperOpt] enough chances to find good 
 hyperparameters for the number of epochs (`n_iter`), number of embeddings (`embedding_dim`), l2-regularisation (`l2`),
@@ -264,3 +266,4 @@ know if you liked this post and comment below.
 [Amazon]: https://snap.stanford.edu/data/amazon-meta.html
 [mean reciprocal rank]: https://en.wikipedia.org/wiki/Mean_reciprocal_rank
 [Latent Cross: Making Use of Context in Recurrent Recommender Systems]: https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf
+[PyScaffold]: https://pyscaffold.org/

@@ -449,7 +449,9 @@ Using a tool like <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> for
 <a href="https://github.com/FlorianWilhelm/mlstm4reco">mlstm4reco</a> repository provides an <code>run.py</code> script in the <code>experiments</code> folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
 But for me it&#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
-log which parameters were used to generate the&nbsp;results. </p>
+log which parameters were used to generate the results. I also used <a href="https://pyscaffold.org/">PyScaffold</a> to set up proper Python package
+scaffold within seconds. This allows me to properly install the <code>mlstm4reco</code> package and import its functionality wherever
+I want without messing around with the <span class="caps">PYTHONPATH</span> environment variable which one should never do&nbsp;anyway. </p>
 <p>For the evaluation matrix below I ran each experiment 200 times to give <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> enough chances to find good 
 hyperparameters for the number of epochs (<code>n_iter</code>), number of embeddings (<code>embedding_dim</code>), l2-regularisation (<code>l2</code>),
 batch size (<code>batch_size</code>) and learning rate (<code>learn_rate</code>). 

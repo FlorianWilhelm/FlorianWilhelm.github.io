@@ -3,7 +3,7 @@ title: Multiplicative LSTM for sequence-based Recommendations
 date: 2018-08-01 18:00
 modified: 2018-08-01 18:00
 category: post
-tags: python, data science, deep learning, recommendation-system
+tags: python, data science, deep learning, recommender systems
 authors: Florian Wilhelm
 status: draft
 ---
@@ -13,7 +13,8 @@ status: draft
 Recommender Systems support the decision making processes of customers with personalized suggestions. 
 They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
 social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
-of a relevant recommendation. Which user interaction occurred just before we want to provide a recommendation?
+of a relevant recommendation. Which user interaction occurred just before the point of time where we want to 
+provide a recommendation?
 How many interactions ago did the user interact with an item like this one?
 Traditional user-item recommenders often neglect the dimension of time completely. 
 This means that many traditional recommenders find for each user a latent representation based on the user's
@@ -22,9 +23,7 @@ this kind of contextual information about interactions, sequence-based recommend
 With the advent of deep learning quite a few of them are nowadays based on [Recurrent Neural Networks] (RNNs).
  
 Whenever I want to dig deeper into a topic like sequence-based recommenders I follow a few simple steps:
-First of all, to learn something I directly need to apply it otherwise learning things doesn't work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the [SMART citeria] a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the outcome.
-
-Actually, this blog post is the outcome of several things I wanted to familiarize myself more and try out:
+First of all, to learn something I directly need to apply it otherwise learning things doesn't work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the [SMART citeria] a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the whole process. This blog post is actually the outcome of several things I wanted to familiarize myself more and try out:
 
  1. [PyTorch], since this framework is used in a large fraction of recent publications about deep learning,
  2. [Spotlight], since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality implemented,
@@ -53,7 +52,7 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  Figure 1 illustrates our sequential recommender model and this is what's actually happening inside Spotlight's 
  sequential recommender with an LSTM representation. If you raise your eyebrow due to the usage of an inner product
  then be aware that [low-rank approximations] have been and still are one of the most successful building blocks
- of a recommender system. An alternative would be to replace the inner product with a deep feed forward network but
+ of recommender systems. An alternative would be to replace the inner product with a deep feed forward network but
  to quite some extent, this would also just learn to perform an approximation of an inner product. A recent paper
  [Latent Cross: Making Use of Context in Recurrent Recommender Systems] by Google also emphasizes the power of learning
  low-rank relations with the help of inner products.
@@ -69,7 +68,8 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
 </figure>
         
 What we want to do is basically replacing the LSTM part of Spotlight's sequential recommender with an mLSTM. 
-But before we do that the obvious question is why? Let's recap the formulae of the [LSTM implementation] of PyTorch:
+But before we do that the obvious question is why? Let's recap the formulae of a typical [LSTM implementation] 
+like the one in PyTorch:
 
 \begin{split}\begin{array}{ll}
 i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{t-1} + b_{hi}) \\
@@ -109,10 +109,8 @@ The element-wise multiplication ($\odot$) allows $m_t$ to flexible change it's v
 On a more theoretical note, if you picture the hidden states of an LSTM as a tree depending on the inputs at each timestep
 then the number of all possible states at timestep $t$ will be much larger for an mLSTM compared to an LSTM. Therefore, 
 the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
-according to the paper.
-
-The paper focuses only on NLP tasks but since surprising inputs are also a concern in sequential recommender systems,
-the self-evident idea is to evaluate if mLSTMs excel in recommender tasks.
+according to the paper. The paper focuses only on NLP tasks but since surprising inputs are also a concern in sequential recommender systems,
+the self-evident idea is to evaluate if mLSTMs excel in recommender tasks. 
 
 ## Implementation
 
@@ -122,7 +120,7 @@ Module is just a class that inherits from `Module` and implements a `forward` me
 with the help of tensor operations. A more complex neural network is again just a `Module` and uses the 
 [composition principle] to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
 found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
-to TensorFlow where you are either stuck on the level of low-level tensor operations or the composition of layers. 
+to core [TensorFlow] vs. [Keras] where you are either stuck on the level of low-level tensor operations or the composition of layers. 
 
 For our task, we gonna need an `mLSTM` module and luckily PyTorch provides `RNNBase`, a base class for custom RNNs.
 So all we have to do is to write a module that inherits from `RNNBase`, defines additional parameters and implements
@@ -180,11 +178,11 @@ The code is pretty much self-explanatory. We inherit from `RNNBase` and initiali
 in `__init__`. In `forward` we use those parameters to calculate $m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})$ with the help of `F.linear` and pass it to an ordinary `LSTMCell`. We collect the results for each timestep
 in our sequence in `steps` and return it as concatenated tensor. 
 
-The [Spotlight] library also follows a modular concept of components that can be easily plugged together and replaced.
+The [Spotlight] library, in the spirit of PyTorch, also follows a modular concept of components that can be easily plugged together and replaced.
 It has only five components:
  
  1. **embedding layers** which map item ids to dense vectors,
- 2. **user/item representations** which take embedding layers to calculate latent representations and the score for an 
+ 2. **user/item representations** which take embedding layers to calculate latent representations and the score for a 
     user/item pair, 
  3. **interactions** which give easy access to the usr/item interactions and their explicit/implicit feedback,
  4. **losses** which define the objective for the recommendation task,
@@ -205,19 +203,19 @@ Using a tool like [HyperOpt] for hyperparameter optimisation is quite easy and m
 To compare Spotlight's [ImplicitSequenceModel] with an LSTM to an mLSTM user representation, the
 [mlstm4reco][Github repo] repository provides an `run.py` script in the `experiments` folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
-For me it's just one aspect of proper and reproducible research since it avoids errors and you can also easily
+But for me it's just one aspect of proper and reproducible research since it avoids errors and you can also easily
 log which parameters were used to generate the results. 
 
 For the evaluation matrix below I ran each experiment 200 times to give [HyperOpt] enough chances to find good 
 hyperparameters for the number of epochs (`n_iter`), number of embeddings (`embedding_dim`), l2-regularisation (`l2`),
 batch size (`batch_size`) and learning rate (`learn_rate`). 
-Each of our two models with *lstm* and *mlstm* representation were applied to three datasets, 
-the [MovieLens] 1m and 10m datasets as well as the [Amazon] dataset. To run 200 experiments with the mlstm 
+Each of our two models, i.e. `lstm` and `mlstm` user representation, were applied to three datasets, 
+the [MovieLens] 1m and 10m datasets as well as the [Amazon] dataset. For instance, to run 200 experiments with the mlstm 
 model on the Movielens 10m dataset the command would be `./run.py -m mlstm -n 200 10m`.
 
 In each experiment the data is split into a training, validation and test set where training is used to fit the model,
 validation to find the right hyperparameters and test for the final evaluation after all parameters are determined. 
-The performance of the models is measured with the help of the [mean reciprocal rank] (MRR) score:
+The performance of the models is measured with the help of the [mean reciprocal rank] (MRR) score. Here are the results:
 
 |dataset        | type  | validation    | test      | learn_rate    | batch_size    |embedding_dim  | l2      | n_iter   |  
 | --:           | --:   | --:           | --:       | --:           | --:           | --:           | --:     | --:      |
@@ -239,8 +237,10 @@ They give us at least some indication that mLSTMs achieve superior results for s
 further underpin this first assessment one could test with more datasets and also check other evaluation 
 metrics besides MRR. I leave this to a dedicated reader, so if you have are interested, please let me know and share your
 results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
-sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project!
+sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project! Let me
+know if you liked this post and comment below.
 
+[Keras]: https://keras.io/
 [Recurrent Neural Networks]: https://en.wikipedia.org/wiki/Recurrent_neural_network
 [TensorFlow]: https://www.tensorflow.org/
 [composition principle]: https://en.wikipedia.org/wiki/Composition_over_inheritance

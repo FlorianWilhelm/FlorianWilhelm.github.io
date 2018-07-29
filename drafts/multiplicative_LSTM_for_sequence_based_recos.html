@@ -168,7 +168,7 @@ init_mathjax();
 <link rel="canonical" href="https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html">
 
         <meta name="author" content="Florian Wilhelm" />
-        <meta name="keywords" content="python,data science,deep learning,recommendation-system" />
+        <meta name="keywords" content="python,data science,deep learning,recommender systems" />
         <meta name="description" content="Motivation Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant …" />
 
         <meta property="og:site_name" content="Florian Wilhelm" />
@@ -181,7 +181,7 @@ init_mathjax();
             <meta property="article:tag" content="python" />
             <meta property="article:tag" content="data science" />
             <meta property="article:tag" content="deep learning" />
-            <meta property="article:tag" content="recommendation-system" />
+            <meta property="article:tag" content="recommender systems" />
             <meta property="article:author" content="Florian Wilhelm" />
 
     <meta name="twitter:card" content="summary">
@@ -266,7 +266,7 @@ Florian Wilhelm            </a>
         /
 	<a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
         /
-	<a href="https://florianwilhelm.info/tag/recommendation-system/">recommendation-system</a>
+	<a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -274,7 +274,8 @@ Florian Wilhelm            </a>
 <p>Recommender Systems support the decision making processes of customers with personalized suggestions. 
 They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
 social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
-of a relevant recommendation. Which user interaction occurred just before we want to provide a recommendation?
+of a relevant recommendation. Which user interaction occurred just before the point of time where we want to 
+provide a recommendation?
 How many interactions ago did the user interact with an item like this one?
 Traditional user-item recommenders often neglect the dimension of time completely. 
 This means that many traditional recommenders find for each user a latent representation based on the user&#8217;s
@@ -282,8 +283,7 @@ historical item interactions without any notion of recency and sequence of inter
 this kind of contextual information about interactions, sequence-based recommenders were developed. 
 With the advent of deep learning quite a few of them are nowadays based on <a href="https://en.wikipedia.org/wiki/Recurrent_neural_network">Recurrent Neural Networks</a>&nbsp;(RNNs).</p>
 <p>Whenever I want to dig deeper into a topic like sequence-based recommenders I follow a few simple steps:
-First of all, to learn something I directly need to apply it otherwise learning things doesn&#8217;t work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the <a href="https://en.wikipedia.org/wiki/SMART_criteria"><span class="caps">SMART</span> citeria</a> a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the&nbsp;outcome.</p>
-<p>Actually, this blog post is the outcome of several things I wanted to familiarize myself more and try&nbsp;out:</p>
+First of all, to learn something I directly need to apply it otherwise learning things doesn&#8217;t work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the <a href="https://en.wikipedia.org/wiki/SMART_criteria"><span class="caps">SMART</span> citeria</a> a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the whole process. This blog post is actually the outcome of several things I wanted to familiarize myself more and try&nbsp;out:</p>
 <ol>
 <li><a href="https://pytorch.org/">PyTorch</a>, since this framework is used in a large fraction of recent publications about deep&nbsp;learning,</li>
 <li><a href="https://github.com/maciejkula/spotlight">Spotlight</a>, since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality&nbsp;implemented,</li>
@@ -309,7 +309,7 @@ the quite renowned <a href="https://github.com/hidasib/GRU4Rec">GRU4Rec</a> mode
  Figure 1 illustrates our sequential recommender model and this is what&#8217;s actually happening inside Spotlight&#8217;s 
  sequential recommender with an <span class="caps">LSTM</span> representation. If you raise your eyebrow due to the usage of an inner product
  then be aware that <a href="https://en.wikipedia.org/wiki/Low-rank_approximation">low-rank approximations</a> have been and still are one of the most successful building blocks
- of a recommender system. An alternative would be to replace the inner product with a deep feed forward network but
+ of recommender systems. An alternative would be to replace the inner product with a deep feed forward network but
  to quite some extent, this would also just learn to perform an approximation of an inner product. A recent paper
  <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf">Latent Cross: Making Use of Context in Recurrent Recommender Systems</a> by Google also emphasizes the power of learning
  low-rank relations with the help of inner&nbsp;products.</p>
@@ -324,7 +324,8 @@ the quite renowned <a href="https://github.com/hidasib/GRU4Rec">GRU4Rec</a> mode
 </figure>
 
 <p>What we want to do is basically replacing the <span class="caps">LSTM</span> part of Spotlight&#8217;s sequential recommender with an mLSTM. 
-But before we do that the obvious question is why? Let&#8217;s recap the formulae of the <a href="http://pytorch.org/docs/0.3.1/nn.html?highlight=lstm#torch.nn.LSTM"><span class="caps">LSTM</span> implementation</a> of&nbsp;PyTorch:</p>
+But before we do that the obvious question is why? Let&#8217;s recap the formulae of a typical <a href="http://pytorch.org/docs/0.3.1/nn.html?highlight=lstm#torch.nn.LSTM"><span class="caps">LSTM</span> implementation</a> 
+like the one in&nbsp;PyTorch:</p>
 <div class="math">\begin{split}\begin{array}{ll}
 i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{t-1} + b_{hi}) \\
 f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{t-1} + b_{hf}) \\
@@ -362,9 +363,8 @@ h_t = o_t * \tanh(c_t)
 On a more theoretical note, if you picture the hidden states of an <span class="caps">LSTM</span> as a tree depending on the inputs at each timestep
 then the number of all possible states at timestep <span class="math">\(t\)</span> will be much larger for an mLSTM compared to an <span class="caps">LSTM</span>. Therefore, 
 the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
-according to the&nbsp;paper.</p>
-<p>The paper focuses only on <span class="caps">NLP</span> tasks but since surprising inputs are also a concern in sequential recommender systems,
-the self-evident idea is to evaluate if mLSTMs excel in recommender&nbsp;tasks.</p>
+according to the paper. The paper focuses only on <span class="caps">NLP</span> tasks but since surprising inputs are also a concern in sequential recommender systems,
+the self-evident idea is to evaluate if mLSTMs excel in recommender&nbsp;tasks. </p>
 <h2>Implementation</h2>
 <p>Everyone seems to love <a href="https://pytorch.org/">PyTorch</a> for it&#8217;s beautiful <span class="caps">API</span> and I totally consent. For me its beauty lies in its simplicity. 
 Every elementary building block of a neural network like a linear transformation is called a <em>Module</em> in PyTorch. A
@@ -372,7 +372,7 @@ Module is just a class that inherits from <code>Module</code> and implements a <
 with the help of tensor operations. A more complex neural network is again just a <code>Module</code> and uses the 
 <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">composition principle</a> to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
 found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
-to TensorFlow where you are either stuck on the level of low-level tensor operations or the composition of&nbsp;layers. </p>
+to core <a href="https://www.tensorflow.org/">TensorFlow</a> vs. <a href="https://keras.io/">Keras</a> where you are either stuck on the level of low-level tensor operations or the composition of&nbsp;layers. </p>
 <p>For our task, we gonna need an <code>mLSTM</code> module and luckily PyTorch provides <code>RNNBase</code>, a base class for custom RNNs.
 So all we have to do is to write a module that inherits from <code>RNNBase</code>, defines additional parameters and implements
 the mLSTM equations inside of <code>forward</code>: </p>
@@ -426,11 +426,11 @@ the mLSTM equations inside of <code>forward</code>: </p>
 <p>The code is pretty much self-explanatory. We inherit from <code>RNNBase</code> and initialize the additional parameters we need for the calculation of <span class="math">\(m_t\)</span>
 in <code>__init__</code>. In <code>forward</code> we use those parameters to calculate <span class="math">\(m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})\)</span> with the help of <code>F.linear</code> and pass it to an ordinary <code>LSTMCell</code>. We collect the results for each timestep
 in our sequence in <code>steps</code> and return it as concatenated&nbsp;tensor. </p>
-<p>The <a href="https://github.com/maciejkula/spotlight">Spotlight</a> library also follows a modular concept of components that can be easily plugged together and replaced.
+<p>The <a href="https://github.com/maciejkula/spotlight">Spotlight</a> library, in the spirit of PyTorch, also follows a modular concept of components that can be easily plugged together and replaced.
 It has only five&nbsp;components:</p>
 <ol>
 <li><strong>embedding layers</strong> which map item ids to dense&nbsp;vectors,</li>
-<li><strong>user/item representations</strong> which take embedding layers to calculate latent representations and the score for an 
+<li><strong>user/item representations</strong> which take embedding layers to calculate latent representations and the score for a 
     user/item&nbsp;pair, </li>
 <li><strong>interactions</strong> which give easy access to the usr/item interactions and their explicit/implicit&nbsp;feedback,</li>
 <li><strong>losses</strong> which define the objective for the recommendation&nbsp;task,</li>
@@ -445,20 +445,20 @@ baseline model for comparison. This avoids quite a common bias in research when 
 their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
 Using a tool like <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> for hyperparameter optimisation is quite easy and mitigates this bias to some extent at&nbsp;least.</p>
 <h2>Evaluation</h2>
-<p>To compare Spotlight&#8217;s <a href="https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit">ImplicitSequenceModel</a> with an <span class="caps">LSTM</span> to an mLSTM user representation,
+<p>To compare Spotlight&#8217;s <a href="https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit">ImplicitSequenceModel</a> with an <span class="caps">LSTM</span> to an mLSTM user representation, the
 <a href="https://github.com/FlorianWilhelm/mlstm4reco">mlstm4reco</a> repository provides an <code>run.py</code> script in the <code>experiments</code> folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
-For me it&#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
+But for me it&#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
 log which parameters were used to generate the&nbsp;results. </p>
 <p>For the evaluation matrix below I ran each experiment 200 times to give <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> enough chances to find good 
 hyperparameters for the number of epochs (<code>n_iter</code>), number of embeddings (<code>embedding_dim</code>), l2-regularisation (<code>l2</code>),
 batch size (<code>batch_size</code>) and learning rate (<code>learn_rate</code>). 
-Each of our two models with <em>lstm</em> and <em>mlstm</em> representation were applied to three datasets, 
-the <a href="https://grouplens.org/datasets/movielens/">MovieLens</a> 1m and 10m datasets as well as the <a href="https://snap.stanford.edu/data/amazon-meta.html">Amazon</a> dataset. To run 200 experiments with the mlstm 
+Each of our two models, i.e. <code>lstm</code> and <code>mlstm</code> user representation, were applied to three datasets, 
+the <a href="https://grouplens.org/datasets/movielens/">MovieLens</a> 1m and 10m datasets as well as the <a href="https://snap.stanford.edu/data/amazon-meta.html">Amazon</a> dataset. For instance, to run 200 experiments with the mlstm 
 model on the Movielens 10m dataset the command would be <code>./run.py -m mlstm -n 200 10m</code>.</p>
 <p>In each experiment the data is split into a training, validation and test set where training is used to fit the model,
 validation to find the right hyperparameters and test for the final evaluation after all parameters are determined. 
-The performance of the models is measured with the help of the <a href="https://en.wikipedia.org/wiki/Mean_reciprocal_rank">mean reciprocal rank</a> (<span class="caps">MRR</span>)&nbsp;score:</p>
+The performance of the models is measured with the help of the <a href="https://en.wikipedia.org/wiki/Mean_reciprocal_rank">mean reciprocal rank</a> (<span class="caps">MRR</span>) score. Here are the&nbsp;results:</p>
 <table>
 <thead>
 <tr>
@@ -550,7 +550,8 @@ They give us at least some indication that mLSTMs achieve superior results for s
 further underpin this first assessment one could test with more datasets and also check other evaluation 
 metrics besides <span class="caps">MRR</span>. I leave this to a dedicated reader, so if you have are interested, please let me know and share your
 results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
-sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side&nbsp;project!</p>
+sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project! Let me
+know if you liked this post and comment&nbsp;below.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -612,10 +613,10 @@ sequential recommenders and with the help of PyTorch, Spotlight I am looking for
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
-        <li><a href="https://florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
         <li><a href="https://florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
         <li><a href="https://florianwilhelm.info/2018/03/isolated_environments_with_pyspark/">Managing isolated Environments with&nbsp;PySpark</a></li>
         <li><a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
+        <li><a href="https://florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
     </ul>
 </section>
     <hr/>

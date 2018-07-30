@@ -17,9 +17,9 @@ Finding a place to start and to actually work with the &lt;span class="caps"&gt;
 easy and obvious as you might expect from other Python&amp;nbsp;domains.&lt;/p&gt;
 &lt;p&gt;Inspired from my own experiences of dealing with &lt;span class="caps"&gt;GPS&lt;/span&gt; data in Python, I want to
 give an overview of some useful libraries. From basic reading and writing &lt;span class="caps"&gt;GPS&lt;/span&gt;
-tracks in the &lt;span class="caps"&gt;GPS&lt;/span&gt; Exchange Format with the help of gpxpy to adding missing
-elevation information with srtm.py. Additionally, I will cover mapping and
-visualising tracks on OpenStreetmap with mplleaflet that even supports
+tracks in the &lt;span class="caps"&gt;GPS&lt;/span&gt; Exchange Format with the help of &lt;a href="https://github.com/tkrajina/gpxpy"&gt;gpxpy&lt;/a&gt; to adding missing
+elevation information with &lt;a href="https://github.com/tkrajina/srtm.py"&gt;srtm.py&lt;/a&gt;. Additionally, I will cover mapping and
+visualising tracks on &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetmap&lt;/a&gt; with &lt;a href="https://github.com/jwass/mplleaflet"&gt;mplleaflet&lt;/a&gt; that even supports
 interactive plots in a Jupyter&amp;nbsp;notebook.&lt;/p&gt;
 &lt;p&gt;Besides the tooling, I will also demonstrate and explain common algorithms like
 Douglas-Peucker to simplify a track and the famous Kalman filters for smoothing.

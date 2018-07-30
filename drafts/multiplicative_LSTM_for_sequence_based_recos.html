@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Multiplicative LSTM for sequence-based Recommendations - Florian Wilhelm</title>
+    <title>Multiplicative LSTM for sequence-based Recommenders - Florian Wilhelm</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -173,7 +173,7 @@ init_mathjax();
 
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Multiplicative LSTM for sequence-based Recommendations"/>
+        <meta property="og:title" content="Multiplicative LSTM for sequence-based Recommenders"/>
         <meta property="og:url" content="https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html"/>
         <meta property="og:description" content="Motivation Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant …"/>
         <meta property="article:published_time" content="2018-08-01" />
@@ -241,8 +241,8 @@ Florian Wilhelm            </a>
                 <h1>
                     <a href="https://florianwilhelm.info/drafts/multiplicative_LSTM_for_sequence_based_recos.html"
                        rel="bookmark"
-                       title="Permalink to Multiplicative LSTM for sequence-based Recommendations">
-                        Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommendations
+                       title="Permalink to Multiplicative LSTM for sequence-based Recommenders">
+                        Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders
                     </a>
                 </h1>
             </header>
@@ -446,12 +446,12 @@ their own model compared to the baseline to later show a better improvement in o
 Using a tool like <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> for hyperparameter optimisation is quite easy and mitigates this bias to some extent at&nbsp;least.</p>
 <h2>Evaluation</h2>
 <p>To compare Spotlight&#8217;s <a href="https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit">ImplicitSequenceModel</a> with an <span class="caps">LSTM</span> to an mLSTM user representation, the
-<a href="https://github.com/FlorianWilhelm/mlstm4reco">mlstm4reco</a> repository provides an <code>run.py</code> script in the <code>experiments</code> folder which takes several
+<a href="https://github.com/FlorianWilhelm/mlstm4reco">mlstm4reco</a> repository provides a <code>run.py</code> script in the <code>experiments</code> folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
 But for me it&#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
 log which parameters were used to generate the results. I also used <a href="https://pyscaffold.org/">PyScaffold</a> to set up proper Python package
-scaffold within seconds. This allows me to properly install the <code>mlstm4reco</code> package and import its functionality wherever
-I want without messing around with the <span class="caps">PYTHONPATH</span> environment variable which one should never do&nbsp;anyway. </p>
+scaffold within seconds. This allows me to properly install the <code>mlstm4reco</code> package and import its functionality from 
+wherever I want without messing around with the <span class="caps">PYTHONPATH</span> environment variable which one should never do&nbsp;anyway. </p>
 <p>For the evaluation matrix below I ran each experiment 200 times to give <a href="http://hyperopt.github.io/hyperopt/">HyperOpt</a> enough chances to find good 
 hyperparameters for the number of epochs (<code>n_iter</code>), number of embeddings (<code>embedding_dim</code>), l2-regularisation (<code>l2</code>),
 batch size (<code>batch_size</code>) and learning rate (<code>learn_rate</code>). 
@@ -545,7 +545,7 @@ The performance of the models is measured with the help of the <a href="https://
 </tbody>
 </table>
 <p>If we compare the test results of the Movielens 1m dataset, it&#8217;s an improvement of 5.30% when using mLSTM over <span class="caps">LSTM</span> 
-representation, for Movilens 10m it&#8217;s 7.96% more and for Amazon it&#8217;s even 18.19%&nbsp;more. </p>
+representation, for Movielens 10m it&#8217;s 7.96% more and for Amazon it&#8217;s even 18.19%&nbsp;more. </p>
 <h2>Conclusion</h2>
 <p>The performance improvements of using an mLSTM over an <span class="caps">LSTM</span> user representation are quite good but nothing spectacular.
 They give us at least some indication that mLSTMs achieve superior results for sequential recommendation tasks. In order to 

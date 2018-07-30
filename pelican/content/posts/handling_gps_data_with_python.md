@@ -20,9 +20,9 @@ easy and obvious as you might expect from other Python domains.
 
 Inspired from my own experiences of dealing with GPS data in Python, I want to
 give an overview of some useful libraries. From basic reading and writing GPS
-tracks in the GPS Exchange Format with the help of gpxpy to adding missing
-elevation information with srtm.py. Additionally, I will cover mapping and
-visualising tracks on OpenStreetmap with mplleaflet that even supports
+tracks in the GPS Exchange Format with the help of [gpxpy][] to adding missing
+elevation information with [srtm.py][]. Additionally, I will cover mapping and
+visualising tracks on [OpenStreetmap] with [mplleaflet] that even supports
 interactive plots in a Jupyter notebook.
 
 Besides the tooling, I will also demonstrate and explain common algorithms like
@@ -40,3 +40,7 @@ wonderful tool perfectly suited for experimenting and learning.
 [EuroPython 2016]: https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python
 [Github]: https://github.com/FlorianWilhelm/gps_data_with_python
 [nbviewer]: http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/
+[gpxpy]: https://github.com/tkrajina/gpxpy
+[srtm.py]: https://github.com/tkrajina/srtm.py
+[mplleaflet]: https://github.com/jwass/mplleaflet
+[OpenStreetmap]: https://www.openstreetmap.org/

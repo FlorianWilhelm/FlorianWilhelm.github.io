@@ -1,5 +1,5 @@
 ---
-title: Multiplicative LSTM for sequence-based Recommendations
+title: Multiplicative LSTM for sequence-based Recommenders
 date: 2018-08-01 18:00
 modified: 2018-08-01 18:00
 category: post
@@ -201,12 +201,12 @@ Using a tool like [HyperOpt] for hyperparameter optimisation is quite easy and m
 ## Evaluation
 
 To compare Spotlight's [ImplicitSequenceModel] with an LSTM to an mLSTM user representation, the
-[mlstm4reco][Github repo] repository provides an `run.py` script in the `experiments` folder which takes several
+[mlstm4reco][Github repo] repository provides a `run.py` script in the `experiments` folder which takes several
 command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
 But for me it's just one aspect of proper and reproducible research since it avoids errors and you can also easily
 log which parameters were used to generate the results. I also used [PyScaffold] to set up proper Python package
-scaffold within seconds. This allows me to properly install the `mlstm4reco` package and import its functionality wherever
-I want without messing around with the PYTHONPATH environment variable which one should never do anyway. 
+scaffold within seconds. This allows me to properly install the `mlstm4reco` package and import its functionality from 
+wherever I want without messing around with the PYTHONPATH environment variable which one should never do anyway. 
 
 For the evaluation matrix below I ran each experiment 200 times to give [HyperOpt] enough chances to find good 
 hyperparameters for the number of epochs (`n_iter`), number of embeddings (`embedding_dim`), l2-regularisation (`l2`),
@@ -230,7 +230,7 @@ The performance of the models is measured with the help of the [mean reciprocal 
 
 
 If we compare the test results of the Movielens 1m dataset, it's an improvement of 5.30% when using mLSTM over LSTM 
-representation, for Movilens 10m it's 7.96% more and for Amazon it's even 18.19% more. 
+representation, for Movielens 10m it's 7.96% more and for Amazon it's even 18.19% more. 
 
 ## Conclusion
 

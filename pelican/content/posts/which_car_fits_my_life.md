@@ -12,7 +12,7 @@ At mobile.de, Germany’s biggest car marketplace, a dedicated team of data engi
 
 By presenting our car-model recommender that suggests similar car models of different brands as a concrete use-case, we reiterate on key-aspects during modelling and implementation. In particular, we present a matrix factorisation library that we used and share our experiences with it. We conclude by a brief demonstration of our results and discuss the improvements we achieved in terms of key performance indicators. Furthermore, we use our use case to exemplify the usage of deep learning for recommendations, comparing it with other traditional approaches and hence providing a brief account of the future of recommendation engines.
 
-This talk was presented at [PyData 2017 Berlin][] and [code.talks 2017][]. The slides are are available on [SlideShare][].
+This talk was presented at [PyData 2017 Berlin][] and [code.talks 2017][]. The slides are available on [SlideShare][].
 
 {% youtube v7MBunqwBSY 800 500 %}
 

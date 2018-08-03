@@ -44,8 +44,8 @@ the quite renowned [GRU4Rec] model uses GRUs but in general it's not possible to
 So given these ingredients, how do we now construct a sequential recommender? Let's assume on every timestep 
 $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is now to feed these interactions into
  an LSTM up to the time $t$ in order to get a representation of the user's preferences $h_t$ and use these to state
- if the user might like or dislike the next item $i_{t+1}$. The other elements of the model are what one would also do
- in a non-sequential recommender like one-hot encoding of the items and embedding them in a dense vector representation $e_{i_t}$
+ if the user might like or dislike the next item $i_{t+1}$. Just like in a non-sequential recommender we also do a
+ [one-hot encoding] of the items followed by an embedding into a dense vector representation $e_{i_t}$
  which is then feed into the LSTM. We can then just use the output $h_t$ of the LSTM and calculate the inner product ($\bigotimes$) 
  with the embedding $e_{i_{t+1}}$ plus an item bias for varying item popularity to retrieve an output $p_{t+1}$. 
  This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
@@ -267,3 +267,4 @@ know if you liked this post and comment below.
 [mean reciprocal rank]: https://en.wikipedia.org/wiki/Mean_reciprocal_rank
 [Latent Cross: Making Use of Context in Recurrent Recommender Systems]: https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf
 [PyScaffold]: https://pyscaffold.org/
+[one-hot encoding]: https://en.wikipedia.org/wiki/One-hot

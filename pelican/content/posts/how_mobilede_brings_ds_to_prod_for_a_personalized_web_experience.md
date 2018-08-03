@@ -3,7 +3,7 @@ title: How mobile.de brings Data Science to Production for a Personalized Web Ex
 date: 2018-07-07 18:00
 modified: 2018-07-07 18:00
 category: talk
-tags: python, data science, production
+tags: python, data science, production, spark, big data
 authors: Florian Wilhelm, Markus Schüler
 status: published
 ---

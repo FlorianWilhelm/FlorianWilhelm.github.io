@@ -26,3 +26,4 @@ This talk was presented at [PyData 2018 Berlin][] together with my colleague Mar
 
 [PyData 2018 Berlin]: https://pydata.org/berlin2018/schedule/presentation/59/
 [SlideShare]: https://www.slideshare.net/FlorianWilhelm2/how-mobilede-brings-data-science-to-production-for-a-personalized-web-experience
+[mobile.de]: https://www.mobile.de/

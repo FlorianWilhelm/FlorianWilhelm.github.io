@@ -40,8 +40,8 @@ the quite renowned &lt;a href="https://github.com/hidasib/GRU4Rec"&gt;GRU4Rec&lt
  with the embedding &lt;span class="math"&gt;\(e_{i_{t+1}}\)&lt;/span&gt; plus an item bias for varying item popularity to retrieve an output &lt;span class="math"&gt;\(p_{t+1}\)&lt;/span&gt;. 
  This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
  We train our model by sampling positive interactions and corresponding negative interactions. In an &lt;em&gt;explicit feedback&lt;/em&gt; context 
- positive and negative interactions might be positive and negative ratings respectively whereas in an &lt;em&gt;implicit feedback&lt;/em&gt; context
- all interactions are considered positive and negative interactions are user/item pairs without interaction.
+ a positive and negative interaction might be a positive and negative rating of a user for an item, respectively. In an &lt;em&gt;implicit feedback&lt;/em&gt; context, all item interactions of a user are considered positive whereas negative interactions arise from items the
+ user did not interact with.
  During the training we adapt the weights of our model so that for a given user the scalar output of positive interaction
  is greater than the output of a negative interaction. This can be seen as an approximation to a &lt;a href="https://en.wikipedia.org/wiki/Softmax_function"&gt;softmax&lt;/a&gt; in very high-dimensional output&amp;nbsp;space.&lt;/p&gt;
 &lt;p&gt;Figure 1 illustrates our sequential recommender model and this is what&amp;#8217;s actually happening inside Spotlight&amp;#8217;s 

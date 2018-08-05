@@ -54,8 +54,8 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  with the embedding $e_{i_{t+1}}$ plus an item bias for varying item popularity to retrieve an output $p_{t+1}$. 
  This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
  We train our model by sampling positive interactions and corresponding negative interactions. In an *explicit feedback* context 
- positive and negative interactions might be positive and negative ratings respectively whereas in an *implicit feedback* context
- all interactions are considered positive and negative interactions are user/item pairs without interaction.
+ a positive and negative interaction might be a positive and negative rating of a user for an item, respectively. In an *implicit feedback* context, all item interactions of a user are considered positive whereas negative interactions arise from items the
+ user did not interact with.
  During the training we adapt the weights of our model so that for a given user the scalar output of positive interaction
  is greater than the output of a negative interaction. This can be seen as an approximation to a [softmax] in very high-dimensional output space.
  

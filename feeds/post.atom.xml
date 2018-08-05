@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2018-08-05T16:00:00+02:00</updated><entry><title>Multiplicative LSTM for sequence-based Recommenders</title><link href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/" rel="alternate"></link><published>2018-08-05T16:00:00+02:00</published><updated>2018-08-05T16:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-08-05:/2018/08/multiplicative_LSTM_for_sequence_based_recos/</id><summary type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. 
-They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2018-08-05T16:00:00+02:00</updated><entry><title>Multiplicative LSTM for sequence-based Recommenders</title><link href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/" rel="alternate"></link><published>2018-08-05T16:00:00+02:00</published><updated>2018-08-05T16:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-08-05:/2018/08/multiplicative_LSTM_for_sequence_based_recos/</id><summary type="html">&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized&amp;nbsp;suggestions.&lt;/p&gt;</summary><content type="html">&lt;p&gt;They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
 social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
-of a relevant …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+of a relevant&amp;nbsp;recommendation.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. 
 They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
 social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation

@@ -56,7 +56,7 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  We train our model by sampling positive interactions and corresponding negative interactions. In an *explicit feedback* context 
  a positive and negative interaction might be a positive and negative rating of a user for an item, respectively. In an *implicit feedback* context, all item interactions of a user are considered positive whereas negative interactions arise from items the
  user did not interact with.
- During the training we adapt the weights of our model so that for a given user the scalar output of positive interaction
+ During the training we adapt the weights of our model so that for a given user the scalar output of a positive interaction
  is greater than the output of a negative interaction. This can be seen as an approximation to a [softmax] in very high-dimensional output space.
  
  Figure 1 illustrates our sequential recommender model and this is what's actually happening inside Spotlight's 

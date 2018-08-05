@@ -42,7 +42,7 @@ the quite renowned &lt;a href="https://github.com/hidasib/GRU4Rec"&gt;GRU4Rec&lt
  We train our model by sampling positive interactions and corresponding negative interactions. In an &lt;em&gt;explicit feedback&lt;/em&gt; context 
  a positive and negative interaction might be a positive and negative rating of a user for an item, respectively. In an &lt;em&gt;implicit feedback&lt;/em&gt; context, all item interactions of a user are considered positive whereas negative interactions arise from items the
  user did not interact with.
- During the training we adapt the weights of our model so that for a given user the scalar output of positive interaction
+ During the training we adapt the weights of our model so that for a given user the scalar output of a positive interaction
  is greater than the output of a negative interaction. This can be seen as an approximation to a &lt;a href="https://en.wikipedia.org/wiki/Softmax_function"&gt;softmax&lt;/a&gt; in very high-dimensional output&amp;nbsp;space.&lt;/p&gt;
 &lt;p&gt;Figure 1 illustrates our sequential recommender model and this is what&amp;#8217;s actually happening inside Spotlight&amp;#8217;s 
  sequential recommender with an &lt;span class="caps"&gt;LSTM&lt;/span&gt; representation. If you raise your eyebrow due to the usage of an inner product

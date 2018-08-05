@@ -5,56 +5,56 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/archives.html</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/tags.html</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/categories.html</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/404-not-found/</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/410-gone/</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/500-error/</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/about/</loc>
-<lastmod>2018-08-05T17:51:26-00:00</lastmod>
+<lastmod>2018-08-05T17:54:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -333,7 +333,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://florianwilhelm.info/tag/kalman/</loc>
+<loc>https://florianwilhelm.info/tag/kalman-filter/</loc>
 <lastmod>2016-07-22T11:15:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>

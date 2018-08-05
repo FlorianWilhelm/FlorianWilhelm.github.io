@@ -3,7 +3,7 @@ title: Handling GPS Data with Python
 date: 2016-07-22 11:15
 modified: 2016-07-22 11:15
 category: talk
-tags: python, jupyter, kalman, gps
+tags: python, jupyter, kalman filter, gps
 authors: Florian Wilhelm
 status: published
 summary: This talk presented at the [EuroPython 2016](https://ep2016.europython.eu/conference/talks/handling-gps-data-with-python) introduces several Python libraries related to the handling of GPS data. The slides of this talk are available on [Github](https://github.com/FlorianWilhelm/gps_data_with_python) or on [nbviewer](http://nbviewer.jupyter.org/format/slides/github/FlorianWilhelm/gps_data_with_python/blob/master/talk.ipynb#/).

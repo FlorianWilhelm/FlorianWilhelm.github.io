@@ -1,11 +1,11 @@
 ---
 title: Multiplicative LSTM for sequence-based Recommenders
-date: 2018-08-01 18:00
-modified: 2018-08-01 18:00
+date: 2018-08-05 16:00
+modified: 2018-08-05 16:00
 category: post
 tags: python, data science, deep learning, recommender systems
 authors: Florian Wilhelm
-status: draft
+status: published
 ---
 
 ## Motivation
@@ -49,6 +49,12 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
  which is then feed into the LSTM. We can then just use the output $h_t$ of the LSTM and calculate the inner product ($\bigotimes$) 
  with the embedding $e_{i_{t+1}}$ plus an item bias for varying item popularity to retrieve an output $p_{t+1}$. 
  This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
+ We train our model by sampling positive interactions and corresponding negative interactions. In an *explicit feedback* context 
+ positive and negative interactions might be positive and negative ratings respectively whereas in an *implicit feedback* context
+ all interactions are considered positive and negative interactions are user/item pairs without interaction.
+ During the training we adapt the weights of our model so that for a given user the scalar output of positive interaction
+ is greater than the output of a negative interaction. This can be seen as an approximation to a [softmax] in very high-dimensional output space.
+ 
  Figure 1 illustrates our sequential recommender model and this is what's actually happening inside Spotlight's 
  sequential recommender with an LSTM representation. If you raise your eyebrow due to the usage of an inner product
  then be aware that [low-rank approximations] have been and still are one of the most successful building blocks
@@ -105,7 +111,7 @@ h_t = o_t * \tanh(c_t)
 \end{array}\end{split}
 <br>
 
-The element-wise multiplication ($\odot$) allows $m_t$ to flexible change it's value with respect to $h_{t-1}$ and $x_t$.
+The element-wise multiplication ($\odot$) allows $m_t$ to flexibly change it's value with respect to $h_{t-1}$ and $x_t$.
 On a more theoretical note, if you picture the hidden states of an LSTM as a tree depending on the inputs at each timestep
 then the number of all possible states at timestep $t$ will be much larger for an mLSTM compared to an LSTM. Therefore, 
 the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
@@ -114,13 +120,14 @@ the self-evident idea is to evaluate if mLSTMs excel in recommender tasks.
 
 ## Implementation
 
-Everyone seems to love [PyTorch] for it's beautiful API and I totally consent. For me its beauty lies in its simplicity. 
+Everyone seems to love [PyTorch] for it's beautiful API and I totally agree. For me its beauty lies in its simplicity. 
 Every elementary building block of a neural network like a linear transformation is called a *Module* in PyTorch. A
 Module is just a class that inherits from `Module` and implements a `forward` method that does the transformation
 with the help of tensor operations. A more complex neural network is again just a `Module` and uses the 
 [composition principle] to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
 found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
-to core [TensorFlow] vs. [Keras] where you are either stuck on the level of low-level tensor operations or the composition of layers. 
+to core [TensorFlow] and [Keras] where you are either stuck on the level of low-level tensor 
+operations or the composition of layers. 
 
 For our task, we gonna need an `mLSTM` module and luckily PyTorch provides `RNNBase`, a base class for custom RNNs.
 So all we have to do is to write a module that inherits from `RNNBase`, defines additional parameters and implements
@@ -268,3 +275,4 @@ know if you liked this post and comment below.
 [Latent Cross: Making Use of Context in Recurrent Recommender Systems]: https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf
 [PyScaffold]: https://pyscaffold.org/
 [one-hot encoding]: https://en.wikipedia.org/wiki/One-hot
+[softmax]: https://en.wikipedia.org/wiki/Softmax_function

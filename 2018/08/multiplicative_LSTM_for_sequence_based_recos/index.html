@@ -350,8 +350,8 @@ those lines again we can see a lot of terms in the form of <span class="math">\(
 moment. Thus a lot of an <span class="caps">LSTM</span>&#8217;s inner workings depend on the addition of the transformed input with the transformed hidden
 state. So what happens if a trained <span class="caps">LSTM</span> with thus fixed <span class="math">\(W_{**}\)</span> encounters some unexpected, completely surprising input
 <span class="math">\(x_t\)</span>? This might disturb the cell state <span class="math">\(c_t\)</span> leading to pertubated future <span class="math">\(h_t\)</span> and it might take a long time for the
-<span class="caps">LSTM</span> to recover from that singular surprising input. The paper <a href="https://arxiv.org/abs/1609.07959">Multiplicative <span class="caps">LSTM</span> for sequence modelling</a> now argues
-that &#8220;<span class="caps">RNN</span> architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
+<span class="caps">LSTM</span> to recover from that singular surprising input. The authors of the paper <a href="https://arxiv.org/abs/1609.07959">Multiplicative <span class="caps">LSTM</span> for sequence modelling</a> 
+now argue that &#8220;<span class="caps">RNN</span> architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
 from surprising inputs&#8221;. By allowing the hidden state to react flexibly on the new input by changing it&#8217;s magnitude it might be
 able to recover from mistakes faster. The quite vague formulation of <em>input-dependent transition functions</em> is then 
 actually achieved in a quite simple way. In an mLSTM the hidden state <span class="math">\(h_{t-1}\)</span> is transformed in a multiplicative way

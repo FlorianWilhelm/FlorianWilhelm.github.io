@@ -79,8 +79,8 @@ those lines again we can see a lot of terms in the form of &lt;span class="math"
 moment. Thus a lot of an &lt;span class="caps"&gt;LSTM&lt;/span&gt;&amp;#8217;s inner workings depend on the addition of the transformed input with the transformed hidden
 state. So what happens if a trained &lt;span class="caps"&gt;LSTM&lt;/span&gt; with thus fixed &lt;span class="math"&gt;\(W_{**}\)&lt;/span&gt; encounters some unexpected, completely surprising input
 &lt;span class="math"&gt;\(x_t\)&lt;/span&gt;? This might disturb the cell state &lt;span class="math"&gt;\(c_t\)&lt;/span&gt; leading to pertubated future &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and it might take a long time for the
-&lt;span class="caps"&gt;LSTM&lt;/span&gt; to recover from that singular surprising input. The paper &lt;a href="https://arxiv.org/abs/1609.07959"&gt;Multiplicative &lt;span class="caps"&gt;LSTM&lt;/span&gt; for sequence modelling&lt;/a&gt; now argues
-that &amp;#8220;&lt;span class="caps"&gt;RNN&lt;/span&gt; architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
+&lt;span class="caps"&gt;LSTM&lt;/span&gt; to recover from that singular surprising input. The authors of the paper &lt;a href="https://arxiv.org/abs/1609.07959"&gt;Multiplicative &lt;span class="caps"&gt;LSTM&lt;/span&gt; for sequence modelling&lt;/a&gt; 
+now argue that &amp;#8220;&lt;span class="caps"&gt;RNN&lt;/span&gt; architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
 from surprising inputs&amp;#8221;. By allowing the hidden state to react flexibly on the new input by changing it&amp;#8217;s magnitude it might be
 able to recover from mistakes faster. The quite vague formulation of &lt;em&gt;input-dependent transition functions&lt;/em&gt; is then 
 actually achieved in a quite simple way. In an mLSTM the hidden state &lt;span class="math"&gt;\(h_{t-1}\)&lt;/span&gt; is transformed in a multiplicative way

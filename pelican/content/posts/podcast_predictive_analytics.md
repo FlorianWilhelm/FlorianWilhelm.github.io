@@ -3,7 +3,7 @@ title: Podcast about Predictive Analytics
 date: 2014-06-26 12:30
 modified: 2016-01-10 19:30
 category: podcast
-tags: Blue Yonder, predictive analytics, machine learning
+tags: predictive analytics, machine learning
 authors: Florian Wilhelm
 ---
 

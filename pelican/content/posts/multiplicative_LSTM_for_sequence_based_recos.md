@@ -6,10 +6,7 @@ category: post
 tags: python, data science, deep learning, recommender systems
 authors: Florian Wilhelm
 status: published
-summary: Recommender Systems support the decision making processes of customers with personalized suggestions. 
-They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
-social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
-of a relevant recommendation.
+summary: Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant recommendation.
 ---
 
 ## Motivation

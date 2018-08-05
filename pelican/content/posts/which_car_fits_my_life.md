@@ -3,7 +3,7 @@ title: “Which car fits my life?” - mobile.de’s approach to recommendations
 date: 2017-07-02 18:00
 modified: 2017-07-02 18:00
 category: talk
-tags: machine-learning, python, recommendation system
+tags: machine-learning, python, recommender systems
 authors: Florian Wilhelm, Arnab Dutta
 status: published
 ---

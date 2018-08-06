@@ -95,7 +95,7 @@ state. So what happens if a trained LSTM with thus fixed $W_{**}$ encounters som
 $x_t$? This might disturb the cell state $c_t$ leading to pertubated future $h_t$ and it might take a long time for the
 LSTM to recover from that singular surprising input. The authors of the paper [Multiplicative LSTM for sequence modelling] 
 now argue that "RNN architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
-from surprising inputs". By allowing the hidden state to react flexibly on the new input by changing it's magnitude it might be
+from surprising inputs". By allowing the hidden state to react flexibly on the new input by changing its magnitude it might be
 able to recover from mistakes faster. The quite vague formulation of *input-dependent transition functions* is then 
 actually achieved in a quite simple way. In an mLSTM the hidden state $h_{t-1}$ is transformed in a multiplicative way
 using the input $x_t$ into an intermediate state $m_t$ before it is used in a plain LSTM as before. Eventually, there
@@ -117,7 +117,7 @@ On a more theoretical note, if you picture the hidden states of an LSTM as a tre
 then the number of all possible states at timestep $t$ will be much larger for an mLSTM compared to an LSTM. Therefore, 
 the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
 according to the paper. The paper focuses only on NLP tasks but since surprising inputs are also a concern in sequential recommender systems,
-the self-evident idea is to evaluate if mLSTMs excel in recommender tasks. 
+the self-evident idea is to evaluate if mLSTMs also excel in recommender tasks. 
 
 ## Implementation
 
@@ -147,7 +147,7 @@ from torch.nn import functional as F
 class mLSTM(RNNBase):
     def __init__(self, input_size, hidden_size, bias=True):
         super(mLSTM, self).__init__(
-            mode='LSTM', input_size=input_size, hidden_size=input_size,
+            mode='LSTM', input_size=input_size, hidden_size=hidden_size,
                  num_layers=1, bias=bias, batch_first=True,
                  dropout=0, bidirectional=False)
 

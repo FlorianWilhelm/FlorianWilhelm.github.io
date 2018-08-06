@@ -348,7 +348,7 @@ state. So what happens if a trained <span class="caps">LSTM</span> with thus fix
 <span class="math">\(x_t\)</span>? This might disturb the cell state <span class="math">\(c_t\)</span> leading to pertubated future <span class="math">\(h_t\)</span> and it might take a long time for the
 <span class="caps">LSTM</span> to recover from that singular surprising input. The authors of the paper <a href="https://arxiv.org/abs/1609.07959">Multiplicative <span class="caps">LSTM</span> for sequence modelling</a> 
 now argue that &#8220;<span class="caps">RNN</span> architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
-from surprising inputs&#8221;. By allowing the hidden state to react flexibly on the new input by changing it&#8217;s magnitude it might be
+from surprising inputs&#8221;. By allowing the hidden state to react flexibly on the new input by changing its magnitude it might be
 able to recover from mistakes faster. The quite vague formulation of <em>input-dependent transition functions</em> is then 
 actually achieved in a quite simple way. In an mLSTM the hidden state <span class="math">\(h_{t-1}\)</span> is transformed in a multiplicative way
 using the input <span class="math">\(x_t\)</span> into an intermediate state <span class="math">\(m_t\)</span> before it is used in a plain <span class="caps">LSTM</span> as before. Eventually, there
@@ -369,7 +369,7 @@ On a more theoretical note, if you picture the hidden states of an <span class="
 then the number of all possible states at timestep <span class="math">\(t\)</span> will be much larger for an mLSTM compared to an <span class="caps">LSTM</span>. Therefore, 
 the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
 according to the paper. The paper focuses only on <span class="caps">NLP</span> tasks but since surprising inputs are also a concern in sequential recommender systems,
-the self-evident idea is to evaluate if mLSTMs excel in recommender&nbsp;tasks. </p>
+the self-evident idea is to evaluate if mLSTMs also excel in recommender&nbsp;tasks. </p>
 <h2>Implementation</h2>
 <p>Everyone seems to love <a href="https://pytorch.org/">PyTorch</a> for it&#8217;s beautiful <span class="caps">API</span> and I totally agree. For me its beauty lies in its simplicity. 
 Every elementary building block of a neural network like a linear transformation is called a <em>Module</em> in PyTorch. A
@@ -393,7 +393,7 @@ the mLSTM equations inside of <code>forward</code>: </p>
 <span class="k">class</span> <span class="nc">mLSTM</span><span class="p">(</span><span class="n">RNNBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">mLSTM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;LSTM&#39;</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="n">input_size</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;LSTM&#39;</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
                  <span class="n">num_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                  <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 

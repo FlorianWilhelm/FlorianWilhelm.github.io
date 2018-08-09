@@ -127,8 +127,7 @@ Module is just a class that inherits from `Module` and implements a `forward` me
 with the help of tensor operations. A more complex neural network is again just a `Module` and uses the 
 [composition principle] to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
 found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
-to core [TensorFlow] and [Keras] where you are either stuck on the level of low-level tensor 
-operations or the composition of layers. 
+to core [TensorFlow] and [Keras] where you are either stuck on the level of tensor operations or the composition of layers. 
 
 For our task, we gonna need an `mLSTM` module and luckily PyTorch provides `RNNBase`, a base class for custom RNNs.
 So all we have to do is to write a module that inherits from `RNNBase`, defines additional parameters and implements
@@ -245,7 +244,7 @@ representation, for Movielens 10m it's 7.96% more and for Amazon it's even 18.19
 The performance improvements of using an mLSTM over an LSTM user representation are quite good but nothing spectacular.
 They give us at least some indication that mLSTMs achieve superior results for sequential recommendation tasks. In order to 
 further underpin this first assessment one could test with more datasets and also check other evaluation 
-metrics besides MRR. I leave this to a dedicated reader, so if you have are interested, please let me know and share your
+metrics besides MRR. I leave this to a dedicated reader, so if you are interested, please let me know and share your
 results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
 sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project! Let me
 know if you liked this post and comment below.

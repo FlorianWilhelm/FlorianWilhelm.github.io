@@ -1,3 +1,12 @@
+---
+title: Using Pandas for time series feature engineering
+date: 2017-07-02 18:00
+modified: 2017-07-02 18:00
+category: talk
+tags: machine-learning, python, recommender systems
+authors: Florian Wilhelm, Arnab Dutta
+status: draft
+---
 ```python
 def cat_seq_features(group, col, name=None, nunique=True):
     name = col if name is None else name

@@ -44,7 +44,7 @@ the quite renowned [GRU4Rec] model uses GRUs but in general it's not possible to
 
 So given these ingredients, how do we now construct a sequential recommender? Let's assume on every timestep 
 $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is now to feed these interactions into
- an LSTM up to the time $t$ in order to get a representation of the user's preferences $h_t$ and use these to state
+ an LSTM up to the time $t$ in order to get a representation of the user's preferences $h_t$ and use that to state
  if the user might like or dislike the next item $i_{t+1}$. Just like in a non-sequential recommender we also do a
  [one-hot encoding] of the items followed by an embedding into a dense vector representation $e_{i_t}$
  which is then feed into the LSTM. We can then just use the output $h_t$ of the LSTM and calculate the inner product ($\bigotimes$) 
@@ -191,7 +191,7 @@ It has only five components:
  1. **embedding layers** which map item ids to dense vectors,
  2. **user/item representations** which take embedding layers to calculate latent representations and the score for a 
     user/item pair, 
- 3. **interactions** which give easy access to the usr/item interactions and their explicit/implicit feedback,
+ 3. **interactions** which give easy access to the user/item interactions and their explicit/implicit feedback,
  4. **losses** which define the objective for the recommendation task,
  5. **models** which take user/item representations, the user/item interactions and a given loss to train the network.  
 

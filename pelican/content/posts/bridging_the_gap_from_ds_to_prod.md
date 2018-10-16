@@ -17,7 +17,7 @@ With my talk I hope to convey the message that breakdowns on the road from data 
 
 This talk was presented at [EuroPython 2018][] and the slides are available on [SlideShare][]. The video below shows the whole session with my talk starting at [51m23s][youtube].
 
-{% youtube XRKPOtbU6UE?t=51m23s 800 500 %}
+{% youtube ItcMqTR7Cds 800 500 %}
 
 [EuroPython 2018]: https://ep2018.europython.eu/conference/talks/bridging-the-gap-from-data-science-to-production
 [SlideShare]: https://www.slideshare.net/FlorianWilhelm2/bridging-the-gap-from-data-science-to-production

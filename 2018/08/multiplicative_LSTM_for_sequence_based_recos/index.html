@@ -300,7 +300,7 @@ in sequential prediction tasks with occasionally superior results. <a href="http
 the quite renowned <a href="https://github.com/hidasib/GRU4Rec">GRU4Rec</a> model uses GRUs but in general it&#8217;s not possible to state that one always outperforms the&nbsp;other.</p>
 <p>So given these ingredients, how do we now construct a sequential recommender? Let&#8217;s assume on every timestep 
 <span class="math">\(t\in\{1,\ldots,T\}\)</span> a user has interacted with an item <span class="math">\(i_t\)</span>. The basic idea is now to feed these interactions into
- an <span class="caps">LSTM</span> up to the time <span class="math">\(t\)</span> in order to get a representation of the user&#8217;s preferences <span class="math">\(h_t\)</span> and use these to state
+ an <span class="caps">LSTM</span> up to the time <span class="math">\(t\)</span> in order to get a representation of the user&#8217;s preferences <span class="math">\(h_t\)</span> and use that to state
  if the user might like or dislike the next item <span class="math">\(i_{t+1}\)</span>. Just like in a non-sequential recommender we also do a
  <a href="https://en.wikipedia.org/wiki/One-hot">one-hot encoding</a> of the items followed by an embedding into a dense vector representation <span class="math">\(e_{i_t}\)</span>
  which is then feed into the <span class="caps">LSTM</span>. We can then just use the output <span class="math">\(h_t\)</span> of the <span class="caps">LSTM</span> and calculate the inner product (<span class="math">\(\bigotimes\)</span>) 
@@ -437,7 +437,7 @@ It has only five&nbsp;components:</p>
 <li><strong>embedding layers</strong> which map item ids to dense&nbsp;vectors,</li>
 <li><strong>user/item representations</strong> which take embedding layers to calculate latent representations and the score for a 
     user/item&nbsp;pair, </li>
-<li><strong>interactions</strong> which give easy access to the usr/item interactions and their explicit/implicit&nbsp;feedback,</li>
+<li><strong>interactions</strong> which give easy access to the user/item interactions and their explicit/implicit&nbsp;feedback,</li>
 <li><strong>losses</strong> which define the objective for the recommendation&nbsp;task,</li>
 <li><strong>models</strong> which take user/item representations, the user/item interactions and a given loss to train the&nbsp;network.  </li>
 </ol>

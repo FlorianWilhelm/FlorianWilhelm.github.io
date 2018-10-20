@@ -29,7 +29,7 @@ in sequential prediction tasks with occasionally superior results. &lt;a href="h
 the quite renowned &lt;a href="https://github.com/hidasib/GRU4Rec"&gt;GRU4Rec&lt;/a&gt; model uses GRUs but in general it&amp;#8217;s not possible to state that one always outperforms the&amp;nbsp;other.&lt;/p&gt;
 &lt;p&gt;So given these ingredients, how do we now construct a sequential recommender? Let&amp;#8217;s assume on every timestep 
 &lt;span class="math"&gt;\(t\in\{1,\ldots,T\}\)&lt;/span&gt; a user has interacted with an item &lt;span class="math"&gt;\(i_t\)&lt;/span&gt;. The basic idea is now to feed these interactions into
- an &lt;span class="caps"&gt;LSTM&lt;/span&gt; up to the time &lt;span class="math"&gt;\(t\)&lt;/span&gt; in order to get a representation of the user&amp;#8217;s preferences &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and use these to state
+ an &lt;span class="caps"&gt;LSTM&lt;/span&gt; up to the time &lt;span class="math"&gt;\(t\)&lt;/span&gt; in order to get a representation of the user&amp;#8217;s preferences &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and use that to state
  if the user might like or dislike the next item &lt;span class="math"&gt;\(i_{t+1}\)&lt;/span&gt;. Just like in a non-sequential recommender we also do a
  &lt;a href="https://en.wikipedia.org/wiki/One-hot"&gt;one-hot encoding&lt;/a&gt; of the items followed by an embedding into a dense vector representation &lt;span class="math"&gt;\(e_{i_t}\)&lt;/span&gt;
  which is then feed into the &lt;span class="caps"&gt;LSTM&lt;/span&gt;. We can then just use the output &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; of the &lt;span class="caps"&gt;LSTM&lt;/span&gt; and calculate the inner product (&lt;span class="math"&gt;\(\bigotimes\)&lt;/span&gt;) 
@@ -166,7 +166,7 @@ It has only five&amp;nbsp;components:&lt;/p&gt;
 &lt;li&gt;&lt;strong&gt;embedding layers&lt;/strong&gt; which map item ids to dense&amp;nbsp;vectors,&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;user/item representations&lt;/strong&gt; which take embedding layers to calculate latent representations and the score for a 
     user/item&amp;nbsp;pair, &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;interactions&lt;/strong&gt; which give easy access to the usr/item interactions and their explicit/implicit&amp;nbsp;feedback,&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;interactions&lt;/strong&gt; which give easy access to the user/item interactions and their explicit/implicit&amp;nbsp;feedback,&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;losses&lt;/strong&gt; which define the objective for the recommendation&amp;nbsp;task,&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;models&lt;/strong&gt; which take user/item representations, the user/item interactions and a given loss to train the&amp;nbsp;network.  &lt;/li&gt;
 &lt;/ol&gt;

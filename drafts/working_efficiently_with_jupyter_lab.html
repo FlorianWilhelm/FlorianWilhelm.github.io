@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>“Which car fits my life?” - mobile.de’s approach to recommendations - Florian Wilhelm</title>
+    <title>Working efficiently with JupyterLab Notebooks - Florian Wilhelm</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -168,19 +168,18 @@ init_mathjax();
 <link rel="canonical" href="https://florianwilhelm.info/drafts/working_efficiently_with_jupyter_lab.html">
 
         <meta name="author" content="Florian Wilhelm" />
-        <meta name="keywords" content="machine-learning,python,recommender systems" />
-        <meta name="description" content="import sys import logging import numpy as np import scipy as sp import sklearn %load_ext autoreload %autoreload 2 import matplotlib as mpl import matplotlib.pyplot as plt %matplotlib inline %config InlineBackend.figure_format = &#39;retina&#39; import seaborn as sns sns.set_context(&#34;poster&#34;) sns.set(rc={&#39;figure.figsize&#39;: (16, 9.)}) sns.set_style(&#34;whitegrid …" />
+        <meta name="keywords" content="python,jupyter" />
+        <meta name="description" content="Motivation If you have ever done something analytical or anything closely related to data science in Python, there is just no way you have not heard of Jupyter or IPython notebooks. In a nutshell, a notebook is a document displayed in your browser which contains source code, e.g. Python …" />
 
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="“Which car fits my life?” - mobile.de’s approach to recommendations"/>
+        <meta property="og:title" content="Working efficiently with JupyterLab Notebooks"/>
         <meta property="og:url" content="https://florianwilhelm.info/drafts/working_efficiently_with_jupyter_lab.html"/>
-        <meta property="og:description" content="import sys import logging import numpy as np import scipy as sp import sklearn %load_ext autoreload %autoreload 2 import matplotlib as mpl import matplotlib.pyplot as plt %matplotlib inline %config InlineBackend.figure_format = &#39;retina&#39; import seaborn as sns sns.set_context(&#34;poster&#34;) sns.set(rc={&#39;figure.figsize&#39;: (16, 9.)}) sns.set_style(&#34;whitegrid …"/>
+        <meta property="og:description" content="Motivation If you have ever done something analytical or anything closely related to data science in Python, there is just no way you have not heard of Jupyter or IPython notebooks. In a nutshell, a notebook is a document displayed in your browser which contains source code, e.g. Python …"/>
         <meta property="article:published_time" content="2017-07-02" />
-            <meta property="article:section" content="talk" />
-            <meta property="article:tag" content="machine-learning" />
+            <meta property="article:section" content="article" />
             <meta property="article:tag" content="python" />
-            <meta property="article:tag" content="recommender systems" />
+            <meta property="article:tag" content="jupyter" />
             <meta property="article:author" content="Florian Wilhelm" />
 
     <meta name="twitter:card" content="summary">
@@ -199,8 +198,8 @@ init_mathjax();
 
 
 
-        <link href="https://florianwilhelm.info/feeds/talk.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Florian Wilhelm talk ATOM Feed"/>
+        <link href="https://florianwilhelm.info/feeds/article.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm article ATOM Feed"/>
 
 </head>
 <body>
@@ -240,8 +239,8 @@ Florian Wilhelm            </a>
                 <h1>
                     <a href="https://florianwilhelm.info/drafts/working_efficiently_with_jupyter_lab.html"
                        rel="bookmark"
-                       title="Permalink to “Which car fits my life?” - mobile.de’s approach to recommendations">
-                        “Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations
+                       title="Permalink to Working efficiently with JupyterLab Notebooks">
+                        Working efficiently with JupyterLab&nbsp;Notebooks
                     </a>
                 </h1>
             </header>
@@ -259,20 +258,117 @@ Florian Wilhelm            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
-        /
 	<a href="https://florianwilhelm.info/tag/python/">python</a>
         /
-	<a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
+	<a href="https://florianwilhelm.info/tag/jupyter/">jupyter</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+                <h2>Motivation</h2>
+<p>If you have ever done something analytical or anything closely related to data science in Python, there is just no way you have not heard of Jupyter or IPython notebooks. In a nutshell, a notebook is a document displayed in your browser which contains source code, e.g. Python and R, as well as rich text elements like paragraphs, equations, figures, links, etc. This combination makes it extremely useful for explorative tasks where the source code, documentation and even visualisations of your analysis are strongly intertwined. Due to this unique characteristic, Jupyter notebooks have achieved a strong adoption particularly in the data science community. But as Pythagoras already noted &#8220;If there be light, then there is darkness.&#8221; and with Jupyter notebooks is no difference of&nbsp;course.</p>
+<p>Being in the data science domain for quite some years, I have seen good but also a lot of ugly. Notebooks that are beautifully designed and perfectly convey ideas and concepts by having the perfect balance between text, code and visualisations like in my all time favourite <a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers">Probabilistic Programming and Bayesian Methods for Hackers</a>. In strong contrast to this, and actually more often to find in practise, are notebooks with cells containing pages of incomprehensible source code, distracting you from the actual analysis. Also sharing these notebooks is quite often an unnecessary pain. Notebooks that need you to tamper with the <code>PYTHONPATH</code> or to start Jupyter from a certain directory for modules to import correctly. In this blog post I will introduce several best practices and techniques that will help you to create notebooks which are focused, easy to comprehend and to work&nbsp;with. </p>
+<h2>History</h2>
+<p>Before we get into the actual subject let&#8217;s take some time to understand how <a href="http://jupyter.org/">Project Jupyter</a> evolved and where it came from. This will also clarify the confusion people sometimes have over IPython, Jupyter and JupyterLab notebooks. In 2001 Fernando Pérez was quite dissatisfied with the capabilities of Python&#8217;s interactive prompt compared to the commercial notebook environments of Maple and Mathematica which he really liked. In order to improve upon this situation he laid the foundation for a notebook environment by building <a href="https://ipython.org/">IPython</a> (Interactive Python), a command shell for interactive computing. IPython quickly became a success as the <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop"><span class="caps">REPL</span></a> of choice for many users but it was only a small step towards a graphical interactive notebook environment. Several years and many failed attempts later, it took until late 2010 for Grain Granger and several others to develop a first graphical console, named <a href="https://qtconsole.readthedocs.io/">QTConsole</a> and based on <a href="https://www.qt.io/"><span class="caps">QT</span></a>. As the speed of development picked up, IPython 0.12 was released only one year later in December 2011 and included for the first time a browser-based IPython notebook environment. People were psyched about the possibilities <em>IPython notebook</em> provided them and the adoption rose&nbsp;quickly. </p>
+<p>In 2014, <a href="http://jupyter.org/">Project Jupyter</a> started as a spin-off project from IPython for several reasons. At that time IPython encompassed an interactive shell, the notebook server, the <span class="caps">QT</span> console and other parts in a single repository with the obvious organisational downsides. After the spin-off, IPython concentrated on providing solely an interactive shell for Python while Project Jupyter itself started as an umbrella organisation for several components like <a href="https://jupyter-notebook.readthedocs.io/">Jupyter notebook</a> and <a href="https://qtconsole.readthedocs.io/">QTConsole</a>, which were moved over from IPython, as well as many others. Another reason for the split was the fact that Jupyter wanted to support other languages besides Python like <a href="https://www.r-project.org/">R</a>, <a href="https://julialang.org/">Julia</a> and more. The name Jupyter itself was chosen to reflect the fact that the three most popular languages in data science are supported among others, thus Jupyter is actually an acronym for <strong>Ju</strong>lia, <strong>Pyt</strong>hon, <strong>R</strong>. </p>
+<p>But evolution never stops and the source code of Jupyter notebook built on the web technologies of 2011 started to show its age. As the code grew bigger, people also started to realise that it actually is more than just a notebook. Some parts of it rather deal with managing files, running notebooks and parallel workers. This eventually led again to the idea of splitting these functionalities and laid the foundation for <a href="https://jupyterlab.readthedocs.io/">JupyterLab</a>. JupyterLab is an interactive development environment for working with notebooks, code and data. It has full support for Jupyter notebooks and enables you to use text editors, terminals, data file viewers, and other custom components side by side with notebooks in a tabbed work area. Since February 2018 it&#8217;s officially considered to be <a href="https://blog.jupyter.org/jupyterlab-is-ready-for-users-5a6f039b8906">ready for users</a> and the 1.0 release is expected to happen end of&nbsp;2018. </p>
+<p>According to my experience in the last months, JupyterLab is absolutely ready and I recommend everyone to migrate to it. In this post, I will thus focus on JupyterLab and the term notebook or sometimes even Jupyter notebook actually refers to a notebook that was opened with JupyterLab. Practically this means that you run <code>jupyter lab</code> instead of <code>jupyter notebook</code>. If you are interested in more historical details read the blog posts of <a href="http://blog.fperez.org/2012/01/ipython-notebook-historical.html">Fernando Pérez</a> and <a href="https://www.datacamp.com/community/blog/ipython-jupyter">Karlijn Willems</a>.</p>
+<h2>Preparation <span class="amp">&amp;</span>&nbsp;Installation</h2>
+<p>The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it&#8217;s a good practice to create a clean, isolated environment for every task. For Python you got basically to options <a href="https://virtualenv.pypa.io/">virtualenv</a> (also descendants like <a href="https://pipenv.readthedocs.io/">pipenv</a>) or <a href="https://conda.io/">conda</a> to achieve this. Since in the field of data science <a href="https://conda.io/">conda</a> is more common, we will use it in this tutorial. For this, I assume you have <a href="https://conda.io/miniconda.html">Miniconda</a> installed on your system. Besides this, every programmer&#8217;s machine should have <a href="https://git-scm.com/">Git</a> installed and set&nbsp;up.</p>
+<h3>0. Use an isolated&nbsp;environment</h3>
+<p>In the spirit of Phil Karlton who supposedly said &#8220;There are only two hard things in Computer Science: cache invalidation and naming things.&#8221;, we gonna select a specific task, namely an analysis based on the all familiar <a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html">Boston housing dataset</a>, to help us finding crisp names. Based on our task we create an environment <code>bostong_housing</code> including Python and some common data science libraries&nbsp;with:</p>
+<div class="highlight"><pre><span></span>conda create -n boston_housing python=3.6 jupyterlab scikit-learn seaborn
+</pre></div>
+
+
+<p>After less than a minute the environment is ready to be used and we can activate it with <code>conda activate boston_housing</code>.</p>
+<h2>Efficient&nbsp;Workflow</h2>
+<h3>1. Use&nbsp;Packages</h3>
+<p>The code in notebooks tends to grow and grow to the point of being incomprehensible. To overcome this problem, the only way is to extract parts of it into Python modules once in a while. Since it only makes sense to extract functions and classes into Python modules, I often start cleaning up a messy notebook by thinking about the actual task a group of cells is accomplishing. This helps me to refactor those cells into a proper function which I can then migrate into a Python&nbsp;module. </p>
+<p>At that point where you create your custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share certain functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports&nbsp;fail. </p>
+<p>This observation brings us to one of the most important best practices: <strong>develop your code as a Python package</strong>. A Python package will allow you to keep structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. <em>But creating a Python package is so much overhead; surely it&#8217;s not worth this small little analysis I will complete in half a day anyway and then forget about it</em>, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don&#8217;t adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it&#8217;s no overhead at&nbsp;all!</p>
+<h4>Creating a&nbsp;package</h4>
+<p>With the help of <a href="https://pyscaffold.org/">PyScaffold</a> it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated&nbsp;with:</p>
+<div class="highlight"><pre><span></span>conda install -c conda-forge pyscaffold
+</pre></div>
+
+
+<p>This package adds the <code>putup</code> command into our environment which we use to create a Python package&nbsp;with:</p>
+<div class="highlight"><pre><span></span>putup boston_housing
+</pre></div>
+
+
+<p>Now we can change into the new <code>boston_housig</code> directory and install the package inside our environment in development&nbsp;mode:</p>
+<div class="highlight"><pre><span></span>python setup.py develop
+</pre></div>
+
+
+<p>The development mode installs the package in a way that changes to the source code of the package, which resides in <code>boston_housing/src/boston_housing</code>, will be available without installing the package&nbsp;again.</p>
+<p>Let&#8217;s start JupyterLab with <code>jupyter lab</code> from the root of your new project where <code>setup.py</code> resides. To keep everything tight and clean, we start by creating a new folder <code>notebooks</code> using the file browser in the left sidebar. Within this empty folder we create a new notebook using the launcher and rename it to <code>housing_model</code>. Within the notebook we can now directly test our package by&nbsp;typing:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">boston_housing.skeleton</span> <span class="kn">import</span> <span class="n">fib</span>
+</pre></div>
+
+
+<p>The <code>skeleton</code> module is just a test module that <a href="https://pyscaffold.org/">PyScaffold</a> provides (omit it with <code>putup --no-skeleton ...</code>) and we import the Fibonacci function <code>fib</code> from it. You can now just test this function by calling <code>fib(42)</code> for&nbsp;instance. </p>
+<p>At that point we have already accomplished several good practices. We have nicely separated our notebook from the actual implementation and since we have a proper Python package we could even package and distribute it by just calling <code>python setup.py bdist_wheel</code> and use <a href="https://twine.readthedocs.io/">twine</a> to upload it to some artefact store like <a href="https://pypi.org/">PyPI</a> or <a href="https://devpi.net/">devpi</a> for internal-only use. Still we haven&#8217;t yet added any functionality, so let&#8217;s see how we do about&nbsp;that.</p>
+<h3>2. Move functionality to the&nbsp;package</h3>
+<p>We start with loading the <a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html">Boston housing dataset</a> into a dataframe with columns of the lower-cased feature names and the target variable <em>price</em>:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
+
+<span class="n">boston</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">boston</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">boston</span><span class="o">.</span><span class="n">feature_names</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">boston</span><span class="o">.</span><span class="n">target</span>
+</pre></div>
+
+
+<p>Now image we would go on like this, do some preprocessing etc., and after a while we would have a pretty extensive notebook of statements and expressions without any structure leading to name collisions and confusion. Since notebooks allow the executing of cells in different order this can be extremely harmful. For these reasons, we create a function&nbsp;instead:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_boston_df</span><span class="p">():</span>
+    <span class="n">boston</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">boston</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">boston</span><span class="o">.</span><span class="n">feature_names</span><span class="p">))</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">boston</span><span class="o">.</span><span class="n">target</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+
+
+<p>We test it inside the notebook but then directly move it into a module <code>model.py</code> that we create within our package under <code>src/boston_boston</code>. Now, inside our notebook, we can just import and use&nbsp;it:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">boston_housing.model</span> <span class="kn">import</span> <span class="n">get_boston_df</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">get_boston_df</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Now that looks much cleaner and allows also for other notebooks to just use this bit of functionality without using copy <span class="amp">&amp;</span>&nbsp;paste! </p>
+<h3>3. Use a proper <span class="caps">IDE</span></h3>
+<p>At that point the natural question comes up how to edit the code within your package. Of course JupyterLab will do the job but let&#8217;s face it, it just sucks compared to a real Integrated Development Environment (<span class="caps">IDE</span>) for such tasks. On the other hand our package structure is just perfect for a proper <span class="caps">IDE</span> like <a href="https://www.jetbrains.com/pycharm/">PyCharm</a>, <a href="https://code.visualstudio.com/">Visual Studio Code</a> or <a href="https://atom.io/">Atom</a> among others. PyCharm which is my favourite <span class="caps">IDE</span> has for instance many code inspection and refactoring features that support you in writing high-quality, clean code. This leads us to another best practice: Use JupyterLab only for integrating code from your package and keep complex functionality inside the package. Thus, extract larger bits of code from a notebook and move it into a package or directly develop code in a proper <span class="caps">IDE</span>. Figure 1 illustrates the current state of our little&nbsp;project.   </p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/pycharm_boston_housing.png" alt="Boston-Housing project view in PyCharm">
+<figcaption><strong>Figure 1:</strong> Project structure of the *boston-housing* package as created with PyScaffold. The `notebooks` folder holds the notebooks for JupyterLab while the `src/boston_housing` folder contains the actual code (`model.py`) and defines an actual Python package.</figcaption>
+</p>
+</figure>
+
+<h3>4. The %autoreload extension is your best&nbsp;friend</h3>
+<p>If we use an <span class="caps">IDE</span> for development as advocated in 3. we will run into an obvious problem. How can we modify a function in our package and have these modifications reflected in our notebook without restarting the kernel every time? At this point I want to introduce you to your new best friend, the <a href="https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html">autoreload extension</a>. Just add in the first cell of your&nbsp;notebook </p>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
+<span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
+</pre></div>
+
+
+<p>and execute. This extension reloads modules before executing user code and thus allows you to use your <span class="caps">IDE</span> for development while executing it inside of&nbsp;Jupyter.</p>
+<h3>Remote&nbsp;sessions</h3>
+<h2>Useful&nbsp;extensions</h2>
+<h2>Neat&nbsp;Tricks</h2>
+<h2>PySpark</h2>
+<h2>Conclusion</h2>
+<p>Verweis auf das&nbsp;Repo.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="kn">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.formula.api</span> <span class="kn">import</span> <span class="n">ols</span>
 
 <span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
 <span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
@@ -306,17 +402,18 @@ LaTeX und auch die Magic commands wie auch Shell mit !&nbsp;erwaehnen.</p>
 Jupyter supports mutiple cursors, similar to Sublime Text. Simply click and drag your mouse while holding down&nbsp;Alt.</p>
 <p>Slideshow https://github.com/damianavila/<span class="caps">RISE</span>&nbsp;? </p>
 <p>https://medium.com/netflix-techblog/notebook-innovation-591ee3221233</p>
+<p>M Y als shortcut um mal eben den output zu&nbsp;loeschen.</p>
 <p>Splitscreen!!!</p>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="https://florianwilhelm.info/2017/07/which_car_fits_my_life/">“Which car fits my life?” - mobile.de’s approach to&nbsp;recommendations</a></li>
-        <li><a href="https://florianwilhelm.info/2017/04/causal_inference_propensity_score/">Causal Inference and Propensity Score&nbsp;Methods</a></li>
-        <li><a href="https://florianwilhelm.info/2014/07/extending_scikit-learn_with_your_own_regressor/">Extending Scikit-Learn with your own&nbsp;regressor</a></li>
+        <li><a href="https://florianwilhelm.info/2016/07/handling_gps_data_with_python/">Handling <span class="caps">GPS</span> Data with&nbsp;Python</a></li>
+        <li><a href="https://florianwilhelm.info/2016/03/jupyter_distribution_visualizer/">Interactively visualizing distributions in a Jupyter notebook with&nbsp;Bokeh</a></li>
+        <li><a href="https://florianwilhelm.info/2016/02/introduction_to_the_python_data_science_stack/">Introduction to the Python Data Science&nbsp;Stack</a></li>
         <li><a href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders</a></li>
-        <li><a href="https://florianwilhelm.info/2016/03/explaining_the_idea_behind_ard/">Explaining the Idea behind <span class="caps">ARD</span> and Bayesian&nbsp;Interpolation</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/bridging_the_gap_from_ds_to_prod/">Bridging the Gap: from Data Science to&nbsp;Production</a></li>
     </ul>
 </section>
     <hr/>

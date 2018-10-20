@@ -29,6 +29,8 @@ According to my experience in the last months, JupyterLab is absolutely ready an
 
 The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it's a good practice to create a clean, isolated environment for every task. For Python you got basically to options [virtualenv] (also descendants like [pipenv]) or [conda] to achieve this. Since in the field of data science [conda] is more common, we will use it in this tutorial. For this, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up.
 
+### 0. Use an isolated environment
+
 In the spirit of Phil Karlton who supposedly said "There are only two hard things in Computer Science: cache invalidation and naming things.", we gonna select a specific task, namely an analysis based on the all familiar [Boston housing dataset], to help us finding crisp names. Based on our task we create an environment `bostong_housing` including Python and some common data science libraries with:
 
 ```commandline
@@ -46,23 +48,85 @@ The code in notebooks tends to grow and grow to the point of being incomprehensi
 
 At that point where you create your custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share certain functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports fail. 
 
+This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to keep structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
 
-This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to keep structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in a half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
+#### Creating a package
+
+With the help of [PyScaffold] it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated with:
+```commandline
+conda install -c conda-forge pyscaffold
+```
+This package adds the `putup` command into our environment which we use to create a Python package with:
+```commandline
+putup boston_housing
+```
+Now we can change into the new `boston_housig` directory and install the package inside our environment in development mode:
+```commandline
+python setup.py develop
+```
+The development mode installs the package in a way that changes to the source code of the package, which resides in `boston_housing/src/boston_housing`, will be available without installing the package again.
+
+Let's start JupyterLab with `jupyter lab` from the root of your new project where `setup.py` resides. To keep everything tight and clean, we start by creating a new folder `notebooks` using the file browser in the left sidebar. Within this empty folder we create a new notebook using the launcher and rename it to `housing_model`. Within the notebook we can now directly test our package by typing:
+```python
+from boston_housing.skeleton import fib
+``` 
+The `skeleton` module is just a test module that [PyScaffold] provides (omit it with `putup --no-skeleton ...`) and we import the Fibonacci function `fib` from it. You can now just test this function by calling `fib(42)` for instance. 
+
+At that point we have already accomplished several good practices. We have nicely separated our notebook from the actual implementation and since we have a proper Python package we could even package and distribute it by just calling `python setup.py bdist_wheel` and use [twine] to upload it to some artefact store like [PyPI] or [devpi] for internal-only use. Still we haven't yet added any functionality, so let's see how we do about that.
+
+### 2. Move functionality to the package
+
+We start with loading the [Boston housing dataset] into a dataframe with columns of the lower-cased feature names and the target variable *price*:
+```python
+import pandas as pd
+from sklearn.datasets import load_boston
+
+boston = load_boston()
+df = pd.DataFrame(boston.data, columns=(c.lower() for c in boston.feature_names))
+df['price'] = boston.target
+```
+
+Now image we would go on like this, do some preprocessing etc., and after a while we would have a pretty extensive notebook of statements and expressions without any structure leading to name collisions and confusion. Since notebooks allow the executing of cells in different order this can be extremely harmful. For these reasons, we create a function instead:
+```python
+def get_boston_df():
+    boston = load_boston()
+    df = pd.DataFrame(boston.data, columns=(c.lower() for c in boston.feature_names))
+    df['price'] = boston.target
+    return df
+```  
+We test it inside the notebook but then directly move it into a module `model.py` that we create within our package under `src/boston_boston`. Now, inside our notebook, we can just import and use it:
+```python
+from boston_housing.model import get_boston_df
+
+df = get_boston_df()
+```
+Now that looks much cleaner and allows also for other notebooks to just use this bit of functionality without using copy & paste! 
+
+### 3. Use a proper IDE
+
+At that point the natural question comes up how to edit the code within your package. Of course JupyterLab will do the job but let's face it, it just sucks compared to a real Integrated Development Environment (IDE) for such tasks. On the other hand our package structure is just perfect for a proper IDE like [PyCharm], [Visual Studio Code] or [Atom] among others. PyCharm which is my favourite IDE has for instance many code inspection and refactoring features that support you in writing high-quality, clean code. This leads us to another best practice: Use JupyterLab only for integrating code from your package and keep complex functionality inside the package. Thus, extract larger bits of code from a notebook and move it into a package or directly develop code in a proper IDE. Figure 1 illustrates the current state of our little project.   
+
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/pycharm_boston_housing.png" alt="Boston-Housing project view in PyCharm">
+<figcaption><strong>Figure 1:</strong> Project structure of the *boston-housing* package as created with PyScaffold. The `notebooks` folder holds the notebooks for JupyterLab while the `src/boston_housing` folder contains the actual code (`model.py`) and defines an actual Python package.</figcaption>
+</p>
+</figure>
+
+
+### 4. The %autoreload extension is your best friend
+
+If we use an IDE for development as advocated in 3. we will run into an obvious problem. How can we modify a function in our package and have these modifications reflected in our notebook without restarting the kernel every time? At this point I want to introduce you to your new best friend, the [autoreload extension]. Just add in the first cell of your notebook 
+```python
+%load_ext autoreload
+%autoreload 2
+```
+and execute. This extension reloads modules before executing user code and thus allows you to use your IDE for development while executing it inside of Jupyter.
 
 
 
 
 
-`notebooks` folder
-
-`putup boston_housing`
-
-`python setup.py develop`
-
-
-putub 
-
-### Isolated environment
 
 ### Remote sessions
 
@@ -155,4 +219,13 @@ Splitscreen!!!
 [pipenv]: https://pipenv.readthedocs.io/
 [git]: https://git-scm.com/
 [Boston housing dataset]: https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html
+[PyScaffold]: https://pyscaffold.org/
+[twine]: https://twine.readthedocs.io/
+[devpi]: https://devpi.net/
+[PyPI]: https://pypi.org/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[Visual Studio Code]: https://code.visualstudio.com/
+[Atom]: https://atom.io/
+[autoreload extension]: https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html
+
 

@@ -42,15 +42,13 @@ After less than a minute the environment is ready to be used and we can activate
 
 ## Efficient Workflow
 
-### 1. Use Packages
-
 The code in notebooks tends to grow and grow to the point of being incomprehensible. To overcome this problem, the only way is to extract parts of it into Python modules once in a while. Since it only makes sense to extract functions and classes into Python modules, I often start cleaning up a messy notebook by thinking about the actual task a group of cells is accomplishing. This helps me to refactor those cells into a proper function which I can then migrate into a Python module. 
 
-At that point where you create your custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share certain functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports fail. 
+At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports fail. 
 
 This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to keep structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
 
-#### Creating a package
+### 1. Develop your code in a Python Package
 
 With the help of [PyScaffold] it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated with:
 ```commandline
@@ -72,9 +70,10 @@ from boston_housing.skeleton import fib
 ``` 
 The `skeleton` module is just a test module that [PyScaffold] provides (omit it with `putup --no-skeleton ...`) and we import the Fibonacci function `fib` from it. You can now just test this function by calling `fib(42)` for instance. 
 
-At that point we have already accomplished several good practices. We have nicely separated our notebook from the actual implementation and since we have a proper Python package we could even package and distribute it by just calling `python setup.py bdist_wheel` and use [twine] to upload it to some artefact store like [PyPI] or [devpi] for internal-only use. Still we haven't yet added any functionality, so let's see how we do about that.
+At that point after having only adhered to a single good practice, we already benefit from many advantages. Since we have nicely separated our notebook from the actual implementation, we can package and distribute our code by just calling `python setup.py bdist_wheel` and use [twine] to upload it to some artefact store like [PyPI] or [devpi] for internal-only use. Another big plus is that having a package allows us to collaboratively work on the source code in your package using git. On the other hand using git with notebooks is a big pain since it its format is not really designed to be human-readable and thus merge conflicts are a horror. 
+Still we haven't yet added any functionality, so let's see how we do about that.
 
-### 2. Move functionality to the package
+### 2. Extract functionality from the notebook
 
 We start with loading the [Boston housing dataset] into a dataframe with columns of the lower-cased feature names and the target variable *price*:
 ```python
@@ -94,17 +93,18 @@ def get_boston_df():
     df['price'] = boston.target
     return df
 ```  
-We test it inside the notebook but then directly move it into a module `model.py` that we create within our package under `src/boston_boston`. Now, inside our notebook, we can just import and use it:
+We test it inside the notebook but then directly extract and move it into a module `model.py` that we create within our package under `src/boston_boston`. Now, inside our notebook, we can just import and use it:
 ```python
 from boston_housing.model import get_boston_df
 
 df = get_boston_df()
 ```
-Now that looks much cleaner and allows also for other notebooks to just use this bit of functionality without using copy & paste! 
+Now that looks much cleaner and allows also for other notebooks to just use this bit of functionality without using copy & paste! This leads us to another best practice: Use JupyterLab only for integrating code from your package and keep complex functionality inside the package. Thus, extract larger bits of code from a notebook and move it into a package or directly develop code in a proper IDE.
+
 
 ### 3. Use a proper IDE
 
-At that point the natural question comes up how to edit the code within your package. Of course JupyterLab will do the job but let's face it, it just sucks compared to a real Integrated Development Environment (IDE) for such tasks. On the other hand our package structure is just perfect for a proper IDE like [PyCharm], [Visual Studio Code] or [Atom] among others. PyCharm which is my favourite IDE has for instance many code inspection and refactoring features that support you in writing high-quality, clean code. This leads us to another best practice: Use JupyterLab only for integrating code from your package and keep complex functionality inside the package. Thus, extract larger bits of code from a notebook and move it into a package or directly develop code in a proper IDE. Figure 1 illustrates the current state of our little project.   
+At that point the natural question comes up how to edit the code within your package. Of course JupyterLab will do the job but let's face it, it just sucks compared to a real Integrated Development Environment (IDE) for such tasks. On the other hand our package structure is just perfect for a proper IDE like [PyCharm], [Visual Studio Code] or [Atom] among others. PyCharm which is my favourite IDE has for instance many code inspection and refactoring features that support you in writing high-quality, clean code. Figure 1 illustrates the current state of our little project.   
 
 <figure>
 <p align="center">
@@ -113,35 +113,19 @@ At that point the natural question comes up how to edit the code within your pac
 </p>
 </figure>
 
-
-### 4. The %autoreload extension is your best friend
-
-If we use an IDE for development as advocated in 3. we will run into an obvious problem. How can we modify a function in our package and have these modifications reflected in our notebook without restarting the kernel every time? At this point I want to introduce you to your new best friend, the [autoreload extension]. Just add in the first cell of your notebook 
+If we use an IDE for development we will run into an obvious problem. How can we modify a function in our package and have these modifications reflected in our notebook without restarting the kernel every time? At this point I want to introduce you to your new best friend, the [autoreload extension]. Just add in the first cell of your notebook 
 ```python
 %load_ext autoreload
 %autoreload 2
 ```
-and execute. This extension reloads modules before executing user code and thus allows you to use your IDE for development while executing it inside of Jupyter.
+and execute. This extension reloads modules before executing user code and thus allows you to use your IDE for development while executing it inside of JupyterLab.
 
 
+### 4. Create your personal notebook template
 
+After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a `template.ipynb` notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the `template.ipynb` notebook and click *Duplicate*. 
 
-
-
-### Remote sessions
-
-## Useful extensions
-
-## Neat Tricks
-
-## PySpark
-
-## Conclusion
-
-
-Verweis auf das Repo.
-
-
+The content of my `template.ipynb` is basically:
 ```python
 import sys
 import logging
@@ -170,9 +154,65 @@ pd.set_option("display.max_rows", 120)
 pd.set_option("display.max_columns", 120)
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-
-from private_selling import price_cmp
 ```
+
+### 5. Document your analysis
+
+A really old programmer's joke goes like "When I wrote this code, only God and I understood what it did. Now... only God knows." The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use [Markdown syntax] to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the `$...$` notation. More general information about the whole project can be put into `README.rst` which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like [PyPI] or [devpi]. Also GitHub and GitLab will display `README.rst` and thus provide a good entry point into your project. 
+
+The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum "The nice thing about standards is that you have so many to choose from". The three most common docstring standards for Python are the default [Sphinx RestructuredText], [Numpy and Google style] which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single `README.rst`, maybe you came up with a new ML algorithms and want to document the concept behind it, you should take a look at [Sphinx]. Our project setup already includes a `docs` folder with an `index.rst` as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as HTML pages:
+```commandline
+conda install spinx
+python setup.py docs
+```
+It's also possible to create a nice PDF and even serve your documentation as a web page using [ReadTheDocs].
+
+### 6. State your dependencies for reproducibility
+
+Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data *scientist*, you should always guarantee **reproducibility** of whatever you do since it's the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using `conda` we can do this with our `boston_housing` project as:
+```commandline
+conda env export -n boston_housing -f environment.lock.yaml
+```
+This creates a file `environment.lock.yaml` that recursively states all dependencies and their version as well as the Python version that was used to allow anyone to deterministically reproduce this environment in the future. This is as easy as 
+```commandline
+conda env create -f environment.lock.yaml --force
+```
+Besides a *concrete* environment file that exhaustively lists all dependencies, it's also common practice to define an `environment.yaml` where you state your *abstract* dependencies. These abstract dependencies comprise only libraries which are directly imported with no specific version. In our case this file looks like:
+```yaml
+name: boston_housing
+channels:
+  - defaults
+dependencies:
+  - jupyterlab
+  - pandas
+  - scikit-learn
+  - seaborn
+```
+This file keeps track of all libraries you are directly using. If you added a new library you can use this file to update your current environment with:
+```commandline
+conda env update --file environment.yaml
+``` 
+Remember to regularly update and commit changes to these files in Git. Whenever you are satisfied with an iteration of your work also make use of Git tags in order to have reference points for later. These tags will also be used automatically as version numbers for your Python package which is another benefit of having used PyScaffold for your project setup.
+
+Reproducible environments are only one aspect of reproducibility. Since many machine learning algorithms (most prominently Deep Learning) use random numbers it's important to keep them deterministic by fixing the random seed. This sounds easier at it is since depending on the used framework, there are different ways to accomplish this. A good overview for many common frameworks is provided in the talk [Reproducibility, and Selection Bias in Machine Learning].
+
+### 7. Develop locally, execute remotely
+
+
+
+## Useful extensions
+
+## Neat Tricks
+
+## PySpark
+
+https://github.corp.ebay.com/myudin/gw_config/blob/master/kernel.json
+
+## Conclusion
+
+
+Verweis auf das Repo.
+
 
 
 alias spark_jupyter='PYSPARK_PYTHON=python3.4 PYSPARK_DRIVER_PYTHON="jupyter" PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=8899" /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false'
@@ -227,5 +267,9 @@ Splitscreen!!!
 [Visual Studio Code]: https://code.visualstudio.com/
 [Atom]: https://atom.io/
 [autoreload extension]: https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html
-
-
+[Markdown syntax]: https://daringfireball.net/projects/markdown/syntax
+[Sphinx]: https://www.sphinx-doc.org/
+[Sphinx RestructuredText]: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#the-python-domain
+[Numpy and Google style]: http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+[ReadTheDocs]: https://readthedocs.org/
+[Reproducibility, and Selection Bias in Machine Learning]: https://de.pycon.org/schedule/talks/reproducibility-and-selection-bias-in-machine-learning/

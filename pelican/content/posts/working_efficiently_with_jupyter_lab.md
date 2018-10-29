@@ -121,7 +121,54 @@ If we use an IDE for development we will run into an obvious problem. How can we
 and execute. This extension reloads modules before executing user code and thus allows you to use your IDE for development while executing it inside of JupyterLab.
 
 
-### 4. Create your personal notebook template
+### 5. Know your tool
+
+JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here practices that I apply commonly.
+
+* Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on Windows/Linux.
+
+  Command                | Shortcut
+  -------------          | -------------
+  Enter Command Mode     | <kbd>Esc</kbd>
+  Run Cell               | <kbd>Ctrl</kbd> <kbd>Enter</kbd>
+  Run Cell & Select Next | <kbd>Shift</kbd> <kbd>Enter</kbd>
+  Add Cell Above         | <kbd>A</kbd>
+  Add Cell Below         | <kbd>B</kbd>
+  To Markdown            | <kbd>M</kbd>
+  To Code                | <kbd>Y</kbd>
+  Delete Cell Output     | <kbd>M</kbd> <kbd>Y</kbd>
+  Delete Cell            | <kbd>D</kbd> <kbd>D</kbd>
+  Comment Line           | <kbd>Ctrl</kbd> <kbd>/</kbd>
+  Command Palette        | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>C</kbd>
+  File Explorer          | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>F</kbd>
+  Toggle Bar             | <kbd>Accel</kbd> <kbd>B</kbd>
+  Fullscreen Mode        | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>D</kbd>
+  Close Tab              | <kbd>Ctrl</kbd> <kbd>Q</kbd>
+  Launcher               | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>L</kbd>
+
+* Get fast help and documentation
+
+  If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with `?` gets you the docstring (and with `??` the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key stroke.  
+  
+  
+* Avoid unintended outputs
+
+  Using `;` in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like `<matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208>` when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending `;` to a command like `plt.plot(...);`.
+  
+* Arrange cells and windows according to your needs
+
+  You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook's tab then moving it around. The same applies to cells. Just click on the cell's number, hold and move it up or down.
+
+* Access a cell's result
+
+  Surely you have experienced this facepalm moment when your cell with `extremely_long_running_dataframe_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _{CELL_NUMBER`, e.g. `result = _42`, to access and save your result.
+
+* Use the multicursor support
+
+  Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or delete. 
+
+
+### 6. Create your personal notebook template
 
 After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a `template.ipynb` notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the `template.ipynb` notebook and click *Duplicate*. 
 
@@ -156,7 +203,7 @@ pd.set_option("display.max_columns", 120)
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 ```
 
-### 5. Document your analysis
+### 7. Document your analysis
 
 A really old programmer's joke goes like "When I wrote this code, only God and I understood what it did. Now... only God knows." The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use [Markdown syntax] to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the `$...$` notation. More general information about the whole project can be put into `README.rst` which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like [PyPI] or [devpi]. Also GitHub and GitLab will display `README.rst` and thus provide a good entry point into your project. 
 
@@ -167,7 +214,7 @@ python setup.py docs
 ```
 It's also possible to create a nice PDF and even serve your documentation as a web page using [ReadTheDocs].
 
-### 6. State your dependencies for reproducibility
+### 8. State your dependencies for reproducibility
 
 Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data *scientist*, you should always guarantee **reproducibility** of whatever you do since it's the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using `conda` we can do this with our `boston_housing` project as:
 ```commandline
@@ -196,49 +243,34 @@ Remember to regularly update and commit changes to these files in Git. Whenever 
 
 Reproducible environments are only one aspect of reproducibility. Since many machine learning algorithms (most prominently Deep Learning) use random numbers it's important to keep them deterministic by fixing the random seed. This sounds easier at it is since depending on the used framework, there are different ways to accomplish this. A good overview for many common frameworks is provided in the talk [Reproducibility, and Selection Bias in Machine Learning].
 
-### 7. Develop locally, execute remotely
+### 9. Develop locally, execute remotely
 
 
 
-## Useful extensions
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/pycharm_deployment.png" alt="Deployment tool of PyCharm">
+<figcaption><strong>Figure 2:</strong> PyCharm allows you to easily develop locally your Python modules and run them remotely in JupyterLab. It will keep track of local changes and upload them automatically what triggers JupterLab's autoreload extension.</figcaption>
+</p>
+</figure>
 
-## Neat Tricks
-
-## PySpark
 
 https://github.corp.ebay.com/myudin/gw_config/blob/master/kernel.json
-
-## Conclusion
-
-
-Verweis auf das Repo.
-
-
 
 alias spark_jupyter='PYSPARK_PYTHON=python3.4 PYSPARK_DRIVER_PYTHON="jupyter" PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=8899" /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false'
 
 
-Die Sache mit dem Zugriff auf die letzten Element wie in dem Twitter post von Bernhard Schäfer
+## Conclusion
+
+Extensions Erwähnen
+Verweis auf das Repo.
 
 
-Das Semikolon erwaehnen um den output der Plots zu unterdruecken.
 
 
-Tipp von Marcel mit Cursor und dann Shift + Tab um schnell mal das zu kriegen was normalerweise ?? und ? macht.
-LaTeX und auch die Magic commands wie auch Shell mit ! erwaehnen.
-
-Multicursor support
-Jupyter supports mutiple cursors, similar to Sublime Text. Simply click and drag your mouse while holding down Alt.
 
 
-Slideshow https://github.com/damianavila/RISE ? 
 
-https://medium.com/netflix-techblog/notebook-innovation-591ee3221233
-
-
-M Y als shortcut um mal eben den output zu loeschen.
-
-Splitscreen!!!
 
 [Project Jupyter]: http://jupyter.org/
 [QT]: https://www.qt.io/

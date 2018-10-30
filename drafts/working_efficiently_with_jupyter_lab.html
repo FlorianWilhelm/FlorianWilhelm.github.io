@@ -356,7 +356,7 @@ Still we haven&#8217;t yet added any functionality, so let&#8217;s see how we do
 <p>and execute. This extension reloads modules before executing user code and thus allows you to use your <span class="caps">IDE</span> for development while executing it inside of&nbsp;JupyterLab.</p>
 <h3>5. Know your&nbsp;tool</h3>
 <p>JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here practices that I apply&nbsp;commonly.</p>
-<h5>Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on&nbsp;Windows/Linux.</h5>
+<h4>Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on&nbsp;Windows/Linux.</h4>
 <table>
 <thead>
 <tr>
@@ -431,15 +431,15 @@ Still we haven&#8217;t yet added any functionality, so let&#8217;s see how we do
 </tr>
 </tbody>
 </table>
-<h5>Quickly access&nbsp;documentation</h5>
+<h4>Quickly access&nbsp;documentation</h4>
 <p>If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with <code>?</code> gets you the docstring (and with <code>??</code> the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key&nbsp;stroke.  </p>
-<h5>Avoid unintended&nbsp;outputs</h5>
+<h4>Avoid unintended&nbsp;outputs</h4>
 <p>Using <code>;</code> in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like <code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208&gt;</code> when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending <code>;</code> to a command like <code>plt.plot(...);</code>.</p>
-<h5>Arrange cells and windows according to your&nbsp;needs</h5>
+<h4>Arrange cells and windows according to your&nbsp;needs</h4>
 <p>You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook&#8217;s tab then moving it around. The same applies to cells. Just click on the cell&#8217;s number, hold and move it up or&nbsp;down.</p>
-<h5>Access a cell&#8217;s&nbsp;result</h5>
+<h4>Access a cell&#8217;s&nbsp;result</h4>
 <p>Surely you have experienced this facepalm moment when your cell with <code>extremely_long_running_dataframe_transformation(df)</code> is finally finished but you forgot to store the result in another variable. Don&#8217;t despair! You can just use <code>result = _{CELL_NUMBER</code>, e.g. <code>result = _42</code>, to access and save your&nbsp;result.</p>
-<h5>Use the multicursor&nbsp;support</h5>
+<h4>Use the multicursor&nbsp;support</h4>
 <p>Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or&nbsp;delete. </p>
 <h3>6. Create your personal notebook&nbsp;template</h3>
 <p>After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a <code>template.ipynb</code> notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the <code>template.ipynb</code> notebook and click <em>Duplicate</em>. </p>

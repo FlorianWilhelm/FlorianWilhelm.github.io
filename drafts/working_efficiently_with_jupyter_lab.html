@@ -356,9 +356,7 @@ Still we haven&#8217;t yet added any functionality, so let&#8217;s see how we do
 <p>and execute. This extension reloads modules before executing user code and thus allows you to use your <span class="caps">IDE</span> for development while executing it inside of&nbsp;JupyterLab.</p>
 <h3>5. Know your&nbsp;tool</h3>
 <p>JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here practices that I apply&nbsp;commonly.</p>
-<ul>
-<li>Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on&nbsp;Windows/Linux.</li>
-</ul>
+<h6>Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on&nbsp;Windows/Linux.</h6>
 <table>
 <thead>
 <tr>
@@ -397,7 +395,7 @@ Still we haven&#8217;t yet added any functionality, so let&#8217;s see how we do
 </tr>
 <tr>
 <td>Delete Cell Output</td>
-<td><kbd>M</kbd> <kbd>Y</kbd></td>
+<td><kbd>M</kbd>, <kbd>Y</kbd> (workaround)</td>
 </tr>
 <tr>
 <td>Delete Cell</td>
@@ -433,25 +431,15 @@ Still we haven&#8217;t yet added any functionality, so let&#8217;s see how we do
 </tr>
 </tbody>
 </table>
-<ul>
-<li>Get fast help and&nbsp;documentation</li>
-</ul>
+<h6>Quickly access&nbsp;documentation</h6>
 <p>If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with <code>?</code> gets you the docstring (and with <code>??</code> the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key&nbsp;stroke.  </p>
-<ul>
-<li>Avoid unintended&nbsp;outputs</li>
-</ul>
+<h6>Avoid unintended&nbsp;outputs</h6>
 <p>Using <code>;</code> in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like <code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208&gt;</code> when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending <code>;</code> to a command like <code>plt.plot(...);</code>.</p>
-<ul>
-<li>Arrange cells and windows according to your&nbsp;needs</li>
-</ul>
+<h6>Arrange cells and windows according to your&nbsp;needs</h6>
 <p>You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook&#8217;s tab then moving it around. The same applies to cells. Just click on the cell&#8217;s number, hold and move it up or&nbsp;down.</p>
-<ul>
-<li>Access a cell&#8217;s&nbsp;result</li>
-</ul>
+<h6>Access a cell&#8217;s&nbsp;result</h6>
 <p>Surely you have experienced this facepalm moment when your cell with <code>extremely_long_running_dataframe_transformation(df)</code> is finally finished but you forgot to store the result in another variable. Don&#8217;t despair! You can just use <code>result = _{CELL_NUMBER</code>, e.g. <code>result = _42</code>, to access and save your&nbsp;result.</p>
-<ul>
-<li>Use the multicursor&nbsp;support</li>
-</ul>
+<h6>Use the multicursor&nbsp;support</h6>
 <p>Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or&nbsp;delete. </p>
 <h3>6. Create your personal notebook&nbsp;template</h3>
 <p>After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a <code>template.ipynb</code> notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the <code>template.ipynb</code> notebook and click <em>Duplicate</em>. </p>
@@ -526,6 +514,8 @@ python setup.py docs
 <p>Remember to regularly update and commit changes to these files in Git. Whenever you are satisfied with an iteration of your work also make use of Git tags in order to have reference points for later. These tags will also be used automatically as version numbers for your Python package which is another benefit of having used PyScaffold for your project&nbsp;setup.</p>
 <p>Reproducible environments are only one aspect of reproducibility. Since many machine learning algorithms (most prominently Deep Learning) use random numbers it&#8217;s important to keep them deterministic by fixing the random seed. This sounds easier at it is since depending on the used framework, there are different ways to accomplish this. A good overview for many common frameworks is provided in the talk <a href="https://de.pycon.org/schedule/talks/reproducibility-and-selection-bias-in-machine-learning/">Reproducibility, and Selection Bias in Machine Learning</a>.</p>
 <h3>9. Develop locally, execute&nbsp;remotely</h3>
+<p>Quite often when you want to do some heavy lifting, your laptop won&#8217;t be enough and thus you might use some powerful workstation by remote access. Running JupyterLab on the workstation and accessing it, maybe through some <a href="https://www.ssh.com/ssh/tunneling/example"><span class="caps">SSH</span> tunnel</a>, is no problem at all but how can we now work on the modules in our package? One way would be to run your <span class="caps">IDE</span> on the workstation but this comes potentially with many downsides depending on your connection. A flaky connection might lead to increased latencies when typing or reduced resolution. For this reason it&#8217;s best to do the actual coding locally in your <span class="caps">IDE</span> and sync every change automatically to the workstation where JupyterLab runs. The general setup for the workstation is analogue to the local setup. We use the <code>environment.lock.yaml</code> to create the exact same environment which we run locally, followed by a <code>python setup.py develop</code>. If we now start JupyterLab within this environment we will be able to import our&nbsp;package. </p>
+<p>Now comes the interesting part: every change in one of our local modules needs to be reflected also on the remote workstation. You can use a classical command line tool like <a href="https://rsync.samba.org/">rsync</a> for that or just rely on the features of your <span class="caps">IDE</span>. Over the last years I have grown quite fond of PyCharm&#8217;s Deployment feature as illustrated in Figure 2. It allows you to configure remote servers and if <em>Automatic Upload</em> is checked it syncs each file when saving. This convenient feature allows for blazing fast iterations. You make some changes to your model, maybe implement a new transformation function, hit <kbd>Accel</kbd> <kbd>S</kbd> to save, hit <kbd>Accel</kbd> <kbd>Tab</kbd> to switch your browser with the JupyterLab tab and then rerun the modified model on the&nbsp;workstation.  </p>
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/pycharm_deployment.png" alt="Deployment tool of PyCharm">
@@ -533,8 +523,37 @@ python setup.py docs
 </p>
 </figure>
 
-<p>https://github.corp.ebay.com/myudin/gw_config/blob/master/kernel.json</p>
-<p>alias spark_jupyter=&#8217;PYSPARK_PYTHON=python3.4 PYSPARK_DRIVER_PYTHON=&#8221;jupyter&#8221; PYSPARK_DRIVER_PYTHON_OPTS=&#8221;notebook &#8212;no-browser &#8212;port=8899&#8221; /usr/bin/pyspark2 &#8212;master yarn &#8212;deploy-mode client &#8212;num-executors 20  &#8212;executor-memory 10g &#8212;executor-cores 5 &#8212;conf&nbsp;spark.dynamicAllocation.enabled=false&#8217;</p>
+<p>Another reason for running JupyterLab on a remote machine might be due to some firewall restrictions. Quite often in order to access sensitive data sources or a <a href="https://spark.apache.org/">Spark</a> cluster, you need to run JupyterLab on a gateway server. To invoke JupyterLab with Spark capabilities there are two ways. An ad hoc method is to just state on the command line that JupyterLab should use pyspark as kernel. For instance starting JupyterLab with Python 3.6 (needs to be consistent with your Spark distribution), 20 executors each having 5 cores might look like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON=&quot;jupyter&quot; PYSPARK_DRIVER_PYTHON_OPTS=&quot;notebook --no-browser --port=8899&quot; /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false
+</pre></div>
+
+
+<p>In order to be able to create notebooks with a specific PySpark kernel directly from JupyterLab, just create a file <code>~/.local/share/jupyter/kernels/pyspark/kernel.json</code> holding:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="nt">&quot;display_name&quot;</span><span class="p">:</span> <span class="s2">&quot;PySpark&quot;</span><span class="p">,</span>
+ <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span>
+ <span class="nt">&quot;argv&quot;</span><span class="p">:</span> <span class="p">[</span>
+  <span class="s2">&quot;/usr/local/anaconda-py3/bin/python&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;ipykernel&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;{connection_file}&quot;</span>
+ <span class="p">],</span>
+ <span class="nt">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="nt">&quot;HADOOP_CONF_DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/hadoop/conf&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;HADOOP_USER_NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;HADOOP_CONF_LIB_NATIVE_DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/lib/cloudera/parcels/CDH/lib/hadoop/lib/native&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;YARN_CONF_DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/hadoop/conf&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;SPARK_YARN_QUEUE&quot;</span><span class="p">:</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;PYTHONPATH&quot;</span><span class="p">:</span> <span class="s2">&quot;/usr/local/anaconda-py3/bin/python:/usr/local/anaconda-py3/lib/python3.6/site-packages:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/lib/py4j-0.10.4-src.zip&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;SPARK_HOME&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/lib/cloudera/parcels/SPARK2/lib/spark2/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;PYTHONSTARTUP&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/pyspark/shell.py&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;PYSPARK_SUBMIT_ARGS&quot;</span><span class="p">:</span> <span class="s2">&quot;--queue dev --conf spark.dynamicAllocation.enabled=false --conf spark.scheduler.minRegisteredResourcesRatio=1 --conf spark.sql.autoBroadcastJoinThreshold=-1 --master yarn --num-executors 5 --driver-memory 2g --executor-memory 20g --executor-cores 3 pyspark-shell&quot;</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2>Conclusion</h2>
 <p>Extensions Erwähnen
 Verweis auf das&nbsp;Repo.</p>

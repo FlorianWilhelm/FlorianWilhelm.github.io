@@ -125,7 +125,7 @@ and execute. This extension reloads modules before executing user code and thus 
 
 JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here practices that I apply commonly.
 
-* Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on Windows/Linux.
+###### Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on Windows/Linux.
 
   Command                | Shortcut
   -------------          | -------------
@@ -136,7 +136,7 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
   Add Cell Below         | <kbd>B</kbd>
   To Markdown            | <kbd>M</kbd>
   To Code                | <kbd>Y</kbd>
-  Delete Cell Output     | <kbd>M</kbd> <kbd>Y</kbd>
+  Delete Cell Output     | <kbd>M</kbd>, <kbd>Y</kbd> (workaround)
   Delete Cell            | <kbd>D</kbd> <kbd>D</kbd>
   Comment Line           | <kbd>Ctrl</kbd> <kbd>/</kbd>
   Command Palette        | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>C</kbd>
@@ -146,24 +146,23 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
   Close Tab              | <kbd>Ctrl</kbd> <kbd>Q</kbd>
   Launcher               | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>L</kbd>
 
-* Get fast help and documentation
+###### Quickly access documentation
 
   If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with `?` gets you the docstring (and with `??` the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key stroke.  
   
-  
-* Avoid unintended outputs
+###### Avoid unintended outputs
 
   Using `;` in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like `<matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208>` when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending `;` to a command like `plt.plot(...);`.
   
-* Arrange cells and windows according to your needs
+###### Arrange cells and windows according to your needs
 
   You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook's tab then moving it around. The same applies to cells. Just click on the cell's number, hold and move it up or down.
 
-* Access a cell's result
+###### Access a cell's result
 
   Surely you have experienced this facepalm moment when your cell with `extremely_long_running_dataframe_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _{CELL_NUMBER`, e.g. `result = _42`, to access and save your result.
 
-* Use the multicursor support
+###### Use the multicursor support
 
   Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or delete. 
 
@@ -245,7 +244,9 @@ Reproducible environments are only one aspect of reproducibility. Since many mac
 
 ### 9. Develop locally, execute remotely
 
+Quite often when you want to do some heavy lifting, your laptop won't be enough and thus you might use some powerful workstation by remote access. Running JupyterLab on the workstation and accessing it, maybe through some [SSH tunnel], is no problem at all but how can we now work on the modules in our package? One way would be to run your IDE on the workstation but this comes potentially with many downsides depending on your connection. A flaky connection might lead to increased latencies when typing or reduced resolution. For this reason it's best to do the actual coding locally in your IDE and sync every change automatically to the workstation where JupyterLab runs. The general setup for the workstation is analogue to the local setup. We use the `environment.lock.yaml` to create the exact same environment which we run locally, followed by a `python setup.py develop`. If we now start JupyterLab within this environment we will be able to import our package. 
 
+Now comes the interesting part: every change in one of our local modules needs to be reflected also on the remote workstation. You can use a classical command line tool like [rsync] for that or just rely on the features of your IDE. Over the last years I have grown quite fond of PyCharm's Deployment feature as illustrated in Figure 2. It allows you to configure remote servers and if *Automatic Upload* is checked it syncs each file when saving. This convenient feature allows for blazing fast iterations. You make some changes to your model, maybe implement a new transformation function, hit <kbd>Accel</kbd> <kbd>S</kbd> to save, hit <kbd>Accel</kbd> <kbd>Tab</kbd> to switch your browser with the JupyterLab tab and then rerun the modified model on the workstation.  
 
 <figure>
 <p align="center">
@@ -254,11 +255,35 @@ Reproducible environments are only one aspect of reproducibility. Since many mac
 </p>
 </figure>
 
-
-https://github.corp.ebay.com/myudin/gw_config/blob/master/kernel.json
-
-alias spark_jupyter='PYSPARK_PYTHON=python3.4 PYSPARK_DRIVER_PYTHON="jupyter" PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=8899" /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false'
-
+Another reason for running JupyterLab on a remote machine might be due to some firewall restrictions. Quite often in order to access sensitive data sources or a [Spark] cluster, you need to run JupyterLab on a gateway server. To invoke JupyterLab with Spark capabilities there are two ways. An ad hoc method is to just state on the command line that JupyterLab should use pyspark as kernel. For instance starting JupyterLab with Python 3.6 (needs to be consistent with your Spark distribution), 20 executors each having 5 cores might look like this:
+```commandline
+PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON="jupyter" PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=8899" /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false
+```
+In order to be able to create notebooks with a specific PySpark kernel directly from JupyterLab, just create a file `~/.local/share/jupyter/kernels/pyspark/kernel.json` holding:
+```json
+{
+ "display_name": "PySpark",
+ "language": "python",
+ "argv": [
+  "/usr/local/anaconda-py3/bin/python",
+  "-m",
+  "ipykernel",
+  "-f",
+  "{connection_file}"
+ ],
+ "env": {
+  "HADOOP_CONF_DIR": "/etc/hadoop/conf",
+  "HADOOP_USER_NAME": "username",
+  "HADOOP_CONF_LIB_NATIVE_DIR": "/var/lib/cloudera/parcels/CDH/lib/hadoop/lib/native",
+  "YARN_CONF_DIR": "/etc/hadoop/conf",
+  "SPARK_YARN_QUEUE": "dev",
+  "PYTHONPATH": "/usr/local/anaconda-py3/bin/python:/usr/local/anaconda-py3/lib/python3.6/site-packages:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/lib/py4j-0.10.4-src.zip",
+  "SPARK_HOME": "/var/lib/cloudera/parcels/SPARK2/lib/spark2/",
+  "PYTHONSTARTUP": "/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/pyspark/shell.py",
+  "PYSPARK_SUBMIT_ARGS": "--queue dev --conf spark.dynamicAllocation.enabled=false --conf spark.scheduler.minRegisteredResourcesRatio=1 --conf spark.sql.autoBroadcastJoinThreshold=-1 --master yarn --num-executors 5 --driver-memory 2g --executor-memory 20g --executor-cores 3 pyspark-shell"
+ }
+}
+```
 
 ## Conclusion
 
@@ -305,3 +330,6 @@ Verweis auf das Repo.
 [Numpy and Google style]: http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
 [ReadTheDocs]: https://readthedocs.org/
 [Reproducibility, and Selection Bias in Machine Learning]: https://de.pycon.org/schedule/talks/reproducibility-and-selection-bias-in-machine-learning/
+[SSH tunnel]: https://www.ssh.com/ssh/tunneling/example
+[rsync]: https://rsync.samba.org/
+[Spark]: https://spark.apache.org/

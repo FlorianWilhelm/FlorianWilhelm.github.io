@@ -125,7 +125,9 @@ and execute. This extension reloads modules before executing user code and thus 
 
 JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here practices that I apply commonly.
 
-#### Use Shortcuts to speed up your work. <kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on Windows/Linux.
+#### Use Shortcuts to speed up your work. 
+
+<kbd>Accel</kbd> means <kbd>Cmd</kbd> on Mac and <kbd>Ctrl</kbd> on Windows/Linux.
 
   Command                | Shortcut
   -------------          | -------------
@@ -148,23 +150,23 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
 
 #### Quickly access documentation
 
-  If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with `?` gets you the docstring (and with `??` the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key stroke.  
+If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with `?` gets you the docstring (and with `??` the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key stroke.  
   
 #### Avoid unintended outputs
 
-  Using `;` in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like `<matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208>` when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending `;` to a command like `plt.plot(...);`.
+Using `;` in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like `<matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208>` when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending `;` to a command like `plt.plot(...);`.
   
 #### Arrange cells and windows according to your needs
 
-  You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook's tab then moving it around. The same applies to cells. Just click on the cell's number, hold and move it up or down.
+You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook's tab then moving it around. The same applies to cells. Just click on the cell's number, hold and move it up or down.
 
 #### Access a cell's result
 
-  Surely you have experienced this facepalm moment when your cell with `extremely_long_running_dataframe_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _{CELL_NUMBER`, e.g. `result = _42`, to access and save your result.
+Surely you have experienced this facepalm moment when your cell with `extremely_long_running_dataframe_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _{CELL_NUMBER`, e.g. `result = _42`, to access and save your result.
 
 #### Use the multicursor support
 
-  Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or delete. 
+Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or delete. 
 
 
 ### 6. Create your personal notebook template

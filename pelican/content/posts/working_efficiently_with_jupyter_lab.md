@@ -1,7 +1,7 @@
 ---
 title: Working efficiently with JupyterLab Notebooks
-date: 2017-07-02 18:00
-modified: 2017-07-02 18:00
+date: 2018-11-11 18:00
+modified: 2018-11-11 18:00
 category: article
 tags: python, jupyter
 authors: Florian Wilhelm
@@ -16,7 +16,7 @@ Being in the data science domain for quite some years, I have seen good but also
 
 ## History
 
-Before we get into the actual subject let's take some time to understand how [Project Jupyter] evolved and where it came from. This will also clarify the confusion people sometimes have over IPython, Jupyter and JupyterLab notebooks. In 2001 Fernando Pérez was quite dissatisfied with the capabilities of Python's interactive prompt compared to the commercial notebook environments of Maple and Mathematica which he really liked. In order to improve upon this situation he laid the foundation for a notebook environment by building [IPython] (Interactive Python), a command shell for interactive computing. IPython quickly became a success as the [REPL] of choice for many users but it was only a small step towards a graphical interactive notebook environment. Several years and many failed attempts later, it took until late 2010 for Grain Granger and several others to develop a first graphical console, named [QTConsole] and based on [QT]. As the speed of development picked up, IPython 0.12 was released only one year later in December 2011 and included for the first time a browser-based IPython notebook environment. People were psyched about the possibilities *IPython notebook* provided them and the adoption rose quickly. 
+Before we get into the actual subject let's take some time to understand how [Project Jupyter] evolved and where it came from. This will also clarify the confusion people sometimes have over IPython, Jupyter and JupyterLab notebooks. In 2001 Fernando Pérez was quite dissatisfied with the capabilities of Python's interactive prompt compared to the commercial notebook environments of Maple and Mathematica which he really liked. In order to improve upon this situation he laid the foundation for a notebook environment by building [IPython] (Interactive Python), a command shell for interactive computing. IPython quickly became a success as the [REPL] of choice for many users but it was only a small step towards a graphical interactive notebook environment. Several years and many failed attempts later, it took until late 2010 for Grain Granger and several others to develop a first graphical console, named [QTConsole] which was based on [QT]. As the speed of development picked up, IPython 0.12 was released only one year later in December 2011 and included for the first time a browser-based IPython notebook environment. People were psyched about the possibilities *IPython notebook* provided them and the adoption rose quickly. 
 
 In 2014, [Project Jupyter] started as a spin-off project from IPython for several reasons. At that time IPython encompassed an interactive shell, the notebook server, the QT console and other parts in a single repository with the obvious organisational downsides. After the spin-off, IPython concentrated on providing solely an interactive shell for Python while Project Jupyter itself started as an umbrella organisation for several components like [Jupyter notebook] and [QTConsole], which were moved over from IPython, as well as many others. Another reason for the split was the fact that Jupyter wanted to support other languages besides Python like [R], [Julia] and more. The name Jupyter itself was chosen to reflect the fact that the three most popular languages in data science are supported among others, thus Jupyter is actually an acronym for **Ju**lia, **Pyt**hon, **R**. 
 
@@ -27,9 +27,9 @@ According to my experience in the last months, JupyterLab is absolutely ready an
 
 ## Preparation & Installation
 
-The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it's a good practice to create a clean, isolated environment for every task. For Python you got basically to options [virtualenv] (also descendants like [pipenv]) or [conda] to achieve this. My favorite is conda for several reasons. First of all conda is a package manager of the [Anaconda] distribution and allows you to install more than just Python packages, it's more like a whole operation system coming with packages for Python, R and C/C++ libraries like libc. From this point of view it's much more than what virtualenv provides, since conda will also install system libraries like glibc if need be. Also the Python interpreter itself is installed separately into an isolated environment and thus independent of the one provided by your system. This makes it possible to easily pin down even the Python version of your environment. The tool [pyenv] allows you to do the same within the virtualenv ecosystem but conda feels just more integrated and gives a unified approach. In total conda allows for much more fined-grained control of what is going on in your virtual environment than virtualenv with less side effects induced by your system. 
+The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it's a good practice to create a clean, isolated environment for every task. For Python you got basically two options [virtualenv] (also descendants like [pipenv]) or [conda] to achieve this. My favorite is conda for several reasons. First of all conda is a package manager of the [Anaconda] distribution and allows you to install more than just Python packages. Anaconda is more like a whole operation system coming with packages for Python, R and C/C++ system libraries like libc. From this point of view it's much more than what virtualenv provides, since conda will also install system libraries like glibc if need be. Also the Python interpreter itself is installed separately into an isolated environment and thus independent of the one provided by your system. This makes it possible to easily pin down even the Python version of your environment. The tool [pyenv] allows you to do the same within the virtualenv ecosystem but conda feels just more integrated and gives a unified approach. In total, conda allows for much more fined-grained control of what is going on in your virtual environment than virtualenv with less side effects induced by your system. 
 
-For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. For this, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up. The final result of the following steps can be found in the [boston_housing repository].
+For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. For this, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up. The result of the following demonstration can be found in the [boston_housing repository].
 
 
 ### 0. Use an isolated environment
@@ -47,7 +47,7 @@ After less than a minute the environment is ready to be used and we can activate
 
 The code in notebooks tends to grow and grow to the point of being incomprehensible. To overcome this problem, the only way is to extract parts of it into Python modules once in a while. Since it only makes sense to extract functions and classes into Python modules, I often start cleaning up a messy notebook by thinking about the actual task a group of cells is accomplishing. This helps me to refactor those cells into a proper function which I can then migrate into a Python module. 
 
-At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports fail. 
+At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports will fail. 
 
 This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
 
@@ -73,7 +73,7 @@ from boston_housing.skeleton import fib
 ``` 
 The `skeleton` module is just a test module that [PyScaffold] provides (omit it with `putup --no-skeleton ...`) and we import the Fibonacci function `fib` from it. You can now just test this function by calling `fib(42)` for instance. 
 
-At that point after having only adhered to a single good practice, we already benefit from many advantages. Since we have nicely separated our notebook from the actual implementation, we can package and distribute our code by just calling `python setup.py bdist_wheel` and use [twine] to upload it to some artefact store like [PyPI] or [devpi] for internal-only use. Another big plus is that having a package allows us to collaboratively work on the source code in your package using git. On the other hand using git with notebooks is a big pain since it its format is not really designed to be human-readable and thus merge conflicts are a horror. 
+At that point after having only adhered to a single good practice, we already benefit from many advantages. Since we have nicely separated our notebook from the actual implementation, we can package and distribute our code by just calling `python setup.py bdist_wheel` and use [twine] to upload it to some artefact store like [PyPI] or [devpi] for internal-only use. Another big plus is that having a package allows us to collaboratively work on the source code in your package using Git. On the other hand using Git with notebooks is a big pain since it its format is not really designed to be human-readable and thus merge conflicts are a horror. 
 Still we haven't yet added any functionality, so let's see how we do about that.
 
 ### 2. Extract functionality from the notebook
@@ -88,7 +88,7 @@ df = pd.DataFrame(boston.data, columns=(c.lower() for c in boston.feature_names)
 df['price'] = boston.target
 ```
 
-Now image we would go on like this, do some preprocessing etc., and after a while we would have a pretty extensive notebook of statements and expressions without any structure leading to name collisions and confusion. Since notebooks allow the executing of cells in different order this can be extremely harmful. For these reasons, we create a function instead:
+Now imagine we would go on like this, do some preprocessing etc., and after a while we would have a pretty extensive notebook of statements and expressions without any structure leading to name collisions and confusion. Since notebooks allow the executing of cells in different order this can be extremely harmful. For these reasons, we create a function instead:
 ```python
 def get_boston_df():
     boston = load_boston()
@@ -112,7 +112,7 @@ At that point the natural question comes up how to edit the code within your pac
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/pycharm_boston_housing.png" alt="Boston-Housing project view in PyCharm">
-<figcaption><strong>Figure 1:</strong> Project structure of the *boston-housing* package as created with PyScaffold. The `notebooks` folder holds the notebooks for JupyterLab while the `src/boston_housing` folder contains the actual code (`model.py`) and defines an actual Python package.</figcaption>
+<figcaption><strong>Figure 1:</strong> Project structure of the <em>boston-housing</em> package as created with PyScaffold. The <code>notebooks</code> folder holds the notebooks for JupyterLab while the <code>src/boston_housing</code> folder contains the actual code (<code>model.py</code>) and defines an actual Python package.</figcaption>
 </p>
 </figure>
 
@@ -126,7 +126,7 @@ and execute. This extension reloads modules before executing user code and thus 
 
 ### 5. Know your tool
 
-JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here practices that I apply commonly.
+JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here only practices that I apply commonly.
 
 #### Use Shortcuts to speed up your work. 
 
@@ -155,7 +155,7 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
 
 #### Quickly access documentation
 
-If you have ever used a notebook or IPython you surely know that rxecuting a command prefixed with `?` gets you the docstring (and with `??` the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key stroke.  
+If you have ever used a notebook or IPython you surely know that executing a command prefixed with `?` gets you the docstring (and with `??` the source code). Even easier than that is actually to moving the cursor over the command and pressing <kbd>Shift</kbd> <kbd>Tab</kbd>. This will open a small drop-down menu displaying the help that closes automatically after the next key stroke.  
   
 #### Avoid unintended outputs
 
@@ -295,7 +295,7 @@ In order to be able to create notebooks with a specific PySpark kernel directly 
 
 ## Conclusion
 
-We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper IDE. JupyterLab is a mighty and flexible tool and thus all the more it's important to adhere to some best practices and processes to guarantee quality in your software and analysis. The [boston_housing repository] demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points.
+We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper IDE. JupyterLab is a mighty and flexible tool and thus all the more it's important to adhere to some best practices and processes to guarantee quality in your software and analysis. The [boston_housing repository] demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points above.
  
 JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyterlab-toc], etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. 
 
@@ -318,7 +318,7 @@ JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyt
 [conda]: https://conda.io/
 [virtualenv]: https://virtualenv.pypa.io/
 [pipenv]: https://pipenv.readthedocs.io/
-[git]: https://git-scm.com/
+[Git]: https://git-scm.com/
 [Boston housing dataset]: https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html
 [PyScaffold]: https://pyscaffold.org/
 [twine]: https://twine.readthedocs.io/

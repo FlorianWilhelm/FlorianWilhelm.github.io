@@ -27,7 +27,10 @@ According to my experience in the last months, JupyterLab is absolutely ready an
 
 ## Preparation & Installation
 
-The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it's a good practice to create a clean, isolated environment for every task. For Python you got basically to options [virtualenv] (also descendants like [pipenv]) or [conda] to achieve this. Since in the field of data science [conda] is more common, we will use it in this tutorial. For this, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up.
+The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it's a good practice to create a clean, isolated environment for every task. For Python you got basically to options [virtualenv] (also descendants like [pipenv]) or [conda] to achieve this. My favorite is conda for several reasons. First of all conda is a package manager of the [Anaconda] distribution and allows you to install more than just Python packages, it's more like a whole operation system coming with packages for Python, R and C/C++ libraries like libc. From this point of view it's much more than what virtualenv provides, since conda will also install system libraries like glibc if need be. Also the Python interpreter itself is installed separately into an isolated environment and thus independent of the one provided by your system. This makes it possible to easily pin down even the Python version of your environment. The tool [pyenv] allows you to do the same within the virtualenv ecosystem but conda feels just more integrated and gives a unified approach. In total conda allows for much more fined-grained control of what is going on in your virtual environment than virtualenv with less side effects induced by your system. 
+
+For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. For this, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up. The final result of the following steps can be found in the [boston_housing repository].
+
 
 ### 0. Use an isolated environment
 
@@ -46,7 +49,7 @@ The code in notebooks tends to grow and grow to the point of being incomprehensi
 
 At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports fail. 
 
-This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to keep structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
+This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
 
 ### 1. Develop your code in a Python Package
 
@@ -62,7 +65,7 @@ Now we can change into the new `boston_housig` directory and install the package
 ```commandline
 python setup.py develop
 ```
-The development mode installs the package in a way that changes to the source code of the package, which resides in `boston_housing/src/boston_housing`, will be available without installing the package again.
+The development mode installs the package in the conda environment by linking to the source code which resides in `boston_housing/src/boston_housing`. By doing so all your changes to the code will be directly available without any need to reinstall the package again.
 
 Let's start JupyterLab with `jupyter lab` from the root of your new project where `setup.py` resides. To keep everything tight and clean, we start by creating a new folder `notebooks` using the file browser in the left sidebar. Within this empty folder we create a new notebook using the launcher and rename it to `housing_model`. Within the notebook we can now directly test our package by typing:
 ```python
@@ -134,10 +137,11 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
   Enter Command Mode     | <kbd>Esc</kbd>
   Run Cell               | <kbd>Ctrl</kbd> <kbd>Enter</kbd>
   Run Cell & Select Next | <kbd>Shift</kbd> <kbd>Enter</kbd>
-  Add Cell Above         | <kbd>A</kbd>
-  Add Cell Below         | <kbd>B</kbd>
-  To Markdown            | <kbd>M</kbd>
-  To Code                | <kbd>Y</kbd>
+  Add Cell Above/Below   | <kbd>A</kbd> / <kbd>B</kbd>
+  Copy/Cut/Paste Cell    | <kbd>C</kbd> / <kbd>X</kbd> / <kbd>V</kbd>
+  Look Around Up/Down    | <kbd>Alt</kbd> <kbd>⇧</kbd> / <kbd>⇩</kbd>
+  Markdown Cell          | <kbd>M</kbd>
+  Code Cell              | <kbd>Y</kbd>
   Delete Cell Output     | <kbd>M</kbd>, <kbd>Y</kbd> (workaround)
   Delete Cell            | <kbd>D</kbd> <kbd>D</kbd>
   Comment Line           | <kbd>Ctrl</kbd> <kbd>/</kbd>
@@ -147,6 +151,7 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
   Fullscreen Mode        | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>D</kbd>
   Close Tab              | <kbd>Ctrl</kbd> <kbd>Q</kbd>
   Launcher               | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>L</kbd>
+
 
 #### Quickly access documentation
 
@@ -162,7 +167,8 @@ You can easily arrange two notebooks side by side or in many other ways by click
 
 #### Access a cell's result
 
-Surely you have experienced this facepalm moment when your cell with `extremely_long_running_dataframe_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _{CELL_NUMBER`, e.g. `result = _42`, to access and save your result.
+Surely you have experienced this facepalm moment when your cell with `long_running_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _NUMBER`, e.g. `result = _42`, where `NUMBER` is the execution number of your cell, e.g. `In [42]`, to access and save your result.
+
 
 #### Use the multicursor support
 
@@ -201,7 +207,7 @@ import pandas as pd
 pd.set_option("display.max_rows", 120)
 pd.set_option("display.max_columns", 120)
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 ```
 
 ### 7. Document your analysis
@@ -289,13 +295,9 @@ In order to be able to create notebooks with a specific PySpark kernel directly 
 
 ## Conclusion
 
-Extensions Erwähnen
-Verweis auf das Repo.
-
-
-
-
-
+We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper IDE. JupyterLab is a mighty and flexible tool and thus all the more it's important to adhere to some best practices and processes to guarantee quality in your software and analysis. The [boston_housing repository] demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points.
+ 
+JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyterlab-toc], etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. 
 
 
 
@@ -335,3 +337,9 @@ Verweis auf das Repo.
 [SSH tunnel]: https://www.ssh.com/ssh/tunneling/example
 [rsync]: https://rsync.samba.org/
 [Spark]: https://spark.apache.org/
+[Anaconda]: https://www.anaconda.com/distribution/
+[pyenv]: https://github.com/pyenv/pyenv
+[boston_housing repository]: https://github.com/FlorianWilhelm/boston_housing
+[extensions]: https://jupyterlab.readthedocs.io/en/stable/user/extensions.html
+[jupyterlab-git]: https://github.com/jupyterlab/jupyterlab-git
+[jupyterlab-toc]: https://github.com/jupyterlab/jupyterlab-toc

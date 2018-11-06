@@ -27,7 +27,7 @@ Before we get into the actual subject let's take some time to understand how [Pr
 
 In 2014, [Project Jupyter] started as a spin-off project from IPython for several reasons. At that time IPython encompassed an interactive shell, the notebook server, the QT console and other parts in a single repository with the obvious organisational downsides. After the spin-off, IPython concentrated on providing solely an interactive shell for Python while Project Jupyter itself started as an umbrella organisation for several components like [Jupyter notebook] and [QTConsole], which were moved over from IPython, as well as many others. Another reason for the split was the fact that Jupyter wanted to support other languages besides Python like [R], [Julia] and more. The name Jupyter itself was chosen to reflect the fact that the three most popular languages in data science are supported among others, thus Jupyter is actually an acronym for **Ju**lia, **Pyt**hon, **R**. 
 
-But evolution never stops and the source code of Jupyter notebook built on the web technologies of 2011 started to show its age. As the code grew bigger, people also started to realise that it actually is more than just a notebook. Some parts of it rather deal with managing files, running notebooks and parallel workers. This eventually led again to the idea of splitting these functionalities and laid the foundation for [JupyterLab]. JupyterLab is an interactive development environment for working with notebooks, code and data. It has full support for Jupyter notebooks and enables you to use text editors, terminals, data file viewers, and other custom components side by side with notebooks in a tabbed work area. Since February 2018 it's officially considered to be [ready for users] and the 1.0 release is expected to happen end of 2018. 
+But evolution never stops and the source code of Jupyter notebook built on the web technologies of 2011 started to show its age. As the code grew bigger, people also started to realise that it actually is more than just a notebook. Some parts of it rather dealt with managing files, running notebooks and parallel workers. This eventually led again to the idea of splitting these functionalities and laid the foundation for [JupyterLab]. JupyterLab is an interactive development environment for working with notebooks, code and data. It has full support for Jupyter notebooks and enables you to use text editors, terminals, data file viewers, and other custom components side by side with notebooks in a tabbed work area. Since February 2018 it's officially considered to be [ready for users] and the 1.0 release is expected to happen end of 2018. 
 
 According to my experience in the last months, JupyterLab is absolutely ready and I recommend everyone to migrate to it. In this post, I will thus focus on JupyterLab and the term notebook or sometimes even Jupyter notebook actually refers to a notebook that was opened with JupyterLab. Practically this means that you run `jupyter lab` instead of `jupyter notebook`. If you are interested in more historical details read the blog posts of [Fernando Pérez] and [Karlijn Willems].
 
@@ -41,7 +41,7 @@ For these reasons conda is much more common than virtualenv in the field of data
 
 ### 0. Use an isolated environment
 
-In the spirit of Phil Karlton who supposedly said "There are only two hard things in Computer Science: cache invalidation and naming things.", we gonna select a specific task, namely an analysis based on the all familiar [Boston housing dataset], to help us finding crisp names. Based on our task we create an environment `bostong_housing` including Python and some common data science libraries with:
+In the spirit of Phil Karlton who supposedly said "There are only two hard things in Computer Science: cache invalidation and naming things.", we gonna select a specific task, namely an analysis based on the all familiar [Boston housing dataset], to help us finding crisp names. Based on our task we create an environment `boston_housing` including Python and some common data science libraries with:
 
 ```commandline
 conda create -n boston_housing python=3.6 jupyterlab scikit-learn seaborn
@@ -56,7 +56,7 @@ The code in notebooks tends to grow and grow to the point of being incomprehensi
 
 At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports will fail. 
 
-This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to he first part of your comment, if you know how, it's no overhead at all!
+This observation brings us to one of the most important best practices: **develop your code as a Python package**. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. *But creating a Python package is so much overhead; surely it's not worth this small little analysis I will complete in half a day anyway and then forget about it*, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don't adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to the first part of your comment, if you know how, it's no overhead at all!
 
 ### 1. Develop your code in a Python Package
 
@@ -68,7 +68,7 @@ This package adds the `putup` command into our environment which we use to creat
 ```commandline
 putup boston_housing
 ```
-Now we can change into the new `boston_housig` directory and install the package inside our environment in development mode:
+Now we can change into the new `boston_housing` directory and install the package inside our environment in development mode:
 ```commandline
 python setup.py develop
 ```
@@ -131,7 +131,7 @@ If we use an IDE for development we will run into an obvious problem. How can we
 and execute. This extension reloads modules before executing user code and thus allows you to use your IDE for development while executing it inside of JupyterLab.
 
 
-### 5. Know your tool
+### 4. Know your tool
 
 JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here only practices that I apply commonly.
 
@@ -151,6 +151,7 @@ JupyterLab is a powerful tool and knowing how to handle it brings you many advan
   Code Cell              | <kbd>Y</kbd>
   Delete Cell Output     | <kbd>M</kbd>, <kbd>Y</kbd> (workaround)
   Delete Cell            | <kbd>D</kbd> <kbd>D</kbd>
+  Toggle Line Numbers    | <kbd>Shift</kbd> <kbd>L</kbd>
   Comment Line           | <kbd>Ctrl</kbd> <kbd>/</kbd>
   Command Palette        | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>C</kbd>
   File Explorer          | <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>F</kbd>
@@ -174,7 +175,7 @@ You can easily arrange two notebooks side by side or in many other ways by click
 
 #### Access a cell's result
 
-Surely you have experienced this facepalm moment when your cell with `long_running_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _NUMBER`, e.g. `result = _42`, where `NUMBER` is the execution number of your cell, e.g. `In [42]`, to access and save your result.
+Surely you have experienced this facepalm moment when your cell with `long_running_transformation(df)` is finally finished but you forgot to store the result in another variable. Don't despair! You can just use `result = _NUMBER`, e.g. `result = _42`, where `NUMBER` is the execution number of your cell, e.g. `In [42]`, to access and save your result. An alternative to `_NUMBER` is `Out[NUMBER]`.
 
 
 #### Use the multicursor support
@@ -182,7 +183,17 @@ Surely you have experienced this facepalm moment when your cell with `long_runni
 Why should you be satisfied with only one cursor if you can have multiple? Just press <kbd>Alt</kbd> while holding down your left mouse button to select several rows. Then type as you would normally do to insert or delete. 
 
 
-### 6. Create your personal notebook template
+#### Activate line numbers
+
+Let's assume you have to debug a cell with lots of code, I know you wouldn't have cells with tons of code so let's say your colleague caused that mess. To find the line corresponding to the error output more easily, you can just hit <kbd>Shift</kbd> <kbd>L</kbd> to show the line numbers for a moment.
+
+
+#### Search all available actions
+
+The Command Palette is surely one of the most powerful features of JupyterLab. Just hit the shortcut <kbd>Accel</kbd> <kbd>Shift</kbd> <kbd>C</kbd> and use the incremental search to find whatever action you are looking for. No more browsing menu drop downs for minutes!
+
+
+### 5. Create your personal notebook template
 
 After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a `template.ipynb` notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the `template.ipynb` notebook and click *Duplicate*. 
 
@@ -217,18 +228,18 @@ pd.set_option("display.max_columns", 120)
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 ```
 
-### 7. Document your analysis
+### 6. Document your analysis
 
-A really old programmer's joke goes like "When I wrote this code, only God and I understood what it did. Now... only God knows." The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use [Markdown syntax] to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the `$...$` notation. More general information about the whole project can be put into `README.rst` which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like [PyPI] or [devpi]. Also GitHub and GitLab will display `README.rst` and thus provide a good entry point into your project. 
+A really old programmer's joke goes like "When I wrote this code, only God and I understood what it did. Now... only God knows." The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use [Markdown syntax] to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the `$...$` notation. More general information about the whole project can be put into `README.rst` which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like [PyPI] or [devpi]. Also GitHub and GitLab will display `README.rst` and thus provide a good entry point into your project. If you are more into the [Markdown syntax] and thus rather want a `README.md`, you can install the [pyscaffoldext-markdown] extension for PyScaffold which adds a `--markdown` flag to PyScaffold's `putup` command.
 
-The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum "The nice thing about standards is that you have so many to choose from". The three most common docstring standards for Python are the default [Sphinx RestructuredText], [Numpy and Google style] which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single `README.rst`, maybe you came up with a new ML algorithms and want to document the concept behind it, you should take a look at [Sphinx]. Our project setup already includes a `docs` folder with an `index.rst` as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as HTML pages:
+The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum "The nice thing about standards is that you have so many to choose from". The three most common docstring standards for Python are the default [Sphinx RestructuredText], [Numpy and Google style] which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single readme file, maybe you came up with a new ML algorithms and want to document the concept behind it, you should take a look at [Sphinx]. Our project setup already includes a `docs` folder with an `index.rst` as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as HTML pages:
 ```commandline
 conda install spinx
 python setup.py docs
 ```
 It's also possible to create a nice PDF and even serve your documentation as a web page using [ReadTheDocs].
 
-### 8. State your dependencies for reproducibility
+### 7. State your dependencies for reproducibility
 
 Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data *scientist*, you should always guarantee **reproducibility** of whatever you do since it's the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using `conda` we can do this with our `boston_housing` project as:
 ```commandline
@@ -257,7 +268,7 @@ Remember to regularly update and commit changes to these files in Git. Whenever 
 
 Reproducible environments are only one aspect of reproducibility. Since many machine learning algorithms (most prominently Deep Learning) use random numbers it's important to keep them deterministic by fixing the random seed. This sounds easier at it is since depending on the used framework, there are different ways to accomplish this. A good overview for many common frameworks is provided in the talk [Reproducibility, and Selection Bias in Machine Learning].
 
-### 9. Develop locally, execute remotely
+### 8. Develop locally, execute remotely
 
 Quite often when you want to do some heavy lifting, your laptop won't be enough and thus you might use some powerful workstation by remote access. Running JupyterLab on the workstation and accessing it, maybe through some [SSH tunnel], is no problem at all but how can we now work on the modules in our package? One way would be to run your IDE on the workstation but this comes potentially with many downsides depending on your connection. A flaky connection might lead to increased latencies when typing or reduced resolution. For this reason it's best to do the actual coding locally in your IDE and sync every change automatically to the workstation where JupyterLab runs. The general setup for the workstation is analogue to the local setup. We `git clone` our repository and use the `environment.lock.yaml` to create the exact same environment which we run locally, followed by a `python setup.py develop`. If we now start JupyterLab within this environment we will be able to import our package. 
 
@@ -342,7 +353,7 @@ JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyt
 [Sphinx RestructuredText]: https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#the-python-domain
 [Numpy and Google style]: http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
 [ReadTheDocs]: https://readthedocs.org/
-[Reproducibility, and Selection Bias in Machine Learning]: https://de.pycon.org/schedule/talks/reproducibility-and-selection-bias-in-machine-learning/
+[Reproducibility, and Selection Bias in Machine Learning]: https://www.youtube.com/watch?v=MOBs6MNepDk&feature=youtu.be
 [SSH tunnel]: https://www.ssh.com/ssh/tunneling/example
 [rsync]: https://rsync.samba.org/
 [Spark]: https://spark.apache.org/
@@ -352,3 +363,4 @@ JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyt
 [extensions]: https://jupyterlab.readthedocs.io/en/stable/user/extensions.html
 [jupyterlab-git]: https://github.com/jupyterlab/jupyterlab-git
 [jupyterlab-toc]: https://github.com/jupyterlab/jupyterlab-toc
+[pyscaffoldext-markdown]: https://github.com/pyscaffold/pyscaffoldext-markdown

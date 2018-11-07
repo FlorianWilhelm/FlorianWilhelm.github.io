@@ -1,7 +1,7 @@
 ---
 title: Working efficiently with JupyterLab Notebooks
-date: 2018-11-11 18:00
-modified: 2018-11-11 18:00
+date: 2018-11-08 12:00
+modified: 2018-11-08 12:00
 category: article
 tags: python, jupyter
 authors: Florian Wilhelm
@@ -36,7 +36,7 @@ According to my experience in the last months, JupyterLab is absolutely ready an
 
 The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it's a good practice to create a clean, isolated environment for every task. For Python you got basically two options [virtualenv] (also descendants like [pipenv]) or [conda] to achieve this. My favorite is conda for several reasons. First of all conda is a package manager of the [Anaconda] distribution and allows you to install more than just Python packages. Anaconda is more like a whole operation system coming with packages for Python, R and C/C++ system libraries like libc. From this point of view it's much more than what virtualenv provides, since conda will also install system libraries like glibc if need be. Also the Python interpreter itself is installed separately into an isolated environment and thus independent of the one provided by your system. This makes it possible to easily pin down even the Python version of your environment. The tool [pyenv] allows you to do the same within the virtualenv ecosystem but conda feels just more integrated and gives a unified approach. In total, conda allows for much more fined-grained control of what is going on in your virtual environment than virtualenv with less side effects induced by your system. 
 
-For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. Still, everything shown here can analogously be conducted with the help of [virtualenv]/[pipenv] and all the concepts still apply. For this tutorial, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up. The result of the following demonstration can be found in the [boston_housing repository].
+For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. Still, everything shown here can analogously be conducted with the help of [virtualenv]/[pipenv] and all the concepts still apply as is also illustrated in a [blog post of Christopher Prohm]. For this tutorial, I assume you have [Miniconda] installed on your system. Besides this, every programmer's machine should have [Git] installed and set up. The result of the following demonstration can be found in the [boston_housing repository].
 
 
 ### 0. Use an isolated environment
@@ -317,7 +317,7 @@ In order to be able to create notebooks with a specific PySpark kernel directly 
 
 We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper IDE. JupyterLab is a mighty and flexible tool and thus all the more it's important to adhere to some best practices and processes to guarantee quality in your software and analysis. The [boston_housing repository] demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points above.
  
-JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyterlab-toc], etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. 
+JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyterlab-toc], etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. Since general concepts are transferable but the specific workflow may be different, also read the [blog post of Christopher Prohm] about the same topic but using partly a different tooling.
 
 
 
@@ -364,3 +364,4 @@ JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyt
 [jupyterlab-git]: https://github.com/jupyterlab/jupyterlab-git
 [jupyterlab-toc]: https://github.com/jupyterlab/jupyterlab-toc
 [pyscaffoldext-markdown]: https://github.com/pyscaffold/pyscaffoldext-markdown
+[blog post of Christopher Prohm]: https://cprohm.de/notebooks-and-modules.html

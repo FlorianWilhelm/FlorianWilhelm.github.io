@@ -6,7 +6,7 @@ category: post
 tags: python, jupyter
 authors: Florian Wilhelm
 status: published
-summary: Being in the data science domain for quite some years, I have seen good Jupyter notebooks but also a lot of ugly. Notebooks that are beautifully designed and perfectly convey ideas and concepts by having the perfect balance between text, code and visualisations. Follow some simple best practices to work more efficiently with your notebooks.
+summary: Being in the data science domain for quite some years, I have seen good Jupyter notebooks but also a lot of ugly. Notebooks can have the perfect balance between text, code and visualisations but how often do your notebooks rather get messy and incomprehensible after a while? Follow some simple best practices to work more efficiently with your notebooks.
 ---
 
 ## Motivation

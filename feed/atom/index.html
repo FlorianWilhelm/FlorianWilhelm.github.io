@@ -1,5 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2018-08-05T16:00:00+02:00</updated><entry><title>Multiplicative LSTM for sequence-based Recommenders</title><link href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/" rel="alternate"></link><published>2018-08-05T16:00:00+02:00</published><updated>2018-08-05T16:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-08-05:/2018/08/multiplicative_LSTM_for_sequence_based_recos/</id><summary type="html">&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant&amp;nbsp;recommendation.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2018-11-08T14:00:00+01:00</updated><entry><title>Working efficiently with JupyterLab Notebooks</title><link href="https://florianwilhelm.info/2018/11/working_efficiently_with_jupyter_lab/" rel="alternate"></link><published>2018-11-08T14:00:00+01:00</published><updated>2018-11-08T14:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-11-08:/2018/11/working_efficiently_with_jupyter_lab/</id><summary type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+&lt;p&gt;If you have ever done something analytical or anything closely related to data science in Python, there is just no way you have not heard of Jupyter or IPython notebooks. In a nutshell, a notebook is an interactive document displayed in your browser which contains source code, e.g …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+&lt;p&gt;If you have ever done something analytical or anything closely related to data science in Python, there is just no way you have not heard of Jupyter or IPython notebooks. In a nutshell, a notebook is an interactive document displayed in your browser which contains source code, e.g. Python and R, as well as rich text elements like paragraphs, equations, figures, links, etc. This combination makes it extremely useful for explorative tasks where the source code, documentation and even visualisations of your analysis are strongly intertwined. Due to this unique characteristic, Jupyter notebooks have achieved a strong adoption particularly in the data science community. But as Pythagoras already noted &amp;#8220;If there be light, then there is darkness.&amp;#8221; and with Jupyter notebooks is no difference of&amp;nbsp;course.&lt;/p&gt;
+&lt;p&gt;Being in the data science domain for quite some years, I have seen good but also a lot of ugly. Notebooks that are beautifully designed and perfectly convey ideas and concepts by having the perfect balance between text, code and visualisations like in my all time favourite &lt;a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers"&gt;Probabilistic Programming and Bayesian Methods for Hackers&lt;/a&gt;. In strong contrast to this, and actually more often to find in practise, are notebooks with cells containing pages of incomprehensible source code, distracting you from the actual analysis. Also sharing these notebooks is quite often an unnecessary pain. Notebooks that need you to tamper with the &lt;code&gt;PYTHONPATH&lt;/code&gt; or to start Jupyter from a certain directory for modules to import correctly. In this blog post I will introduce several best practices and techniques that will help you to create notebooks which are focused, easy to comprehend and to work&amp;nbsp;with. &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/jupyter_worker.png" alt="Worker carrying JupyterLab"&gt;
+&lt;/p&gt;
+&lt;/figure&gt;
+
+&lt;h2&gt;History&lt;/h2&gt;
+&lt;p&gt;Before we get into the actual subject let&amp;#8217;s take some time to understand how &lt;a href="http://jupyter.org/"&gt;Project Jupyter&lt;/a&gt; evolved and where it came from. This will also clarify the confusion people sometimes have over IPython, Jupyter and JupyterLab notebooks. In 2001 Fernando Pérez was quite dissatisfied with the capabilities of Python&amp;#8217;s interactive prompt compared to the commercial notebook environments of Maple and Mathematica which he really liked. In order to improve upon this situation he laid the foundation for a notebook environment by building &lt;a href="https://ipython.org/"&gt;IPython&lt;/a&gt; (Interactive Python), a command shell for interactive computing. IPython quickly became a success as the &lt;a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop"&gt;&lt;span class="caps"&gt;REPL&lt;/span&gt;&lt;/a&gt; of choice for many users but it was only a small step towards a graphical interactive notebook environment. Several years and many failed attempts later, it took until late 2010 for Grain Granger and several others to develop a first graphical console, named &lt;a href="https://qtconsole.readthedocs.io/"&gt;QTConsole&lt;/a&gt; which was based on &lt;a href="https://www.qt.io/"&gt;&lt;span class="caps"&gt;QT&lt;/span&gt;&lt;/a&gt;. As the speed of development picked up, IPython 0.12 was released only one year later in December 2011 and included for the first time a browser-based IPython notebook environment. People were psyched about the possibilities &lt;em&gt;IPython notebook&lt;/em&gt; provided them and the adoption rose&amp;nbsp;quickly. &lt;/p&gt;
+&lt;p&gt;In 2014, &lt;a href="http://jupyter.org/"&gt;Project Jupyter&lt;/a&gt; started as a spin-off project from IPython for several reasons. At that time IPython encompassed an interactive shell, the notebook server, the &lt;span class="caps"&gt;QT&lt;/span&gt; console and other parts in a single repository with the obvious organisational downsides. After the spin-off, IPython concentrated on providing solely an interactive shell for Python while Project Jupyter itself started as an umbrella organisation for several components like &lt;a href="https://jupyter-notebook.readthedocs.io/"&gt;Jupyter notebook&lt;/a&gt; and &lt;a href="https://qtconsole.readthedocs.io/"&gt;QTConsole&lt;/a&gt;, which were moved over from IPython, as well as many others. Another reason for the split was the fact that Jupyter wanted to support other languages besides Python like &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt;, &lt;a href="https://julialang.org/"&gt;Julia&lt;/a&gt; and more. The name Jupyter itself was chosen to reflect the fact that the three most popular languages in data science are supported among others, thus Jupyter is actually an acronym for &lt;strong&gt;Ju&lt;/strong&gt;lia, &lt;strong&gt;Pyt&lt;/strong&gt;hon, &lt;strong&gt;R&lt;/strong&gt;. &lt;/p&gt;
+&lt;p&gt;But evolution never stops and the source code of Jupyter notebook built on the web technologies of 2011 started to show its age. As the code grew bigger, people also started to realise that it actually is more than just a notebook. Some parts of it rather dealt with managing files, running notebooks and parallel workers. This eventually led again to the idea of splitting these functionalities and laid the foundation for &lt;a href="https://jupyterlab.readthedocs.io/"&gt;JupyterLab&lt;/a&gt;. JupyterLab is an interactive development environment for working with notebooks, code and data. It has full support for Jupyter notebooks and enables you to use text editors, terminals, data file viewers, and other custom components side by side with notebooks in a tabbed work area. Since February 2018 it&amp;#8217;s officially considered to be &lt;a href="https://blog.jupyter.org/jupyterlab-is-ready-for-users-5a6f039b8906"&gt;ready for users&lt;/a&gt; and the 1.0 release is expected to happen end of&amp;nbsp;2018. &lt;/p&gt;
+&lt;p&gt;According to my experience in the last months, JupyterLab is absolutely ready and I recommend everyone to migrate to it. In this post, I will thus focus on JupyterLab and the term notebook or sometimes even Jupyter notebook actually refers to a notebook that was opened with JupyterLab. Practically this means that you run &lt;code&gt;jupyter lab&lt;/code&gt; instead of &lt;code&gt;jupyter notebook&lt;/code&gt;. If you are interested in more historical details read the blog posts of &lt;a href="http://blog.fperez.org/2012/01/ipython-notebook-historical.html"&gt;Fernando Pérez&lt;/a&gt; and &lt;a href="https://www.datacamp.com/community/blog/ipython-jupyter"&gt;Karlijn Willems&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Preparation &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt;&amp;nbsp;Installation&lt;/h2&gt;
+&lt;p&gt;The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it&amp;#8217;s a good practice to create a clean, isolated environment for every task. For Python you got basically two options &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; (also descendants like &lt;a href="https://pipenv.readthedocs.io/"&gt;pipenv&lt;/a&gt;) or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; to achieve this. My favorite is conda for several reasons. First of all conda is a package manager of the &lt;a href="https://www.anaconda.com/distribution/"&gt;Anaconda&lt;/a&gt; distribution and allows you to install more than just Python packages. Anaconda is more like a whole operation system coming with packages for Python, R and C/C++ system libraries like libc. From this point of view it&amp;#8217;s much more than what virtualenv provides, since conda will also install system libraries like glibc if need be. Also the Python interpreter itself is installed separately into an isolated environment and thus independent of the one provided by your system. This makes it possible to easily pin down even the Python version of your environment. The tool &lt;a href="https://github.com/pyenv/pyenv"&gt;pyenv&lt;/a&gt; allows you to do the same within the virtualenv ecosystem but conda feels just more integrated and gives a unified approach. In total, conda allows for much more fined-grained control of what is going on in your virtual environment than virtualenv with less side effects induced by your&amp;nbsp;system. &lt;/p&gt;
+&lt;p&gt;For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. Still, everything shown here can analogously be conducted with the help of &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;/&lt;a href="https://pipenv.readthedocs.io/"&gt;pipenv&lt;/a&gt; and all the concepts still apply as is also illustrated in a &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt;. For this tutorial, I assume you have &lt;a href="https://conda.io/miniconda.html"&gt;Miniconda&lt;/a&gt; installed on your system. Besides this, every programmer&amp;#8217;s machine should have &lt;a href="https://git-scm.com/"&gt;Git&lt;/a&gt; installed and set up. The result of the following demonstration can be found in the &lt;a href="https://github.com/FlorianWilhelm/boston_housing"&gt;boston_housing repository&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;0. Use an isolated&amp;nbsp;environment&lt;/h3&gt;
+&lt;p&gt;In the spirit of Phil Karlton who supposedly said &amp;#8220;There are only two hard things in Computer Science: cache invalidation and naming things.&amp;#8221;, we gonna select a specific task, namely an analysis based on the all familiar &lt;a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html"&gt;Boston housing dataset&lt;/a&gt;, to help us finding crisp names. Based on our task we create an environment &lt;code&gt;boston_housing&lt;/code&gt; including Python and some common data science libraries&amp;nbsp;with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda create -n boston_housing python=3.6 jupyterlab scikit-learn seaborn
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After less than a minute the environment is ready to be used and we can activate it with &lt;code&gt;conda activate boston_housing&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Efficient&amp;nbsp;Workflow&lt;/h2&gt;
+&lt;p&gt;The code in notebooks tends to grow and grow to the point of being incomprehensible. To overcome this problem, the only way is to extract parts of it into Python modules once in a while. Since it only makes sense to extract functions and classes into Python modules, I often start cleaning up a messy notebook by thinking about the actual task a group of cells is accomplishing. This helps me to refactor those cells into a proper function which I can then migrate into a Python&amp;nbsp;module. &lt;/p&gt;
+&lt;p&gt;At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports will&amp;nbsp;fail. &lt;/p&gt;
+&lt;p&gt;This observation brings us to one of the most important best practices: &lt;strong&gt;develop your code as a Python package&lt;/strong&gt;. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. &lt;em&gt;But creating a Python package is so much overhead; surely it&amp;#8217;s not worth this small little analysis I will complete in half a day anyway and then forget about it&lt;/em&gt;, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don&amp;#8217;t adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to the first part of your comment, if you know how, it&amp;#8217;s no overhead at&amp;nbsp;all!&lt;/p&gt;
+&lt;h3&gt;1. Develop your code in a Python&amp;nbsp;Package&lt;/h3&gt;
+&lt;p&gt;With the help of &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated&amp;nbsp;with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install -c conda-forge pyscaffold
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This package adds the &lt;code&gt;putup&lt;/code&gt; command into our environment which we use to create a Python package&amp;nbsp;with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup boston_housing
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we can change into the new &lt;code&gt;boston_housing&lt;/code&gt; directory and install the package inside our environment in development&amp;nbsp;mode:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;python setup.py develop
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The development mode installs the package in the conda environment by linking to the source code which resides in &lt;code&gt;boston_housing/src/boston_housing&lt;/code&gt;. By doing so all your changes to the code will be directly available without any need to reinstall the package&amp;nbsp;again.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s start JupyterLab with &lt;code&gt;jupyter lab&lt;/code&gt; from the root of your new project where &lt;code&gt;setup.py&lt;/code&gt; resides. To keep everything tight and clean, we start by creating a new folder &lt;code&gt;notebooks&lt;/code&gt; using the file browser in the left sidebar. Within this empty folder we create a new notebook using the launcher and rename it to &lt;code&gt;housing_model&lt;/code&gt;. Within the notebook we can now directly test our package by&amp;nbsp;typing:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;boston_housing.skeleton&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;fib&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;skeleton&lt;/code&gt; module is just a test module that &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; provides (omit it with &lt;code&gt;putup --no-skeleton ...&lt;/code&gt;) and we import the Fibonacci function &lt;code&gt;fib&lt;/code&gt; from it. You can now just test this function by calling &lt;code&gt;fib(42)&lt;/code&gt; for&amp;nbsp;instance. &lt;/p&gt;
+&lt;p&gt;At that point after having only adhered to a single good practice, we already benefit from many advantages. Since we have nicely separated our notebook from the actual implementation, we can package and distribute our code by just calling &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt; and use &lt;a href="https://twine.readthedocs.io/"&gt;twine&lt;/a&gt; to upload it to some artefact store like &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; or &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt; for internal-only use. Another big plus is that having a package allows us to collaboratively work on the source code in your package using Git. On the other hand using Git with notebooks is a big pain since it its format is not really designed to be human-readable and thus merge conflicts are a horror. 
+Still we haven&amp;#8217;t yet added any functionality, so let&amp;#8217;s see how we do about&amp;nbsp;that.&lt;/p&gt;
+&lt;h3&gt;2. Extract functionality from the&amp;nbsp;notebook&lt;/h3&gt;
+&lt;p&gt;We start with loading the &lt;a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html"&gt;Boston housing dataset&lt;/a&gt; into a dataframe with columns of the lower-cased feature names and the target variable &lt;em&gt;price&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.datasets&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;
+
+&lt;span class="n"&gt;boston&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lower&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;feature_names&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now imagine we would go on like this, do some preprocessing etc., and after a while we would have a pretty extensive notebook of statements and expressions without any structure leading to name collisions and confusion. Since notebooks allow the executing of cells in different order this can be extremely harmful. For these reasons, we create a function&amp;nbsp;instead:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_boston_df&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;boston&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lower&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;feature_names&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We test it inside the notebook but then directly extract and move it into a module &lt;code&gt;model.py&lt;/code&gt; that we create within our package under &lt;code&gt;src/boston_boston&lt;/code&gt;. Now, inside our notebook, we can just import and use&amp;nbsp;it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;boston_housing.model&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_boston_df&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_boston_df&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now that looks much cleaner and allows also for other notebooks to just use this bit of functionality without using copy &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; paste! This leads us to another best practice: Use JupyterLab only for integrating code from your package and keep complex functionality inside the package. Thus, extract larger bits of code from a notebook and move it into a package or directly develop code in a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;.&lt;/p&gt;
+&lt;h3&gt;3. Use a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;At that point the natural question comes up how to edit the code within your package. Of course JupyterLab will do the job but let&amp;#8217;s face it, it just sucks compared to a real Integrated Development Environment (&lt;span class="caps"&gt;IDE&lt;/span&gt;) for such tasks. On the other hand our package structure is just perfect for a proper &lt;span class="caps"&gt;IDE&lt;/span&gt; like &lt;a href="https://www.jetbrains.com/pycharm/"&gt;PyCharm&lt;/a&gt;, &lt;a href="https://code.visualstudio.com/"&gt;Visual Studio Code&lt;/a&gt; or &lt;a href="https://atom.io/"&gt;Atom&lt;/a&gt; among others. PyCharm which is my favourite &lt;span class="caps"&gt;IDE&lt;/span&gt; has for instance many code inspection and refactoring features that support you in writing high-quality, clean code. Figure 1 illustrates the current state of our little&amp;nbsp;project.   &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/pycharm_boston_housing.png" alt="Boston-Housing project view in PyCharm"&gt;
+&lt;figcaption&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; Project structure of the &lt;em&gt;boston-housing&lt;/em&gt; package as created with PyScaffold. The &lt;code&gt;notebooks&lt;/code&gt; folder holds the notebooks for JupyterLab while the &lt;code&gt;src/boston_housing&lt;/code&gt; folder contains the actual code (&lt;code&gt;model.py&lt;/code&gt;) and defines an actual Python package.&lt;/figcaption&gt;
+&lt;/p&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If we use an &lt;span class="caps"&gt;IDE&lt;/span&gt; for development we will run into an obvious problem. How can we modify a function in our package and have these modifications reflected in our notebook without restarting the kernel every time? At this point I want to introduce you to your new best friend, the &lt;a href="https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html"&gt;autoreload extension&lt;/a&gt;. Just add in the first cell of your&amp;nbsp;notebook &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and execute. This extension reloads modules before executing user code and thus allows you to use your &lt;span class="caps"&gt;IDE&lt;/span&gt; for development while executing it inside of&amp;nbsp;JupyterLab.&lt;/p&gt;
+&lt;h3&gt;4. Know your&amp;nbsp;tool&lt;/h3&gt;
+&lt;p&gt;JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here only practices that I apply&amp;nbsp;commonly.&lt;/p&gt;
+&lt;h4&gt;Use Shortcuts to speed up your&amp;nbsp;work.&lt;/h4&gt;
+&lt;p&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; means &lt;kbd&gt;Cmd&lt;/kbd&gt; on Mac and &lt;kbd&gt;Ctrl&lt;/kbd&gt; on&amp;nbsp;Windows/Linux.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Enter Command Mode&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Esc&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Run Cell&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;Enter&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Run Cell &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Select Next&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;Enter&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Add Cell Above/Below&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;A&lt;/kbd&gt; / &lt;kbd&gt;B&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Copy/Cut/Paste Cell&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;C&lt;/kbd&gt; / &lt;kbd&gt;X&lt;/kbd&gt; / &lt;kbd&gt;V&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Look Around Up/Down&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Alt&lt;/kbd&gt; &lt;kbd&gt;⇧&lt;/kbd&gt; / &lt;kbd&gt;⇩&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Markdown Cell&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;M&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Code Cell&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Y&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Delete Cell Output&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;M&lt;/kbd&gt;, &lt;kbd&gt;Y&lt;/kbd&gt; (workaround)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Delete Cell&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;D&lt;/kbd&gt; &lt;kbd&gt;D&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Toggle Line Numbers&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;L&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Comment Line&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;/&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Command Palette&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;C&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;File Explorer&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;F&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Toggle Bar&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;B&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Fullscreen Mode&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;D&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Close Tab&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;Q&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Launcher&lt;/td&gt;
+&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;L&lt;/kbd&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4&gt;Quickly access&amp;nbsp;documentation&lt;/h4&gt;
+&lt;p&gt;If you have ever used a notebook or IPython you surely know that executing a command prefixed with &lt;code&gt;?&lt;/code&gt; gets you the docstring (and with &lt;code&gt;??&lt;/code&gt; the source code). Even easier than that is actually to moving the cursor over the command and pressing &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;Tab&lt;/kbd&gt;. This will open a small drop-down menu displaying the help that closes automatically after the next key&amp;nbsp;stroke.  &lt;/p&gt;
+&lt;h4&gt;Avoid unintended&amp;nbsp;outputs&lt;/h4&gt;
+&lt;p&gt;Using &lt;code&gt;;&lt;/code&gt; in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like &lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208&amp;gt;&lt;/code&gt; when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending &lt;code&gt;;&lt;/code&gt; to a command like &lt;code&gt;plt.plot(...);&lt;/code&gt;.&lt;/p&gt;
+&lt;h4&gt;Arrange cells and windows according to your&amp;nbsp;needs&lt;/h4&gt;
+&lt;p&gt;You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook&amp;#8217;s tab then moving it around. The same applies to cells. Just click on the cell&amp;#8217;s number, hold and move it up or&amp;nbsp;down.&lt;/p&gt;
+&lt;h4&gt;Access a cell&amp;#8217;s&amp;nbsp;result&lt;/h4&gt;
+&lt;p&gt;Surely you have experienced this facepalm moment when your cell with &lt;code&gt;long_running_transformation(df)&lt;/code&gt; is finally finished but you forgot to store the result in another variable. Don&amp;#8217;t despair! You can just use &lt;code&gt;result = _NUMBER&lt;/code&gt;, e.g. &lt;code&gt;result = _42&lt;/code&gt;, where &lt;code&gt;NUMBER&lt;/code&gt; is the execution number of your cell, e.g. &lt;code&gt;In [42]&lt;/code&gt;, to access and save your result. An alternative to &lt;code&gt;_NUMBER&lt;/code&gt; is &lt;code&gt;Out[NUMBER]&lt;/code&gt;.&lt;/p&gt;
+&lt;h4&gt;Use the multicursor&amp;nbsp;support&lt;/h4&gt;
+&lt;p&gt;Why should you be satisfied with only one cursor if you can have multiple? Just press &lt;kbd&gt;Alt&lt;/kbd&gt; while holding down your left mouse button to select several rows. Then type as you would normally do to insert or&amp;nbsp;delete. &lt;/p&gt;
+&lt;h4&gt;Activate line&amp;nbsp;numbers&lt;/h4&gt;
+&lt;p&gt;Let&amp;#8217;s assume you have to debug a cell with lots of code, I know you wouldn&amp;#8217;t have cells with tons of code so let&amp;#8217;s say your colleague caused that mess. To find the line corresponding to the error output more easily, you can just hit &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;L&lt;/kbd&gt; to show the line numbers for a&amp;nbsp;moment.&lt;/p&gt;
+&lt;h4&gt;Search all available&amp;nbsp;actions&lt;/h4&gt;
+&lt;p&gt;The Command Palette is surely one of the most powerful features of JupyterLab. Just hit the shortcut &lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;C&lt;/kbd&gt; and use the incremental search to find whatever action you are looking for. No more browsing menu drop downs for&amp;nbsp;minutes!&lt;/p&gt;
+&lt;h3&gt;5. Create your personal notebook&amp;nbsp;template&lt;/h3&gt;
+&lt;p&gt;After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a &lt;code&gt;template.ipynb&lt;/code&gt; notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the &lt;code&gt;template.ipynb&lt;/code&gt; notebook and click &lt;em&gt;Duplicate&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;The content of my &lt;code&gt;template.ipynb&lt;/code&gt; is&amp;nbsp;basically:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sp&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sklearn&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.api&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sm&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.formula.api&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ols&lt;/span&gt;
+
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;mpl&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="n"&gt;InlineBackend&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure_format&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;retina&amp;#39;&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;poster&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;9.&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;whitegrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_option&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;display.max_rows&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_option&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;display.max_columns&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stream&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;6. Document your&amp;nbsp;analysis&lt;/h3&gt;
+&lt;p&gt;A really old programmer&amp;#8217;s joke goes like &amp;#8220;When I wrote this code, only God and I understood what it did. Now&amp;#8230; only God knows.&amp;#8221; The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use &lt;a href="https://daringfireball.net/projects/markdown/syntax"&gt;Markdown syntax&lt;/a&gt; to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the &lt;code&gt;$...$&lt;/code&gt; notation. More general information about the whole project can be put into &lt;code&gt;README.rst&lt;/code&gt; which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; or &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt;. Also GitHub and GitLab will display &lt;code&gt;README.rst&lt;/code&gt; and thus provide a good entry point into your project. If you are more into the &lt;a href="https://daringfireball.net/projects/markdown/syntax"&gt;Markdown syntax&lt;/a&gt; and thus rather want a &lt;code&gt;README.md&lt;/code&gt;, you can install the &lt;a href="https://github.com/pyscaffold/pyscaffoldext-markdown"&gt;pyscaffoldext-markdown&lt;/a&gt; extension for PyScaffold which adds a &lt;code&gt;--markdown&lt;/code&gt; flag to PyScaffold&amp;#8217;s &lt;code&gt;putup&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum &amp;#8220;The nice thing about standards is that you have so many to choose from&amp;#8221;. The three most common docstring standards for Python are the default &lt;a href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#the-python-domain"&gt;Sphinx RestructuredText&lt;/a&gt;, &lt;a href="http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html"&gt;Numpy and Google style&lt;/a&gt; which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single readme file, maybe you came up with a new &lt;span class="caps"&gt;ML&lt;/span&gt; algorithms and want to document the concept behind it, you should take a look at &lt;a href="https://www.sphinx-doc.org/"&gt;Sphinx&lt;/a&gt;. Our project setup already includes a &lt;code&gt;docs&lt;/code&gt; folder with an &lt;code&gt;index.rst&lt;/code&gt; as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as &lt;span class="caps"&gt;HTML&lt;/span&gt;&amp;nbsp;pages:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install spinx
+python setup.py docs
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It&amp;#8217;s also possible to create a nice &lt;span class="caps"&gt;PDF&lt;/span&gt; and even serve your documentation as a web page using &lt;a href="https://readthedocs.org/"&gt;ReadTheDocs&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;7. State your dependencies for&amp;nbsp;reproducibility&lt;/h3&gt;
+&lt;p&gt;Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data &lt;em&gt;scientist&lt;/em&gt;, you should always guarantee &lt;strong&gt;reproducibility&lt;/strong&gt; of whatever you do since it&amp;#8217;s the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using &lt;code&gt;conda&lt;/code&gt; we can do this with our &lt;code&gt;boston_housing&lt;/code&gt; project&amp;nbsp;as:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env export -n boston_housing -f environment.lock.yaml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This creates a file &lt;code&gt;environment.lock.yaml&lt;/code&gt; that recursively states all dependencies and their version as well as the Python version that was used to allow anyone to deterministically reproduce this environment in the future. This is as easy&amp;nbsp;as &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env create -f environment.lock.yaml --force
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Besides a &lt;em&gt;concrete&lt;/em&gt; environment file that exhaustively lists all dependencies, it&amp;#8217;s also common practice to define an &lt;code&gt;environment.yaml&lt;/code&gt; where you state your &lt;em&gt;abstract&lt;/em&gt; dependencies. These abstract dependencies comprise only libraries which are directly imported with no specific version. In our case this file looks&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;boston_housing&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;channels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;defaults&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;dependencies&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;jupyterlab&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pandas&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;scikit-learn&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;seaborn&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This file keeps track of all libraries you are directly using. If you added a new library you can use this file to update your current environment&amp;nbsp;with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env update --file environment.yaml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Remember to regularly update and commit changes to these files in Git. Whenever you are satisfied with an iteration of your work also make use of Git tags in order to have reference points for later. These tags will also be used automatically as version numbers for your Python package which is another benefit of having used PyScaffold for your project&amp;nbsp;setup.&lt;/p&gt;
+&lt;p&gt;Reproducible environments are only one aspect of reproducibility. Since many machine learning algorithms (most prominently Deep Learning) use random numbers it&amp;#8217;s important to keep them deterministic by fixing the random seed. This sounds easier at it is since depending on the used framework, there are different ways to accomplish this. A good overview for many common frameworks is provided in the talk &lt;a href="https://www.youtube.com/watch?v=MOBs6MNepDk&amp;amp;feature=youtu.be"&gt;Reproducibility, and Selection Bias in Machine Learning&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;8. Develop locally, execute&amp;nbsp;remotely&lt;/h3&gt;
+&lt;p&gt;Quite often when you want to do some heavy lifting, your laptop won&amp;#8217;t be enough and thus you might use some powerful workstation by remote access. Running JupyterLab on the workstation and accessing it, maybe through some &lt;a href="https://www.ssh.com/ssh/tunneling/example"&gt;&lt;span class="caps"&gt;SSH&lt;/span&gt; tunnel&lt;/a&gt;, is no problem at all but how can we now work on the modules in our package? One way would be to run your &lt;span class="caps"&gt;IDE&lt;/span&gt; on the workstation but this comes potentially with many downsides depending on your connection. A flaky connection might lead to increased latencies when typing or reduced resolution. For this reason it&amp;#8217;s best to do the actual coding locally in your &lt;span class="caps"&gt;IDE&lt;/span&gt; and sync every change automatically to the workstation where JupyterLab runs. The general setup for the workstation is analogue to the local setup. We &lt;code&gt;git clone&lt;/code&gt; our repository and use the &lt;code&gt;environment.lock.yaml&lt;/code&gt; to create the exact same environment which we run locally, followed by a &lt;code&gt;python setup.py develop&lt;/code&gt;. If we now start JupyterLab within this environment we will be able to import our&amp;nbsp;package. &lt;/p&gt;
+&lt;p&gt;Now comes the interesting part: every change in one of our local modules needs to be reflected also on the remote workstation. You can use a classical command line tool like &lt;a href="https://rsync.samba.org/"&gt;rsync&lt;/a&gt; for that or just rely on the features of your &lt;span class="caps"&gt;IDE&lt;/span&gt;. Over the last years I have grown quite fond of PyCharm&amp;#8217;s Deployment feature as illustrated in Figure 2, which is unfortunately only available in the Professional version. It allows you to configure remote servers and if &lt;em&gt;Automatic Upload&lt;/em&gt; is checked it syncs each file when saving. This convenient feature allows for blazing fast iterations. You make some changes to your model, maybe implement a new transformation function, hit &lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;S&lt;/kbd&gt; to save, hit &lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Tab&lt;/kbd&gt; to switch your browser with the JupyterLab tab and then rerun the modified model on the&amp;nbsp;workstation.  &lt;/p&gt;
+&lt;p&gt;From time to time, we also need to commit our changes using Git. Since we developed mostly on our local machine we only need to download the content of the &lt;code&gt;notebooks&lt;/code&gt; folder from the remote workstation. For this we can again use rsync or the &lt;em&gt;Download from &amp;#8230;&lt;/em&gt; deployment feature of PyCharm Professional. Thus also all our git operations are executed locally avoiding merge conflicts between the local and remote repository. Git should not be used for synching tasks&amp;nbsp;anyway.&lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/pycharm_deployment.png" alt="Deployment tool of PyCharm"&gt;
+&lt;figcaption&gt;&lt;strong&gt;Figure 2:&lt;/strong&gt; PyCharm Professional allows you to easily develop locally your Python modules and run them remotely in JupyterLab. It will keep track of local changes and upload them automatically what triggers JupterLab&amp;#8217;s autoreload extension.&lt;/figcaption&gt;
+&lt;/p&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Another reason for running JupyterLab on a remote machine might be due to some firewall restrictions. Quite often in order to access sensitive data sources or a &lt;a href="https://spark.apache.org/"&gt;Spark&lt;/a&gt; cluster, you need to run JupyterLab on a gateway server. To invoke JupyterLab with Spark capabilities there are two ways. An ad hoc method is to just state on the command line that JupyterLab should use pyspark as kernel. For instance starting JupyterLab with Python 3.6 (needs to be consistent with your Spark distribution), 20 executors each having 5 cores might look like&amp;nbsp;this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON=&amp;quot;jupyter&amp;quot; PYSPARK_DRIVER_PYTHON_OPTS=&amp;quot;notebook --no-browser --port=8899&amp;quot; /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In order to be able to create notebooks with a specific PySpark kernel directly from JupyterLab, just create a file &lt;code&gt;~/.local/share/jupyter/kernels/pyspark/kernel.json&lt;/code&gt; holding:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;quot;display_name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;PySpark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;quot;language&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;python&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;quot;argv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;/usr/local/anaconda-py3/bin/python&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;-m&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;ipykernel&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;-f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;{connection_file}&amp;quot;&lt;/span&gt;
+ &lt;span class="p"&gt;],&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;quot;env&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;HADOOP_CONF_DIR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/etc/hadoop/conf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;HADOOP_USER_NAME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;username&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;HADOOP_CONF_LIB_NATIVE_DIR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/var/lib/cloudera/parcels/CDH/lib/hadoop/lib/native&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;YARN_CONF_DIR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/etc/hadoop/conf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;SPARK_YARN_QUEUE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;dev&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;PYTHONPATH&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/usr/local/anaconda-py3/bin/python:/usr/local/anaconda-py3/lib/python3.6/site-packages:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/lib/py4j-0.10.4-src.zip&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/var/lib/cloudera/parcels/SPARK2/lib/spark2/&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;PYTHONSTARTUP&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/pyspark/shell.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;PYSPARK_SUBMIT_ARGS&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;--queue dev --conf spark.dynamicAllocation.enabled=false --conf spark.scheduler.minRegisteredResourcesRatio=1 --conf spark.sql.autoBroadcastJoinThreshold=-1 --master yarn --num-executors 5 --driver-memory 2g --executor-memory 20g --executor-cores 3 pyspark-shell&amp;quot;&lt;/span&gt;
+ &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;. JupyterLab is a mighty and flexible tool and thus all the more it&amp;#8217;s important to adhere to some best practices and processes to guarantee quality in your software and analysis. The &lt;a href="https://github.com/FlorianWilhelm/boston_housing"&gt;boston_housing repository&lt;/a&gt; demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points&amp;nbsp;above.&lt;/p&gt;
+&lt;p&gt;JupyterLab also offers many powerful &lt;a href="https://jupyterlab.readthedocs.io/en/stable/user/extensions.html"&gt;extensions&lt;/a&gt;, e.g. &lt;a href="https://github.com/jupyterlab/jupyterlab-git"&gt;jupyterlab-git&lt;/a&gt;, &lt;a href="https://github.com/jupyterlab/jupyterlab-toc"&gt;jupyterlab-toc&lt;/a&gt;, etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. Since general concepts are transferable but the specific workflow may be different, also read the &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt; about the same topic but using partly a different&amp;nbsp;tooling.&lt;/p&gt;</content><category term="python"></category><category term="jupyter"></category></entry><entry><title>Multiplicative LSTM for sequence-based Recommenders</title><link href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/" rel="alternate"></link><published>2018-08-05T16:00:00+02:00</published><updated>2018-08-05T16:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-08-05:/2018/08/multiplicative_LSTM_for_sequence_based_recos/</id><summary type="html">&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant&amp;nbsp;recommendation.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. 
 They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
 social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
@@ -497,194 +811,4 @@ activate_env.py /my_venvs/venv
 &lt;/figure&gt;
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without access to the cluster&amp;#8217;s nodes. Since the explained method also works with &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt; this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project&amp;nbsp;itself.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="production"></category></entry><entry><title>Data Science in Production: Packaging, Versioning and Continuous Integration</title><link href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/" rel="alternate"></link><published>2018-01-08T12:00:00+01:00</published><updated>2018-01-08T12:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-01-08:/2018/01/ds_in_prod_packaging_ci/</id><summary type="html">&lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all fun and games until someone wants to put it into production. All of a sudden the crucial question is how to deploy your model, which version, how can updates be rolled out, which requirements are needed and&amp;nbsp;&amp;#8230;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;A common pattern in most data science projects I participated in is that it&amp;#8217;s all 
-fun and games until someone wants to put it into production. From that point in time on
-no one will any longer give you a pat on the back for a high accuracy and smart
-algorithm. All of a sudden the crucial question is how to deploy your model,
-which version, how can updates be rolled out, which requirements are needed and so&amp;nbsp;on.&lt;/p&gt;
-&lt;p&gt;The worst case in such a moment is to realize that up until now the glorious proof of concept
-model is not an application but rather a stew of Python/R scripts which were deployed 
-by cloning a git repo and run by some Jenkins jobs with a dash of&amp;nbsp;Bash.&lt;/p&gt;
-&lt;p&gt;Bringing data science to production is a hot topic right now and there are many facets 
-to it. This is the first in a series of posts about &lt;em&gt;data science in production&lt;/em&gt; and
-focuses on aspects of modern software engineering like &lt;em&gt;packaging&lt;/em&gt;, &lt;em&gt;versioning&lt;/em&gt; as
-well as &lt;em&gt;Continuous Integration&lt;/em&gt; in&amp;nbsp;general.&lt;/p&gt;
-&lt;h2&gt;Packages vs.&amp;nbsp;Scripts&lt;/h2&gt;
-&lt;p&gt;Being a data scientist does not free you from proper software engineering. Of course
-most models start with a simple script or a Jupyter notebook maybe, just the essence
-of your idea to test it quickly. But as your model evolves, the number of lines
-of code grow, it&amp;#8217;s always a good idea to think about the structure of your code and to
-move away from writing simple scripts to proper applications or&amp;nbsp;libraries. &lt;/p&gt;
-&lt;p&gt;In case of a Python model, that means grouping functionality into different modules 
-&lt;a href="https://en.wikipedia.org/wiki/Separation_of_concerns"&gt;separating different concerns&lt;/a&gt; which could be organised in Python packages on a higher
-level. Maybe certain parts of the model are even so general that they could be packaged 
-into an own library for greater reusability also for other projects. In the context
-of Python, a bundle of software to be installed like a library or application is denoted 
-with the term &lt;em&gt;package&lt;/em&gt;. Another synonym is &lt;em&gt;distribution&lt;/em&gt; which is easily to be confused with
-a Linux distribution. Therefore the term package is more commonly used although there is an
-ambiguity with the kind of package you import in your Python source code (i.e. a container of&amp;nbsp;modules).&lt;/p&gt;
-&lt;p&gt;So what is now the key difference between a bunch of Python scripts with some modules 
-and a proper package? A Python package adheres a certain structure and thus can be shipped and 
-installed by others. Simple as it sounds this is a major advantage over having just some Python 
-modules inside a repository. With a package it is possible
-to make distinct code releases with different versions that can be stored for later reference. 
-Dependencies like &lt;em&gt;numpy&lt;/em&gt; and &lt;em&gt;scikit-learn&lt;/em&gt; can be specified and dependency resolution is automated
-by tools like &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt; and &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt;. Why is this so important? When bugs in production occur 
-it&amp;#8217;s incredibly useful to know which state of your code actually is in production. Is it still
-version 0.9 or already 1.0? Did the bug also occur in the last release? Most debugging starts
-with reproducing the bug locally on your machine. But what if the release is already half a 
-year old and there where major changes in its requirements? Maybe the bug is caused by one of
-its dependencies? If your package also includes its dependencies with pinned versions, 
-restoring the exact same state as in production but inside a local &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; 
-environment will be a matter of&amp;nbsp;seconds.&lt;/p&gt;
-&lt;h2&gt;Packaging and&amp;nbsp;Versioning&lt;/h2&gt;
-&lt;p&gt;Python&amp;#8217;s history of packaging has had its dark times but nowadays things have pretty much settled 
-and now there is only one obvious tool left to do it, namely &lt;a href="https://setuptools.readthedocs.io/"&gt;setuptools&lt;/a&gt;. 
-An official Python &lt;a href="https://packaging.python.org/tutorials/distributing-packages/"&gt;packaging tutorial&lt;/a&gt; and many user articles like &lt;a href="http://veekaybee.github.io/2017/09/26/python-packaging/"&gt;Alice in Python projectland&lt;/a&gt; 
-explain the various steps needed to set up a proper &lt;code&gt;setup.py&lt;/code&gt;
-but it takes a long time to really master the subtleties of Python packaging and even then it
-is quite cumbersome. This is the reason many developers refrain from building Python packages.
-Another reason is that even if you have a correct Python package set up, proper versioning is
-still a manual and thus error-prone process. Therefore the tool &lt;a href="https://github.com/pypa/setuptools_scm"&gt;setuptools_scm&lt;/a&gt; exists which
-draws the current version automatically from git so a new release is as simple as creating a new tag.
-Following the famous Unix principle &amp;#8220;Do one thing and do it well&amp;#8221; also a Python package is
-composed of many specialised tools. Besides &lt;a href="https://setuptools.readthedocs.io/"&gt;setuptools&lt;/a&gt; and &lt;a href="https://github.com/pypa/setuptools_scm"&gt;setuptools_scm&lt;/a&gt; there 
-is &lt;a href="http://www.sphinx-doc.org/"&gt;sphinx&lt;/a&gt; for documentation, testing tools like &lt;a href="https://docs.pytest.org/"&gt;pytest&lt;/a&gt; and &lt;a href="https://tox.readthedocs.io/"&gt;tox&lt;/a&gt; as well as many other
-little helpers to consider when setting up a Python package. Already scared off of Python packaging?
-Hold your breath, there is no reason to&amp;nbsp;be.&lt;/p&gt;
-&lt;h3&gt;PyScaffold&lt;/h3&gt;
-&lt;p&gt;Luckily there is one tool to rule them all, &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt;, which provides a proper Python 
-package within a second. It is installed easily&amp;nbsp;with&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pyscaffold
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;or &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install -c conda-forge pyscaffold
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;if you prefer &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; over &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt;. Generating now a project &lt;code&gt;Scikit-AI&lt;/code&gt; with a package &lt;code&gt;skai&lt;/code&gt; is just 
-a matter of typing a single&amp;nbsp;command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup Scikit-AI -p skai
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This will create a git repository &lt;code&gt;Scikit-AI&lt;/code&gt; including a fully configured &lt;code&gt;setup.py&lt;/code&gt; that can be configured easily
-and in a descriptive way by modifying &lt;code&gt;setup.cfg&lt;/code&gt;. The typical Python package structure is provided including
-subfolders such as &lt;code&gt;docs&lt;/code&gt; for &lt;a href="http://www.sphinx-doc.org/"&gt;sphinx&lt;/a&gt; documentation, &lt;code&gt;tests&lt;/code&gt; for unit testing as well as a &lt;code&gt;src&lt;/code&gt;
-subfolder including the actual Python package &lt;code&gt;skai&lt;/code&gt;. Also &lt;a href="https://github.com/pypa/setuptools_scm"&gt;setuptools_scm&lt;/a&gt; is integrated
-and other features can be activates optionally like support for &lt;a href="https://travis-ci.org/"&gt;Travis&lt;/a&gt;, &lt;a href="https://gitlab.com/"&gt;Gitlab&lt;/a&gt;, &lt;a href="https://tox.readthedocs.io/"&gt;tox&lt;/a&gt;, &lt;a href="http://pre-commit.com/"&gt;pre-commit&lt;/a&gt;
-and many&amp;nbsp;more.&lt;/p&gt;
-&lt;p&gt;An example of a more advanced usage of PyScaffold&amp;nbsp;is&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup Scikit-AI -p skai --travis --tox -d &lt;span class="s2"&gt;&amp;quot;Scientific AI library with a twist&amp;quot;&lt;/span&gt; -u &lt;span class="s2"&gt;&amp;quot;http://sky.net/&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;where also example configuration files for Travis and tox will be created. The additionally provided short description
-with the flag &lt;code&gt;-d&lt;/code&gt; is used where appropriate as is the url passed by &lt;code&gt;-u&lt;/code&gt;. As usual with shell commands,
-&lt;code&gt;putup --help&lt;/code&gt; provides information about the various&amp;nbsp;arguments.&lt;/p&gt;
-&lt;h3&gt;Versioning&lt;/h3&gt;
-&lt;p&gt;Having a proper Python package already gives us the possibility to ship something that can be installed by others
-easily including its dependencies of course. But if you want to move fast also the deployment of your new model
-package needs to be as much automated as possible. You want to make sure that bug fixes end up in production
-automatically while new features need to be manually&amp;nbsp;approved. &lt;/p&gt;
-&lt;p&gt;For this reason &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; was developed which basically says that a version number is composed of
-&lt;span class="caps"&gt;MAJOR&lt;/span&gt;.&lt;span class="caps"&gt;MINOR&lt;/span&gt;.&lt;span class="caps"&gt;PATCH&lt;/span&gt; and you increment&amp;nbsp;the:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;span class="caps"&gt;MAJOR&lt;/span&gt; version when you make incompatible &lt;span class="caps"&gt;API&lt;/span&gt;&amp;nbsp;changes,&lt;/li&gt;
-&lt;li&gt;&lt;span class="caps"&gt;MINOR&lt;/span&gt; version when you add functionality in a backwards-compatible manner,&amp;nbsp;and&lt;/li&gt;
-&lt;li&gt;&lt;span class="caps"&gt;PATCH&lt;/span&gt; version when you make backwards-compatible bug&amp;nbsp;fixes.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;This programming language independent concept also made its way into Python&amp;#8217;s official version identification &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt;.
-Besides &lt;span class="caps"&gt;MAJOR&lt;/span&gt;, &lt;span class="caps"&gt;MINOR&lt;/span&gt; and &lt;span class="caps"&gt;PATCH&lt;/span&gt; the version number is also extended by semantics identifying development, post and pre 
-releases. A package that was set up with PyScaffold uses the information from git to generate a &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; compatible,
-semantic  version identifier. A developer just needs to follow the conventions of &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; when tagging a
-release with&amp;nbsp;git. &lt;/p&gt;
-&lt;p&gt;Versioning becomes even more important when your company develops many interdependent packages. The effort of sticking
-to the simple conventions of &lt;a href="https://semver.org/"&gt;Semantic Versioning&lt;/a&gt; right from the start is just a small price to pay compared to 
-the myriad of pains in the &lt;a href="https://en.wikipedia.org/wiki/Dependency_hell"&gt;dependency hell&lt;/a&gt; you will otherwise end up in long-term. Believe me on that&amp;nbsp;one.&lt;/p&gt;
-&lt;h2&gt;Continuous&amp;nbsp;Integration&lt;/h2&gt;
-&lt;p&gt;Now that we know about packaging and versioning the next step is to establish an automated Continuous Integration (&lt;span class="caps"&gt;CI&lt;/span&gt;)
-process. For this purpose a common choice is &lt;a href="https://jenkins-ci.org/"&gt;Jenkins&lt;/a&gt; especially for proprietary software since it can be installed
-on&amp;nbsp;premise. &lt;/p&gt;
-&lt;h3&gt;Artefact&amp;nbsp;Store&lt;/h3&gt;
-&lt;p&gt;Besides the &lt;span class="caps"&gt;CI&lt;/span&gt; tool there is also a place needed to store the built packages. The term &lt;em&gt;artefact store&lt;/em&gt; is
-used commonly for a service that offers a way to store and install packages from. In the Python world the 
-Python Package Index (&lt;a href="https://pypi.python.org"&gt;PyPI&lt;/a&gt;) is the official artefact store to publish open source packages. For companies the
-on-premise equivalent is &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt;&amp;nbsp;that:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;acts as a PyPI&amp;nbsp;mirror, &lt;/li&gt;
-&lt;li&gt;allows uploading, testing and staging with private&amp;nbsp;indexes,&lt;/li&gt;
-&lt;li&gt;has a nice web interface for&amp;nbsp;searching,&lt;/li&gt;
-&lt;li&gt;allows uploading and browsing the Sphinx documentation of&amp;nbsp;packages,&lt;/li&gt;
-&lt;li&gt;has user management&amp;nbsp;and&lt;/li&gt;
-&lt;li&gt;features Jenkins&amp;nbsp;integration.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If all you care about is Python then devpi is the right artefact store for you. In most companies also Java is used
-and &lt;a href="http://www.sonatype.org/nexus/"&gt;Nexus&lt;/a&gt; often serves thereby already as artefact store. In this case it might be more advantageous to use Nexus also for
-storing Python packages which is available since version 3.0 to avoid the complexity of maintaining another&amp;nbsp;service.&lt;/p&gt;
-&lt;p&gt;In highly polylingual environments with many languages like Python, R, Java and C/C++ this will lead to many different
-artefact stores and various different ways of installing artefacts. A unified approach is provided by &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; since
-conda packages can be built for &lt;a href="https://conda.io/docs/user-guide/tutorials/build-postgis.html"&gt;general code projects&lt;/a&gt;. The on-premise artefact store provided by &lt;a href="https://anaconda.org/"&gt;Anaconda&lt;/a&gt; is
-called &lt;a href="https://docs.anaconda.com/anaconda-repository/"&gt;anaconda-repository&lt;/a&gt; and is part of the proprietary enterprise server. Whenever a unified approach to storing and
-installing artefacts of different languages is a major concern, &lt;a href="https://anaconda.org/"&gt;Anaconda&lt;/a&gt; might be a viable&amp;nbsp;solution.&lt;/p&gt;
-&lt;h3&gt;Indices and&amp;nbsp;Channels&lt;/h3&gt;
-&lt;p&gt;Common to all artifact stores is the availability of different &lt;em&gt;indices&lt;/em&gt; (or &lt;em&gt;channels&lt;/em&gt; in conda) to organize artefacts. 
-It is a good practice to have different indices to describe the maturity of the contained packages like &lt;em&gt;unstable&lt;/em&gt;,
-&lt;em&gt;testing&lt;/em&gt; and &lt;em&gt;stable&lt;/em&gt;. This complements the automatic &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; versioning with &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; since it allows us to 
-tell a development version which passed the unit tests (&lt;em&gt;testing&lt;/em&gt;) from a development version which did not (&lt;em&gt;unstable&lt;/em&gt;).&lt;br&gt;
-Since &lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt; by default installs only stable releases, e.g. &lt;code&gt;1.0&lt;/code&gt; but not &lt;code&gt;1.0b3&lt;/code&gt;, while the &lt;code&gt;--pre&lt;/code&gt; flag 
-is needed to install unstable releases the differentiation between &lt;em&gt;testing&lt;/em&gt; and &lt;em&gt;stable&lt;/em&gt; indices is not absolutely 
-necessary. Still for organisational reasons, having an &lt;em&gt;testing&lt;/em&gt; index as input for &lt;span class="caps"&gt;QA&lt;/span&gt; and a &lt;em&gt;stable&lt;/em&gt; index that really
-only holds releases that passed the whole &lt;span class="caps"&gt;QA&lt;/span&gt; process is a good idea. Also &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; does not seem to provide an equivalent
-to the &lt;code&gt;--pre&lt;/code&gt; flag and thus different channels need to be&amp;nbsp;used.&lt;/p&gt;
-&lt;p&gt;One should also note that git allows to tag a single commit several times which will lead to different versions of the
-Python package having the same content. This gives means to the following convention: Let&amp;#8217;s say there was a bug in version
-&lt;code&gt;1.2&lt;/code&gt; and after two commits the bug seems to be fixed. The automatically inferred version number by PyScaffold
-will be &lt;code&gt;1.2.post0.pre2-gHASH&lt;/code&gt;. Being happy with her fix the developer tags the commit with &lt;code&gt;1.2.1rc1&lt;/code&gt; (first release
-candidate of version 1.2.1). Since all unit tests pass this patch will end up in the &lt;em&gt;testing&lt;/em&gt; index where &lt;span class="caps"&gt;QA&lt;/span&gt; can put it to the
-acid test. After that, the same commit will be tagged and signed by &lt;span class="caps"&gt;QA&lt;/span&gt; with name &lt;code&gt;1.2.1&lt;/code&gt; which results in a new package
-that can be moved to the &lt;em&gt;stable&lt;/em&gt; index&amp;nbsp;automatically.&lt;/p&gt;
-&lt;h3&gt;Automated &lt;span class="caps"&gt;CI&lt;/span&gt;&amp;nbsp;Process&lt;/h3&gt;
-&lt;p&gt;With this components in mind we can establish an automated &lt;span class="caps"&gt;CI&lt;/span&gt; process. Upon a new commit on a central git repository 
-the &lt;em&gt;packaging&lt;/em&gt; Jenkins job clones the repo and builds the package, e.g. with &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt;. If this is
-successful the package is uploaded to the &lt;em&gt;unstable&lt;/em&gt; index of the artefact store. Upon the successful completion of the
-packaging job a second Jenkins job for &lt;em&gt;testing&lt;/em&gt; is triggered. The reason for packaging and publishing before running
-any kind of unit tests is that already during the packaging can be major flaws that a typical unit test could never
-find. For instance, missing data files that are in the repo but not specified in the package, missing or wrong
-dependencies and so on. Therefore it is important to run unit tests always against the package installed in a clean
-environment and that is exactly what the testing job does. After having set up a fresh environment with &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;
-or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; the just published package is installed from the artefact store. 
-If this succeeds the git repo is cloned into a subfolder providing
-the unit tests (in the &lt;code&gt;tests&lt;/code&gt; subfolder). These unit tests are then executed and check the installed package. In case
-that all tests pass the package is moved from the &lt;em&gt;unstable&lt;/em&gt; index to the &lt;em&gt;testing&lt;/em&gt; index. In case the commit was
-tagged as a stable release and thus the package&amp;#8217;s version is stable according to &lt;a href="https://www.python.org/dev/peps/pep-0440/"&gt;&lt;span class="caps"&gt;PEP440&lt;/span&gt;&lt;/a&gt; it is moved into the
- &lt;em&gt;stable&lt;/em&gt; index. Figure 1 illustrates the complete&amp;nbsp;process.&lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/ci_build_publish.png" alt="Building and publishing a package"&gt;
-&lt;figcaption&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; The &lt;em&gt;packaging&lt;/em&gt; job clones source code repository, builds the software package and pushes
-it into the &lt;em&gt;unstable&lt;/em&gt; index of the artefact store. If these steps succeed the &lt;em&gt;testing&lt;/em&gt; job
-is triggered which installs the package from the artefact store and its dependencies into a clean environment.
-The source code reposistory is then cloned in order to run the unit tests against the installed package. If all 
-unit tests pass the package is moved into the &lt;em&gt;testing&lt;/em&gt; index of the artefact store or optionally
-to the &lt;em&gt;stable&lt;/em&gt; index if the version is a stable release.&lt;/figcaption&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;It is clear that packaging, versioning and &lt;span class="caps"&gt;CI&lt;/span&gt; are just one aspect of how to bring Data Science in production
-and follow-up posts will shed some light on other aspects.
-Whereas these aspects are quite important, their benefits are often underestimated. We have seen that proper packaging is
-crucial to shipping, installing a package and dealing with its dependencies. Semantic Versioning supports us in automation
-of rolling out patches and in the organisation of deployment. The advantages of Continuous Integration are quite obvious
-and promoted a lot by the DevOps culture in recent years. Also Data Science can learn and benefit from this spirit and
-we have seen that a minimal &lt;span class="caps"&gt;CI&lt;/span&gt; setup is easy to accomplish. All together they build a fundamental corner stone of
-Data Science in production. Bringing data science to production plays a crucial part in many projects at &lt;a href="https://www.inovex.de/en/"&gt;inovex&lt;/a&gt;
-since the added value of data science only shows in&amp;nbsp;production.&lt;/p&gt;
-&lt;p&gt;Some good talks around this topic were held by &lt;a href="https://www.linkedin.com/in/sebastian-neubauer-16626a79/"&gt;Sebastian Neubauer&lt;/a&gt;, one of the acclaimed
-DevOps rock stars of Python in production. His talks &lt;a href="https://www.youtube.com/watch?v=Ad9qSbrfnvk"&gt;A Pythonic Approach to &lt;span class="caps"&gt;CI&lt;/span&gt;&lt;/a&gt; and 
-&lt;a href="https://www.youtube.com/watch?v=hnQKsxKjCUo"&gt;There should be one obvious way to bring Python into production&lt;/a&gt; perfectly complement this post and are even fun 
-to&amp;nbsp;watch.&lt;/p&gt;</content><category term="python"></category><category term="data science"></category><category term="production"></category></entry></feed>
+&lt;p&gt;Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without access to the cluster&amp;#8217;s nodes. Since the explained method also works with &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt; this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project&amp;nbsp;itself.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="production"></category></entry></feed>

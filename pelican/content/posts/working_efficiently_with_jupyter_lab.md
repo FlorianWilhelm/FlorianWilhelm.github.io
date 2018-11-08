@@ -1,11 +1,11 @@
 ---
 title: Working efficiently with JupyterLab Notebooks
-date: 2018-11-08 12:00
-modified: 2018-11-08 12:00
-category: article
+date: 2018-11-08 14:00
+modified: 2018-11-08 14:00
+category: post
 tags: python, jupyter
 authors: Florian Wilhelm
-status: draft
+status: published
 ---
 
 ## Motivation
@@ -274,12 +274,12 @@ Quite often when you want to do some heavy lifting, your laptop won't be enough 
 
 Now comes the interesting part: every change in one of our local modules needs to be reflected also on the remote workstation. You can use a classical command line tool like [rsync] for that or just rely on the features of your IDE. Over the last years I have grown quite fond of PyCharm's Deployment feature as illustrated in Figure 2, which is unfortunately only available in the Professional version. It allows you to configure remote servers and if *Automatic Upload* is checked it syncs each file when saving. This convenient feature allows for blazing fast iterations. You make some changes to your model, maybe implement a new transformation function, hit <kbd>Accel</kbd> <kbd>S</kbd> to save, hit <kbd>Accel</kbd> <kbd>Tab</kbd> to switch your browser with the JupyterLab tab and then rerun the modified model on the workstation.  
 
-From time to time, we also need to commit our changes using Git. Since we developed mostly on our local machine we only need to download the content of the `notebooks` folder from the remote workstation. For this we can again use rsync or the *Download from ...* deployment feature of PyCharm. Thus also all our git operations are executed locally avoiding merge conflicts between the local and remote repository. Git should not be used for synching tasks anyway.
+From time to time, we also need to commit our changes using Git. Since we developed mostly on our local machine we only need to download the content of the `notebooks` folder from the remote workstation. For this we can again use rsync or the *Download from ...* deployment feature of PyCharm Professional. Thus also all our git operations are executed locally avoiding merge conflicts between the local and remote repository. Git should not be used for synching tasks anyway.
 
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/pycharm_deployment.png" alt="Deployment tool of PyCharm">
-<figcaption><strong>Figure 2:</strong> PyCharm allows you to easily develop locally your Python modules and run them remotely in JupyterLab. It will keep track of local changes and upload them automatically what triggers JupterLab's autoreload extension.</figcaption>
+<figcaption><strong>Figure 2:</strong> PyCharm Professional allows you to easily develop locally your Python modules and run them remotely in JupyterLab. It will keep track of local changes and upload them automatically what triggers JupterLab's autoreload extension.</figcaption>
 </p>
 </figure>
 
@@ -364,4 +364,4 @@ JupyterLab also offers many powerful [extensions], e.g. [jupyterlab-git], [jupyt
 [jupyterlab-git]: https://github.com/jupyterlab/jupyterlab-git
 [jupyterlab-toc]: https://github.com/jupyterlab/jupyterlab-toc
 [pyscaffoldext-markdown]: https://github.com/pyscaffold/pyscaffoldext-markdown
-[blog post of Christopher Prohm]: https://cprohm.de/notebooks-and-modules.html
+[blog post of Christopher Prohm]: https://cprohm.de/article/notebooks-and-modules.html

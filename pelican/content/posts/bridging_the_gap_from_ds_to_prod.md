@@ -15,10 +15,10 @@ Additionally, my talk also addresses organisational as well as problems in quali
 
 With my talk I hope to convey the message that breakdowns on the road from data science to production are rather the rule than the exception, so you are not alone. At the end of my talk, you will have a better understanding of why your team and you are struggling and what to do about it.
 
-This talk was presented at [EuroPython 2018][] and the slides are available on [SlideShare][]. The video below shows the whole session with my talk starting at [51m23s][youtube].
+This talk was presented at [EuroPython 2018][] and [Code.Talks 2018][]. The slides are available on [SlideShare][].
 
 {% youtube ItcMqTR7Cds 800 500 %}
 
 [EuroPython 2018]: https://ep2018.europython.eu/conference/talks/bridging-the-gap-from-data-science-to-production
+[Code.Talks 2018]: https://www.codetalks.de/de/2018/programm/#talk-255
 [SlideShare]: https://www.slideshare.net/FlorianWilhelm2/bridging-the-gap-from-data-science-to-production
-[youtube]: https://youtu.be/XRKPOtbU6UE?t=51m23s

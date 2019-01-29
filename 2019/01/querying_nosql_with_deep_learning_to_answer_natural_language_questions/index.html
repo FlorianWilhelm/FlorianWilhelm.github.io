@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>programming - Florian Wilhelm</title>
+    <title>Querying NoSQL with Deep Learning to Answer Natural Language Questions - Florian Wilhelm</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -165,16 +165,22 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 
+<link rel="canonical" href="https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/">
 
-    <meta name="author" content="Florian Wilhelm" />
-    <meta name="keywords" content="programming" />
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="data science,nlp" />
+        <meta name="description" content="Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (QA) system that allows a …" />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Florian Wilhelm" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Florian Wilhelm"/>
-        <meta property="og:url" content="https://florianwilhelm.info"/>
-        <meta property="og:description" content="Florian Wilhelm"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Querying NoSQL with Deep Learning to Answer Natural Language Questions"/>
+        <meta property="og:url" content="https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/"/>
+        <meta property="og:description" content="Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (QA) system that allows a …"/>
+        <meta property="article:published_time" content="2019-01-29" />
+            <meta property="article:section" content="talk" />
+            <meta property="article:tag" content="data science" />
+            <meta property="article:tag" content="nlp" />
+            <meta property="article:author" content="Florian Wilhelm" />
 
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
@@ -192,6 +198,8 @@ init_mathjax();
 
 
 
+        <link href="https://florianwilhelm.info/feeds/talk.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm talk ATOM Feed"/>
 
 </head>
 <body>
@@ -225,13 +233,83 @@ Florian Wilhelm            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-            <article>
-                <h2><a href="https://florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></h2>
-                <div class="summary"><p>Declarative Programming is a programming paradigm that focuses on describing <em>what</em> should be computed in a problem domain without describing <em>how</em> it should be done. The post starts by explaining differences between a declarative and imperative approach with the help of examples from everyday&nbsp;life.</p>
-                    <a class="btn btn-default btn-xs" href="https://florianwilhelm.info/2017/07/declarative_thinking_and_programming/">more ...</a>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/"
+                       rel="bookmark"
+                       title="Permalink to Querying NoSQL with Deep Learning to Answer Natural Language Questions">
+                        Querying NoSQL with Deep Learning to Answer Natural Language&nbsp;Questions
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2019-01-29T11:30:00+01:00"> Jan. 29, 2019</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+        /
+	<a href="https://florianwilhelm.info/tag/nlp/">nlp</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 </div>
-            </article>
-            <hr/>
+                <p>Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (<span class="caps">QA</span>) system that allows a user to query an external NoSQL database by using natural language. A major challenge of such a system is the non-differentiability of database operations which we overcome by applying policy-based reinforcement learning. We evaluate our approach on Facebook’s bAbI Movie Dialog dataset and achieve a competitive score of 84.2% compared to several benchmark models. We conclude that our approach excels with regard to real-world scenarios where knowledge resides in external databases and intermediate labels are too costly to gather for non-end-to-end trainable <span class="caps">QA</span>&nbsp;systems.</p>
+<p>Our paper <em>Querying NoSQL with Deep Learning to Answer Natural Language Questions</em> was presented at <a href="https://aaai.org/Conferences/AAAI-19/"><span class="caps">IAAI</span>-19</a> and can be downloaded on <a href="https://aaai.org/Papers/AAAI/2019/IAAI-BlankS.88.pdf">aaai.org</a>. There is also a simplified blog post about the same topic on the <a href="https://www.inovex.de/blog/seqpolicynet-nlp-elasticsearch/">inovex blog</a> by my colleague Sebastian&nbsp;Blank.</p>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/bridging_the_gap_from_ds_to_prod/">Bridging the Gap: from Data Science to&nbsp;Production</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
+        <li><a href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
+        <li><a href="https://florianwilhelm.info/2016/04/leveraging_the_value_of_big_data_with_automated_decision_making/">Leveraging the Value of Big Data with Automated Decision&nbsp;Making</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'querying_nosql_with_deep_learning_to_answer_natural_language_questions';
+                var disqus_url = 'https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
 
         </div>
         <div class="col-sm-3" id="sidebar">
@@ -404,7 +482,7 @@ Florian Wilhelm            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2017 Florian Wilhelm
+         <div class="col-xs-10">&copy; 2019 Florian Wilhelm
             &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
@@ -453,5 +531,10 @@ Florian Wilhelm            </a>
     </script>
     <!-- End Google Analytics Code -->
 
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
 </body>
 </html>

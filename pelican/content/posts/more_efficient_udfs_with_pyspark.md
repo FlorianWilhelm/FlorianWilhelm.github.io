@@ -8,7 +8,7 @@ authors: Florian Wilhelm
 status: draft
 ---
 
-Some time has passed since my blog post on [Efficient UD(A)Fs with PySpark]({filename}/efficient_udfs_with_pyspark.md) which demonstrated how to define *User-Defined Aggregation Function* (UDAF) with [PySpark][] 2.1 that allow you to use [Pandas][]. Meanwhile things got a lot easier with the release of Spark 2.3 which provides [pandas_udf][] that natively provides the same functionality and performs much faster if [Apache Arrow][] is activated. *Nice, so life is good now? No more workarounds!? Well, almost...*
+Some time has passed since my blog post on [Efficient UD(A)Fs with PySpark]({filename}/posts/efficient_udfs_with_pyspark.md) which demonstrated how to define *User-Defined Aggregation Function* (UDAF) with [PySpark][] 2.1 that allow you to use [Pandas][]. Meanwhile things got a lot easier with the release of Spark 2.3 which provides [pandas_udf][] that natively provides the same functionality and performs much faster if [Apache Arrow][] is activated. *Nice, so life is good now? No more workarounds!? Well, almost...*
 
 If you are just using simple datatypes in your Spark dataframes everything will work and even blazingly fast if you got Arrow activated but don't you dare dealing with complex datatypes like maps (dictionaries), arrays (lists) and structs. In that case, all you will get is a `TypeError: Unsupported type in conversion to Arrow` which is already tracked under issue [SPARK-21187]. Even a simple `toPandas()` does not work which might get you to deactivate Arrow support altogether. But this would also keep you from using `pandas_udf` which is really nice... 
 

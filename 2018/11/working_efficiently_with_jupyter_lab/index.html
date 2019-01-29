@@ -283,14 +283,14 @@ Florian Wilhelm            </a>
 <p>For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. Still, everything shown here can analogously be conducted with the help of <a href="https://virtualenv.pypa.io/">virtualenv</a>/<a href="https://pipenv.readthedocs.io/">pipenv</a> and all the concepts still apply as is also illustrated in a <a href="https://cprohm.de/article/notebooks-and-modules.html">blog post of Christopher Prohm</a>. For this tutorial, I assume you have <a href="https://conda.io/miniconda.html">Miniconda</a> installed on your system. Besides this, every programmer&#8217;s machine should have <a href="https://git-scm.com/">Git</a> installed and set up. The result of the following demonstration can be found in the <a href="https://github.com/FlorianWilhelm/boston_housing">boston_housing repository</a>.</p>
 <h3>0. Use an isolated&nbsp;environment</h3>
 <p>In the spirit of Phil Karlton who supposedly said &#8220;There are only two hard things in Computer Science: cache invalidation and naming things.&#8221;, we gonna select a specific task, namely an analysis based on the all familiar <a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html">Boston housing dataset</a>, to help us finding crisp names. Based on our task we create an environment <code>boston_housing</code> including Python and some common data science libraries&nbsp;with:</p>
-<div class="highlight"><pre><span></span>conda create -n boston_housing python=3.6 jupyterlab scikit-learn seaborn
+<div class="highlight"><pre><span></span>conda create -n boston_housing python=3.6 jupyterlab pandas scikit-learn seaborn
 </pre></div>
 
 
 <p>After less than a minute the environment is ready to be used and we can activate it with <code>conda activate boston_housing</code>.</p>
 <h2>Efficient&nbsp;Workflow</h2>
 <p>The code in notebooks tends to grow and grow to the point of being incomprehensible. To overcome this problem, the only way is to extract parts of it into Python modules once in a while. Since it only makes sense to extract functions and classes into Python modules, I often start cleaning up a messy notebook by thinking about the actual task a group of cells is accomplishing. This helps me to refactor those cells into a proper function which I can then migrate into a Python&nbsp;module. </p>
-<p>At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing you notebook everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grow, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports will&nbsp;fail. </p>
+<p>At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing your notebook, everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grows, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports will&nbsp;fail. </p>
 <p>This observation brings us to one of the most important best practices: <strong>develop your code as a Python package</strong>. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. <em>But creating a Python package is so much overhead; surely it&#8217;s not worth this small little analysis I will complete in half a day anyway and then forget about it</em>, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don&#8217;t adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to the first part of your comment, if you know how, it&#8217;s no overhead at&nbsp;all!</p>
 <h3>1. Develop your code in a Python&nbsp;Package</h3>
 <p>With the help of <a href="https://pyscaffold.org/">PyScaffold</a> it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated&nbsp;with:</p>
@@ -726,6 +726,11 @@ python setup.py docs
                             machine-learning
                         </a>
                     </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/nlp/">
+                            nlp
+                        </a>
+                    </li>
                     <li class="list-group-item tag-3">
                         <a href="https://florianwilhelm.info/tag/predictive-analytics/">
                             predictive analytics
@@ -789,7 +794,7 @@ python setup.py docs
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2018 Florian Wilhelm
+         <div class="col-xs-10">&copy; 2019 Florian Wilhelm
             &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

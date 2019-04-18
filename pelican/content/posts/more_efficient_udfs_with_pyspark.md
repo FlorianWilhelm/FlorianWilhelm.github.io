@@ -6,6 +6,7 @@ category: post
 tags: spark, python, big data
 authors: Florian Wilhelm
 status: draft
+summary: With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked around.
 ---
 
 Some time has passed since my blog post on [Efficient UD(A)Fs with PySpark]({filename}/posts/efficient_udfs_with_pyspark.md) which demonstrated how to define *User-Defined Aggregation Function* (UDAF) with [PySpark][] 2.1 that allow you to use [Pandas][]. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the [pandas_udf][] decorator. This decorator gives you the same functionality as our custom `pandas_udaf` in the former post but performs much faster if [Apache Arrow][] is activated. *Nice, so life is good now? No more workarounds!? Well, almost...*
@@ -277,7 +278,7 @@ df_final.show()
 
 # Conclusion
 
-We have shown a practical workaround to deal with Spark dataframes having complex datatypes and UDFs for Spark 2.3/4. As with every workaround, it's far from perfect and hopefully the issue [SPARK-21187] will be resolved soon rendering this workaround unnecessary.
+We have shown a practical workaround to deal with UDFs and complex datatypes for Spark 2.3/4. As with every workaround, it's far from perfect and hopefully the issue [SPARK-21187] will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on it.
 
 
 [from_json]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json

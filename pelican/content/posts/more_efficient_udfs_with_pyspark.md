@@ -1,10 +1,11 @@
 ---
 title: More Efficient UD(A)Fs with PySpark
-date: 2019-05-01 12:30
-modified: 2019-05-01 12:30
+date: 2019-04-19 12:30
+modified: 2019-04-19 12:30
 category: post
 tags: spark, python, big data
 authors: Florian Wilhelm
+status: published
 summary: With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked around.
 ---
 
@@ -25,11 +26,11 @@ Just to give you a little overview about the functionality, take a look at the t
 | `GROUPED_MAP` | Group & Map | DataFrame → DataFrame | `df.apply(...)`     |
 | `GROUPED_AGG` | Reduce      | Series → Scalar       | `df.aggregate(...)` |
 
-Besides the return type of your UDF, the `pandas_udf` needs you to specify a function type which describes the general behavior of your UDF. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass `PandasUDFType.SCALAR`. This would also determine that your UDF retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the `transform` method of a Pandas dataframe. A `GROUPED_MAP` UDF is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation `GROUPED_AGG` which takes a Pandas Series as input and needs to return a scalar. Read more details in the [official Spark documentation][].
+Besides the return type of your UDF, the `pandas_udf` needs you to specify a function type which describes the general behavior of your UDF. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass `PandasUDFType.SCALAR`. This would also determine that your UDF retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the `transform` method of a Pandas dataframe. A `GROUPED_MAP` UDF is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation `GROUPED_AGG` which takes a Pandas Series as input and needs to return a scalar. Read more details about `pandas_udf` in the [official Spark documentation][].
 
 # Basic idea
 
-Our workaround will be quite simple. We make use of the [to_json][] and convert all columns with complex data types to JSON strings. Since Arrow can easily handle strings, we are able to use the [pandas_udf][] decorator. Within our UDF, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to JSON within our UDF, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from JSON to complex types with [from_json][]. The following figure illustrates the process.
+Our workaround will be quite simple. We make use of the [to_json][] function and convert all columns with complex data types to JSON strings. Since Arrow can easily handle strings, we are able to use the [pandas_udf][] decorator. Within our UDF, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to JSON within our UDF, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from JSON to complex types with [from_json][]. The following figure illustrates the process.
 
 <figure>
 <p align="center">
@@ -102,7 +103,7 @@ def complex_dtypes_from_json(df, col_dtypes):
     return df.select(*selects)
 ```
 
-The function `complex_dtypes_to_json` converts a given Spark dataframe to a new dataframe with all columns that have complex type replaced by JSON strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by `complex_dtypes_from_json` to convert exactly those columns back to their original type. You might find it strange that we define some `root` node in the schema. This is necessary due to some restrictions of Spark's [from_json][] that we circumvent by this. After the conversion, we drop this `root` struct again so that `complex_dtypes_to_json` and `complex_dtypes_from_json` are inverses of each other. We can now also easily define a `toPandas` which also works with complex Spark dataframes.
+The function `complex_dtypes_to_json` converts a given Spark dataframe to a new dataframe with all columns that have complex types replaced by JSON strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by `complex_dtypes_from_json` to convert exactly those columns back to their original type. You might find it strange that we define some `root` node in the schema. This is necessary due to some restrictions of Spark's [from_json][] that we circumvent by this. After the conversion, we drop this `root` struct again so that `complex_dtypes_to_json` and `complex_dtypes_from_json` are inverses of each other. We can now also easily define a `toPandas` which also works with complex Spark dataframes.
 
 ```python
 def toPandas(df):
@@ -119,7 +120,7 @@ def toPandas(df):
 
 ## 2. Conversion of Pandas Dataframe
 
-Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual UDF since we want to avoid probing every column containing strings. In the conversion to JSON, we add the `root` node explained above. 
+Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual UDF since we want to avoid probing every column containing strings. In the conversion to JSON, we add the `root` node as explained above. 
 
 ```python
 import json
@@ -169,7 +170,7 @@ def cols_to_json(df, columns):
 
 ## 3. Decorator
 
-At this point we got everything we need for our final decorators named `pandas_udf_ct` combining all our ingredients. Like Spark's official [pandas_udf][], our decorator takes the arguments `returnType` and `functionType`. It's just a tad more complicated in the sense that you first have to pass `returnType`, `functionType` which leaves you with a new function. This function takes the parameters `cols_in` and `cols_out` which specify which columns need to be converted to and from JSON. Only after passing those you end up having the actual decorator for your UDF. No need to despair, an example below illustrates the usage but first we take a look at the implementation.
+At this point we got everything we need for our final decorators named `pandas_udf_ct` combining all our ingredients. Like Spark's official [pandas_udf][], our decorator takes the arguments `returnType` and `functionType`. It's just a tad more complicated in the sense that you first have to pass `returnType`, `functionType` which leaves you with some special decorator. A function decorated with such a decorator takes the parameters `cols_in` and `cols_out` which specify which columns need to be converted to and from JSON. Only after passing those you end up with the actual UDF that you defined. No need to despair, an example below illustrates the usage but first we take a look at the implementation.
 
 ```python
 import json

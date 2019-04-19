@@ -165,7 +165,7 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 
-<link rel="canonical" href="https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html">
+<link rel="canonical" href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/">
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="spark,python,big data" />
@@ -174,9 +174,9 @@ init_mathjax();
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="More Efficient UD(A)Fs with PySpark"/>
-        <meta property="og:url" content="https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html"/>
+        <meta property="og:url" content="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/"/>
         <meta property="og:description" content="With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked around."/>
-        <meta property="article:published_time" content="2019-05-01" />
+        <meta property="article:published_time" content="2019-04-19" />
             <meta property="article:section" content="post" />
             <meta property="article:tag" content="spark" />
             <meta property="article:tag" content="python" />
@@ -238,7 +238,7 @@ Florian Wilhelm            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html"
+                    <a href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/"
                        rel="bookmark"
                        title="Permalink to More Efficient UD(A)Fs with PySpark">
                         More Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark
@@ -251,7 +251,7 @@ Florian Wilhelm            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2019-05-01T12:30:00+02:00"> May. 01, 2019</time>
+        <i class="fa fa-calendar"></i><time datetime="2019-04-19T12:30:00+02:00"> Apr. 19, 2019</time>
     </span>
 
 
@@ -302,9 +302,9 @@ Florian Wilhelm            </a>
 </tr>
 </tbody>
 </table>
-<p>Besides the return type of your <span class="caps">UDF</span>, the <code>pandas_udf</code> needs you to specify a function type which describes the general behavior of your <span class="caps">UDF</span>. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass <code>PandasUDFType.SCALAR</code>. This would also determine that your <span class="caps">UDF</span> retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the <code>transform</code> method of a Pandas dataframe. A <code>GROUPED_MAP</code> <span class="caps">UDF</span> is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation <code>GROUPED_AGG</code> which takes a Pandas Series as input and needs to return a scalar. Read more details in the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">official Spark documentation</a>.</p>
+<p>Besides the return type of your <span class="caps">UDF</span>, the <code>pandas_udf</code> needs you to specify a function type which describes the general behavior of your <span class="caps">UDF</span>. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass <code>PandasUDFType.SCALAR</code>. This would also determine that your <span class="caps">UDF</span> retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the <code>transform</code> method of a Pandas dataframe. A <code>GROUPED_MAP</code> <span class="caps">UDF</span> is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation <code>GROUPED_AGG</code> which takes a Pandas Series as input and needs to return a scalar. Read more details about <code>pandas_udf</code> in the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">official Spark documentation</a>.</p>
 <h1>Basic&nbsp;idea</h1>
-<p>Our workaround will be quite simple. We make use of the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.to_json">to_json</a> and convert all columns with complex data types to <span class="caps">JSON</span> strings. Since Arrow can easily handle strings, we are able to use the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a> decorator. Within our <span class="caps">UDF</span>, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to <span class="caps">JSON</span> within our <span class="caps">UDF</span>, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from <span class="caps">JSON</span> to complex types with <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a>. The following figure illustrates the&nbsp;process.</p>
+<p>Our workaround will be quite simple. We make use of the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.to_json">to_json</a> function and convert all columns with complex data types to <span class="caps">JSON</span> strings. Since Arrow can easily handle strings, we are able to use the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a> decorator. Within our <span class="caps">UDF</span>, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to <span class="caps">JSON</span> within our <span class="caps">UDF</span>, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from <span class="caps">JSON</span> to complex types with <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a>. The following figure illustrates the&nbsp;process.</p>
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/pandas_udf_complex.png" alt="Converting complex data types to JSON before applying the UDF">
@@ -372,7 +372,7 @@ Florian Wilhelm            </a>
 </pre></div>
 
 
-<p>The function <code>complex_dtypes_to_json</code> converts a given Spark dataframe to a new dataframe with all columns that have complex type replaced by <span class="caps">JSON</span> strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by <code>complex_dtypes_from_json</code> to convert exactly those columns back to their original type. You might find it strange that we define some <code>root</code> node in the schema. This is necessary due to some restrictions of Spark&#8217;s <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a> that we circumvent by this. After the conversion, we drop this <code>root</code> struct again so that <code>complex_dtypes_to_json</code> and <code>complex_dtypes_from_json</code> are inverses of each other. We can now also easily define a <code>toPandas</code> which also works with complex Spark&nbsp;dataframes.</p>
+<p>The function <code>complex_dtypes_to_json</code> converts a given Spark dataframe to a new dataframe with all columns that have complex types replaced by <span class="caps">JSON</span> strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by <code>complex_dtypes_from_json</code> to convert exactly those columns back to their original type. You might find it strange that we define some <code>root</code> node in the schema. This is necessary due to some restrictions of Spark&#8217;s <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a> that we circumvent by this. After the conversion, we drop this <code>root</code> struct again so that <code>complex_dtypes_to_json</code> and <code>complex_dtypes_from_json</code> are inverses of each other. We can now also easily define a <code>toPandas</code> which also works with complex Spark&nbsp;dataframes.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">toPandas</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Same as df.toPandas() but converts complex types to JSON first</span>
 
@@ -387,7 +387,7 @@ Florian Wilhelm            </a>
 
 
 <h2>2. Conversion of Pandas&nbsp;Dataframe</h2>
-<p>Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual <span class="caps">UDF</span> since we want to avoid probing every column containing strings. In the conversion to <span class="caps">JSON</span>, we add the <code>root</code> node explained&nbsp;above. </p>
+<p>Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual <span class="caps">UDF</span> since we want to avoid probing every column containing strings. In the conversion to <span class="caps">JSON</span>, we add the <code>root</code> node as explained&nbsp;above. </p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="k">def</span> <span class="nf">cols_from_json</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
@@ -434,7 +434,7 @@ Florian Wilhelm            </a>
 
 
 <h2>3.&nbsp;Decorator</h2>
-<p>At this point we got everything we need for our final decorators named <code>pandas_udf_ct</code> combining all our ingredients. Like Spark&#8217;s official <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a>, our decorator takes the arguments <code>returnType</code> and <code>functionType</code>. It&#8217;s just a tad more complicated in the sense that you first have to pass <code>returnType</code>, <code>functionType</code> which leaves you with a new function. This function takes the parameters <code>cols_in</code> and <code>cols_out</code> which specify which columns need to be converted to and from <span class="caps">JSON</span>. Only after passing those you end up having the actual decorator for your <span class="caps">UDF</span>. No need to despair, an example below illustrates the usage but first we take a look at the&nbsp;implementation.</p>
+<p>At this point we got everything we need for our final decorators named <code>pandas_udf_ct</code> combining all our ingredients. Like Spark&#8217;s official <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a>, our decorator takes the arguments <code>returnType</code> and <code>functionType</code>. It&#8217;s just a tad more complicated in the sense that you first have to pass <code>returnType</code>, <code>functionType</code> which leaves you with some special decorator. A function decorated with such a decorator takes the parameters <code>cols_in</code> and <code>cols_out</code> which specify which columns need to be converted to and from <span class="caps">JSON</span>. Only after passing those you end up with the actual <span class="caps">UDF</span> that you defined. No need to despair, an example below illustrates the usage but first we take a look at the&nbsp;implementation.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">pandas_udf</span><span class="p">,</span> <span class="n">PandasUDFType</span>
@@ -555,7 +555,7 @@ Florian Wilhelm            </a>
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'more_efficient_udfs_with_pyspark';
-                var disqus_url = 'https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html';
+                var disqus_url = 'https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/';
 
             var disqus_config = function () {
                 this.language = "en";

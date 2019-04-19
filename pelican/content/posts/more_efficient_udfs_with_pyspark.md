@@ -15,7 +15,7 @@ If you are just using simple data types in your Spark dataframes everything will
 To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let's first take a look into which features `pandas_udf` provides and why we should make use of it.
 
 
-# Features of `pandas_udf`
+# Features of Sparks 2.3's pandas\_udf
 
 Just to give you a little overview about the functionality, take a look at the table below.
 
@@ -287,3 +287,4 @@ We have shown a practical workaround to deal with UDFs and complex data types fo
 [Pandas apply]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html
 [pyspark23_udaf.py]: {filename}/src/pyspark23_udaf.py
 [official Spark documentation]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf
+[Apache Arrow]: https://arrow.apache.org/

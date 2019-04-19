@@ -444,16 +444,16 @@ Florian Wilhelm            </a>
     <span class="sd">&quot;&quot;&quot;Decorator for UDAFs with Spark &gt;= 2.3 and complex types</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        returnType: the return type of the user-defined function. The value can be either a pyspark.sql.types.DataType</span>
-<span class="sd">                    object or a DDL-formatted type string.</span>
+<span class="sd">        returnType: the return type of the user-defined function. The value can be either a </span>
+<span class="sd">                    pyspark.sql.types.DataType object or a DDL-formatted type string.</span>
 <span class="sd">        functionType: an enum value in pyspark.sql.functions.PandasUDFType. Default: SCALAR.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Function with arguments `cols_in` and `cols_out` defining column names having complex types</span>
-<span class="sd">        that need to be transformed during input and output for GROUPED_MAP. In case of SCALAR, we are</span>
-<span class="sd">        dealing with a series and thus transformation is done if `cols_in`/`cols_out` evaluates to `True`.</span>
+<span class="sd">        Function with arguments `cols_in` and `cols_out` defining column names having complex </span>
+<span class="sd">        types that need to be transformed during input and output for GROUPED_MAP. In case of </span>
+<span class="sd">        SCALAR, we are dealing with a series and thus transformation is done if `cols_in` or </span>
+<span class="sd">        `cols_out` evaluates to `True`. </span>
 <span class="sd">        Calling this functions with these arguments returns the actual UDF.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returnType</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">functionType</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -481,7 +481,8 @@ Florian Wilhelm            </a>
                     <span class="n">res</span> <span class="o">=</span> <span class="n">cols_to_json</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">cols_out</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">cols_out</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">==</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">:</span>
                     <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ct_val_to_json</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">==</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">GROUPED_AGG</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> 
+                      <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">==</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">GROUPED_AGG</span><span class="p">):</span>
                     <span class="n">res</span> <span class="o">=</span> <span class="n">ct_val_to_json</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">res</span>
 

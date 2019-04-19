@@ -225,17 +225,16 @@ class pandas_udf_ct(object):
     """Decorator for UDAFs with Spark >= 2.3 and complex types
 
     Args:
-        returnType: the return type of the user-defined function. The value can be either a pyspark.sql.types.DataType
-                    object or a DDL-formatted type string.
+        returnType: the return type of the user-defined function. The value can be either a
+                    pyspark.sql.types.DataType object or a DDL-formatted type string.
         functionType: an enum value in pyspark.sql.functions.PandasUDFType. Default: SCALAR.
-        logLevel: logging level for UDF
 
     Returns:
-        Function with arguments `cols_in` and `cols_out` defining column names having complex types
-        that need to be transformed during input and output for GROUPED_MAP. In case of SCALAR, we are
-        dealing with a series and thus transformation is done if `cols_in`/`cols_out` evaluates to `True`.
+        Function with arguments `cols_in` and `cols_out` defining column names having complex
+        types that need to be transformed during input and output for GROUPED_MAP. In case of
+        SCALAR, we are dealing with a series and thus transformation is done if `cols_in` or
+        `cols_out` evaluates to `True`.
         Calling this functions with these arguments returns the actual UDF.
-
     """
 
     def __init__(self, returnType=None, functionType=None, logLevel=logging.INFO):

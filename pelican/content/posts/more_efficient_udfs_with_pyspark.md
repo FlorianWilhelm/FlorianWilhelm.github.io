@@ -130,7 +130,7 @@ def cols_from_json(df, columns):
 
     Args:
         df (dataframe): Pandas DataFrame
-        columns ([str]): list of column names
+        columns (iter): list of or iterator over column names
 
     Returns:
         dataframe: new dataframe with converted columns
@@ -251,10 +251,8 @@ df.show()
 For sake of simplicity, let's say we just want to add to the dictionaries in the `maps` column a key `x` with value `42`. We first use `complex_dtypes_to_json` to get a converted Spark dataframe `df_json` and the converted columns `ct_cols`. We define a UDF `normalize` and decorate it with our `pandas_udf_ct` specifying the return type using `dfj_json.schema` (since we only want simple data types) and the function type `GROUPED_MAP`. 
 
 ```python
-# convert complex columns to JSON strings
 df_json, ct_cols = complex_dtypes_to_json(df)
 
-# define your UDF
 def change_vals(dct):
     dct['x'] = 42
     return dct
@@ -265,20 +263,17 @@ def normalize(pdf):
     return pdf
 
 ```
-Just for demonstration, we now group by the `vals` column and apply our `normalize` UDF on each group. Instead of just passing `normalize` we have to call it first with parameters `cols_in` and `cols_out` as explained before. As input columns we pass the output `ct_cols` from our `complex_dtypes_to_json` function and since we do not change the shape of our dataframe we use the same for the output `cols_out`. In case your UDF removes columns or adds additional ones with complex data types, you would have to change `cols_out` accordingly. As a final step we use `complex_dtypes_from_json` to convert the JSON strings of our transformed Spark dataframe back to complex data types.
+Just for demonstration, we now group by the `vals` column and apply our `normalize` UDF on each group. Instead of just passing `normalize` we have to call it first with parameters `cols_in` and `cols_out` as explained before. As input columns we pass the output `ct_cols` from our `complex_dtypes_to_json` function and since we do not change the shape of our dataframe within the UDF, we use the same for the output `cols_out`. In case your UDF removes columns or adds additional ones with complex data types, you would have to change `cols_out` accordingly. As a final step we use `complex_dtypes_from_json` to convert the JSON strings of our transformed Spark dataframe back to complex data types.
 ```python
 df_json = df_json.groupby("vals").apply(normalize(cols_in=ct_cols, cols_out=ct_cols))
 
-cols_dtypes = {field.name: field.dataType for field in df.schema if is_complex_dtype(field.dataType)}
-df_final = complex_dtypes_from_json(df_json, cols_dtypes)
+df_final = complex_dtypes_from_json(df_json, ct_cols)
 df_final.show()
 ```
 
-#TODO::: Checken ob das oben nicht auch einfach mit ct_cols geht.
-
 # Conclusion
 
-We have shown a practical workaround to deal with UDFs and complex datatypes for Spark 2.3/4. As with every workaround, it's far from perfect and hopefully the issue [SPARK-21187] will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on it.
+We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it's far from perfect and hopefully the issue [SPARK-21187] will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on it.
 
 
 [from_json]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json

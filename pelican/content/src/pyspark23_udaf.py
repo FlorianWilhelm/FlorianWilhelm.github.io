@@ -33,8 +33,7 @@ A minimal example is::
     df_json = df_json.groupby("vals").apply(normalize(cols_in=ct_cols, cols_out=ct_cols))
 
     # convert back to complex types from string
-    cols_dtypes = {field.name: field.dataType for field in df.schema if is_complex_dtype(field.dataType)}
-    df_final = complex_dtypes_from_json(df_json, cols_dtypes)
+    df_final = complex_dtypes_from_json(df_json, ct_cols)
     df_final.show()
 """
 import os
@@ -197,7 +196,7 @@ def cols_to_json(df, columns):
 
     Args:
         df (dataframe): Pandas DataFrame
-        columns ([str]): list of column names
+        columns (iter): list of or iterator over column names
 
     Returns:
         dataframe: new dataframe with converted columns

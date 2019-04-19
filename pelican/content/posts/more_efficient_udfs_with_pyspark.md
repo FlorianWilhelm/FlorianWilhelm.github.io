@@ -16,7 +16,7 @@ If you are just using simple data types in your Spark dataframes everything will
 To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let's first take a look into which features `pandas_udf` provides and why we should make use of it.
 
 
-# Features of Sparks 2.3's pandas\_udf
+# Features of Spark 2.3's pandas\_udf
 
 Just to give you a little overview about the functionality, take a look at the table below.
 

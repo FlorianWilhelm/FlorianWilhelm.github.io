@@ -1,11 +1,10 @@
 ---
 title: More Efficient UD(A)Fs with PySpark
-date: 2019-10-11 12:30
-modified: 2019-03-08 12:30
+date: 2019-05-01 12:30
+modified: 2019-05-01 12:30
 category: post
 tags: spark, python, big data
 authors: Florian Wilhelm
-status: draft
 summary: With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked around.
 ---
 

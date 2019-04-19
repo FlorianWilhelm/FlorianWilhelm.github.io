@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>More Efficient UD(A)Fs with PySpark - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+
+/*some stuff for output/input prompts*/
+div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
+div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
+div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
+div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
+@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
+div.prompt:empty{padding-top:0;padding-bottom:0}
+div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
+div.inner_cell{width:90%;}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
+div.input_prompt{color:navy;border-top:1px solid transparent;}
+div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
+div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
+div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
+div.output_prompt{color:darkred;}
+
+a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
+h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
+/* end stuff for output/input prompts*/
+
+
+.highlight-ipynb .hll { background-color: #ffffcc }
+.highlight-ipynb  { background: #f8f8f8; }
+.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
+.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
+.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight-ipynb .o { color: #666666 } /* Operator */
+.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
+.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
+.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
+.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
+.highlight-ipynb .go { color: #888888 } /* Generic.Output */
+.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
+.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
+.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
+.highlight-ipynb .m { color: #666666 } /* Literal.Number */
+.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
+.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
+.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
+.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight-ipynb .no { color: #880000 } /* Name.Constant */
+.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
+.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
+.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
+.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
+.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
+.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
+.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
+.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
+.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+div.entry-content {
+  overflow: visible;
+  padding: 8px;
+}
+.input_area {
+  padding: 0.2em;
+}
+
+a.heading-anchor {
+ white-space: normal;
+}
+
+.rendered_html
+code {
+ font-size: .8em;
+}
+
+pre.ipynb {
+  color: black;
+  background: #f7f7f7;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0px;
+  font-size: 13px;
+}
+
+/* remove the prompt div from text cells */
+div.text_cell .prompt {
+    display: none;
+}
+
+/* remove horizontal padding from text cells, */
+/* so it aligns with outer body text */
+div.text_cell_render {
+    padding: 0.5em 0em;
+}
+
+img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            },
+            displayAlign: 'center', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+
+<link rel="canonical" href="https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="spark,python,big data" />
+        <meta name="description" content="With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked around." />
+
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="More Efficient UD(A)Fs with PySpark"/>
+        <meta property="og:url" content="https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html"/>
+        <meta property="og:description" content="With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked around."/>
+        <meta property="article:published_time" content="2019-05-01" />
+            <meta property="article:section" content="post" />
+            <meta property="article:tag" content="spark" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="big data" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="https://florianwilhelm.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="https://florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+
+
+        <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html"
+                       rel="bookmark"
+                       title="Permalink to More Efficient UD(A)Fs with PySpark">
+                        More Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2019-05-01T12:30:00+02:00"> May. 01, 2019</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/spark/">spark</a>
+        /
+	<a href="https://florianwilhelm.info/tag/python/">python</a>
+        /
+	<a href="https://florianwilhelm.info/tag/big-data/">big data</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Some time has passed since my blog post on <a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with PySpark</a> which demonstrated how to define <em>User-Defined Aggregation Function</em> (<span class="caps">UDAF</span>) with <a href="https://spark.apache.org/docs/latest/api/python/index.html">PySpark</a> 2.1 that allow you to use <a href="http://pandas.pydata.org/">Pandas</a>. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a> decorator. This decorator gives you the same functionality as our custom <code>pandas_udaf</code> in the former post but performs much faster if [Apache Arrow][] is activated. <em>Nice, so life is good now? No more workarounds!? Well,&nbsp;almost&#8230;</em></p>
+<p>If you are just using simple data types in your Spark dataframes everything will work and even blazingly fast if you got Arrow activated but don&#8217;t you dare dealing with complex data types like maps (dictionaries), arrays (lists) and structs. In that case, all you will get is a <code>TypeError: Unsupported type in conversion to Arrow</code> which is already tracked under issue <a href="https://jira.apache.org/jira/browse/SPARK-21187"><span class="caps">SPARK</span>-21187</a>. Even a simple <code>toPandas()</code> does not work which might get you to deactivate Arrow support altogether but this would also keep you from using <code>pandas_udf</code> which is really&nbsp;nice&#8230; </p>
+<p>To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let&#8217;s first take a look into which features <code>pandas_udf</code> provides and why we should make use of&nbsp;it.</p>
+<h1>Features of <code>pandas_udf</code></h1>
+<p>Just to give you a little overview about the functionality, take a look at the table&nbsp;below.</p>
+<table>
+<thead>
+<tr>
+<th>function type</th>
+<th>Operation</th>
+<th>Input → Output</th>
+<th>Pandas equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SCALAR</code></td>
+<td>Mapping</td>
+<td>Series → Series</td>
+<td><code>df.transform(...)</code></td>
+</tr>
+<tr>
+<td><code>GROUPED_MAP</code></td>
+<td>Group <span class="amp">&amp;</span> Map</td>
+<td>DataFrame → DataFrame</td>
+<td><code>df.apply(...)</code></td>
+</tr>
+<tr>
+<td><code>GROUPED_AGG</code></td>
+<td>Reduce</td>
+<td>Series → Scalar</td>
+<td><code>df.aggregate(...)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Besides the return type of your <span class="caps">UDF</span>, the <code>pandas_udf</code> needs you to specify a function type which describes the general behavior of your <span class="caps">UDF</span>. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass <code>PandasUDFType.SCALAR</code>. This would also determine that your <span class="caps">UDF</span> retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the <code>transform</code> method of a Pandas dataframe. A <code>GROUPED_MAP</code> <span class="caps">UDF</span> is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation <code>GROUPED_AGG</code> which takes a Pandas Series as input and needs to return a scalar. Read more details in the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">official Spark documentation</a>.</p>
+<h1>Basic&nbsp;idea</h1>
+<p>Our workaround will be quite simple. We make use of the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.to_json">to_json</a> and convert all columns with complex data types to <span class="caps">JSON</span> strings. Since Arrow can easily handle strings, we are able to use the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a> decorator. Within our <span class="caps">UDF</span>, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to <span class="caps">JSON</span> within our <span class="caps">UDF</span>, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from <span class="caps">JSON</span> to complex types with <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a>. The following figure illustrates the&nbsp;process.</p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/pandas_udf_complex.png" alt="Converting complex data types to JSON before applying the UDF">
+</p>
+</figure>
+
+<p>Our workaround involves a lot of bookkeeping and surely is not that user-friendly. Like we did in the last blog post, it is again possible to hide much of the details with the help of a <a href="https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator">Python decorator</a> from a user. So let&#8217;s get&nbsp;started!</p>
+<h1>Implementation</h1>
+<p>We split our implementation into three different kinds of functionalities: 1. functions that convert a Spark dataframe to and from <span class="caps">JSON</span>, 2. functions that do the same for Pandas dataframes and 3. we combine all of them in one decorator. The final and extended implementation can be found in the file <a href="https://florianwilhelm.info/src/pyspark23_udaf.py">pyspark23_udaf.py</a> where also some logging mechanism for easier debugging of UDFs was&nbsp;added. </p>
+<h2>1. Conversion of Spark&nbsp;Dataframe</h2>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">MapType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">,</span> <span class="n">StructField</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">to_json</span><span class="p">,</span> <span class="n">from_json</span>
+
+<span class="k">def</span> <span class="nf">is_complex_dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check is dtype is a complex type</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dtype: Spark Datatype</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Bool: if dtype is complex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="p">(</span><span class="n">MapType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">complex_dtypes_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts all columns with complex dtypes to JSON</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: Spark dataframe</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Spark dataframe and dictionary of converted columns and their data types</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conv_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">selects</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">schema</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_complex_dtype</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">dataType</span><span class="p">):</span>
+            <span class="n">conv_cols</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">dataType</span>
+            <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to_json</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="n">selects</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">conv_cols</span>
+
+
+<span class="k">def</span> <span class="nf">complex_dtypes_from_json</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col_dtypes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts JSON columns to complex types</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: Spark dataframe</span>
+<span class="sd">        col_dtypes (dict): dictionary of columns names and their datatype</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Spark dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">selects</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">col_dtypes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span><span class="n">StructField</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">col_dtypes</span><span class="p">[</span><span class="n">column</span><span class="p">])])</span>
+            <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">from_json</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">getItem</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">column</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="n">selects</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The function <code>complex_dtypes_to_json</code> converts a given Spark dataframe to a new dataframe with all columns that have complex type replaced by <span class="caps">JSON</span> strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by <code>complex_dtypes_from_json</code> to convert exactly those columns back to their original type. You might find it strange that we define some <code>root</code> node in the schema. This is necessary due to some restrictions of Spark&#8217;s <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a> that we circumvent by this. After the conversion, we drop this <code>root</code> struct again so that <code>complex_dtypes_to_json</code> and <code>complex_dtypes_from_json</code> are inverses of each other. We can now also easily define a <code>toPandas</code> which also works with complex Spark&nbsp;dataframes.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">toPandas</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Same as df.toPandas() but converts complex types to JSON first</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: Spark dataframe</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Pandas dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">complex_dtypes_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+</pre></div>
+
+
+<h2>2. Conversion of Pandas&nbsp;Dataframe</h2>
+<p>Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual <span class="caps">UDF</span> since we want to avoid probing every column containing strings. In the conversion to <span class="caps">JSON</span>, we add the <code>root</code> node explained&nbsp;above. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">cols_from_json</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts Pandas dataframe colums from json</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (dataframe): Pandas DataFrame</span>
+<span class="sd">        columns (iter): list of or iterator over column names</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dataframe: new dataframe with converted columns</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">ct_val_to_json</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a scalar complex type value to JSON</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: map or list complex value</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: JSON string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+
+
+<span class="k">def</span> <span class="nf">cols_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts Pandas dataframe columns to json and adds root handle</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (dataframe): Pandas DataFrame</span>
+<span class="sd">        columns ([str]): list of column names</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dataframe: new dataframe with converted columns</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ct_val_to_json</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+
+
+<h2>3.&nbsp;Decorator</h2>
+<p>At this point we got everything we need for our final decorators named <code>pandas_udf_ct</code> combining all our ingredients. Like Spark&#8217;s official <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a>, our decorator takes the arguments <code>returnType</code> and <code>functionType</code>. It&#8217;s just a tad more complicated in the sense that you first have to pass <code>returnType</code>, <code>functionType</code> which leaves you with a new function. This function takes the parameters <code>cols_in</code> and <code>cols_out</code> which specify which columns need to be converted to and from <span class="caps">JSON</span>. Only after passing those you end up having the actual decorator for your <span class="caps">UDF</span>. No need to despair, an example below illustrates the usage but first we take a look at the&nbsp;implementation.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">pandas_udf</span><span class="p">,</span> <span class="n">PandasUDFType</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="k">class</span> <span class="nc">pandas_udf_ct</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorator for UDAFs with Spark &gt;= 2.3 and complex types</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        returnType: the return type of the user-defined function. The value can be either a pyspark.sql.types.DataType</span>
+<span class="sd">                    object or a DDL-formatted type string.</span>
+<span class="sd">        functionType: an enum value in pyspark.sql.functions.PandasUDFType. Default: SCALAR.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Function with arguments `cols_in` and `cols_out` defining column names having complex types</span>
+<span class="sd">        that need to be transformed during input and output for GROUPED_MAP. In case of SCALAR, we are</span>
+<span class="sd">        dealing with a series and thus transformation is done if `cols_in`/`cols_out` evaluates to `True`.</span>
+<span class="sd">        Calling this functions with these arguments returns the actual UDF.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returnType</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">functionType</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">returnType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">=</span> <span class="n">functionType</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">converter</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">cols_in</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cols_out</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">cols_in</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">cols_in</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cols_out</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">cols_out</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+            <span class="nd">@pandas_udf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">return_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">udf_wrapper</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">cols_from_json</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">cols_in</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cols_in</span><span class="p">:</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">==</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">GROUPED_MAP</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+                        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">cols_to_json</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">cols_out</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">cols_out</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">==</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">:</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ct_val_to_json</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_type</span> <span class="o">==</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">GROUPED_AGG</span><span class="p">:</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">ct_val_to_json</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">res</span>
+
+            <span class="k">return</span> <span class="n">udf_wrapper</span>
+
+        <span class="k">return</span> <span class="n">converter</span>
+</pre></div>
+
+
+<p>It&#8217;s just a typical decorator-with-parameters implementation but with one more layer of wrapping for <code>cols_in</code> and <code>cols_out</code>.  </p>
+<h1>Usage</h1>
+<p>An example says more than one thousand words of explanation. Let&#8217;s first create some dummy Spark dataframe with complex data&nbsp;types:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">Row</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="c1"># create some dummy data</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mf">1.</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">Row</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+                            <span class="p">(</span><span class="mf">2.</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="n">Row</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
+                            <span class="p">(</span><span class="mf">3.</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">],</span> <span class="n">Row</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">))],</span>
+                           <span class="n">schema</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vals&#39;</span><span class="p">,</span> <span class="s1">&#39;maps&#39;</span><span class="p">,</span> <span class="s1">&#39;lists&#39;</span><span class="p">,</span> <span class="s1">&#39;structs&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;lists&#39;</span><span class="p">)</span>  <span class="c1"># only Spark 2.4 supports ArrayTypes in to_json!</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p>For sake of simplicity, let&#8217;s say we just want to add to the dictionaries in the <code>maps</code> column a key <code>x</code> with value <code>42</code>. We first use <code>complex_dtypes_to_json</code> to get a converted Spark dataframe <code>df_json</code> and the converted columns <code>ct_cols</code>. We define a <span class="caps">UDF</span> <code>normalize</code> and decorate it with our <code>pandas_udf_ct</code> specifying the return type using <code>dfj_json.schema</code> (since we only want simple data types) and the function type <code>GROUPED_MAP</code>. </p>
+<div class="highlight"><pre><span></span><span class="n">df_json</span><span class="p">,</span> <span class="n">ct_cols</span> <span class="o">=</span> <span class="n">complex_dtypes_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">change_vals</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+    <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="k">return</span> <span class="n">dct</span>
+
+<span class="nd">@pandas_udf_ct</span><span class="p">(</span><span class="n">df_json</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">PandasUDFType</span><span class="o">.</span><span class="n">GROUPED_MAP</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">pdf</span><span class="p">):</span>
+    <span class="n">pdf</span><span class="p">[</span><span class="s1">&#39;maps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">change_vals</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pdf</span>
+</pre></div>
+
+
+<p>Just for demonstration, we now group by the <code>vals</code> column and apply our <code>normalize</code> <span class="caps">UDF</span> on each group. Instead of just passing <code>normalize</code> we have to call it first with parameters <code>cols_in</code> and <code>cols_out</code> as explained before. As input columns we pass the output <code>ct_cols</code> from our <code>complex_dtypes_to_json</code> function and since we do not change the shape of our dataframe within the <span class="caps">UDF</span>, we use the same for the output <code>cols_out</code>. In case your <span class="caps">UDF</span> removes columns or adds additional ones with complex data types, you would have to change <code>cols_out</code> accordingly. As a final step we use <code>complex_dtypes_from_json</code> to convert the <span class="caps">JSON</span> strings of our transformed Spark dataframe back to complex data&nbsp;types.</p>
+<div class="highlight"><pre><span></span><span class="n">df_json</span> <span class="o">=</span> <span class="n">df_json</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;vals&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">normalize</span><span class="p">(</span><span class="n">cols_in</span><span class="o">=</span><span class="n">ct_cols</span><span class="p">,</span> <span class="n">cols_out</span><span class="o">=</span><span class="n">ct_cols</span><span class="p">))</span>
+
+<span class="n">df_final</span> <span class="o">=</span> <span class="n">complex_dtypes_from_json</span><span class="p">(</span><span class="n">df_json</span><span class="p">,</span> <span class="n">ct_cols</span><span class="p">)</span>
+<span class="n">df_final</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<h1>Conclusion</h1>
+<p>We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it&#8217;s far from perfect and hopefully the issue <a href="https://jira.apache.org/jira/browse/SPARK-21187"><span class="caps">SPARK</span>-21187</a> will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on&nbsp;it.</p>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
+        <li><a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
+        <li><a href="https://florianwilhelm.info/2018/03/isolated_environments_with_pyspark/">Managing isolated Environments with&nbsp;PySpark</a></li>
+        <li><a href="https://florianwilhelm.info/2016/10/python_udf_in_hive/">Hive UDFs and UDAFs with&nbsp;Python</a></li>
+        <li><a href="https://florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'more_efficient_udfs_with_pyspark';
+                var disqus_url = 'https://florianwilhelm.info/drafts/more_efficient_udfs_with_pyspark.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/causal-inference/">
+                            causal inference
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/deep-learning/">
+                            deep learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gans/">
+                            GANs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
+                            kalman filter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/nlp/">
+                            nlp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/production/">
+                            production
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/programming/">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://florianwilhelm.info/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
+                            recommender systems
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
+                            semi-supervised
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/spark/">
+                            spark
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/template/">
+                            template
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2019 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
+</body>
+</html>

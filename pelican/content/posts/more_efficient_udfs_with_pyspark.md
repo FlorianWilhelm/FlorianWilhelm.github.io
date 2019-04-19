@@ -16,7 +16,7 @@ If you are just using simple data types in your Spark dataframes everything will
 To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let's first take a look into which features `pandas_udf` provides and why we should make use of it.
 
 
-# Features of Spark 2.3's pandas\_udf
+## Features of Spark 2.3's pandas\_udf
 
 Just to give you a little overview about the functionality, take a look at the table below.
 
@@ -28,7 +28,7 @@ Just to give you a little overview about the functionality, take a look at the t
 
 Besides the return type of your UDF, the `pandas_udf` needs you to specify a function type which describes the general behavior of your UDF. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass `PandasUDFType.SCALAR`. This would also determine that your UDF retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the `transform` method of a Pandas dataframe. A `GROUPED_MAP` UDF is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation `GROUPED_AGG` which takes a Pandas Series as input and needs to return a scalar. Read more details about `pandas_udf` in the [official Spark documentation][].
 
-# Basic idea
+## Basic idea
 
 Our workaround will be quite simple. We make use of the [to_json][] function and convert all columns with complex data types to JSON strings. Since Arrow can easily handle strings, we are able to use the [pandas_udf][] decorator. Within our UDF, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to JSON within our UDF, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from JSON to complex types with [from_json][]. The following figure illustrates the process.
 
@@ -40,11 +40,11 @@ Our workaround will be quite simple. We make use of the [to_json][] function and
 
 Our workaround involves a lot of bookkeeping and surely is not that user-friendly. Like we did in the last blog post, it is again possible to hide much of the details with the help of a [Python decorator][] from a user. So let's get started!
 
-# Implementation
+## Implementation
 
 We split our implementation into three different kinds of functionalities: 1. functions that convert a Spark dataframe to and from JSON, 2. functions that do the same for Pandas dataframes and 3. we combine all of them in one decorator. The final and extended implementation can be found in the file [pyspark23_udaf.py][] where also some logging mechanism for easier debugging of UDFs was added. 
 
-## 1. Conversion of Spark Dataframe
+### 1. Conversion of Spark Dataframe
 
 ```python
 from pyspark.sql.types import MapType, StructType, ArrayType, StructField
@@ -118,7 +118,7 @@ def toPandas(df):
     return complex_dtypes_to_json(df)[0].toPandas()
 ```
 
-## 2. Conversion of Pandas Dataframe
+### 2. Conversion of Pandas Dataframe
 
 Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual UDF since we want to avoid probing every column containing strings. In the conversion to JSON, we add the `root` node as explained above. 
 
@@ -168,7 +168,7 @@ def cols_to_json(df, columns):
 ```
 
 
-## 3. Decorator
+### 3. Decorator
 
 At this point we got everything we need for our final decorators named `pandas_udf_ct` combining all our ingredients. Like Spark's official [pandas_udf][], our decorator takes the arguments `returnType` and `functionType`. It's just a tad more complicated in the sense that you first have to pass `returnType`, `functionType` which leaves you with some special decorator. A function decorated with such a decorator takes the parameters `cols_in` and `cols_out` which specify which columns need to be converted to and from JSON. Only after passing those you end up with the actual UDF that you defined. No need to despair, an example below illustrates the usage but first we take a look at the implementation.
 
@@ -231,7 +231,7 @@ class pandas_udf_ct(object):
 
 It's just a typical decorator-with-parameters implementation but with one more layer of wrapping for `cols_in` and `cols_out`.  
 
-# Usage
+## Usage
 
 An example says more than one thousand words of explanation. Let's first create some dummy Spark dataframe with complex data types:
 
@@ -272,7 +272,7 @@ df_final = complex_dtypes_from_json(df_json, ct_cols)
 df_final.show()
 ```
 
-# Conclusion
+## Conclusion
 
 We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it's far from perfect and hopefully the issue [SPARK-21187] will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on it.
 

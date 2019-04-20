@@ -239,7 +239,6 @@ An example says more than one thousand words of explanation. Let's first create 
 from pyspark.sql.types import Row
 from pyspark.sql import SparkSession
 
-# create some dummy data
 spark = SparkSession.builder.getOrCreate()
 df = spark.createDataFrame([(1., {'a': 1}, ["a", "a"], Row(a=1)),
                             (2., {'b': 1}, ["a", "b"], Row(a=42)),

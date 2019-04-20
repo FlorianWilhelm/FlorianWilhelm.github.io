@@ -51,7 +51,7 @@ from pyspark.sql.types import MapType, StructType, ArrayType, StructField
 from pyspark.sql.functions import to_json, from_json
 
 def is_complex_dtype(dtype):
-    """Check is dtype is a complex type
+    """Check if dtype is a complex type
 
     Args:
         dtype: Spark Datatype

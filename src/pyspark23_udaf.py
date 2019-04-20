@@ -111,7 +111,7 @@ class DropDuplicates(logging.Filter):
 
 
 def is_complex_dtype(dtype):
-    """Check is dtype is a complex type
+    """Check if dtype is a complex type
 
     Args:
         dtype: Spark data type

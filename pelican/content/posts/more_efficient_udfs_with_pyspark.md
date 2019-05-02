@@ -240,6 +240,8 @@ from pyspark.sql.types import Row
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.execution.arrow.enabled", "true")
+
 df = spark.createDataFrame([(1., {'a': 1}, ["a", "a"], Row(a=1)),
                             (2., {'b': 1}, ["a", "b"], Row(a=42)),
                             (3., {'a': 1, 'b': 3}, ["d","e"], Row(a=1))],

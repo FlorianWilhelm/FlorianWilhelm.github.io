@@ -154,7 +154,9 @@ It is actually easier than it looks. In the ``main`` function we initialize the 
 
 ## Conclusion
 
-Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without access to the cluster's nodes. Since the explained method also works with [Jupyter][] this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project itself.
+Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without access to the cluster's nodes. At this point I want to mention the tool [Border-Patrol][] that helps us quite a lot in debugging Spark environments and is really easy to use. It tells you about all imported packages by your application, their versions and if these packages were taken from the environment or from the system installation of the cluster nodes. 
+
+Since the explained method also works with [Jupyter][] this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project itself.
 
 
 [PySpark]: http://spark.apache.org/docs/latest/api/python/pyspark.html
@@ -170,3 +172,5 @@ Setting up an isolated environment like this is a bit cumbersome and surely also
 [coffee boat]: https://github.com/nteract/coffee_boat
 [PyScaffold]: http://pyscaffold.org/
 [Jupyter]: http://jupyter.org/
+[Border-Patrol]: https://border-patrol.readthedocs.io/
+

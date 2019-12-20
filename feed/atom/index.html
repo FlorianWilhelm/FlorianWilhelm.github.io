@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2019-04-19T12:30:00+02:00</updated><entry><title>More Efficient UD(A)Fs with PySpark</title><link href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/" rel="alternate"></link><published>2019-04-19T12:30:00+02:00</published><updated>2019-04-19T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-04-19:/2019/04/more_efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked&amp;nbsp;around.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Some time has passed since my blog post on &lt;a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt; which demonstrated how to define &lt;em&gt;User-Defined Aggregation Function&lt;/em&gt; (&lt;span class="caps"&gt;UDAF&lt;/span&gt;) with &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt; 2.1 that allow you to use &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt; decorator. This decorator gives you the same functionality as our custom &lt;code&gt;pandas_udaf&lt;/code&gt; in the former post but performs much faster if &lt;a href="https://arrow.apache.org/"&gt;Apache Arrow&lt;/a&gt; is activated. &lt;em&gt;Nice, so life is good now? No more workarounds!? Well,&amp;nbsp;almost&amp;#8230;&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2019-12-20T18:00:00+01:00</updated><entry><title>Are you sure about that?! Uncertainty Quantification in AI</title><link href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/" rel="alternate"></link><published>2019-10-10T18:00:00+02:00</published><updated>2019-12-20T18:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-10-10:/2019/10/uncertainty_quantification_in_ai/</id><summary type="html">&lt;p&gt;With the advent of Deep Learning (&lt;span class="caps"&gt;DL&lt;/span&gt;), the field of &lt;span class="caps"&gt;AI&lt;/span&gt; made a giant leap forward and it is nowadays applied in many industrial use-cases. Especially critical systems like autonomous driving, require that &lt;span class="caps"&gt;DL&lt;/span&gt; methods not only produce a prediction but also state the certainty about the prediction in order …&lt;/p&gt;</summary><content type="html">&lt;p&gt;With the advent of Deep Learning (&lt;span class="caps"&gt;DL&lt;/span&gt;), the field of &lt;span class="caps"&gt;AI&lt;/span&gt; made a giant leap forward and it is nowadays applied in many industrial use-cases. Especially critical systems like autonomous driving, require that &lt;span class="caps"&gt;DL&lt;/span&gt; methods not only produce a prediction but also state the certainty about the prediction in order to assess risks and&amp;nbsp;failure.&lt;/p&gt;
+&lt;p&gt;In my talk, I will give an introduction to different kinds of uncertainty, i.e. epistemic and aleatoric. To have a baseline for comparison, the classical method of Gaussian Processes for regression problems is presented. I then elaborate on different &lt;span class="caps"&gt;DL&lt;/span&gt; methods for uncertainty quantification like Quantile Regression, Monte-Carlo Dropout, and Deep Ensembles. The talk is concluded with a comparison of these techniques to Gaussian Processes and the current state of the&amp;nbsp;art.&lt;/p&gt;
+&lt;p&gt;This talk was presented at &lt;a href="https://de.pycon.org/"&gt;PyCon.&lt;span class="caps"&gt;DE&lt;/span&gt; &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; PyData Berlin 2019&lt;/a&gt; and &lt;a href="https://bigdataconference.lt/2019/"&gt;Big Data Conference Vilnius 2019&lt;/a&gt;. The slides are available on &lt;a href="https://www.slideshare.net/FlorianWilhelm2/uncertainty-quantification-in-ai"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
+                &lt;iframe width="800" height="500"
+                    src='https://www.youtube.com/embed/LCDIqL-8bHs'
+                    frameborder='0' webkitAllowFullScreen mozallowfullscreen
+                    allowFullScreen&gt;
+                &lt;/iframe&gt;
+            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="machine-learning"></category><category term="uncertainty quantification"></category><category term="data science"></category></entry><entry><title>More Efficient UD(A)Fs with PySpark</title><link href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/" rel="alternate"></link><published>2019-04-19T12:30:00+02:00</published><updated>2019-04-19T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-04-19:/2019/04/more_efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked&amp;nbsp;around.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Some time has passed since my blog post on &lt;a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt; which demonstrated how to define &lt;em&gt;User-Defined Aggregation Function&lt;/em&gt; (&lt;span class="caps"&gt;UDAF&lt;/span&gt;) with &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt; 2.1 that allow you to use &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt; decorator. This decorator gives you the same functionality as our custom &lt;code&gt;pandas_udaf&lt;/code&gt; in the former post but performs much faster if &lt;a href="https://arrow.apache.org/"&gt;Apache Arrow&lt;/a&gt; is activated. &lt;em&gt;Nice, so life is good now? No more workarounds!? Well,&amp;nbsp;almost&amp;#8230;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;If you are just using simple data types in your Spark dataframes everything will work and even blazingly fast if you got Arrow activated but don&amp;#8217;t you dare dealing with complex data types like maps (dictionaries), arrays (lists) and structs. In that case, all you will get is a &lt;code&gt;TypeError: Unsupported type in conversion to Arrow&lt;/code&gt; which is already tracked under issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt;. Even a simple &lt;code&gt;toPandas()&lt;/code&gt; does not work which might get you to deactivate Arrow support altogether but this would also keep you from using &lt;code&gt;pandas_udf&lt;/code&gt; which is really&amp;nbsp;nice&amp;#8230; &lt;/p&gt;
 &lt;p&gt;To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let&amp;#8217;s first take a look into which features &lt;code&gt;pandas_udf&lt;/code&gt; provides and why we should make use of&amp;nbsp;it.&lt;/p&gt;
 &lt;h2&gt;Features of Spark 2.3&amp;#8217;s&amp;nbsp;pandas_udf&lt;/h2&gt;
@@ -170,7 +179,7 @@
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;functools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;wraps&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;pandas_udf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;pandas_udf_ct&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Decorator for UDAFs with Spark &amp;gt;= 2.3 and complex types&lt;/span&gt;
@@ -188,16 +197,16 @@
 &lt;span class="sd"&gt;        Calling this functions with these arguments returns the actual UDF.&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;returnType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;functionType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;returnType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;functionType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;returnType&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;functionType&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__call__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="nd"&gt;@wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;converter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;converter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
                 &lt;span class="n"&gt;cols_in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
                 &lt;span class="n"&gt;cols_out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
             &lt;span class="nd"&gt;@pandas_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -284,7 +293,7 @@
 &lt;p&gt;For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. Still, everything shown here can analogously be conducted with the help of &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;/&lt;a href="https://pipenv.readthedocs.io/"&gt;pipenv&lt;/a&gt; and all the concepts still apply as is also illustrated in a &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt;. For this tutorial, I assume you have &lt;a href="https://conda.io/miniconda.html"&gt;Miniconda&lt;/a&gt; installed on your system. Besides this, every programmer&amp;#8217;s machine should have &lt;a href="https://git-scm.com/"&gt;Git&lt;/a&gt; installed and set up. The result of the following demonstration can be found in the &lt;a href="https://github.com/FlorianWilhelm/boston_housing"&gt;boston_housing repository&lt;/a&gt;.&lt;/p&gt;
 &lt;h3&gt;0. Use an isolated&amp;nbsp;environment&lt;/h3&gt;
 &lt;p&gt;In the spirit of Phil Karlton who supposedly said &amp;#8220;There are only two hard things in Computer Science: cache invalidation and naming things.&amp;#8221;, we gonna select a specific task, namely an analysis based on the all familiar &lt;a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html"&gt;Boston housing dataset&lt;/a&gt;, to help us finding crisp names. Based on our task we create an environment &lt;code&gt;boston_housing&lt;/code&gt; including Python and some common data science libraries&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda create -n boston_housing python=3.6 jupyterlab pandas scikit-learn seaborn
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;conda create -n boston_housing python=3.6 jupyterlab pandas scikit-learn seaborn&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -295,17 +304,17 @@
 &lt;p&gt;This observation brings us to one of the most important best practices: &lt;strong&gt;develop your code as a Python package&lt;/strong&gt;. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. &lt;em&gt;But creating a Python package is so much overhead; surely it&amp;#8217;s not worth this small little analysis I will complete in half a day anyway and then forget about it&lt;/em&gt;, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don&amp;#8217;t adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to the first part of your comment, if you know how, it&amp;#8217;s no overhead at&amp;nbsp;all!&lt;/p&gt;
 &lt;h3&gt;1. Develop your code in a Python&amp;nbsp;Package&lt;/h3&gt;
 &lt;p&gt;With the help of &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install -c conda-forge pyscaffold
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;conda install -c conda-forge pyscaffold&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This package adds the &lt;code&gt;putup&lt;/code&gt; command into our environment which we use to create a Python package&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup boston_housing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;putup boston_housing&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Now we can change into the new &lt;code&gt;boston_housing&lt;/code&gt; directory and install the package inside our environment in development&amp;nbsp;mode:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;python setup.py develop
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;python setup.py develop&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -320,7 +329,7 @@
 Still we haven&amp;#8217;t yet added any functionality, so let&amp;#8217;s see how we do about&amp;nbsp;that.&lt;/p&gt;
 &lt;h3&gt;2. Extract functionality from the&amp;nbsp;notebook&lt;/h3&gt;
 &lt;p&gt;We start with loading the &lt;a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html"&gt;Boston housing dataset&lt;/a&gt; into a dataframe with columns of the lower-cased feature names and the target variable &lt;em&gt;price&lt;/em&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.datasets&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;
 
 &lt;span class="n"&gt;boston&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -468,26 +477,26 @@ Still we haven&amp;#8217;t yet added any functionality, so let&amp;#8217;s see h
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
 
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sp&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sp&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sklearn&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.api&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sm&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.api&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sm&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.formula.api&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ols&lt;/span&gt;
 
 &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
 &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
 
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;mpl&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;mpl&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
 &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
 &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="n"&gt;InlineBackend&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure_format&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;retina&amp;#39;&lt;/span&gt;
 
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;poster&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;9.&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
 &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;whitegrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_option&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;display.max_rows&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_option&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;display.max_columns&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -498,28 +507,28 @@ Still we haven&amp;#8217;t yet added any functionality, so let&amp;#8217;s see h
 &lt;h3&gt;6. Document your&amp;nbsp;analysis&lt;/h3&gt;
 &lt;p&gt;A really old programmer&amp;#8217;s joke goes like &amp;#8220;When I wrote this code, only God and I understood what it did. Now&amp;#8230; only God knows.&amp;#8221; The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use &lt;a href="https://daringfireball.net/projects/markdown/syntax"&gt;Markdown syntax&lt;/a&gt; to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the &lt;code&gt;$...$&lt;/code&gt; notation. More general information about the whole project can be put into &lt;code&gt;README.rst&lt;/code&gt; which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; or &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt;. Also GitHub and GitLab will display &lt;code&gt;README.rst&lt;/code&gt; and thus provide a good entry point into your project. If you are more into the &lt;a href="https://daringfireball.net/projects/markdown/syntax"&gt;Markdown syntax&lt;/a&gt; and thus rather want a &lt;code&gt;README.md&lt;/code&gt;, you can install the &lt;a href="https://github.com/pyscaffold/pyscaffoldext-markdown"&gt;pyscaffoldext-markdown&lt;/a&gt; extension for PyScaffold which adds a &lt;code&gt;--markdown&lt;/code&gt; flag to PyScaffold&amp;#8217;s &lt;code&gt;putup&lt;/code&gt; command.&lt;/p&gt;
 &lt;p&gt;The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum &amp;#8220;The nice thing about standards is that you have so many to choose from&amp;#8221;. The three most common docstring standards for Python are the default &lt;a href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#the-python-domain"&gt;Sphinx RestructuredText&lt;/a&gt;, &lt;a href="http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html"&gt;Numpy and Google style&lt;/a&gt; which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single readme file, maybe you came up with a new &lt;span class="caps"&gt;ML&lt;/span&gt; algorithms and want to document the concept behind it, you should take a look at &lt;a href="https://www.sphinx-doc.org/"&gt;Sphinx&lt;/a&gt;. Our project setup already includes a &lt;code&gt;docs&lt;/code&gt; folder with an &lt;code&gt;index.rst&lt;/code&gt; as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as &lt;span class="caps"&gt;HTML&lt;/span&gt;&amp;nbsp;pages:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install spinx
-python setup.py docs
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;conda install spinx&lt;/span&gt;
+&lt;span class="err"&gt;python setup.py docs&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;It&amp;#8217;s also possible to create a nice &lt;span class="caps"&gt;PDF&lt;/span&gt; and even serve your documentation as a web page using &lt;a href="https://readthedocs.org/"&gt;ReadTheDocs&lt;/a&gt;.&lt;/p&gt;
 &lt;h3&gt;7. State your dependencies for&amp;nbsp;reproducibility&lt;/h3&gt;
 &lt;p&gt;Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data &lt;em&gt;scientist&lt;/em&gt;, you should always guarantee &lt;strong&gt;reproducibility&lt;/strong&gt; of whatever you do since it&amp;#8217;s the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using &lt;code&gt;conda&lt;/code&gt; we can do this with our &lt;code&gt;boston_housing&lt;/code&gt; project&amp;nbsp;as:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env export -n boston_housing -f environment.lock.yaml
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;conda env export -n boston_housing -f environment.lock.yaml&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This creates a file &lt;code&gt;environment.lock.yaml&lt;/code&gt; that recursively states all dependencies and their version as well as the Python version that was used to allow anyone to deterministically reproduce this environment in the future. This is as easy&amp;nbsp;as &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env create -f environment.lock.yaml --force
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;conda env create -f environment.lock.yaml --force&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Besides a &lt;em&gt;concrete&lt;/em&gt; environment file that exhaustively lists all dependencies, it&amp;#8217;s also common practice to define an &lt;code&gt;environment.yaml&lt;/code&gt; where you state your &lt;em&gt;abstract&lt;/em&gt; dependencies. These abstract dependencies comprise only libraries which are directly imported with no specific version. In our case this file looks&amp;nbsp;like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;boston_housing&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;channels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;boston_housing&lt;/span&gt;
+&lt;span class="nt"&gt;channels&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;defaults&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;dependencies&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;span class="nt"&gt;dependencies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;jupyterlab&lt;/span&gt;
   &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pandas&lt;/span&gt;
   &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;scikit-learn&lt;/span&gt;
@@ -528,7 +537,7 @@ python setup.py docs
 
 
 &lt;p&gt;This file keeps track of all libraries you are directly using. If you added a new library you can use this file to update your current environment&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env update --file environment.yaml
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;conda env update --file environment.yaml&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -546,7 +555,7 @@ python setup.py docs
 &lt;/figure&gt;
 
 &lt;p&gt;Another reason for running JupyterLab on a remote machine might be due to some firewall restrictions. Quite often in order to access sensitive data sources or a &lt;a href="https://spark.apache.org/"&gt;Spark&lt;/a&gt; cluster, you need to run JupyterLab on a gateway server. To invoke JupyterLab with Spark capabilities there are two ways. An ad hoc method is to just state on the command line that JupyterLab should use pyspark as kernel. For instance starting JupyterLab with Python 3.6 (needs to be consistent with your Spark distribution), 20 executors each having 5 cores might look like&amp;nbsp;this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON=&amp;quot;jupyter&amp;quot; PYSPARK_DRIVER_PYTHON_OPTS=&amp;quot;notebook --no-browser --port=8899&amp;quot; /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON=&amp;quot;jupyter&amp;quot; PYSPARK_DRIVER_PYTHON_OPTS=&amp;quot;notebook --no-browser --port=8899&amp;quot; /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -589,347 +598,4 @@ python setup.py docs
                     frameborder='0' webkitAllowFullScreen mozallowfullscreen
                     allowFullScreen&gt;
                 &lt;/iframe&gt;
-            &lt;/span&gt;&lt;/p&gt;</content><category term="machine-learning"></category><category term="python"></category><category term="GANs"></category><category term="semi-supervised"></category></entry><entry><title>Multiplicative LSTM for sequence-based Recommenders</title><link href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/" rel="alternate"></link><published>2018-08-05T16:00:00+02:00</published><updated>2018-08-05T16:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-08-05:/2018/08/multiplicative_LSTM_for_sequence_based_recos/</id><summary type="html">&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant&amp;nbsp;recommendation.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. 
-They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
-social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
-of a relevant recommendation. Which user interaction occurred just before the point of time where we want to 
-provide a recommendation?
-How many interactions ago did the user interact with an item like this one?
-Traditional user-item recommenders often neglect the dimension of time completely. 
-This means that many traditional recommenders find for each user a latent representation based on the user&amp;#8217;s
-historical item interactions without any notion of recency and sequence of interactions. To also incorporate 
-this kind of contextual information about interactions, sequence-based recommenders were developed. 
-With the advent of deep learning quite a few of them are nowadays based on &lt;a href="https://en.wikipedia.org/wiki/Recurrent_neural_network"&gt;Recurrent Neural Networks&lt;/a&gt;&amp;nbsp;(RNNs).&lt;/p&gt;
-&lt;p&gt;Whenever I want to dig deeper into a topic like sequence-based recommenders I follow a few simple steps:
-First of all, to learn something I directly need to apply it otherwise learning things doesn&amp;#8217;t work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the &lt;a href="https://en.wikipedia.org/wiki/SMART_criteria"&gt;&lt;span class="caps"&gt;SMART&lt;/span&gt; citeria&lt;/a&gt; a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the whole process. This blog post is actually the outcome of several things I wanted to familiarize myself more and try&amp;nbsp;out:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt;, since this framework is used in a large fraction of recent publications about deep&amp;nbsp;learning,&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/maciejkula/spotlight"&gt;Spotlight&lt;/a&gt;, since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality&amp;nbsp;implemented,&lt;/li&gt;
-&lt;li&gt;applying a paper about &lt;a href="https://arxiv.org/abs/1609.07959"&gt;Multiplicative &lt;span class="caps"&gt;LSTM&lt;/span&gt; for sequence modelling&lt;/a&gt; to recommender systems and see how that performs compared to traditional&amp;nbsp;LSTMs.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Since Spotlight is based on PyTorch and multiplicative LSTMs (mLSTMs) are not yet implemented in PyTorch the task of evaluating mLSTMs vs. LSTMs inherently addresses all those points outlined above. The goal is set, so let&amp;#8217;s get&amp;nbsp;going!&lt;/p&gt;
-&lt;h2&gt;Theory&lt;/h2&gt;
-&lt;p&gt;Long short-term memory architectures (LSTMs) are maybe the most common incarnations of RNNs since they don&amp;#8217;t adhere 
-to the &lt;a href="https://en.wikipedia.org/wiki/Vanishing_gradient_problem"&gt;vanishing gradient problem&lt;/a&gt; and thus are able to capture long-term relationships in a sequence. You can find a great
-explanation of LSTMs in Colah&amp;#8217;s post &lt;a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/"&gt;Understanding &lt;span class="caps"&gt;LSTM&lt;/span&gt; Networks&lt;/a&gt; and more general about the power of RNNs in the 
-article &lt;a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;. 
-More recently, also Gated Recurrent Units (GRUs) which have a simplified structure compared to LSTMs are also used 
-in sequential prediction tasks with occasionally superior results. &lt;a href="https://github.com/maciejkula/spotlight"&gt;Spotlight&lt;/a&gt; provides a sequential recommender based on LSTMs and 
-the quite renowned &lt;a href="https://github.com/hidasib/GRU4Rec"&gt;GRU4Rec&lt;/a&gt; model uses GRUs but in general it&amp;#8217;s not possible to state that one always outperforms the&amp;nbsp;other.&lt;/p&gt;
-&lt;p&gt;So given these ingredients, how do we now construct a sequential recommender? Let&amp;#8217;s assume on every timestep 
-&lt;span class="math"&gt;\(t\in\{1,\ldots,T\}\)&lt;/span&gt; a user has interacted with an item &lt;span class="math"&gt;\(i_t\)&lt;/span&gt;. The basic idea is now to feed these interactions into
- an &lt;span class="caps"&gt;LSTM&lt;/span&gt; up to the time &lt;span class="math"&gt;\(t\)&lt;/span&gt; in order to get a representation of the user&amp;#8217;s preferences &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and use that to state
- if the user might like or dislike the next item &lt;span class="math"&gt;\(i_{t+1}\)&lt;/span&gt;. Just like in a non-sequential recommender we also do a
- &lt;a href="https://en.wikipedia.org/wiki/One-hot"&gt;one-hot encoding&lt;/a&gt; of the items followed by an embedding into a dense vector representation &lt;span class="math"&gt;\(e_{i_t}\)&lt;/span&gt;
- which is then feed into the &lt;span class="caps"&gt;LSTM&lt;/span&gt;. We can then just use the output &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; of the &lt;span class="caps"&gt;LSTM&lt;/span&gt; and calculate the inner product (&lt;span class="math"&gt;\(\bigotimes\)&lt;/span&gt;) 
- with the embedding &lt;span class="math"&gt;\(e_{i_{t+1}}\)&lt;/span&gt; plus an item bias for varying item popularity to retrieve an output &lt;span class="math"&gt;\(p_{t+1}\)&lt;/span&gt;. 
- This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
- We train our model by sampling positive interactions and corresponding negative interactions. In an &lt;em&gt;explicit feedback&lt;/em&gt; context 
- a positive and negative interaction might be a positive and negative rating of a user for an item, respectively. In an &lt;em&gt;implicit feedback&lt;/em&gt; context, all item interactions of a user are considered positive whereas negative interactions arise from items the
- user did not interact with.
- During the training we adapt the weights of our model so that for a given user the scalar output of a positive interaction
- is greater than the output of a negative interaction. This can be seen as an approximation to a &lt;a href="https://en.wikipedia.org/wiki/Softmax_function"&gt;softmax&lt;/a&gt; in very high-dimensional output&amp;nbsp;space.&lt;/p&gt;
-&lt;p&gt;Figure 1 illustrates our sequential recommender model and this is what&amp;#8217;s actually happening inside Spotlight&amp;#8217;s 
- sequential recommender with an &lt;span class="caps"&gt;LSTM&lt;/span&gt; representation. If you raise your eyebrow due to the usage of an inner product
- then be aware that &lt;a href="https://en.wikipedia.org/wiki/Low-rank_approximation"&gt;low-rank approximations&lt;/a&gt; have been and still are one of the most successful building blocks
- of recommender systems. An alternative would be to replace the inner product with a deep feed forward network but
- to quite some extent, this would also just learn to perform an approximation of an inner product. A recent paper
- &lt;a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf"&gt;Latent Cross: Making Use of Context in Recurrent Recommender Systems&lt;/a&gt; by Google also emphasizes the power of learning
- low-rank relations with the help of inner&amp;nbsp;products.&lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/mLSTM.png" alt="mLSTM"&gt;
-&lt;figcaption&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; At timestep $t$ the item $i_t$ is embedded and fed into an &lt;span class="caps"&gt;LSTM&lt;/span&gt; together with
- cell state $C_{t-1}$ and $h_{t-1}$ of the last timestep which yields a new presentation $h_t$. The inner product of 
- $h_t$ with the embedding of the potential next item $e_{i_{t+1}}$ yields a scalar value corresponding to how likely the user
- would interact with $i_{t+1}$.&lt;/figcaption&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;What we want to do is basically replacing the &lt;span class="caps"&gt;LSTM&lt;/span&gt; part of Spotlight&amp;#8217;s sequential recommender with an mLSTM. 
-But before we do that the obvious question is why? Let&amp;#8217;s recap the formulae of a typical &lt;a href="http://pytorch.org/docs/0.3.1/nn.html?highlight=lstm#torch.nn.LSTM"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt; implementation&lt;/a&gt; 
-like the one in&amp;nbsp;PyTorch:&lt;/p&gt;
-&lt;div class="math"&gt;\begin{split}\begin{array}{ll}
-i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{t-1} + b_{hi}) \\
-f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{t-1} + b_{hf}) \\
-g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hc} h_{t-1} + b_{hg}) \\
-o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{ho} h_{t-1} + b_{ho}) \\
-c_t = f_t * c_{t-1} + i_t * g_t \\
-h_t = o_t * \tanh(c_t)
-\end{array}\end{split}&lt;/div&gt;
-&lt;p&gt;
-&lt;br&gt;&lt;/p&gt;
-&lt;p&gt;where &lt;span class="math"&gt;\(i_t\)&lt;/span&gt; denotes the input gate, &lt;span class="math"&gt;\(f_t\)&lt;/span&gt; the forget gate and &lt;span class="math"&gt;\(o_t\)&lt;/span&gt; the output gate at timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt;. If we look at
-those lines again we can see a lot of terms in the form of &lt;span class="math"&gt;\(W_{**} x_t + W_{**} h_{t-1}\)&lt;/span&gt; neglecting the biases &lt;span class="math"&gt;\(b_*\)&lt;/span&gt; for a
-moment. Thus a lot of an &lt;span class="caps"&gt;LSTM&lt;/span&gt;&amp;#8217;s inner workings depend on the addition of the transformed input with the transformed hidden
-state. So what happens if a trained &lt;span class="caps"&gt;LSTM&lt;/span&gt; with thus fixed &lt;span class="math"&gt;\(W_{**}\)&lt;/span&gt; encounters some unexpected, completely surprising input
-&lt;span class="math"&gt;\(x_t\)&lt;/span&gt;? This might disturb the cell state &lt;span class="math"&gt;\(c_t\)&lt;/span&gt; leading to pertubated future &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and it might take a long time for the
-&lt;span class="caps"&gt;LSTM&lt;/span&gt; to recover from that singular surprising input. The authors of the paper &lt;a href="https://arxiv.org/abs/1609.07959"&gt;Multiplicative &lt;span class="caps"&gt;LSTM&lt;/span&gt; for sequence modelling&lt;/a&gt; 
-now argue that &amp;#8220;&lt;span class="caps"&gt;RNN&lt;/span&gt; architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
-from surprising inputs&amp;#8221;. By allowing the hidden state to react flexibly on the new input by changing its magnitude it might be
-able to recover from mistakes faster. The quite vague formulation of &lt;em&gt;input-dependent transition functions&lt;/em&gt; is then 
-actually achieved in a quite simple way. In an mLSTM the hidden state &lt;span class="math"&gt;\(h_{t-1}\)&lt;/span&gt; is transformed in a multiplicative way
-using the input &lt;span class="math"&gt;\(x_t\)&lt;/span&gt; into an intermediate state &lt;span class="math"&gt;\(m_t\)&lt;/span&gt; before it is used in a plain &lt;span class="caps"&gt;LSTM&lt;/span&gt; as before. Eventually, there
-is only a single equation to be prepended to the equations of an &lt;span class="caps"&gt;LSTM&lt;/span&gt;:&lt;/p&gt;
-&lt;div class="math"&gt;\begin{split}\begin{array}{ll}
-m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm}) \\
-i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{mi} m_t + b_{mi}) \\
-f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{mf} m_t + b_{mf}) \\
-g_t = \tanh(W_{ig} x_t + b_{ig} + W_{mc} m_t + b_{mg}) \\
-o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{mo} m_t + b_{mo}) \\
-c_t = f_t * c_{t-1} + i_t * g_t \\
-h_t = o_t * \tanh(c_t)
-\end{array}\end{split}&lt;/div&gt;
-&lt;p&gt;
-&lt;br&gt;&lt;/p&gt;
-&lt;p&gt;The element-wise multiplication (&lt;span class="math"&gt;\(\odot\)&lt;/span&gt;) allows &lt;span class="math"&gt;\(m_t\)&lt;/span&gt; to flexibly change it&amp;#8217;s value with respect to &lt;span class="math"&gt;\(h_{t-1}\)&lt;/span&gt; and &lt;span class="math"&gt;\(x_t\)&lt;/span&gt;.
-On a more theoretical note, if you picture the hidden states of an &lt;span class="caps"&gt;LSTM&lt;/span&gt; as a tree depending on the inputs at each timestep
-then the number of all possible states at timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt; will be much larger for an mLSTM compared to an &lt;span class="caps"&gt;LSTM&lt;/span&gt;. Therefore, 
-the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
-according to the paper. The paper focuses only on &lt;span class="caps"&gt;NLP&lt;/span&gt; tasks but since surprising inputs are also a concern in sequential recommender systems,
-the self-evident idea is to evaluate if mLSTMs also excel in recommender&amp;nbsp;tasks. &lt;/p&gt;
-&lt;h2&gt;Implementation&lt;/h2&gt;
-&lt;p&gt;Everyone seems to love &lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt; for it&amp;#8217;s beautiful &lt;span class="caps"&gt;API&lt;/span&gt; and I totally agree. For me its beauty lies in its simplicity. 
-Every elementary building block of a neural network like a linear transformation is called a &lt;em&gt;Module&lt;/em&gt; in PyTorch. A
-Module is just a class that inherits from &lt;code&gt;Module&lt;/code&gt; and implements a &lt;code&gt;forward&lt;/code&gt; method that does the transformation
-with the help of tensor operations. A more complex neural network is again just a &lt;code&gt;Module&lt;/code&gt; and uses the 
-&lt;a href="https://en.wikipedia.org/wiki/Composition_over_inheritance"&gt;composition principle&lt;/a&gt; to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
-found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
-to core &lt;a href="https://www.tensorflow.org/"&gt;TensorFlow&lt;/a&gt; and &lt;a href="https://keras.io/"&gt;Keras&lt;/a&gt; where you are either stuck on the level of tensor operations or the composition of&amp;nbsp;layers. &lt;/p&gt;
-&lt;p&gt;For our task, we gonna need an &lt;code&gt;mLSTM&lt;/code&gt; module and luckily PyTorch provides &lt;code&gt;RNNBase&lt;/code&gt;, a base class for custom RNNs.
-So all we have to do is to write a module that inherits from &lt;code&gt;RNNBase&lt;/code&gt;, defines additional parameters and implements
-the mLSTM equations inside of &lt;code&gt;forward&lt;/code&gt;: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;math&lt;/span&gt;
-
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;torch&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;torch.nn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;torch.nn.modules.rnn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RNNBase&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;LSTMCell&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;torch.nn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;functional&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;
-
-
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;mLSTM&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;RNNBase&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mLSTM&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-            &lt;span class="n"&gt;mode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;LSTM&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                 &lt;span class="n"&gt;num_layers&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;batch_first&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                 &lt;span class="n"&gt;dropout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bidirectional&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="n"&gt;w_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;w_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;b_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;b_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w_im&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b_im&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w_hm&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b_hm&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lstm_cell&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;LSTMCell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_parameters&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;reset_parameters&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;stdv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;weight&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-            &lt;span class="n"&gt;weight&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;uniform_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stdv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stdv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;forward&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;n_batch&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_seq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_feat&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-        &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hx&lt;/span&gt;
-        &lt;span class="n"&gt;steps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unsqueeze&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;seq&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_seq&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-            &lt;span class="n"&gt;mx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linear&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="n"&gt;seq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:],&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_im&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_im&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linear&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_hm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_hm&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="n"&gt;hx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lstm_cell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="n"&gt;seq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:],&lt;/span&gt; &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="n"&gt;steps&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unsqueeze&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;steps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The code is pretty much self-explanatory. We inherit from &lt;code&gt;RNNBase&lt;/code&gt; and initialize the additional parameters we need for the calculation of &lt;span class="math"&gt;\(m_t\)&lt;/span&gt;
-in &lt;code&gt;__init__&lt;/code&gt;. In &lt;code&gt;forward&lt;/code&gt; we use those parameters to calculate &lt;span class="math"&gt;\(m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})\)&lt;/span&gt; with the help of &lt;code&gt;F.linear&lt;/code&gt; and pass it to an ordinary &lt;code&gt;LSTMCell&lt;/code&gt;. We collect the results for each timestep
-in our sequence in &lt;code&gt;steps&lt;/code&gt; and return it as concatenated&amp;nbsp;tensor. &lt;/p&gt;
-&lt;p&gt;The &lt;a href="https://github.com/maciejkula/spotlight"&gt;Spotlight&lt;/a&gt; library, in the spirit of PyTorch, also follows a modular concept of components that can be easily plugged together and replaced.
-It has only five&amp;nbsp;components:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;embedding layers&lt;/strong&gt; which map item ids to dense&amp;nbsp;vectors,&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;user/item representations&lt;/strong&gt; which take embedding layers to calculate latent representations and the score for a 
-    user/item&amp;nbsp;pair, &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;interactions&lt;/strong&gt; which give easy access to the user/item interactions and their explicit/implicit&amp;nbsp;feedback,&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;losses&lt;/strong&gt; which define the objective for the recommendation&amp;nbsp;task,&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;models&lt;/strong&gt; which take user/item representations, the user/item interactions and a given loss to train the&amp;nbsp;network.  &lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Due to this modular layout, we only need to write a new user/item representation module called &lt;code&gt;mLSTMNet&lt;/code&gt;. Since this
-is straight-forward I leave it to you to take a look at the source code in my &lt;a href="https://github.com/FlorianWilhelm/mlstm4reco"&gt;mlstm4reco&lt;/a&gt; repository.
-At this point I should mentioned that the whole layout of the repository was strongly inspired by Maciej Kula&amp;#8217;s 
-&lt;a href="https://arxiv.org/abs/1711.08379"&gt;Mixture-of-tastes Models for Representing Users with Diverse Interests&lt;/a&gt; paper and the accompanying &lt;a href="https://github.com/maciejkula/mixture"&gt;source code&lt;/a&gt;.
-My implementation also follows his advise of using an automatic hyperparameter optimisation for my own model and the
-baseline model for comparison. This avoids quite a common bias in research when people put more effort in hand-tuning
-their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
-Using a tool like &lt;a href="http://hyperopt.github.io/hyperopt/"&gt;HyperOpt&lt;/a&gt; for hyperparameter optimisation is quite easy and mitigates this bias to some extent at&amp;nbsp;least.&lt;/p&gt;
-&lt;h2&gt;Evaluation&lt;/h2&gt;
-&lt;p&gt;To compare Spotlight&amp;#8217;s &lt;a href="https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit"&gt;ImplicitSequenceModel&lt;/a&gt; with an &lt;span class="caps"&gt;LSTM&lt;/span&gt; to an mLSTM user representation, the
-&lt;a href="https://github.com/FlorianWilhelm/mlstm4reco"&gt;mlstm4reco&lt;/a&gt; repository provides a &lt;code&gt;run.py&lt;/code&gt; script in the &lt;code&gt;experiments&lt;/code&gt; folder which takes several
-command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
-But for me it&amp;#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
-log which parameters were used to generate the results. I also used &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; to set up proper Python package
-scaffold within seconds. This allows me to properly install the &lt;code&gt;mlstm4reco&lt;/code&gt; package and import its functionality from 
-wherever I want without messing around with the &lt;span class="caps"&gt;PYTHONPATH&lt;/span&gt; environment variable which one should never do&amp;nbsp;anyway. &lt;/p&gt;
-&lt;p&gt;For the evaluation matrix below I ran each experiment 200 times to give &lt;a href="http://hyperopt.github.io/hyperopt/"&gt;HyperOpt&lt;/a&gt; enough chances to find good 
-hyperparameters for the number of epochs (&lt;code&gt;n_iter&lt;/code&gt;), number of embeddings (&lt;code&gt;embedding_dim&lt;/code&gt;), l2-regularisation (&lt;code&gt;l2&lt;/code&gt;),
-batch size (&lt;code&gt;batch_size&lt;/code&gt;) and learning rate (&lt;code&gt;learn_rate&lt;/code&gt;). 
-Each of our two models, i.e. &lt;code&gt;lstm&lt;/code&gt; and &lt;code&gt;mlstm&lt;/code&gt; user representation, were applied to three datasets, 
-the &lt;a href="https://grouplens.org/datasets/movielens/"&gt;MovieLens&lt;/a&gt; 1m and 10m datasets as well as the &lt;a href="https://snap.stanford.edu/data/amazon-meta.html"&gt;Amazon&lt;/a&gt; dataset. For instance, to run 200 experiments with the mlstm 
-model on the Movielens 10m dataset the command would be &lt;code&gt;./run.py -m mlstm -n 200 10m&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;In each experiment the data is split into a training, validation and test set where training is used to fit the model,
-validation to find the right hyperparameters and test for the final evaluation after all parameters are determined. 
-The performance of the models is measured with the help of the &lt;a href="https://en.wikipedia.org/wiki/Mean_reciprocal_rank"&gt;mean reciprocal rank&lt;/a&gt; (&lt;span class="caps"&gt;MRR&lt;/span&gt;) score. Here are the&amp;nbsp;results:&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align="right"&gt;dataset&lt;/th&gt;
-&lt;th align="right"&gt;type&lt;/th&gt;
-&lt;th align="right"&gt;validation&lt;/th&gt;
-&lt;th align="right"&gt;test&lt;/th&gt;
-&lt;th align="right"&gt;learn_rate&lt;/th&gt;
-&lt;th align="right"&gt;batch_size&lt;/th&gt;
-&lt;th align="right"&gt;embedding_dim&lt;/th&gt;
-&lt;th align="right"&gt;l2&lt;/th&gt;
-&lt;th align="right"&gt;n_iter&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 1m&lt;/td&gt;
-&lt;td align="right"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt;&lt;/td&gt;
-&lt;td align="right"&gt;0.1199&lt;/td&gt;
-&lt;td align="right"&gt;0.1317&lt;/td&gt;
-&lt;td align="right"&gt;1.93e-2&lt;/td&gt;
-&lt;td align="right"&gt;208&lt;/td&gt;
-&lt;td align="right"&gt;112&lt;/td&gt;
-&lt;td align="right"&gt;6.01e-06&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 1m&lt;/td&gt;
-&lt;td align="right"&gt;mLSTM&lt;/td&gt;
-&lt;td align="right"&gt;0.1275&lt;/td&gt;
-&lt;td align="right"&gt;0.1386&lt;/td&gt;
-&lt;td align="right"&gt;1.25e-2&lt;/td&gt;
-&lt;td align="right"&gt;240&lt;/td&gt;
-&lt;td align="right"&gt;120&lt;/td&gt;
-&lt;td align="right"&gt;5.90e-06&lt;/td&gt;
-&lt;td align="right"&gt;40&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 10m&lt;/td&gt;
-&lt;td align="right"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt;&lt;/td&gt;
-&lt;td align="right"&gt;0.1090&lt;/td&gt;
-&lt;td align="right"&gt;0.1033&lt;/td&gt;
-&lt;td align="right"&gt;4.19e-3&lt;/td&gt;
-&lt;td align="right"&gt;224&lt;/td&gt;
-&lt;td align="right"&gt;120&lt;/td&gt;
-&lt;td align="right"&gt;2.43e-07&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 10m&lt;/td&gt;
-&lt;td align="right"&gt;mLSTM&lt;/td&gt;
-&lt;td align="right"&gt;0.1142&lt;/td&gt;
-&lt;td align="right"&gt;0.1115&lt;/td&gt;
-&lt;td align="right"&gt;4.50e-3&lt;/td&gt;
-&lt;td align="right"&gt;224&lt;/td&gt;
-&lt;td align="right"&gt;128&lt;/td&gt;
-&lt;td align="right"&gt;1.12e-06&lt;/td&gt;
-&lt;td align="right"&gt;45&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Amazon&lt;/td&gt;
-&lt;td align="right"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt;&lt;/td&gt;
-&lt;td align="right"&gt;0.2629&lt;/td&gt;
-&lt;td align="right"&gt;0.2642&lt;/td&gt;
-&lt;td align="right"&gt;2.85e-3&lt;/td&gt;
-&lt;td align="right"&gt;224&lt;/td&gt;
-&lt;td align="right"&gt;128&lt;/td&gt;
-&lt;td align="right"&gt;2.42e-11&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Amazon&lt;/td&gt;
-&lt;td align="right"&gt;mLSTM&lt;/td&gt;
-&lt;td align="right"&gt;0.3061&lt;/td&gt;
-&lt;td align="right"&gt;0.3123&lt;/td&gt;
-&lt;td align="right"&gt;2.48e-3&lt;/td&gt;
-&lt;td align="right"&gt;144&lt;/td&gt;
-&lt;td align="right"&gt;120&lt;/td&gt;
-&lt;td align="right"&gt;4.53e-11&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;If we compare the test results of the Movielens 1m dataset, it&amp;#8217;s an improvement of 5.30% when using mLSTM over &lt;span class="caps"&gt;LSTM&lt;/span&gt; 
-representation, for Movielens 10m it&amp;#8217;s 7.96% more and for Amazon it&amp;#8217;s even 18.19%&amp;nbsp;more. &lt;/p&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;The performance improvements of using an mLSTM over an &lt;span class="caps"&gt;LSTM&lt;/span&gt; user representation are quite good but nothing spectacular.
-They give us at least some indication that mLSTMs achieve superior results for sequential recommendation tasks. In order to 
-further underpin this first assessment one could test with more datasets and also check other evaluation 
-metrics besides &lt;span class="caps"&gt;MRR&lt;/span&gt;. I leave this to a dedicated reader, so if you are interested, please let me know and share your
-results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
-sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project! Let me
-know if you liked this post and comment&amp;nbsp;below.&lt;/p&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="python"></category><category term="data science"></category><category term="deep learning"></category><category term="recommender systems"></category></entry></feed>
+            &lt;/span&gt;&lt;/p&gt;</content><category term="machine-learning"></category><category term="python"></category><category term="GANs"></category><category term="semi-supervised"></category></entry></feed>

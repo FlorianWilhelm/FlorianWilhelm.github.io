@@ -12,10 +12,10 @@ With the advent of Deep Learning (DL), the field of AI made a giant leap forward
 
 In my talk, I will give an introduction to different kinds of uncertainty, i.e. epistemic and aleatoric. To have a baseline for comparison, the classical method of Gaussian Processes for regression problems is presented. I then elaborate on different DL methods for uncertainty quantification like Quantile Regression, Monte-Carlo Dropout, and Deep Ensembles. The talk is concluded with a comparison of these techniques to Gaussian Processes and the current state of the art.
 
-This talk was presented at [PyCon.DE/PyData 2019 Berlin][] and [Big Data Conference Vilnius 2019][]. The slides are available on [SlideShare][].
+This talk was presented at [PyCon.DE & PyData Berlin 2019][] and [Big Data Conference Vilnius 2019][]. The slides are available on [SlideShare][].
 
 {% youtube LCDIqL-8bHs 800 500 %}
 
 [Big Data Conference Vilnius 2019]: https://bigdataconference.lt/2019/
-[PyCon.DE/PyData Berlin 2019]: https://de.pycon.org/
+[PyCon.DE & PyData Berlin 2019]: https://de.pycon.org/
 [SlideShare]: https://www.slideshare.net/FlorianWilhelm2/uncertainty-quantification-in-ai

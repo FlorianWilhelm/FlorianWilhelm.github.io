@@ -9,7 +9,7 @@ dependencies:
   - jinja2
   - pip
   - pip:
-     - pelican
+     - pelican==3.7.1
      - Markdown
      - bs4
      - pillow

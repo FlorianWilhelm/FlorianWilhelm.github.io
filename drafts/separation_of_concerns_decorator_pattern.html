@@ -289,16 +289,16 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
     <span class="n">hours</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
     <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">days</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;{}{}d{}h{}m{}s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">d</span><span class="si">{}</span><span class="s1">h</span><span class="si">{}</span><span class="s1">m</span><span class="si">{}</span><span class="s1">s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">hours</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;{}{}h{}m{}s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">h</span><span class="si">{}</span><span class="s1">m</span><span class="si">{}</span><span class="s1">s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">minutes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;{}{}m{}s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">m</span><span class="si">{}</span><span class="s1">s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;{}{}s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">log_time</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">log_time</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Decorator for logging the run time of a function</span>
 
 <span class="sd">    Args:</span>
@@ -309,14 +309,14 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
 <span class="sd">        wrapped function</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">secs</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
             <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Runtime of {}: {{time}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Runtime of </span><span class="si">{}</span><span class="s2">: {{time}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="n">msg</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pretty_timedelta</span><span class="p">(</span><span class="n">secs</span><span class="p">)))</span>
@@ -343,7 +343,7 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
         <span class="c1"># keeps track of the last calls</span>
         <span class="n">last_calls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 
-        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">curr_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">last_calls</span><span class="p">:</span>
@@ -355,7 +355,7 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
                 <span class="n">idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_calls</span><span class="p">)</span> <span class="o">-</span> <span class="n">calls</span>
                 <span class="n">delta</span> <span class="o">=</span> <span class="n">fabs</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">curr_time</span> <span class="o">+</span> <span class="n">last_calls</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
                 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stalling call to {} for {}s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">delta</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stalling call to </span><span class="si">{}</span><span class="s2"> for </span><span class="si">{}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">delta</span><span class="p">))</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">last_calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
@@ -394,10 +394,10 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="https://florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
+        <li><a href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/">Are you sure about that?! Uncertainty Quantification in <span class="caps">AI</span></a></li>
         <li><a href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/">More Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
         <li><a href="https://florianwilhelm.info/2018/11/working_efficiently_with_jupyter_lab/">Working efficiently with JupyterLab&nbsp;Notebooks</a></li>
         <li><a href="https://florianwilhelm.info/2018/10/performance_evalution_of_gans_in_a_semi-supervised_ocr_use_case/">Performance evaluation of GANs in a semi-supervised <span class="caps">OCR</span> use&nbsp;case</a></li>
-        <li><a href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders</a></li>
     </ul>
 </section>
     <hr/>
@@ -481,7 +481,7 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
                             causal inference
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
+                    <li class="list-group-item tag-1">
                         <a href="https://florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
@@ -589,6 +589,11 @@ aspect-oriented programming (<span class="caps">AOP</span>)&nbsp;https://de.wiki
                     <li class="list-group-item tag-4">
                         <a href="https://florianwilhelm.info/tag/template/">
                             template
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
+                            uncertainty quantification
                         </a>
                     </li>
                 </ul>

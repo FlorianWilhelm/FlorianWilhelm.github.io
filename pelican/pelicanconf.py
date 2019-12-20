@@ -34,7 +34,7 @@ WITH_FUTURE_DATES = False
 
 THEME = 'themes/pelican-bootstrap3'
 SHOW_ARTICLE_AUTHOR = False
-JINJA_ENVIRONMENT = ['jinja2.ext.i18n']
+JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.i18n']}
 
 STATIC_PATHS = ['images', 'documents', 'extras', 'notebooks', 'src']
 
@@ -170,7 +170,7 @@ SITEMAP = {
 }
 
 # Plugins
-PLUGIN_PATHS = ['plugins-core', 'plugins']
+PLUGIN_PATHS = ['plugins', 'plugins-core']
 PLUGINS = [
      # Core plugins (order actually matters)
      'render_math',

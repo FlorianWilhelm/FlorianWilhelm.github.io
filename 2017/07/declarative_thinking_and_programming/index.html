@@ -421,7 +421,7 @@ We will use the Python library <a href="https://sites.google.com/site/pydatalog/
 all facts and rules, we can just ask for the values of each field of the table and PyDatalog will do the inference based
 on the knowledge we have given. The syntax of PyDatalog might seem a bit strange at first but it is really concise and powerful.
 The rule for a square number is stated&nbsp;as:</p>
-<div class="highlight"><pre><span></span><span class="n">squared</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">squared</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
 
@@ -491,9 +491,9 @@ applied allowing to describe the task in a canonical&nbsp;way. </p>
 <span class="n">pyDatalog</span><span class="o">.</span><span class="n">create_terms</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
 <span class="n">pyDatalog</span><span class="o">.</span><span class="n">create_terms</span><span class="p">(</span><span class="s1">&#39;divmod&#39;</span><span class="p">)</span>
 
-<span class="nd">@pyDatalog.program</span><span class="p">()</span>
+<span class="nd">@pyDatalog</span><span class="o">.</span><span class="n">program</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">_</span><span class="p">():</span>
-    <span class="n">squared</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">squared</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
 
     <span class="n">divisible</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">divmod</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
@@ -592,7 +592,7 @@ applied allowing to describe the task in a canonical&nbsp;way. </p>
         <span class="c1"># J vertical</span>
         <span class="n">squared</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">]]))</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="n">riddle</span><span class="p">([(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">A4</span><span class="p">,</span> <span class="n">A5</span><span class="p">),</span> <span class="p">(</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">B3</span><span class="p">,</span> <span class="n">B4</span><span class="p">,</span> <span class="n">B5</span><span class="p">),</span> <span class="p">(</span><span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">C3</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">C5</span><span class="p">),</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">riddle</span><span class="p">([(</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">A4</span><span class="p">,</span> <span class="n">A5</span><span class="p">),</span> <span class="p">(</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="p">,</span> <span class="n">B3</span><span class="p">,</span> <span class="n">B4</span><span class="p">,</span> <span class="n">B5</span><span class="p">),</span> <span class="p">(</span><span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">C3</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">C5</span><span class="p">),</span>
                   <span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">D2</span><span class="p">,</span> <span class="n">D3</span><span class="p">,</span> <span class="n">D4</span><span class="p">,</span> <span class="n">D5</span><span class="p">),</span> <span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">E3</span><span class="p">,</span> <span class="n">E4</span><span class="p">,</span> <span class="n">E5</span><span class="p">),</span> <span class="p">(</span><span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">F3</span><span class="p">,</span> <span class="n">F4</span><span class="p">,</span> <span class="n">F5</span><span class="p">)]))</span>
 </pre></div>
 
@@ -686,11 +686,11 @@ Declarative programming means finding the right abstraction level that describes
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/">Are you sure about that?! Uncertainty Quantification in <span class="caps">AI</span></a></li>
         <li><a href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/">More Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
         <li><a href="https://florianwilhelm.info/2018/11/working_efficiently_with_jupyter_lab/">Working efficiently with JupyterLab&nbsp;Notebooks</a></li>
         <li><a href="https://florianwilhelm.info/2018/10/performance_evalution_of_gans_in_a_semi-supervised_ocr_use_case/">Performance evaluation of GANs in a semi-supervised <span class="caps">OCR</span> use&nbsp;case</a></li>
         <li><a href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders</a></li>
-        <li><a href="https://florianwilhelm.info/2018/07/bridging_the_gap_from_ds_to_prod/">Bridging the Gap: from Data Science to&nbsp;Production</a></li>
     </ul>
 </section>
     <hr/>
@@ -774,7 +774,7 @@ Declarative programming means finding the right abstraction level that describes
                             causal inference
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
+                    <li class="list-group-item tag-1">
                         <a href="https://florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
@@ -882,6 +882,11 @@ Declarative programming means finding the right abstraction level that describes
                     <li class="list-group-item tag-4">
                         <a href="https://florianwilhelm.info/tag/template/">
                             template
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
+                            uncertainty quantification
                         </a>
                     </li>
                 </ul>

@@ -156,7 +156,7 @@ We will use the Python library &lt;a href="https://sites.google.com/site/pydatal
 all facts and rules, we can just ask for the values of each field of the table and PyDatalog will do the inference based
 on the knowledge we have given. The syntax of PyDatalog might seem a bit strange at first but it is really concise and powerful.
 The rule for a square number is stated&amp;nbsp;as:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;squared&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_integer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;squared&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_integer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -226,9 +226,9 @@ applied allowing to describe the task in a canonical&amp;nbsp;way. &lt;/p&gt;
 &lt;span class="n"&gt;pyDatalog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_terms&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;math&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;pyDatalog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_terms&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;divmod&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="nd"&gt;@pyDatalog.program&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="nd"&gt;@pyDatalog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="n"&gt;squared&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_integer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;squared&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_integer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="n"&gt;divisible&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;divmod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Y&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -327,7 +327,7 @@ applied allowing to describe the task in a canonical&amp;nbsp;way. &lt;/p&gt;
         &lt;span class="c1"&gt;# J vertical&lt;/span&gt;
         &lt;span class="n"&gt;squared&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]]))&lt;/span&gt;
 
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;riddle&lt;/span&gt;&lt;span class="p"&gt;([(&lt;/span&gt;&lt;span class="n"&gt;A0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;B0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;C0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;riddle&lt;/span&gt;&lt;span class="p"&gt;([(&lt;/span&gt;&lt;span class="n"&gt;A0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;B0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;C0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
                   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;D0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;D1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;D2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;D3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;D4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;D5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;E1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;E2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;E3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;E4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;E5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;F0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;F1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;F2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;F3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;F4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;F5&lt;/span&gt;&lt;span class="p"&gt;)]))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -420,7 +420,7 @@ Declarative programming means finding the right abstraction level that describes
 &lt;p&gt;Another example would be to estimate the effect of additional booking options in an online marketplace. A common use case of an online vehicle marketplace is to provide estimations to sellers on the effect that additional booking options (e.g. highlighting, top of page etc.) may have on the selling time of a given vehicle. Likewise, many dealers will be interested in knowing how changing the price of a vehicle will affect the probability of selling the vehicle within a certain period of time or the expected selling&amp;nbsp;time.&lt;/p&gt;
 &lt;p&gt;These two examples outline the need for methods to estimate the actual causal effect of a controllable covariate onto the response. Before we dip our toes into the deep sea of causal inference, let&amp;#8217;s consider a few general aspects. The first and maybe not so obvious point when coming from a supervised learning background is that causal inference is thinking about &lt;em&gt;what did not happen&lt;/em&gt;. That means that we don&amp;#8217;t know for instance how much a customer that received a voucher would have ordered if they had not received one. This fundamental problem basically renders it an unsupervised learning problem. More interesting aspects of causal inference are summarized in a blog post by Macartan Humphreys on &lt;a href="http://egap.org/methods-guides/10-things-you-need-know-about-causal-inference"&gt;10 Things to Know About Causal Inference&lt;/a&gt;. The question remains how can we estimate the causal effect of a controllable&amp;nbsp;covariate?&lt;/p&gt;
 &lt;h2&gt;Strongly&amp;nbsp;ignorable&lt;/h2&gt;
-&lt;p&gt;The answer to this question lies in another important (and actually the original) use case of causal inference, which is the analysis of therapy effects. In a best-case scenario, the effect of a therapy can be determined in a randomized trial by comparing the response of a treatment group to a control group. In a randomized trial, the allocation of participants to the test or control group is random and thus independent of any covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;. Following the original paper of Rosenbaum &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Rubin &lt;sup id="fnref-rose"&gt;&lt;a class="footnote-ref" href="#fn-rose"&gt;2&lt;/a&gt;&lt;/sup&gt;, in a randomized trial the treatment assignment &lt;span class="math"&gt;\(Z\)&lt;/span&gt; and the (unobservable) potential outcomes &lt;span class="math"&gt;\({Y_1, Y_0}\)&lt;/span&gt; are conditionally independent given the covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;,&amp;nbsp;i.e. &lt;/p&gt;
+&lt;p&gt;The answer to this question lies in another important (and actually the original) use case of causal inference, which is the analysis of therapy effects. In a best-case scenario, the effect of a therapy can be determined in a randomized trial by comparing the response of a treatment group to a control group. In a randomized trial, the allocation of participants to the test or control group is random and thus independent of any covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;. Following the original paper of Rosenbaum &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Rubin &lt;sup id="fnref:rose"&gt;&lt;a class="footnote-ref" href="#fn:rose"&gt;2&lt;/a&gt;&lt;/sup&gt;, in a randomized trial the treatment assignment &lt;span class="math"&gt;\(Z\)&lt;/span&gt; and the (unobservable) potential outcomes &lt;span class="math"&gt;\({Y_1, Y_0}\)&lt;/span&gt; are conditionally independent given the covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;,&amp;nbsp;i.e. &lt;/p&gt;
 &lt;div class="math"&gt;$${Y_1, Y_0} ⫫ Z \mid X.$$&lt;/div&gt;
 &lt;p&gt; Furthermore, we assume that each participant in the experiment has a chance to receive each treatment, i.e. &lt;span class="math"&gt;\(0 &amp;lt; p(Z=1|x) &amp;lt; 1\)&lt;/span&gt;. The treatment assignment is said to be &lt;em&gt;strongly ignorable&lt;/em&gt; if those two conditions hold for our observed covariates &lt;span class="math"&gt;\(x\)&lt;/span&gt;. &lt;/p&gt;
 &lt;h2&gt;Causal effect in a randomized&amp;nbsp;trial&lt;/h2&gt;
@@ -431,11 +431,11 @@ Declarative programming means finding the right abstraction level that describes
 &lt;li&gt;calculate the effect with &lt;span class="math"&gt;\(\hat{y}_1 - \hat{y}_0\)&lt;/span&gt; or &lt;span class="math"&gt;\(\frac{\hat{y}_1}{\hat{y}_0}\)&lt;/span&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;In a real-world big-data problem we often have no control over the experimental setup — we are just left with the data. This happens for instance in observational studies. Imagine for instance the treatment with an experimental drug having strong side-effects that might cure a life-threatening disease. A controlled, randomized experiment where the control groups gets a placebo might be impracticable or even&amp;nbsp;unethical. &lt;/p&gt;
-&lt;p&gt;In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable&lt;sup id="fnref-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;. According to Pearl&lt;sup id="fnref-pearl2"&gt;&lt;a class="footnote-ref" href="#fn-pearl2"&gt;4&lt;/a&gt;&lt;/sup&gt; by now assuming strong ignorability we are basically assuming that our covariate set &lt;span class="math"&gt;\(X\)&lt;/span&gt; is &lt;em&gt;admissible&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)&lt;/span&gt;. Here, Pearl&amp;#8217;s &lt;span class="math"&gt;\(\mathrm{do}\)&lt;/span&gt;-notation &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))\)&lt;/span&gt; denotes the “causal effect” of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;, i.e. the distribution of &lt;span class="math"&gt;\(Y\)&lt;/span&gt; after setting variable &lt;span class="math"&gt;\(Z\)&lt;/span&gt; to a constant &lt;span class="math"&gt;\(Z = z\)&lt;/span&gt; by external intervention. In practice, the assumption of admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies&lt;sup id="fnref2-pearl1"&gt;&lt;a class="footnote-ref" href="#fn-pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;, so one should always be aware that the entire causal analysis depends on the validity of this&amp;nbsp;assumption. &lt;/p&gt;
+&lt;p&gt;In such a nonrandomized experiment, there is no proper mathematical way to check if the treatment is strongly ignorable&lt;sup id="fnref:pearl1"&gt;&lt;a class="footnote-ref" href="#fn:pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;. According to Pearl&lt;sup id="fnref:pearl2"&gt;&lt;a class="footnote-ref" href="#fn:pearl2"&gt;4&lt;/a&gt;&lt;/sup&gt; by now assuming strong ignorability we are basically assuming that our covariate set &lt;span class="math"&gt;\(X\)&lt;/span&gt; is &lt;em&gt;admissible&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))=\sum_{x}p(y|x,z)p(x)\)&lt;/span&gt;. Here, Pearl&amp;#8217;s &lt;span class="math"&gt;\(\mathrm{do}\)&lt;/span&gt;-notation &lt;span class="math"&gt;\(p(y|\mathrm{do}(z))\)&lt;/span&gt; denotes the “causal effect” of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;, i.e. the distribution of &lt;span class="math"&gt;\(Y\)&lt;/span&gt; after setting variable &lt;span class="math"&gt;\(Z\)&lt;/span&gt; to a constant &lt;span class="math"&gt;\(Z = z\)&lt;/span&gt; by external intervention. In practice, the assumption of admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; is often used to estimate a causal effect. This led to incorrect results in some studies as well as controversies&lt;sup id="fnref2:pearl1"&gt;&lt;a class="footnote-ref" href="#fn:pearl1"&gt;3&lt;/a&gt;&lt;/sup&gt;, so one should always be aware that the entire causal analysis depends on the validity of this&amp;nbsp;assumption. &lt;/p&gt;
 &lt;p&gt;So far, we have not only assumed admissibility of &lt;span class="math"&gt;\(X\)&lt;/span&gt; but also a randomized trial for our approach. Therefore, we should check beforehand that &lt;span class="math"&gt;\(X ⫫ Z\)&lt;/span&gt;, (which is a necessary but not sufficient condition), before applying the aforementioned approach. This can be verified by using &lt;span class="math"&gt;\(X\)&lt;/span&gt; to predict &lt;span class="math"&gt;\(Z\)&lt;/span&gt;. If this is not possible, and thus &lt;span class="math"&gt;\(p(z|x) = p(z)\)&lt;/span&gt;, the former approach is viable. But what if &lt;span class="math"&gt;\(Z\)&lt;/span&gt; is not independent of &lt;span class="math"&gt;\(X\)&lt;/span&gt; — as is often the case with real-world data. For instance, dealers of expensive vehicle brands might be more willing to spend money and therefore tend to use more booking options. The data from the last marketing campaign presumingly includes a bias induced by the current strategy of the marketing department on how to pick customers that get a voucher. In these cases, we have to isolate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; from our covariates &lt;span class="math"&gt;\(X\)&lt;/span&gt;.&lt;/p&gt;
 &lt;h2&gt;Propensity&amp;nbsp;score&lt;/h2&gt;
 &lt;p&gt;By predicting &lt;span class="math"&gt;\(Z\)&lt;/span&gt; based on &lt;span class="math"&gt;\(X\)&lt;/span&gt;, we have estimated the &lt;em&gt;propensity score&lt;/em&gt;, i.e. &lt;span class="math"&gt;\(p(Z=1|x)\)&lt;/span&gt;. This of course assumes that we have used a classification method that returns probabilities for the classes &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt;. Let &lt;span class="math"&gt;\(e_i=p(Z=1|x_i)\)&lt;/span&gt; be the propensity score of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th observation, i.e. the propensity of the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th participant getting the treatment (&lt;span class="math"&gt;\(Z=1\)&lt;/span&gt;). &lt;/p&gt;
-&lt;p&gt;We can use the propensity score to define weights &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment&lt;sup id="fnref-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;,&amp;nbsp;i.e. &lt;/p&gt;
+&lt;p&gt;We can use the propensity score to define weights &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; to create a synthetic sample in which the distribution of measured baseline covariates is independent of treatment assignment&lt;sup id="fnref:austin"&gt;&lt;a class="footnote-ref" href="#fn:austin"&gt;5&lt;/a&gt;&lt;/sup&gt;,&amp;nbsp;i.e. &lt;/p&gt;
 &lt;div class="math"&gt;$$w_i=\frac{z_i}{e_i}+\frac{1-z_i}{1-e_i},$$&lt;/div&gt;
 &lt;p&gt; where &lt;span class="math"&gt;\(z_i\)&lt;/span&gt; indicates if the &lt;span class="math"&gt;\(i\)&lt;/span&gt;-th subject was&amp;nbsp;treated. &lt;/p&gt;
 &lt;p&gt;The covariates from our data sample &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; are then weighted by &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; to eliminate the correlation between &lt;span class="math"&gt;\(X\)&lt;/span&gt; and &lt;span class="math"&gt;\(Z\)&lt;/span&gt;, which is a technique known as &lt;em&gt;inverse probability of treatment weighting&lt;/em&gt; (&lt;span class="caps"&gt;IPTW&lt;/span&gt;). This allows us to estimate the causal effect via the following&amp;nbsp;approach:&lt;/p&gt;
@@ -449,24 +449,23 @@ Declarative programming means finding the right abstraction level that describes
 &lt;h2&gt;Python&amp;nbsp;implementation&lt;/h2&gt;
 &lt;p&gt;We can set up a synthetic experiment to demonstrate and evaluate this method with the help of Python and Scikit-Learn. A synthetic experiment is appropriate to address the fundamental problem of causal inference described above. With real data, we  don&amp;#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we derive a model that describes the relationship of &lt;span class="math"&gt;\(X\)&lt;/span&gt; to &lt;span class="math"&gt;\(Y\)&lt;/span&gt; as well as the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; on &lt;span class="math"&gt;\(Y\)&lt;/span&gt;. We use this model to generate observational data where for each sample &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; we either have &lt;span class="math"&gt;\(Z=1\)&lt;/span&gt; or &lt;span class="math"&gt;\(Z=0\)&lt;/span&gt; and thus incomplete information in our data. Our task is now to estimate the effect of &lt;span class="math"&gt;\(Z\)&lt;/span&gt; with the help of the generated&amp;nbsp;data.&lt;/p&gt;
 &lt;p&gt;The following portion of this article is available for &lt;a href="https://florianwilhelm.info/notebooks/causal_inference_propensity_score.ipynb"&gt;download&lt;/a&gt; as a Jupyter&amp;nbsp;notebook.&lt;/p&gt;
-&lt;p&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[1]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
     &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;math&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;math&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;
 
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sp&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.special&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;expit&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.special&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;expit&lt;/span&gt;
 
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.ensemble&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RandomForestClassifier&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RandomForestRegressor&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.linear_model&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;LogisticRegression&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.naive_bayes&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;GaussianNB&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.calibration&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;CalibratedClassifierCV&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.ensemble&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RandomForestClassifier&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RandomForestRegressor&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.linear_model&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;LogisticRegression&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.naive_bayes&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;GaussianNB&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.calibration&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;CalibratedClassifierCV&lt;/span&gt;
 
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.api&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sm&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.formula.api&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;smf&lt;/span&gt;
@@ -483,14 +482,13 @@ Declarative programming means finding the right abstraction level that describes
 &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h3 id="Model"&gt;Model&lt;a class="anchor-link" href="#Model"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Assume we have patients characterized by sex and age suffering from some disease with different severities. The recovery time of a patient depends only on the sex, age, severity and if the patient is on medication. Let the expected recovery time in days $t_{recovery}$ be defined as
 $$\mathbf{E}(t_{recovery}) = \exp(2+0.5\cdot{}I_{male}+0.03\cdot{}age+2\cdot{}severity-1\cdot{}I_{medication}),$$
@@ -512,14 +510,13 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;poisson&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rvs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;exp_recovery_time&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sex&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;severity&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;medication&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;For the features of the patients we will use a Beta distribution to show how badly the disease struck the patients, a Gamma distribution for the age of our patients and a Bernoulli distribution for the gender of the&amp;nbsp;patients.&lt;/p&gt;
 
@@ -539,14 +536,13 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;span class="n"&gt;severties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sev_dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rvs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;It&amp;#8217;s always a good idea to take a look at the nontrivial&amp;nbsp;distributions:&lt;/p&gt;
 
@@ -572,7 +568,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tight_layout&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -582,7 +578,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -1531,8 +1527,7 @@ AABJRU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h3 id="Randomized-trial"&gt;Randomized trial&lt;a class="anchor-link" href="#Randomized-trial"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;In a controlled randomized trial we randomly select patients and assign them with a chance of 50% to either treatment or control. Therefore, the assignment of treatement is completely random and&amp;nbsp;independent.&lt;/p&gt;
 
@@ -1547,14 +1542,13 @@ AABJRU5ErkJggg==
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;meds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;We assemble everything in a dataframe also including a constant&amp;nbsp;column.&lt;/p&gt;
 
@@ -1574,7 +1568,7 @@ AABJRU5ErkJggg==
 &lt;span class="n"&gt;df_rnd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -1584,7 +1578,7 @@ AABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
 
 
 
@@ -1667,7 +1661,7 @@ AABJRU5ErkJggg==
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_rnd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -1677,7 +1671,7 @@ AABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
 
 
 
@@ -1780,8 +1774,7 @@ AABJRU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;By construction, there is no correlation between medication and any other&amp;nbsp;covariate.&lt;/p&gt;
 
@@ -1796,7 +1789,7 @@ AABJRU5ErkJggg==
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;heatmap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_rnd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;corr&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;vmin&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -1806,7 +1799,7 @@ AABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -2162,8 +2155,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;To get started we use a Poisson regression to estimate the coefficients of our formula for $\mathbf{E}(t_{recovery})$ from the generated data. Of course we expect to see approximately the same coefficients since Poisson regression assumes the exact same model that generated our&amp;nbsp;data.&lt;/p&gt;
 
@@ -2180,7 +2172,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2190,7 +2182,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
 
 
 
@@ -2251,8 +2243,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Now we use a randome forest which is a pretty standard machine learning method to estimate the individual effects of the treatment on the patients. We fit the model and predict for each patient the recovery time assuming medication, i.e. medication column is 1, as well as assuming no medication, i.e. medication column is 0. Subsequently we divide the prediction assuming medication by the prediction assuming no medication to get an estimation of the treatment&amp;#8217;s&amp;nbsp;effect.&lt;/p&gt;
 
@@ -2270,7 +2261,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2280,7 +2271,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
 
 
 
@@ -2314,14 +2305,13 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;span class="n"&gt;preds_rnd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X_pos&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X_neg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Let&amp;#8217;s take a look at the distribution of individual effects. Even though we are assuming no model by using a random forest, our estimations of the treatment effect look&amp;nbsp;decent.&lt;/p&gt;
 
@@ -2341,7 +2331,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2351,7 +2341,7 @@ tbW1CAsLg1gsxrZt2/g3spi3F1vgMAzDMAzT5/TZt6gYhmEYhnl3sQUOwzAMwzB9DlvgMAzDMAzT
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -2833,8 +2823,7 @@ TkSuQmCC
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h3 id="Nonrandomized-trial"&gt;Nonrandomized trial&lt;a class="anchor-link" href="#Nonrandomized-trial"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;To make things a bit more interesting, we put now patients on a treatment depending on their sex and severity of the illness. Since men often suffer more than women from the same illness, e.g. &lt;a href="https://en.wikipedia.org/wiki/Man_flu"&gt;man flu&lt;/a&gt;, they tend to complain more and thus are more likely to convince the doctor of prescibing a medication. Thereafter we generate the recovery time again and follow the same procedure as before in the randomized&amp;nbsp;trial.&lt;/p&gt;
 
@@ -2850,7 +2839,7 @@ TkSuQmCC
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;sex&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;severity&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mf"&gt;0.15&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randn&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2866,7 +2855,7 @@ TkSuQmCC
 &lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2876,7 +2865,7 @@ TkSuQmCC
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
 
 
 
@@ -2986,7 +2975,7 @@ TkSuQmCC
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;heatmap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;corr&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;vmin&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2996,7 +2985,7 @@ TkSuQmCC
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -3361,7 +3350,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -3371,7 +3360,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[16]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[16]:&lt;/div&gt;
 
 
 
@@ -3432,8 +3421,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The first stunning result is that the Poisson regression is still able to correctly estimate the coefficients of our model. This is due to the &lt;a href="http://www.preventionresearch.org/wp-content/uploads/2011/07/SPR-Propensity-pc-workshop-slides.pdf"&gt;model dependence&lt;/a&gt; and in realistic cases actually a bad thing. In a nutshell, model dependence means that the inference of the causal effect depends on the chosen model. In our case, the assumptions about the relation of the covariates in the Poisson regression extrapolates our data and thus makes our results heavily depend on the Poisson model. Since we also used a Poisson model to generate the data we are lucky but this is in reality rarely the case. Let&amp;#8217;s check how the random forest&amp;nbsp;performs.&lt;/p&gt;
 
@@ -3451,7 +3439,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -3461,7 +3449,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[17]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[17]:&lt;/div&gt;
 
 
 
@@ -3493,7 +3481,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;span class="n"&gt;preds_no_rnd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X_pos&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X_neg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -3511,7 +3499,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -3521,7 +3509,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -4023,8 +4011,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The distribution is now quite skewed and we can see that for a lot of our patients their individual treatment effect is heavily underestimated. This due to the fact that the random forest overrates the impact of a patient&amp;#8217;s sex which is highly correlated with the&amp;nbsp;medication.&lt;/p&gt;
 
@@ -4032,8 +4019,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h3 id="Inverse-probability-of-treatment-weighting"&gt;Inverse probability of treatment weighting&lt;a class="anchor-link" href="#Inverse-probability-of-treatment-weighting"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;To deminish the impact of other covariates onto the effect of medication we will no calculate the propensity score and use inverse probability of treatment weighting (&lt;span class="caps"&gt;IPTW&lt;/span&gt;). In order to do that we use a classification to predict the probability of a patient to be treated. This can be accomplished by Scikit-Learn&amp;#8217;s &lt;code&gt;predict_proba&lt;/code&gt; method that is available for most classificators. Don&amp;#8217;t be fooled by the name though, in most cases (logistic regression is an exception) the probabilites are not calibrated and cannot be relied on. To fix this, we use the &lt;a href="http://scikit-learn.org/stable/modules/calibration.html"&gt;CalibratedClassifierCV&lt;/a&gt; in order to get proper probabilities (and it doesn&amp;#8217;t hurt applying it for logistic regression too). After that we calculate the inverse probability of treatment weights and pass those as sample weights to the estimator during the&amp;nbsp;fit.&lt;/p&gt;
 
@@ -4057,7 +4043,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -4067,7 +4053,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[20]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[20]:&lt;/div&gt;
 
 
 
@@ -4095,7 +4081,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;span class="n"&gt;propensity&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -4105,7 +4091,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
 
 
 
@@ -4157,8 +4143,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;We can see that the propensity scores of our patients in the randomized trial vary a lot as&amp;nbsp;expected.&lt;/p&gt;
 
@@ -4177,7 +4162,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 &lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;density&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -4187,7 +4172,7 @@ VxZ4MzdmqIEAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -4637,8 +4622,7 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Only for comparison we can also plot the propensity scores of the randomized trail and check if the propensity score is $\frac{1}{2}$ as&amp;nbsp;expected.&lt;/p&gt;
 
@@ -4660,7 +4644,7 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 &lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;density&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -4670,7 +4654,7 @@ hBBCCCE6KUnkhBBCCCE6qf8HUKkx+P8hUwsAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -5090,8 +5074,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;We now calculate at this point the inverse probability of treatment weights (IPTWs) with the help of the propensity scores of the nonrandomized&amp;nbsp;trial.&lt;/p&gt;
 
@@ -5107,7 +5090,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;iptw&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;propensity&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lookup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;propensity&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]),&lt;/span&gt; &lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;medication&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5120,7 +5103,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5130,7 +5113,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[25]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[25]:&lt;/div&gt;
 
 
 
@@ -5242,8 +5225,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The poisson regression benefits from using the IPTWs as weights since the Z-scores of the coefficients&amp;nbsp;increase.&lt;/p&gt;
 
@@ -5262,7 +5244,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5272,7 +5254,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
 
 
 
@@ -5333,8 +5315,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Let&amp;#8217;s check how our random forest does with the help of&amp;nbsp;IPTWs.&lt;/p&gt;
 
@@ -5352,7 +5333,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sample_weight&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;iptw&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5362,7 +5343,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
 
 
 
@@ -5394,7 +5375,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;span class="n"&gt;preds_propensity&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X_pos&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;reg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X_neg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5412,7 +5393,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5422,7 +5403,7 @@ pNgTQgghhOjCpNgTQgghhOjC/gs4GjxYWvOKcQAAAABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -5873,8 +5854,7 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;After taking a brief look at the distribution we see that using &lt;span class="caps"&gt;IPTW&lt;/span&gt; drastically improved the estimation of the treatment&amp;#8217;s causal effect. On second glance though, it can also be seen that for a few samples we have over-estimation beyond 1. Looking at those patients it can be seen that all of them are female. This indicates that the causal effect for these cases could not be captured maybe due to the bagging approach in random forests. For most of the patients the estimation of the causal effect is improved&amp;nbsp;though.&lt;/p&gt;
 &lt;p&gt;A direct comparison is given below, showing the estimations of treatment effects for the &lt;em&gt;randomized&lt;/em&gt; trail, the &lt;em&gt;non-randomized&lt;/em&gt; trail and the &lt;em&gt;non-randomized with &lt;span class="caps"&gt;IPTW&lt;/span&gt;&lt;/em&gt;&amp;nbsp;application.&lt;/p&gt;
@@ -5895,7 +5875,7 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -5905,7 +5885,7 @@ ywAAAABJREFUNa8GHgAAAABJRU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -6651,8 +6631,7 @@ RU5ErkJggg==
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The actual trick of &lt;span class="caps"&gt;IPTW&lt;/span&gt; is that sample weights are chosen in such a way that the correlation of other covariates and the medication is decreased. With the help of a weighted correlation this can also be illustrated. Remarkably enough, neither Numpy, Scipy, Pandas nor StatsModels seem to directly provide a weigthed correlation function, only weighted covariance, which we use to define a weighted&amp;nbsp;correlation.&lt;/p&gt;
 
@@ -6672,14 +6651,13 @@ RU5ErkJggg==
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cov&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;outer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Here is the original correlation of the nonrandomized trial again by setting all weights to&amp;nbsp;1.&lt;/p&gt;
 
@@ -6697,7 +6675,7 @@ RU5ErkJggg==
 &lt;span class="n"&gt;orig_corr&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -6707,7 +6685,7 @@ RU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[32]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[32]:&lt;/div&gt;
 
 
 
@@ -6799,7 +6777,7 @@ RU5ErkJggg==
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;heatmap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;orig_corr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmin&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -6809,7 +6787,7 @@ RU5ErkJggg==
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -7165,8 +7143,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Using the IPTWs the correlation reduces quite a&amp;nbsp;bit.&lt;/p&gt;
 
@@ -7183,7 +7160,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;span class="n"&gt;iptw_corr&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -7193,7 +7170,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt output_prompt"&gt;Out[34]:&lt;/div&gt;
+    &lt;div class="prompt output_prompt"&gt;Out[34]:&lt;/div&gt;
 
 
 
@@ -7285,7 +7262,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;heatmap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iptw_corr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmin&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -7295,7 +7272,7 @@ w/Q5bIHDMAzDMEyfwxY4DMMwDMP0OWyBwzAMwzBMn/M/qpu7H9azSxYAAAAASUVORK5CYII=
 
 &lt;div class="output_area"&gt;
 
-&lt;div class="prompt"&gt;&lt;/div&gt;
+    &lt;div class="prompt"&gt;&lt;/div&gt;
 
 
 
@@ -7653,11 +7630,12 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 &lt;/div&gt;
  
 
-&lt;/p&gt;
+
+
 &lt;h2&gt;Final&amp;nbsp;notes&lt;/h2&gt;
 &lt;p&gt;“With great power comes great responsibility” so they say, and &lt;span class="caps"&gt;IPTW&lt;/span&gt; is surely a weapon of math destruction that needs to be handled carefully. Keep in mind that a controlled randomized experiment remains the gold standard by which to  estimate a causal effect and should always be preferred. But when reality hits us hard and we have just the data, i.e. no influence on the experiment generating it, we saw that &lt;span class="caps"&gt;IPTW&lt;/span&gt; improves causal inference to some&amp;nbsp;extent. &lt;/p&gt;
 &lt;p&gt;Furthermore, the demonstrated technique relies on several things. First, &lt;span class="math"&gt;\(X\)&lt;/span&gt; needs to be &lt;em&gt;admissible&lt;/em&gt; — which cannot be practically checked. But we &lt;em&gt;can&lt;/em&gt; investigate how the treatment was assigned in our data. In our campaign example, that would mean asking the marketing department about their former strategy when sending vouchers to customers. Then we could verify that the data includes all factors on which their strategy relied. Second, we need an accurate method of estimating the propensity scores for this approach to work. For the sake of simplicity, our demonstration did not check the prediction quality of our machine learning models on a test set, which would be advisable in a real application. The application of machine learning models should always encompass training, validation, test splits and a proper cost&amp;nbsp;functional.&lt;/p&gt;
-&lt;p&gt;That said, propensity score techniques like &lt;span class="caps"&gt;IPTW&lt;/span&gt; can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;propensity score methods introduction&lt;/a&gt; by Peter Austin&lt;sup id="fnref2-austin"&gt;&lt;a class="footnote-ref" href="#fn-austin"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;That said, propensity score techniques like &lt;span class="caps"&gt;IPTW&lt;/span&gt; can be very useful. Results can be improved further by first using only the covariates to estimate the recovery time, followed by a residual training with the treatment and the sample weighting to further guide the machine learning algorithm by isolating the causal effect of the treatment — but this is beyond the scope of this post. An overview of other propensity score methods like propensity score matching, stratification on the propensity score and covariate adjustment using the propensity score are well explained in the &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;propensity score methods introduction&lt;/a&gt; by Peter Austin&lt;sup id="fnref2:austin"&gt;&lt;a class="footnote-ref" href="#fn:austin"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;h2&gt;PyData meetup&amp;nbsp;talk&lt;/h2&gt;
 &lt;p&gt;A talk about this blog post was presented at PyData meetup in Berlin, April&amp;nbsp;19th:&lt;/p&gt;
 &lt;p&gt;&lt;span class="videobox"&gt;
@@ -7671,20 +7649,20 @@ cDgcDofDGXPwAIfD4XA4HM6Y439wHsjNwXv84gAAAABJRU5ErkJggg==
 &lt;div class="footnote"&gt;
 &lt;hr&gt;
 &lt;ol&gt;
-&lt;li id="fn-stuart"&gt;
-&lt;p&gt;E. Stuart; &lt;a href="http://www.preventionresearch.org/wp-content/uploads/2011/07/SPR-Propensity-pc-workshop-slides.pdf"&gt;The why, when, and how of propensity score methods for estimating causal effects&lt;/a&gt;; Johns Hopkins Bloomberg School of Public Health, 2011&amp;#160;&lt;a class="footnote-backref" href="#fnref-stuart" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:stuart"&gt;
+&lt;p&gt;E. Stuart; &lt;a href="http://www.preventionresearch.org/wp-content/uploads/2011/07/SPR-Propensity-pc-workshop-slides.pdf"&gt;The why, when, and how of propensity score methods for estimating causal effects&lt;/a&gt;; Johns Hopkins Bloomberg School of Public Health, 2011&amp;#160;&lt;a class="footnote-backref" href="#fnref:stuart" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-rose"&gt;
-&lt;p&gt;Paul R. Rosenbaum, Donald B. Rubin; &amp;#8220;The Central Role of the Propensity Score in Observational Studies for Causal Effects&amp;#8221;; Biometrika, Vol. 70, No. 1., Apr., 1983, &lt;a href="http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf"&gt;pp. 41-55&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-rose" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:rose"&gt;
+&lt;p&gt;Paul R. Rosenbaum, Donald B. Rubin; &amp;#8220;The Central Role of the Propensity Score in Observational Studies for Causal Effects&amp;#8221;; Biometrika, Vol. 70, No. 1., Apr., 1983, &lt;a href="http://www.stat.cmu.edu/~ryantibs/journalclub/rosenbaum_1983.pdf"&gt;pp. 41-55&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:rose" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-pearl1"&gt;
-&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf"&gt;pp. 348-352&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:pearl1"&gt;
+&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-5-final.pdf"&gt;pp. 348-352&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2:pearl1" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-pearl2"&gt;
-&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf"&gt;pp. 341-344&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-pearl2" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:pearl2"&gt;
+&lt;p&gt;Judea Pearl; &amp;#8220;&lt;span class="caps"&gt;CAUSALITY&lt;/span&gt; - Models, Reasoning and Inference&amp;#8221;; 2nd Edition, 2009, &lt;a href="http://bayes.cs.ucla.edu/BOOK-09/ch11-3-2-final.pdf"&gt;pp. 341-344&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:pearl2" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-austin"&gt;
-&lt;p&gt;Peter C. Austin; &amp;#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&amp;#8221;; Multivariate Behav Res. 2011 May; 46(3): &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;pp. 399–424&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:austin"&gt;
+&lt;p&gt;Peter C. Austin; &amp;#8220;An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies&amp;#8221;; Multivariate Behav Res. 2011 May; 46(3): &lt;a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144483/"&gt;pp. 399–424&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2:austin" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;

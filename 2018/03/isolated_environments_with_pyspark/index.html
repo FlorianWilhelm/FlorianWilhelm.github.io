@@ -347,8 +347,8 @@ activate_env.py /my_venvs/venv
 
     <span class="k">for</span> <span class="n">path_name</span> <span class="ow">in</span> <span class="n">list_path_names</span><span class="p">(</span><span class="n">hdfs_path</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hdfs_path</span><span class="p">,</span> <span class="n">path_name</span><span class="p">)</span>
-        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Distributing {}...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
-        <span class="n">sc</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Distributing </span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">sc</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
@@ -493,7 +493,7 @@ activate_env.py /my_venvs/venv
                             causal inference
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
+                    <li class="list-group-item tag-1">
                         <a href="https://florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
@@ -601,6 +601,11 @@ activate_env.py /my_venvs/venv
                     <li class="list-group-item tag-4">
                         <a href="https://florianwilhelm.info/tag/template/">
                             template
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
+                            uncertainty quantification
                         </a>
                     </li>
                 </ul>

@@ -391,8 +391,8 @@ miniconda which might not be available on the data&nbsp;nodes.</p>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">SEP</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span>
 <span class="n">NULL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">N&#39;</span>
@@ -409,12 +409,12 @@ miniconda which might not be available on the data&nbsp;nodes.</p>
     <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">read_input</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
-        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading group {}...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vtype</span><span class="p">))</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading group </span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vtype</span><span class="p">))</span>
         <span class="n">group</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">rowid</span><span class="p">),</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">price</span> <span class="o">==</span> <span class="n">NULL</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">price</span><span class="p">))</span>
                  <span class="k">for</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">price</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;vtype&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">))</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">vtype</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()]</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">output</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">output</span><span class="p">))</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
@@ -512,7 +512,7 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
         <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
         <li><a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
         <li><a href="https://florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="https://florianwilhelm.info/2018/11/working_efficiently_with_jupyter_lab/">Working efficiently with JupyterLab&nbsp;Notebooks</a></li>
+        <li><a href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/">Are you sure about that?! Uncertainty Quantification in <span class="caps">AI</span></a></li>
     </ul>
 </section>
     <hr/>
@@ -596,7 +596,7 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
                             causal inference
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
+                    <li class="list-group-item tag-1">
                         <a href="https://florianwilhelm.info/tag/data-science/">
                             data science
                         </a>
@@ -704,6 +704,11 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
                     <li class="list-group-item tag-4">
                         <a href="https://florianwilhelm.info/tag/template/">
                             template
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
+                            uncertainty quantification
                         </a>
                     </li>
                 </ul>

@@ -1,12 +1,15 @@
 Blog of Florian Wilhelm
 =======================
 
-This is my blog hosted on http://www.florianwilhelm.info/. 
+This is my blog hosted on https://florianwilhelm.info/. 
 Feel free to let me know about errors and typos.
 
-Installation
-------------
+Installation & Usage
+--------------------
 
 ```bash
-pip install pelican Markdown bs4 IPython pillow jsonschema mistune nbconvert jupyter typogrify
+conda env create -f environment.yaml
+conda activate pelican
+cd pelican
+./generate_site.sh
 ```

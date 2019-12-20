@@ -1,0 +1,17 @@
+name: pelican
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - ipython
+  - jupyterlab
+  - nbconvert
+  - pip
+  - pip:
+     - pelican
+     - Markdown
+     - bs4
+     - pillow
+     - jsonschema
+     - mistune
+     - typogrify

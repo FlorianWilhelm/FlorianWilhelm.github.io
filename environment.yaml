@@ -6,6 +6,7 @@ dependencies:
   - ipython
   - jupyterlab
   - nbconvert
+  - jinja2
   - pip
   - pip:
      - pelican

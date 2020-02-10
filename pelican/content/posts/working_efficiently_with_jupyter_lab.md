@@ -44,7 +44,7 @@ For these reasons conda is much more common than virtualenv in the field of data
 
 In the spirit of Phil Karlton who supposedly said "There are only two hard things in Computer Science: cache invalidation and naming things.", we gonna select a specific task, namely an analysis based on the all familiar [Boston housing dataset], to help us finding crisp names. Based on our task we create an environment `boston_housing` including Python and some common data science libraries with:
 
-```commandline
+```bash
 conda create -n boston_housing python=3.6 jupyterlab pandas scikit-learn seaborn
 ```
 
@@ -62,15 +62,15 @@ This observation brings us to one of the most important best practices: **develo
 ### 1. Develop your code in a Python Package
 
 With the help of [PyScaffold] it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated with:
-```commandline
+```bash
 conda install -c conda-forge pyscaffold
 ```
 This package adds the `putup` command into our environment which we use to create a Python package with:
-```commandline
+```bash
 putup boston_housing
 ```
 Now we can change into the new `boston_housing` directory and install the package inside our environment in development mode:
-```commandline
+```bash
 python setup.py develop
 ```
 The development mode installs the package in the conda environment by linking to the source code which resides in `boston_housing/src/boston_housing`. By doing so all your changes to the code will be directly available without any need to reinstall the package again.
@@ -234,7 +234,7 @@ logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 A really old programmer's joke goes like "When I wrote this code, only God and I understood what it did. Now... only God knows." The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use [Markdown syntax] to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the `$...$` notation. More general information about the whole project can be put into `README.rst` which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like [PyPI] or [devpi]. Also GitHub and GitLab will display `README.rst` and thus provide a good entry point into your project. If you are more into the [Markdown syntax] and thus rather want a `README.md`, you can install the [pyscaffoldext-markdown] extension for PyScaffold which adds a `--markdown` flag to PyScaffold's `putup` command.
 
 The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum "The nice thing about standards is that you have so many to choose from". The three most common docstring standards for Python are the default [Sphinx RestructuredText], [Numpy and Google style] which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single readme file, maybe you came up with a new ML algorithms and want to document the concept behind it, you should take a look at [Sphinx]. Our project setup already includes a `docs` folder with an `index.rst` as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as HTML pages:
-```commandline
+```bash
 conda install spinx
 python setup.py docs
 ```
@@ -243,11 +243,11 @@ It's also possible to create a nice PDF and even serve your documentation as a w
 ### 7. State your dependencies for reproducibility
 
 Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data *scientist*, you should always guarantee **reproducibility** of whatever you do since it's the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using `conda` we can do this with our `boston_housing` project as:
-```commandline
+```bash
 conda env export -n boston_housing -f environment.lock.yaml
 ```
 This creates a file `environment.lock.yaml` that recursively states all dependencies and their version as well as the Python version that was used to allow anyone to deterministically reproduce this environment in the future. This is as easy as 
-```commandline
+```bash
 conda env create -f environment.lock.yaml --force
 ```
 Besides a *concrete* environment file that exhaustively lists all dependencies, it's also common practice to define an `environment.yaml` where you state your *abstract* dependencies. These abstract dependencies comprise only libraries which are directly imported with no specific version. In our case this file looks like:
@@ -262,7 +262,7 @@ dependencies:
   - seaborn
 ```
 This file keeps track of all libraries you are directly using. If you added a new library you can use this file to update your current environment with:
-```commandline
+```bash
 conda env update --file environment.yaml
 ``` 
 Remember to regularly update and commit changes to these files in Git. Whenever you are satisfied with an iteration of your work also make use of Git tags in order to have reference points for later. These tags will also be used automatically as version numbers for your Python package which is another benefit of having used PyScaffold for your project setup.
@@ -285,7 +285,7 @@ From time to time, we also need to commit our changes using Git. Since we develo
 </figure>
 
 Another reason for running JupyterLab on a remote machine might be due to some firewall restrictions. Quite often in order to access sensitive data sources or a [Spark] cluster, you need to run JupyterLab on a gateway server. To invoke JupyterLab with Spark capabilities there are two ways. An ad hoc method is to just state on the command line that JupyterLab should use pyspark as kernel. For instance starting JupyterLab with Python 3.6 (needs to be consistent with your Spark distribution), 20 executors each having 5 cores might look like this:
-```commandline
+```bash
 PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON="jupyter" PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=8899" /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false
 ```
 In order to be able to create notebooks with a specific PySpark kernel directly from JupyterLab, just create a file `~/.local/share/jupyter/kernels/pyspark/kernel.json` holding:

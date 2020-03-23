@@ -3,7 +3,7 @@ title: Honey, I shrunk the target variable
 date: 2020-03-10 14:00
 modified: 2020-03-10 14:00
 category: post
-tags: python, data science
+tags: python, data science, mathematics
 authors: Florian Wilhelm
 status: draft
 ---
@@ -12,10 +12,10 @@ status: draft
 
 For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem... but it also makes me contemplating. So full of vigour and enthusiasm, 
-they are often completely absorbed by the idea of minimizing whatever metric they were given or maybe some random metric 
+they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
 they chose themselves, like the [root-mean-square error (RMSE)]. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
-the target variable. Why should they? If the target variable is for instance positive and quite right-skewed, why not transform it using the
+the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn't this better or even required for simple models like linear regression,
 anyways? A little $\log$ never killed dog, so what could possibly go wrong? 
 
@@ -33,7 +33,7 @@ As you might have guessed from these questions, it's not that easy, and transfor
 directly into the danger zone. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
 Without spoiling too much I hope, for the too busy or plain lazy readers, the main take-away is:
 
-> **TLDR**: Applying any non-[affine transformation] to your target variable, might have unwanted effects on the metric you are minimizing.
+> **TLDR**: Applying any non-[affine transformation] to your target variable, might have unwanted effects on the error measure you are minimizing.
             So if you don't know exactly what you are doing, just don't.
 
 
@@ -65,28 +65,155 @@ We only know the amount of money the seller wanted to have which is of course hi
 For the sake of simplicity, we assume that we have raised this point with the business unit, they noted it duly and we
 thus neglect it for our analysis.
 
-## Choosing the right metric
+## Choosing the right error measure
 
 At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
 building some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
-that one might even forget the metric you are optimizing as in most cases it will be the [mean squared error] by default.
+that one might even forget the error measure that is optimized as in most cases it will be the [mean squared error] by default.
 But does the [mean squared error] really make sense for this use-case? First of all is our target measured in some currency,
 so why would try to minimize some squared difference? $\mathrm{\euro}^2$? Very clearly, even taking the square root in the 
 end, i.e. [root mean squared error], would not change a thing about this fact. Still, we would weight one large residual
-higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10,- € is somehow
-less severe than a single residual of 100,- €. You see where I am getting at. In our use-case a metric like the 
-[mean absolute error] might be the more natural choice compared to the [mean squared error].
+higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
+less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
+[mean absolute error] (MAE) might be the more natural choice compared to the [mean squared error] (MSE).
 
-Obsession with MSE
+On the other hand, is it really that important if a car costs you 1000.- € more or less? It definitely does if you
+are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
+Consequently, the [mean absolute percentage error] (MAPE) might even be a better fit than the MAE for this use-case.
+Having said that, we will keep all those error measures in mind but use to default MSE criterion in our machine-learning
+algorithm for the sake of simplicity and to help me making the actual point of this blog post ;-)
 
 
+## Distribution of the target variable
+
+Our data contains not only cars that are for sale but people searching for a car having a certain price. Additionally,
+we have people offering damaged cars, wanting to trade their car for another or just an insanely enormous amount of money. 
+For our use-case we gonna keep only real offerings of an undamaged car with a reasonable price between 200.- € and 50,000.- €.
+This is how the distribution of the price looks like.
+
+<figure>
+<img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
+<figcaption>Distribution plot of the price variable using 1,000.- € bins.</figcaption>
+</figure>
+
+It surely does look like a [log-normal distribution] and just to have visual check, fitting a log-normal distribution
+with the help of the wonderful SciPy gets us this.
+
+<figure>
+<img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit">
+<figcaption>Log-normal distribution fitted to the distribution of prices.</figcaption>
+</figure>
+
+Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
+more *normal*. And isn't this some basic assumption of a linear model anyway? 
+
+Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn't need to
+be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
+For the observed outcome $y_i$ and our model prediction $\hat y_i$ of the $i$-th sample, we have
+
+$$
+\begin{aligned}
+y^\star(\mathbf{x}_i) &=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
+y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon, \tag{1}
+\end{aligned}
+$$
+
+where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions
+and $\epsilon\sim\mathcal{N}(0, \sigma)$ some random noise with standard deviation $\sigma$.
+
+To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
+of a person celebrating Carnival only using a single binary feature, i.e. did the person have a one-night-stand over Carnival or not. 
+Under these assumptions we simple generate some data using the linear model from above and plot it:
+
+```python
+import numpy as np
+import seaborn as sns
+import matplotlib.pylab as plt
+
+N = 10000  # number of people
+x = np.random.randint(2, size=N)
+y = x + 0.28*np.random.randn(N)
+
+sns.distplot(y)
+plt.xlim(-2, 10)
+``` 
+
+Obviously, this results in the a bimodal distribution also known as the notorious [Cologne Cathedral distribution] as some may call it.
+Thus, although using a linear model, we generated a non-normally distributed target variable with residuals that are normally distributed.
+
+<figure>
+<img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
+<figcaption>Bimodal distribution generated with a linear model resembling the cathedral of Cologne.</figcaption>
+</figure>
+
+Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
+you will never forget that the residuals of a linear model are normally distribution and *not* the target variable in general. 
+Only in the case that you used a linear model having only an intercept, i.e. $M=1$ and $\phi_1(\mathbf{x})\equiv 1$,
+the target distribution would equal the residual distribution in all data sets. But seriously, who does that?
 
 
+## Analysis of the Residual Distribution
 
-* Linear model
-* Notice distribution of residuals, not the target variable
-* Example of dom distribution, people having affiars on carneval
-* Thinking about metrics, [mean squared error] -> expectation value, [mean absolute error] -> Median
+Now that we learnt about the distribution of the residual, we want to further analyse it. Especially with respect to
+the error measure that we are trying to minimize as well as the transformation we apply to the target variable beforehand.
+Let's take a look at the definition of the MSE again, i.e.
+$$
+\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2,\tag{2}
+$$
+where $\hat y_i = \hat y(\mathbf{x}_i)$ is our prediction given the feature vector $\mathbf{x}_i$ and $y_i$
+is the observed outcome for the sample $i$. In reality we might only have a single or maybe a few samples sharing
+exactly the same feature vector $(\mathbf{x}_i)$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
+we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
+assume we keep $\mathbf{x}_i$ fixed and would calculate (2) having all those observed outcomes. Let's drop the index $i$
+from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Since we have now an infinite number of outcomes we need
+to incorporate the probability $p(y)$ of a given outcome $y$. Consequently, (2) becomes
+$$
+\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\tag{3},
+$$
+as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
+*residual distribution* I am actually referring to the distribution $y - \hat y$ with $y$ being distributed as $p(y)$ or $y\sim p(y)$ for short.
+Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
+In case of a linear model as in (1), we assume $p(y)$ to be normally distributed but it could also be anything else.
+In our car pricing use-case, we now that $p(y)$ will be non-negative as no one is gonna give you money if you take the car. Let me know if you have counter-example ;-)
+This rules out a normal distribution and thus a log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
+
+For now, we gonna consider (3) again and note that our model, whatever it is, will somehow try to minimize (3) by choosing a proper $\hat y$.
+So let's do that analytically by deriving (3) with respect to $\hat y$ and setting to $0$, we have that
+$$
+\frac{\partial d}{\partial d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
+$$
+and subsequently
+$$
+\hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.
+$$
+Looks familiar? Yes, this is just the definition of the [expected value in the continuous case]! So whenever we are 
+using the RMSE or MSE as error measure, we are actually calculating the expected value of $p(y)$. So what happens if
+we do calculate this for the MAE? In this case we have
+$$
+\int_{-\infty}^\infty \vert y-\hat y\vert p(y)\, \mathrm{d}y=\int_{\hat y}^\infty (y-\hat y) p(y)\, \mathrm{d}y-\int_{-\infty}^{\hat y} (y-\hat y)p(y)\, \mathrm{d}y,
+$$ 
+and deriving by $\hat y$ again, we have
+$$
+\int_{-\infty}^{\hat y}  p(y)\, \mathrm{d}y - \int_{\hat y}^\infty  p(y)\, \mathrm{d}y \stackrel{!}{=} 0.
+$$
+We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [median] of the distribution $p(y)$!
+
+A small recap at this point. We just learnt that minimizing the MSE or RMSE (also [l2-norm] as a fancier name) leads
+to the estimation of the expected value of $p(y)$ while minimizing MAE (also l1-norm) gets us the median of $p(y)$.
+Also remember that our feature vector $\mathbf{x}_i$ is still fixed, so $y-y^\star$ just describes the random fluctuations around
+some true value $y^\star$ that we just don't know and $\hat y$ is our best guess for it. If we assume a normal distribution
+there no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
+minimizing the l1-norm. It may make a huge different though, if we are dealing with a non-symmetrical distribution like
+the log-normal distribution.
+
+TODO: How does it look in our example
+
+## Shrinking the target variable
+
+There is still some elephant in the room that we haven't talked about yet. 
+ 
+
+
 * MAE is not continuously differentiable. second derivative is zero
 * Affine transformations are fine if residuals are normally distributed
 * Back and forth transformation leads to median but is actual expected value (page 2-3 on notes)
@@ -112,3 +239,9 @@ Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\i
 [used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans
 [mean absolute error]: https://en.wikipedia.org/wiki/Mean_absolute_error
 [mean squared error]: https://en.wikipedia.org/wiki/Mean_squared_error
+[mean absolute percentage error]: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
+[log-normal distribution]: https://en.wikipedia.org/wiki/Log-normal_distribution
+[Cologne Cathedral distribution]: https://en.wikipedia.org/wiki/Cologne_Cathedral
+[expectation value in the continuous case]: https://en.wikipedia.org/wiki/Expected_value#Absolutely_continuous_case
+[median]: https://en.wikipedia.org/wiki/Median#Probability_distributions
+[l2-norm]: https://en.wikipedia.org/wiki/Sequence_space#%E2%84%93p_spaces

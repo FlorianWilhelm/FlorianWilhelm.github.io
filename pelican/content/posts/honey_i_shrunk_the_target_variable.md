@@ -113,12 +113,12 @@ Well, this is a common misconception. The dependent variable, i.e. target variab
 be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
 For the observed outcome $y_i$ and our model prediction $\hat y_i$ of the $i$-th sample, we have
 
-$$
-\begin{align}
+\begin{equation}
+\begin{split}
 y^\star(\mathbf{x}_i) &=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
 y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon, 
-\end{align}\tag{1}
-$$
+\end{split}\label{eqn:linear-model}
+\end{equation}
 &nbsp;
 
 where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions
@@ -161,35 +161,35 @@ the target distribution equals the residual distribution (up to some shift) in a
 Now that we learnt about the distribution of the residual, we want to further analyse it. Especially with respect to
 the error measure that we are trying to minimize as well as the transformation we apply to the target variable beforehand.
 Let's take a look at the definition of the MSE again, i.e.
-$$
-\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2,\tag{2}
-$$
+\begin{equation}
+\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2,\label{eqn:sum_residual}
+\end{equation}
 where $\hat y_i = \hat y(\mathbf{x}_i)$ is our prediction given the feature vector $\mathbf{x}_i$ and $y_i$
 is the observed outcome for the sample $i$. In reality we might only have a single or maybe a few samples sharing
 exactly the same feature vector $(\mathbf{x}_i)$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
-assume we keep $\mathbf{x}_i$ fixed and would calculate (2) having all those observed outcomes. Let's drop the index $i$
+assume we keep $\mathbf{x}_i$ fixed and would $\eqref{eqn:sum_residual}$ having all those observed outcomes. Let's drop the index $i$
 from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Since we have now an infinite number of outcomes we need
-to incorporate the probability $p(y)$ of a given outcome $y$. Consequently, (2) becomes
-$$
-\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\tag{3}
-$$
+to incorporate the probability $p(y)$ of a given outcome $y$. Consequently, $\eqref{eqn:sum_residual}$ becomes
+\begin{equation}
+\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\label{eqn:int_residual}
+\end{equation}
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
 *residual distribution* I am actually referring to the distribution $y - \hat y$ with $y$ being distributed as $p(y)$ or $y\sim p(y)$ for short.
 Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
-In case of a linear model as in (1), we assume $p(y)$ to be normally distributed but it could also be anything else.
+In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $p(y)$ to be normally distributed but it could also be anything else.
 In our car pricing use-case, we now that $p(y)$ will be non-negative as no one is gonna give you money if you take the car. Let me know if you have counter-example ;-)
 This rules out a normal distribution and thus a log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
 
-For now, we gonna consider (3) again and note that our model, whatever it is, will somehow try to minimize (3) by choosing a proper $\hat y$.
-So let's do that analytically by deriving (3) with respect to $\hat y$ and setting to $0$, we have that
+For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
+So let's do that analytically by deriving $\eqref{eqn:int_residual}$ with respect to $\hat y$ and setting to $0$, we have that
 $$
-\frac{\partial d}{\partial d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
+\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
 $$
 and subsequently
-$$
-\hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.
-$$
+\begin{equation}
+\hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.\label{eqn:expected-value}
+\end{equation}
 Looks familiar? Yes, this is just the definition of the [expected value in the continuous case]! So whenever we are 
 using the RMSE or MSE as error measure, we are actually calculating the expected value of $p(y)$. So what happens if
 we do calculate this for the MAE? In this case we have
@@ -281,32 +281,90 @@ variable by applying a log transformation and then minimize the MSE?
 ``` 
 So if whe now transform the result `x` which is roughly `8.3` back using `np.exp(8.3)` we get a rounded result of `4024`.
 *Wait a second! What just happened!?* We would have expected the final result to be around `6703` because that's the
-mean value. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
+mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
 transformation changed the result. Now our result of `4024` looks rather like an approximation of the median... well...
 it actually is assuming a log-normal distribution as we will fully understand soon. 
 If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
 of the residual distribution would have been much smaller. Still, 
 we would have missed our goal of minimizing the (R)MSE. Instead we would have unknowingly minimized the MAE, which
-might actually be better suited for our use-case at hand. In any case, a data scientist should know what he or she
-is doing and a lucky punch just doesn't suit a scientist.
+might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
+is doing and a lucky punch without a clue of what happened, just doesn't suit a scientist.
 
-Before we showed that the distribution of prices resembles a log-normal distribution. So let's assume now that we
+Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let's assume now that we
 have a log-normal distribution, and thus we have $\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)$. Consequently,
-the probability density function is
-$$
-\tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\tag{4}
-$$
+the [probability density function] (pdf) is
+\begin{equation}
+\tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
+\end{equation}
 where the only difference to a normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
 $\sigma$ of the log-normal distribution. For our log-transformed prices this are the parameters of a normal distribution
-and thus $\sigma$ is the mean and also the *median*, i.e. $\operatorname {P} (\mathrm{price}\leq \sigma)= 0.5$. Applying
+and thus $\mu is the expected value and also the *median*, i.e. $\operatorname {P} (\mathrm{price}\leq \mu)= 0.5$. Applying
 any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
-$\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\sigma)) = 0.5$ and thus the median as well as any other quantile
+$\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
 is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
 thus the result is not surprising at all from a mathematical point of view.
 
-The expected value is not so well-behaved as the median under transformations. 
+The expected value is not so well-behaved under transformations as the median. Using the definition of the expected
+value $\ref{eqn:expected-value}$ we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
+with scalars $a$ and $b$, allow us to transform the target, determine the expected value and apply the
+inverse transformation to get the expected value of the original distribution. For the transformed random variable
+$\phi(X)$ we have that the expected value
+$$
+\begin{align*}
+E[\phi(X)] &= E[aX + b] \\
+            &= \int (ax + b)p(x)\mathrm{d}x \\
+            &= a\int xp(x)\mathrm{d}x + b \\
+            &=aE[X] + b =\phi(E[X]),
+\end{align*}
+$$
+where we used the fact that probability density functions are normalized, i.e. $\int p(x)\mathrm{d}x=1$. What a relief!
+That means at least affine transformations are fine when we minimize the (R)MSE. 
+This is especially important if you belong to the illustrious circle of deep learning specialists. In some cases, 
+the target variable of a regression problem is standardized or [min-max scaled] during training and transformed back afterwards.
+Since these normalization techniques are affine transformations we are on the safe side.  
 
+Coming back to our example where we know that our residual transformation is quite log-normally distributed. Can we 
+somehow still receive the mean of the untransformed target variable? Yes, we can, actually. Using the parameter $\mu$ that
+we already determined above we just calculate the variance $\sigma^2$ and have $\exp(\mu + \frac{\sigma^2}{2})$ for the mean
+of the untransformed distribution. More details on how to do this can be found in the notebook
+of the [used-cars-log-trans repository]. Way more interesting (at least for the mathematically interested reader) 
+is the actually the question *Why does this work?*.
+
+This is easy to see using some high-school calculus. Let $\tilde y = \log(y)$, $p(y)$ be the pdf of the normal distribution
+and $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
+Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
+\begin{equation}
+\int y \tilde p(y)\mathrm{d}y = \int e^{\tilde y} \tilde p(\tilde y)e^{\tilde y}\mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\end{equation}
+where in the last equation the additional factor of the log-normal distribution was canceled out with $e^{\tilde y}$ and thus
+became the pdf of a normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
+and completing the square with $\tilde y$, we have 
+$$
+\begin{align*}
+\tilde y - \frac{(\tilde y-\mu)^2}{2\sigma^2} &= -\frac{\mu^2 - 2\mu\tilde y + \tilde{y}^2 - 2\sigma^2\tilde y}{2\sigma^2} \\
+            &= -\frac{(\tilde y - (\mu + \sigma^2))^2}{2\sigma^2} + \mu + \frac{\sigma^2}{2}.
+\end{align*}
+$$
+Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$, thus
+$$
+\int p(\tilde y)e^{\tilde y} \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p(\tilde y)\mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+$$
+and subsequently we have proved that the expected value of the log-normal distribution indeed is $\exp(\mu + \frac{\sigma^2}{2})$.
+
+A little recap at this point. When minimizing l2, i.e. (R)MSE, only affine transformations
+allow us the determine the expected value of original target by applying the inverse transformation to the expected value
+of the transformed target variable. When minimizing l2, i.e. MAE, all strictly monotonic increasing transformations can be
+applied to determine the median from the transformed target variable.
+
+
+## Next 
+
+
+\begin{equation} \label{eq:eq12} X^2 \end{equation}
+then $\eqref{eq:eq12}$.
+
+$l2$ etc.
 
 Definition of log-normal and parameters
 We fit MSE that means we get the mean which equals the median in case of a normal distribution. Transforming 
@@ -317,8 +375,7 @@ a distribution has the transformed median. Small proof using the the definition 
 For normally distributed residual error and affine transformation.
 This shows again why the normal distribution is a mathematician's BFF, no matter how you or it changes over time, it will still be true to you and itself.
 
-* Do not use sklearn functions for rmse, mae
-* Affine should work for everything.
+
 * MAE is not continuously differentiable. second derivative is zero
 * Affine transformations are fine if residuals are normally distributed
 * Back and forth transformation leads to median but is actual expected value (page 2-3 on notes)
@@ -347,6 +404,9 @@ Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\i
 [mean absolute percentage error]: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
 [log-normal distribution]: https://en.wikipedia.org/wiki/Log-normal_distribution
 [Cologne Cathedral distribution]: https://en.wikipedia.org/wiki/Cologne_Cathedral
-[expectation value in the continuous case]: https://en.wikipedia.org/wiki/Expected_value#Absolutely_continuous_case
+[expected value in the continuous case]: https://en.wikipedia.org/wiki/Expected_value#Absolutely_continuous_case
 [median]: https://en.wikipedia.org/wiki/Median#Probability_distributions
 [l2-norm]: https://en.wikipedia.org/wiki/Sequence_space#%E2%84%93p_spaces
+[probability density function]: https://en.wikipedia.org/wiki/Probability_density_function
+[min-max scaled]: https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)
+[integration by substitution]: https://en.wikipedia.org/wiki/Integration_by_substitution

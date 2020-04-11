@@ -54,7 +54,7 @@ Consequently, we can think of this predicted price (let's call it `pred_price`) 
 To determine if the actual `price` of a vehicle is a good, fair or bad deal, we would then calculate for instance the relative
 error 
 
-$$\frac{\mathrm{pred_price} - \mathrm{price}}{\mathrm{pred_price}}$$
+$$\frac{\mathrm{pred\_price} - \mathrm{price}}{\mathrm{price}}$$
 
 in the simplest case. If the relative error is close to zero we would call it fair, if it is much larger than zero it's a 
 good deal and a bad deal if it is much smaller than zero. For the actual subject of this blog post, that serves us already
@@ -93,16 +93,18 @@ This is how the distribution of the price looks like.
 
 <figure>
 <img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
-<figcaption>Distribution plot of the price variable using 1,000.- € bins.</figcaption>
+<figcaption align="center">Distribution plot of the price variable using 1,000.- € bins.</figcaption>
 </figure>
+&nbsp;
 
 It surely does look like a [log-normal distribution] and just to have visual check, fitting a log-normal distribution
 with the help of the wonderful SciPy gets us this.
 
 <figure>
 <img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit">
-<figcaption>Log-normal distribution fitted to the distribution of prices.</figcaption>
+<figcaption align="center">Log-normal distribution fitted to the distribution of prices.</figcaption>
 </figure>
+&nbsp;
 
 Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
 more *normal*. And isn't this some basic assumption of a linear model anyway? 
@@ -112,11 +114,12 @@ be normally distribution, only the residuals are. This can be seen easily by rev
 For the observed outcome $y_i$ and our model prediction $\hat y_i$ of the $i$-th sample, we have
 
 $$
-\begin{aligned}
+\begin{align}
 y^\star(\mathbf{x}_i) &=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
-y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon, \tag{1}
-\end{aligned}
+y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon, 
+\end{align}\tag{1}
 $$
+&nbsp;
 
 where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions
 and $\epsilon\sim\mathcal{N}(0, \sigma)$ some random noise with standard deviation $\sigma$.
@@ -143,13 +146,14 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 
 <figure>
 <img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
-<figcaption>Bimodal distribution generated with a linear model resembling the cathedral of Cologne.</figcaption>
+<figcaption align="center">Bimodal distribution generated with a linear model obviously resembling the cathedral of Cologne.</figcaption>
 </figure>
+&nbsp;
 
 Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
 you will never forget that the residuals of a linear model are normally distribution and *not* the target variable in general. 
 Only in the case that you used a linear model having only an intercept, i.e. $M=1$ and $\phi_1(\mathbf{x})\equiv 1$,
-the target distribution would equal the residual distribution in all data sets. But seriously, who does that?
+the target distribution equals the residual distribution (up to some shift) in all data sets. But seriously, who does that in real life?
 
 
 ## Analysis of the Residual Distribution
@@ -168,7 +172,7 @@ assume we keep $\mathbf{x}_i$ fixed and would calculate (2) having all those obs
 from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Since we have now an infinite number of outcomes we need
 to incorporate the probability $p(y)$ of a given outcome $y$. Consequently, (2) becomes
 $$
-\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\tag{3},
+\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\tag{3}
 $$
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
 *residual distribution* I am actually referring to the distribution $y - \hat y$ with $y$ being distributed as $p(y)$ or $y\sim p(y)$ for short.
@@ -199,21 +203,122 @@ $$
 We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [median] of the distribution $p(y)$!
 
 A small recap at this point. We just learnt that minimizing the MSE or RMSE (also [l2-norm] as a fancier name) leads
-to the estimation of the expected value of $p(y)$ while minimizing MAE (also l1-norm) gets us the median of $p(y)$.
-Also remember that our feature vector $\mathbf{x}_i$ is still fixed, so $y-y^\star$ just describes the random fluctuations around
+to the estimation of the expected value of $p(y)$ while minimizing MAE (also known as l1-norm) gets us the median of $p(y)$.
+Also remember that our feature vector $\mathbf{x}_i$ is still fixed, so $y\sim p(y)$ just describes the random fluctuations around
 some true value $y^\star$ that we just don't know and $\hat y$ is our best guess for it. If we assume a normal distribution
-there no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
+there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
 minimizing the l1-norm. It may make a huge different though, if we are dealing with a non-symmetrical distribution like
 the log-normal distribution.
 
-TODO: How does it look in our example
+Let's just demonstrate this using our used cars example. We have already seen that the distribution of price is rather
+log-normally than normally distributed. If we now use the simplest model we can think of, having only a single variable, 
+(yeah, here comes the linear model with just an intercept again), the target distribution directly determines the residual
+distribution. Now, we fit the variable `yhat` to the price vector `y` using RMSE and MSE to compare the results to 
+the mean and median, respectively.  
+
+```python
+>>> def rmse(yhat, y):
+>>>     yhat = np.resize(yhat, y.size)
+>>>     # not taking the root, i.e. MSE, would not change the actual result
+>>>     return np.sqrt(np.mean((y - yhat)**2))
+ 
+>>> def mae(yhat, y):
+>>>     yhat = np.resize(yhat, y.size)
+>>>     return np.mean(np.abs(y - yhat))
+
+>>> y = df.price.to_numpy()
+>>> sp.optimize.minimize(rmse, 1., args=(y,))
+      fun: 7174.003600843465
+ hess_inv: array([[7052.74958795]])
+      jac: array([0.])
+  message: 'Optimization terminated successfully.'
+     nfev: 36
+      nit: 5
+     njev: 12
+   status: 0
+  success: True
+        x: array([6703.59325181])
+
+>>> np.mean(y)
+6704.024314214464
+
+>>> sp.optimize.minimize(mae, 1., options=dict(gtol=2e-4), args=(y,))
+      fun: 4743.492333474732
+ hess_inv: array([[7862.69627309]])
+      jac: array([-0.00018311])
+  message: 'Optimization terminated successfully.'
+     nfev: 120
+      nit: 8
+     njev: 40
+   status: 0
+  success: True
+        x: array([4099.9946168])
+
+>>> np.median(y)
+4100.0
+```
+
+As expected, by looking at the `x` in the output of `minimize`, we approximated the mean by minimizing the RMSE and the median by minimizing the MSE.
 
 ## Shrinking the target variable
 
-There is still some elephant in the room that we haven't talked about yet. 
+There is still some elephant in the room that we haven't talked about yet. What happens now if we shrink our target
+variable by applying a log transformation and then minimize the MSE?
+
+```python 
+>>> y_log = np.log(df.price.to_numpy())
+>>> sp.optimize.minimize(rmse, 8., args=(y_log,), tol=1e-16)
+      fun: 1.066675943730279
+ hess_inv: array([[1.11749076]])
+      jac: array([0.])
+  message: 'Optimization terminated successfully.'
+     nfev: 30
+      nit: 5
+     njev: 10
+   status: 0
+  success: True
+        x: array([8.29160403])
+``` 
+So if whe now transform the result `x` which is roughly `8.3` back using `np.exp(8.3)` we get a rounded result of `4024`.
+*Wait a second! What just happened!?* We would have expected the final result to be around `6703` because that's the
+mean value. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
+transformation changed the result. Now our result of `4024` looks rather like an approximation of the median... well...
+it actually is assuming a log-normal distribution as we will fully understand soon. 
+If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
+of the residual distribution would have been much smaller. Still, 
+we would have missed our goal of minimizing the (R)MSE. Instead we would have unknowingly minimized the MAE, which
+might actually be better suited for our use-case at hand. In any case, a data scientist should know what he or she
+is doing and a lucky punch just doesn't suit a scientist.
+
+Before we showed that the distribution of prices resembles a log-normal distribution. So let's assume now that we
+have a log-normal distribution, and thus we have $\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)$. Consequently,
+the probability density function is
+$$
+\tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\tag{4}
+$$
+where the only difference to a normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
+So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
+$\sigma$ of the log-normal distribution. For our log-transformed prices this are the parameters of a normal distribution
+and thus $\sigma$ is the mean and also the *median*, i.e. $\operatorname {P} (\mathrm{price}\leq \sigma)= 0.5$. Applying
+any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
+$\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\sigma)) = 0.5$ and thus the median as well as any other quantile
+is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
+thus the result is not surprising at all from a mathematical point of view.
+
+The expected value is not so well-behaved as the median under transformations. 
+
+
+Definition of log-normal and parameters
+We fit MSE that means we get the mean which equals the median in case of a normal distribution. Transforming 
+a distribution has the transformed median. Small proof using the the definition of median.
  
 
 
+For normally distributed residual error and affine transformation.
+This shows again why the normal distribution is a mathematician's BFF, no matter how you or it changes over time, it will still be true to you and itself.
+
+* Do not use sklearn functions for rmse, mae
+* Affine should work for everything.
 * MAE is not continuously differentiable. second derivative is zero
 * Affine transformations are fine if residuals are normally distributed
 * Back and forth transformation leads to median but is actual expected value (page 2-3 on notes)

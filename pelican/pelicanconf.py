@@ -11,7 +11,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
 SITEURL = 'https://florianwilhelm.info'
-# SITEURL = ''
+SITEURL = ''
 
 PATH = 'content'
 MARKUP = ('md',)
@@ -147,10 +147,6 @@ DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives', 'search', 'tag
 
 #LEFT_SIDEBAR = """"""
 
-# plumage settings
-SITESUBTITLE = 'Data Scientist'
-SITE_THUMBNAIL = '/images/thumbnail.jpeg'
-SITE_THUMBNAIL_TEXT = 'Sometimes with hip glasses 😎'
 MENUITEMS = (
     ('Home', '/'),
     ('About me', '/about/'),
@@ -191,7 +187,7 @@ PLUGINS = [
 ]
 
 # check https://github.com/barrysteyn/pelican_plugin-render_math for options
-MATH_JAX = {'align': 'center'}
+MATH_JAX = {'align': 'center', 'tex_extensions': ['color.js']}
 BOOTSTRAP_NAVBAR_INVERSE = True
 
 DISQUS_SITENAME = 'florianwilhelmblog'

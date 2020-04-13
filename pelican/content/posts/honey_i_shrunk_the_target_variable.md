@@ -43,7 +43,7 @@ Before we start with the gory mathematical details, let's first pick and explore
 data scientists might be tempted to transform the target variable without a second thought. In order to demonstrate this, I chose 
 the [used-cars database from Kaggle] and if you want to follow along, you find the code here in the notebooks of my Github 
 [used-cars-log-trans repository]. As the name suggests, the data set contains used cars having car features like `vehicleType`,
-`yearOfRegistration` & `monthOfRegistration`, `gearbox`, `PowerPS`, `model`, `kilometer` (mileage), `fuelType`, `brand` and `price`.
+`yearOfRegistration` & `monthOfRegistration`, `gearbox`, `powerPS`, `model`, `kilometer` (mileage), `fuelType`, `brand` and `price`.
 
 Let's say the business unit basically asks us to determine the proper market value of a car given the features above to determine
 if its price is actually a good deal, fair deal or a bad deal. The obvious way to approach this problem is create a model
@@ -156,7 +156,7 @@ Only in the case that you used a linear model having only an intercept, i.e. $M=
 the target distribution equals the residual distribution (up to some shift) in all data sets. But seriously, who does that in real life?
 
 
-## Analysis of the Residual Distribution
+## Analysis of the residual distribution
 
 Now that we learnt about the distribution of the residual, we want to further analyse it. Especially with respect to
 the error measure that we are trying to minimize as well as the transformation we apply to the target variable beforehand.
@@ -297,10 +297,11 @@ the [probability density function] (pdf) is
 \tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
 where the only difference to a normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
+Also note that that parameters $\mu$ and $\sigma$ are tne well-known parameters of the normal distribution but for the
+log-transformed target.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
-$\sigma$ of the log-normal distribution. For our log-transformed prices this are the parameters of a normal distribution
-and thus $\mu is the expected value and also the *median*, i.e. $\operatorname {P} (\mathrm{price}\leq \mu)= 0.5$. Applying
-any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
+$\mu$ of a normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\mathrm{price}\leq \mu)= 0.5$. 
+Applying any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
 $\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
 is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
 thus the result is not surprising at all from a mathematical point of view.
@@ -322,7 +323,7 @@ where we used the fact that probability density functions are normalized, i.e. $
 That means at least affine transformations are fine when we minimize the (R)MSE. 
 This is especially important if you belong to the illustrious circle of deep learning specialists. In some cases, 
 the target variable of a regression problem is standardized or [min-max scaled] during training and transformed back afterwards.
-Since these normalization techniques are affine transformations we are on the safe side.  
+Since these normalization techniques are affine transformations we are on the safe side, though.  
 
 Coming back to our example where we know that our residual transformation is quite log-normally distributed. Can we 
 somehow still receive the mean of the untransformed target variable? Yes, we can, actually. Using the parameter $\mu$ that
@@ -346,25 +347,43 @@ $$
             &= -\frac{(\tilde y - (\mu + \sigma^2))^2}{2\sigma^2} + \mu + \frac{\sigma^2}{2}.
 \end{align*}
 $$
-Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$, thus
+Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$ by shifting the parameter $\mu$ of the
+normal distribution by $\sigma^2$. Denoting with $p_s(y)$ the shifted pdf, we have
 $$
-\int p(\tilde y)e^{\tilde y} \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p(\tilde y)\mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+\int e^{\tilde y} p(\tilde y) \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
 $$
 and subsequently we have proved that the expected value of the log-normal distribution indeed is $\exp(\mu + \frac{\sigma^2}{2})$.
 
-A little recap at this point. When minimizing l2, i.e. (R)MSE, only affine transformations
+A little recap of this section's most important points to remember. When minimizing l2, i.e. (R)MSE, only affine transformations
 allow us the determine the expected value of original target by applying the inverse transformation to the expected value
 of the transformed target variable. When minimizing l2, i.e. MAE, all strictly monotonic increasing transformations can be
 applied to determine the median from the transformed target variable.
 
 
-## Next 
+## Transforming the target for fun and profit
+
+So we have seen that not everything is as it seems or as we might have expected by doing some rather academical analysis.
+But can we somehow use this knowledge in our use-case of predicting the market value of a used car?
+And this is the point where I close the circle to the beginning of the story. I already argued that the RMSE might not
+be the right error measure to minimize. Also we saw that log-transforming the target and still minimizing the RMSE 
+gave us an approximation to the result we got if we had minimized the MAE. This is a neat trick if our regression method
+only allows minimizing the MSE or is too slow or unstable when minimizing MAE directly. A word of caution again, this
+only works if the residual distribution approximates a log-normal distribution.
+
+Well, this is all quite nice, but how about minimizing some relative measure like the MAPE? Assuming that our regression
+method does not support minimizing it directly, does the log-transformation do any good here? 
+Intuitively, since we know that multiplicative, and thus relative, relationships become additive in log-space, 
+we might expect it to be advantageous and indeed it does help. Before we do some experiments, let's first look at some
+other relative error measure, the Root Mean Square Percentage Error (RMSPE), i.e.
+$$
+\sqrt{\frac{1}{n}\sum_{i=1}^n\left(\frac{y_i-\hat y_i}{y_i}\right)^2}.
+$$
+This error measure was used for evaluation in the [Rossmann Store Sales] Kaggle challenge. Since the RMSPE is a rather
+unusual and uncommon error measure, most participants log-transformed the target and minimized the RMSE without giving
+too much thought. Let's now evaluate how the error measures RMSE, MAE, MAPE and RMSPE behave in our use-case with 
+the raw as well as the log-transformed target before we come back to this.
 
 
-\begin{equation} \label{eq:eq12} X^2 \end{equation}
-then $\eqref{eq:eq12}$.
-
-$l2$ etc.
 
 Definition of log-normal and parameters
 We fit MSE that means we get the mean which equals the median in case of a normal distribution. Transforming 
@@ -410,3 +429,4 @@ Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\i
 [probability density function]: https://en.wikipedia.org/wiki/Probability_density_function
 [min-max scaled]: https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)
 [integration by substitution]: https://en.wikipedia.org/wiki/Integration_by_substitution
+[Rossmann Store Sales]: https://www.kaggle.com/c/rossmann-store-sales/

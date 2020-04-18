@@ -146,7 +146,7 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 
 <figure>
 <img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
-<figcaption align="center">Bimodal distribution generated with a linear model obviously resembling the cathedral of Cologne.</figcaption>
+<figcaption align="center">Bimodal distribution generated with a linear model; obviously resembling the cathedral of Cologne.</figcaption>
 </figure>
 &nbsp;
 
@@ -217,14 +217,12 @@ distribution. Now, we fit the variable `yhat` to the price vector `y` using RMSE
 the mean and median, respectively.  
 
 ```python
->>> def rmse(yhat, y):
->>>     yhat = np.resize(yhat, y.size)
+>>> def rmse(y_pred, y_true):
 >>>     # not taking the root, i.e. MSE, would not change the actual result
->>>     return np.sqrt(np.mean((y - yhat)**2))
+>>>     return np.sqrt(np.mean((y_true - y_pred)**2))
  
->>> def mae(yhat, y):
->>>     yhat = np.resize(yhat, y.size)
->>>     return np.mean(np.abs(y - yhat))
+>>> def mae(y_pred, y_true):
+>>>     return np.mean(np.abs(y_true - y_pred))
 
 >>> y = df.price.to_numpy()
 >>> sp.optimize.minimize(rmse, 1., args=(y,))
@@ -307,10 +305,10 @@ is equivariant under the transformation $\varphi$. In our specific case from abo
 thus the result is not surprising at all from a mathematical point of view.
 
 The expected value is not so well-behaved under transformations as the median. Using the definition of the expected
-value $\ref{eqn:expected-value}$ we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
+value $\eqref{eqn:expected-value}$ we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
 with scalars $a$ and $b$, allow us to transform the target, determine the expected value and apply the
 inverse transformation to get the expected value of the original distribution. For the transformed random variable
-$\phi(X)$ we have that the expected value
+$\phi(X)$ we have for the expected value
 $$
 \begin{align*}
 E[\phi(X)] &= E[aX + b] \\
@@ -329,11 +327,11 @@ Coming back to our example where we know that our residual transformation is qui
 somehow still receive the mean of the untransformed target variable? Yes, we can, actually. Using the parameter $\mu$ that
 we already determined above we just calculate the variance $\sigma^2$ and have $\exp(\mu + \frac{\sigma^2}{2})$ for the mean
 of the untransformed distribution. More details on how to do this can be found in the notebook
-of the [used-cars-log-trans repository]. Way more interesting (at least for the mathematically interested reader) 
-is the actually the question *Why does this work?*.
+of the [used-cars-log-trans repository]. Way more interesting, at least for the mathematically interested reader,
+is the question *Why does this work?*.
 
-This is easy to see using some high-school calculus. Let $\tilde y = \log(y)$, $p(y)$ be the pdf of the normal distribution
-and $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
+This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ and let $p(y)$ be the pdf of the normal distribution
+as well as $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
 Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
 \begin{equation}
 \int y \tilde p(y)\mathrm{d}y = \int e^{\tilde y} \tilde p(\tilde y)e^{\tilde y}\mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\mathrm{d}\tilde y,\label{eqn:mean-log-normal}
@@ -365,35 +363,108 @@ applied to determine the median from the transformed target variable.
 So we have seen that not everything is as it seems or as we might have expected by doing some rather academical analysis.
 But can we somehow use this knowledge in our use-case of predicting the market value of a used car?
 And this is the point where I close the circle to the beginning of the story. I already argued that the RMSE might not
-be the right error measure to minimize. Also we saw that log-transforming the target and still minimizing the RMSE 
-gave us an approximation to the result we got if we had minimized the MAE. This is a neat trick if our regression method
-only allows minimizing the MSE or is too slow or unstable when minimizing MAE directly. A word of caution again, this
-only works if the residual distribution approximates a log-normal distribution.
+be the right error measure to minimize. We already saw that log-transforming the target and still minimizing the RMSE 
+gave us an approximation to the result we got if we had minimized MAE, which quite likely is a more appropriate error 
+measure in this use-case than the RMSE. This is a neat trick if our regression method
+only allows minimizing MSE or is too slow or unstable when minimizing MAE directly. A word of caution again, this
+only works if the residual distribution approximates a log-normal distribution. So far we only seen that the target
+distribution is quite log-normal but since we are dealing with positive numbers, and also taking into account the fact 
+that a car seller might be more inclined to start with a higher price, this justifies the assumption that the residual 
+distribution (in case of a multivariate model) will also approximate a log-normal distribution.
 
-Well, this is all quite nice, but how about minimizing some relative measure like the MAPE? Assuming that our regression
+Well, MAE surely is quite nice, but how about minimizing some relative measure like the MAPE? Assuming that our regression
 method does not support minimizing it directly, does the log-transformation do any good here? 
 Intuitively, since we know that multiplicative, and thus relative, relationships become additive in log-space, 
-we might expect it to be advantageous and indeed it does help. Before we do some experiments, let's first look at some
-other relative error measure, the Root Mean Square Percentage Error (RMSPE), i.e.
+we might expect it to be advantageous and indeed it does help. But before we do some experiments, let's first look at some
+other relative error measure, namely the Root Mean Square Percentage Error (RMSPE), i.e.
 $$
 \sqrt{\frac{1}{n}\sum_{i=1}^n\left(\frac{y_i-\hat y_i}{y_i}\right)^2}.
 $$
 This error measure was used for evaluation in the [Rossmann Store Sales] Kaggle challenge. Since the RMSPE is a rather
 unusual and uncommon error measure, most participants log-transformed the target and minimized the RMSE without giving
-too much thought. Let's now evaluate how the error measures RMSE, MAE, MAPE and RMSPE behave in our use-case with 
-the raw as well as the log-transformed target before we come back to this.
+too much thought about it, just following their intuition. Some participants in the challenge dug deeper, like Tim Hochberg 
+who proved in a [forum's post] that minimizing the RMSE of the log-transformed target is a first-order approximation of the RMSPE 
+using [Taylor series] expansion. Although his result is correct, it only tells us that we are asymptotically doing the 
+right thing, i.e. only if we had some really glorious model that perfectly predicts the target, which of course is never true.
+So in practice, the residual distribution might be quite narrow but if it was the [Dirac delta function] we would have found some
+deterministic relationship between our feature and the target variable, or more likely made a mistake by evaluating some
+over-fitted model on the train set. In a [reply post] to Tim's original post, a guy who just calls himself *ML*, pointed
+out the overly optimistic assumptions and proved that a correction of $-\frac{3}{2}\sigma^2$ is necessary during
+back-transformation assuming a log-normal target distribution. Since his post is quite scrambled, and also just for the
+fun of it, we will also prove this after some more practical applications using the notation we already established. 
+And while we are at it, we will also show that the necessary correction in case of MAPE is $-\sigma^2$. But for now, we will
+just take for granted the following
 
+|                   |    RMSE     |  MSE  | MAPE        | RMSPE                  |
+|-------------------|-------------|-------|-------------|------------------------|
+| correction terms  | $+\sigma^2$ | $0$   | $-\sigma^2$ | $-\frac{3}{2}\sigma^2$ |
 
+which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target.
+Let's now evaluate how these error measures behave in our use-case with the raw as well as the log-transformed target before we come back to this.
 
-Definition of log-normal and parameters
-We fit MSE that means we get the mean which equals the median in case of a normal distribution. Transforming 
-a distribution has the transformed median. Small proof using the the definition of median.
  
-
+Random forest is like a VW Passat
 
 For normally distributed residual error and affine transformation.
 This shows again why the normal distribution is a mathematician's BFF, no matter how you or it changes over time, it will still be true to you and itself.
 
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">RMSE</th>
+      <th colspan="2" halign="left">MAE</th>
+      <th colspan="2" halign="left">MAPE</th>
+      <th colspan="2" halign="left">RMSPE</th>
+    </tr>
+    <tr>
+      <th>target</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>log &amp; no corr</th>
+      <td>+3.42%</td>
+      <td>±1.07%p</td>
+      <td>-0.09%</td>
+      <td>±0.61%p</td>
+      <td>-10.99%</td>
+      <td>±0.65%p</td>
+      <td>-12.08%</td>
+      <td>±4.14%p</td>
+    </tr>
+    <tr>
+      <th>log &amp; sigma2 corr</th>
+      <td>+4.14%</td>
+      <td>±0.84%p</td>
+      <td>-0.09%</td>
+      <td>±0.61%p</td>
+      <td>-11.03%</td>
+      <td>±0.74%p</td>
+      <td>-28.24%</td>
+      <td>±3.35%p</td>
+    </tr>
+    <tr>
+      <th>log &amp; fitted corr</th>
+      <td>+2.75%</td>
+      <td>±1.00%p</td>
+      <td>-0.19%</td>
+      <td>±0.58%p</td>
+      <td>-13.23%</td>
+      <td>±0.68%p</td>
+      <td>-47.27%</td>
+      <td>±5.37%p</td>
+    </tr>
+  </tbody>
+</table>
 
 * MAE is not continuously differentiable. second derivative is zero
 * Affine transformations are fine if residuals are normally distributed
@@ -417,7 +488,7 @@ Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\i
 [used-cars database from Kaggle]: https://www.kaggle.com/orgesleka/used-cars-database
 [root-mean-square error (RMSE)]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [affine transformation]: https://en.wikipedia.org/wiki/Affine_transformation
-[used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans
+[used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb
 [mean absolute error]: https://en.wikipedia.org/wiki/Mean_absolute_error
 [mean squared error]: https://en.wikipedia.org/wiki/Mean_squared_error
 [mean absolute percentage error]: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
@@ -430,3 +501,7 @@ Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\i
 [min-max scaled]: https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)
 [integration by substitution]: https://en.wikipedia.org/wiki/Integration_by_substitution
 [Rossmann Store Sales]: https://www.kaggle.com/c/rossmann-store-sales/
+[forum's post]: https://www.kaggle.com/c/rossmann-store-sales/discussion/17026
+[Taylor series]: https://en.wikipedia.org/wiki/Taylor_series
+[Dirac delta function]: https://en.wikipedia.org/wiki/Dirac_delta_function
+[reply post]: https://www.kaggle.com/c/rossmann-store-sales/discussion/17601

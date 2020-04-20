@@ -1,7 +1,7 @@
 ---
 title: Honey, I shrunk the target variable
-date: 2020-03-10 14:00
-modified: 2020-03-10 14:00
+date: 2020-05-01 14:00
+modified: 2020-05-01 14:00
 category: post
 tags: python, data science, mathematics
 authors: Florian Wilhelm
@@ -30,7 +30,7 @@ anyways? A little $\log$ never killed dog, so what could possibly go wrong?
 &nbsp;
 
 As you might have guessed from these questions, it's not that easy, and transforming your target variable puts you
-directly into the danger zone. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
+directly into the [danger zone]. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
 Without spoiling too much I hope, for the too busy or plain lazy readers, the main take-away is:
 
 > **TLDR**: Applying any non-[affine transformation] to your target variable, might have unwanted effects on the error measure you are minimizing.
@@ -41,7 +41,7 @@ Without spoiling too much I hope, for the too busy or plain lazy readers, the ma
 
 Before we start with the gory mathematical details, let's first pick and explore a typical use-case where most inexperienced
 data scientists might be tempted to transform the target variable without a second thought. In order to demonstrate this, I chose 
-the [used-cars database from Kaggle] and if you want to follow along, you find the code here in the notebooks of my Github 
+the [used-cars database from Kaggle] and if you want to follow along, you find the code in the notebooks folder of my Github 
 [used-cars-log-trans repository]. As the name suggests, the data set contains used cars having car features like `vehicleType`,
 `yearOfRegistration` & `monthOfRegistration`, `gearbox`, `powerPS`, `model`, `kilometer` (mileage), `fuelType`, `brand` and `price`.
 
@@ -71,13 +71,13 @@ At this point, a lot of inexperienced data scientists would directly get into bu
 building some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
 that one might even forget the error measure that is optimized as in most cases it will be the [mean squared error] by default.
 But does the [mean squared error] really make sense for this use-case? First of all is our target measured in some currency,
-so why would try to minimize some squared difference? $\mathrm{\euro}^2$? Very clearly, even taking the square root in the 
+so why would try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
 end, i.e. [root mean squared error], would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
 [mean absolute error] (MAE) might be the more natural choice compared to the [mean squared error] (MSE).
 
-On the other hand, is it really that important if a car costs you 1000.- € more or less? It definitely does if you
+On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
 are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
 Consequently, the [mean absolute percentage error] (MAPE) might even be a better fit than the MAE for this use-case.
 Having said that, we will keep all those error measures in mind but use to default MSE criterion in our machine-learning
@@ -305,10 +305,10 @@ is equivariant under the transformation $\varphi$. In our specific case from abo
 thus the result is not surprising at all from a mathematical point of view.
 
 The expected value is not so well-behaved under transformations as the median. Using the definition of the expected
-value $\eqref{eqn:expected-value}$ we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
+value $\eqref{eqn:expected-value}$, we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
 with scalars $a$ and $b$, allow us to transform the target, determine the expected value and apply the
-inverse transformation to get the expected value of the original distribution. For the transformed random variable
-$\phi(X)$ we have for the expected value
+inverse transformation to get the expected value of the original distribution. 
+For the transformed random variable $\phi(X)$ we have for the expected value that
 $$
 \begin{align*}
 E[\phi(X)] &= E[aX + b] \\
@@ -326,7 +326,7 @@ Since these normalization techniques are affine transformations we are on the sa
 Coming back to our example where we know that our residual transformation is quite log-normally distributed. Can we 
 somehow still receive the mean of the untransformed target variable? Yes, we can, actually. Using the parameter $\mu$ that
 we already determined above we just calculate the variance $\sigma^2$ and have $\exp(\mu + \frac{\sigma^2}{2})$ for the mean
-of the untransformed distribution. More details on how to do this can be found in the notebook
+of the untransformed distribution. More details on how to do this can be found in the [notebook]
 of the [used-cars-log-trans repository]. Way more interesting, at least for the mathematically interested reader,
 is the question *Why does this work?*.
 
@@ -354,7 +354,7 @@ and subsequently we have proved that the expected value of the log-normal distri
 
 A little recap of this section's most important points to remember. When minimizing l2, i.e. (R)MSE, only affine transformations
 allow us the determine the expected value of original target by applying the inverse transformation to the expected value
-of the transformed target variable. When minimizing l2, i.e. MAE, all strictly monotonic increasing transformations can be
+of the transformed target variable. When minimizing l1, i.e. MAE, all strictly monotonic increasing transformations can be
 applied to determine the median from the transformed target variable.
 
 
@@ -390,7 +390,7 @@ So in practice, the residual distribution might be quite narrow but if it was th
 deterministic relationship between our feature and the target variable, or more likely made a mistake by evaluating some
 over-fitted model on the train set. In a [reply post] to Tim's original post, a guy who just calls himself *ML*, pointed
 out the overly optimistic assumptions and proved that a correction of $-\frac{3}{2}\sigma^2$ is necessary during
-back-transformation assuming a log-normal target distribution. Since his post is quite scrambled, and also just for the
+back-transformation assuming a log-normal residual distribution. Since his post is quite scrambled, and also just for the
 fun of it, we will also prove this after some more practical applications using the notation we already established. 
 And while we are at it, we will also show that the necessary correction in case of MAPE is $-\sigma^2$. But for now, we will
 just take for granted the following
@@ -399,14 +399,92 @@ just take for granted the following
 |-------------------|-------------|-------|-------------|------------------------|
 | correction terms  | $+\sigma^2$ | $0$   | $-\sigma^2$ | $-\frac{3}{2}\sigma^2$ |
 
-which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target.
-Let's now evaluate how these error measures behave in our use-case with the raw as well as the log-transformed target before we come back to this.
+which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target. Needless to
+say, the correction for RMSPE was one of the decisive factors to win the Kaggle challenge and make some profit. The 
+winner Gert Jacobusse mentions this in the attached PDF of his [model documentation post]. 
 
- 
-Random forest is like a VW Passat
+What if we don't have an log-normal residual distribution or only a really rough approximation, can we better than applying
+those theoretical corrections terms? Sure, we can! In the end, since we are transforming back using $\exp$, it's only
+a correction factor close to $1$ that we are applying. So in case of RMSPE and for our approximation $\hat\mu$ of the log-
+normal distribution, we have a factor of $c=\exp(-\frac{3}{2}\sigma^2)$ for the back-transformed target $\exp(\hat\mu)$.
+We can just treat this as another one-dimensional optimization problem and determine the best correction factor numerically. 
+Speaking of numerical computation, we are not gonna determine a factor $c$ but equivalently a correction term $\tilde c$,
+so that $\exp(\hat \mu + \tilde c)=\hat y$, which is numerically much more stable. At my former employer [Blue Yonder],
+we used to call this the *Gronbach factor* after our colleague Moritz Gronbach, who would successfully apply this fitted correction
+to all kinds of regression problems with non-negative values. The implementation given the true value, our predicted value
+in log-space and some error measure is actually quite easy:
 
-For normally distributed residual error and affine transformation.
-This shows again why the normal distribution is a mathematician's BFF, no matter how you or it changes over time, it will still be true to you and itself.
+```python
+def get_corr(y_true, y_pred_log, error_func):
+    """Determine correction delta for exp transformation"""
+    res = sp.optimize.minimize(lambda delta: error_func(np.exp(delta + y_pred_log), y_true), 0.)
+    return res.x
+```
+
+Let's now get our hands dirty and evaluate how RMSE, MSE, MAPE and RMSPE behave in our use-case with the raw as well 
+as the log-transformed target using no, the theoretical and the fitted correction. To do so we gonna do some feature engineering and apply some ML method. 
+Regarding the former, we just do some extremely basic things like calculating the age of a car and average mileage per year, i.e.
+```python
+df['monthOfRegistration'] = df['monthOfRegistration'].replace(0, 7)
+df['dateOfRegistration'] = df.apply(
+    lambda ds: datetime(ds["yearOfRegistration"], ds["monthOfRegistration"], 1), axis=1)
+df['ageInYears'] = df.apply(
+    lambda ds: (ds['dateCreated'] - ds['dateOfRegistration']).days / 365, axis=1)
+df['mileageOverAge'] = df['kilometer'] / df['ageInYears']
+```
+In total, combined with the original features, we take as our feature set including the target:
+```python
+FEATURES = ["vehicleType", 
+            "ageInYears",
+            "mileageOverAge",
+            "gearbox", 
+            "powerPS",
+            "model",
+            "kilometer", 
+            "fuelType",
+            "brand",
+            "price"]
+df = df[FEATURES]
+```
+and transform all categorical features to integers, i.e.
+```python
+for col, dtype in zip(df.columns, df.dtypes):
+    if dtype is np.dtype('O'):
+        df[col] = df[col].astype('category').cat.codes
+```
+to get our final feature matrix `X` and target vector `y` with
+```python
+y = df['price'].to_numpy()
+X = df.drop(columns='price').to_numpy()
+```
+As ML method, let's just choose a [Random Forest] as for me it's like the [Volkswagen Passat Variant] under all ML algorithms. 
+Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
+In a real world scenario, one would rather select and fine-tune some [Gradient Boosted Decision Tree] like [XGBoost],
+[LightGBM] or maybe even better [CatBoost] since categories (e.g. `vehicleType` and `model`) surely play an important 
+part in this use-case. We will use the default MSE criterion of [Scikit-Learn's RandomForestRegressor] implementation for
+all experiments. 
+
+To now evaluate this model we gonna use a 10-fold cross-validation and split a validation set from the training set 
+in each split to fit our correction term. The cross-validation will give us some indication about the variance in 
+our results. In each split we then fit the model and predict using the
+
+1. untransformed target,
+2. log-transformed target with no correction,
+3. log-transformed target with the corresponding sigma2 correction,
+4. log-transformed target with the fitted correction,
+
+and evaluate the results with RMSE, MSE, MAPE and RMSPE. To spare you the trivial implementation, which is to be found
+in the [notebook], we jump directly to the results of the first split:
+
+|   split | target            |    rmse |     mae |     mape |    rmspe |
+|--------:|:------------------|--------:|--------:|---------:|---------:|
+|       0 | raw               | 2368.36 | 1249.34 | 0.342704 | 1.65172  |
+|       0 | log & no corr     | 2464.5  | 1253.19 | 0.307301 | 1.56172  |
+|       0 | log & sigma2 corr | 2475.48 | 1253.19 | 0.305424 | 1.27903  |
+|       0 | log & fitted corr | 2449.23 | 1251.35 | 0.299577 | 0.858787 |
+
+For each split, we take now the first row as baseline and calculate the percentage change for all other rows. Then, we 
+calculate for each cell the mean and standard deviation over all 10 splits, resulting in:
 
 <table border="1" class="dataframe">
   <thead>
@@ -466,29 +544,44 @@ This shows again why the normal distribution is a mathematician's BFF, no matter
   </tbody>
 </table>
 
-* MAE is not continuously differentiable. second derivative is zero
-* Affine transformations are fine if residuals are normally distributed
-* Back and forth transformation leads to median but is actual expected value (page 2-3 on notes)
-* Mention the RMSPE from Kaggle and show calculation
-* Show relative error too?
+Let's interpret those evaluation results and note that negative percentages mean an improvement over the untransformed
+target. The RMSE columns shows us that if we really wanna get the best results for RMSE, transforming the target variable
+leads to a worse result compared to a model trained on the original target. The theoretical sigma2 correction makes it even
+worse which tells us that the residuals in log-space are not normally distributed. We can check that using for instance the
+[Kolmogorov–Smirnov test]. At least the fitted correction improves somewhat over an uncorrected back-transformation. 
+For the MAE we see an improvement as expected and we know that theoretically there is no need for a correction. Again,
+noting that the log-normal assumption is quite idealistic, we can understand that the fitted correction is better than
+the theoretical optimisation. Coming now to the more appropriate measures for this use-case, we see that quite a huge
+percentage improvement for MAPE. So applying the log-transformation here gets us a huge performance boost even without
+correction. The sigma2 correction makes it a tad better but is outperformed by the fitted correction. Last but not least,
+RMSPE brings the most pleasing results. Transforming without correction is good, sigma2 makes it even better and the
+fitted corrections is simply outstanding, at least percentage-wise compared to the baseline. In absolute numbers, judged
+in the respective error measure, we would still need to improve the model a lot to use it in some production use-case
+but that was not the actual point. 
+ 
+Having proven mathematically and shown in same example use-case, we can conclude finally that transforming the target
+variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
+disaster. It's now up to you and remember that with great power comes great responsibility ;-) The rest of this post
+is only for the inquisitive reader who wants to know exactly where the correction terms for MAPE and RSMPE come from.
 
-One important thing to note is that when we are fitting the mean squared error, i.e. $\
+## Aftermath
 
-$\frac{1}{n}\sum_{i=1}^n \Vert y_i - \hat y_i \Vert^2$
-$\frac{1}{\vert \mathcal{I}\vert}\sum_{i\in \mathcal{I}} \Vert y_i - \hat y \Vert^2$ 
-where the index set $\mathcal I$ is such that $\hat y = f(x)$ is constant within a small neighbourhood of a fixed $x$. 
+So you are still reading? I totally appreciate it and bet you're one of those people who wants to know for sure. 
+If you ever had religious education, you were certainly a pain in the ass for your teacher and I can feel you.
 
-$\int_{-\infty}^\infty \vert y-\hat y\vert p(y)\, \mathrm{d}y=\int_{\hat y}^\infty (y-\hat y) p(y)\, \mathrm{d}y-\int_{-\infty}^{\hat y} (y-\hat y)p(y)\, \mathrm{d}y$
-Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\int_{-\infty}^{\hat y}  p(y)\, \mathrm{d}y - \int_{\hat y}^\infty  p(y)\, \mathrm{d}y \stackrel{!}{=} 0$. By the definition of the median, we thus have $\hat y = P(X\leq \frac{1}{2})$, i.e. the median, for any distribution $p(y)$.
-
+For normally distributed residual error and affine transformation.
+This shows again why the normal distribution is a mathematician's BFF, no matter how you or it changes over time, it will still be true to you and itself.
 
 
+
+
+[danger zone]: https://www.youtube.com/watch?v=siwpn14IE7E
 [root mean squared error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [Scikit-Learn]: https://scikit-learn.org/
 [used-cars database from Kaggle]: https://www.kaggle.com/orgesleka/used-cars-database
 [root-mean-square error (RMSE)]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [affine transformation]: https://en.wikipedia.org/wiki/Affine_transformation
-[used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb
+[used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans/
 [mean absolute error]: https://en.wikipedia.org/wiki/Mean_absolute_error
 [mean squared error]: https://en.wikipedia.org/wiki/Mean_squared_error
 [mean absolute percentage error]: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
@@ -505,3 +598,14 @@ Differentiating by $\hat y$ and setting to $0$ in order to minimize, we have $\i
 [Taylor series]: https://en.wikipedia.org/wiki/Taylor_series
 [Dirac delta function]: https://en.wikipedia.org/wiki/Dirac_delta_function
 [reply post]: https://www.kaggle.com/c/rossmann-store-sales/discussion/17601
+[model documentation post]: https://www.kaggle.com/c/rossmann-store-sales/discussion/18024
+[Random Forest]: https://en.wikipedia.org/wiki/Random_forest
+[Gradient Boosted Decision Tree]: https://en.wikipedia.org/wiki/Gradient_boosting
+[XGBoost]: https://xgboost.readthedocs.io/
+[LightGBM]: https://lightgbm.readthedocs.io/
+[CatBoost]: https://catboost.ai/
+[Volkswagen Passat Variant]: https://en.wikipedia.org/wiki/Volkswagen_Passat
+[Blue Yonder]: https://blueyonder.com/
+[Scikit-Learn RandomForestRegressor]: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
+[notebook]: https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb
+[Kolmogorov–Smirnov test]: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test

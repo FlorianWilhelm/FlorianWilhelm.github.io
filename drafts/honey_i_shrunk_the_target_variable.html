@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Honey, I shrunk the target variable - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+
+/*some stuff for output/input prompts*/
+div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
+div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
+div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
+div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
+@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
+div.prompt:empty{padding-top:0;padding-bottom:0}
+div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
+div.inner_cell{width:90%;}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
+div.input_prompt{color:navy;border-top:1px solid transparent;}
+div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
+div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
+div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
+div.output_prompt{color:darkred;}
+
+a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
+h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
+/* end stuff for output/input prompts*/
+
+
+.highlight-ipynb .hll { background-color: #ffffcc }
+.highlight-ipynb  { background: #f8f8f8; }
+.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
+.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
+.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight-ipynb .o { color: #666666 } /* Operator */
+.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
+.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
+.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
+.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
+.highlight-ipynb .go { color: #888888 } /* Generic.Output */
+.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
+.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
+.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
+.highlight-ipynb .m { color: #666666 } /* Literal.Number */
+.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
+.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
+.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
+.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight-ipynb .no { color: #880000 } /* Name.Constant */
+.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
+.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
+.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
+.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
+.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
+.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
+.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
+.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
+.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+div.entry-content {
+  overflow: visible;
+  padding: 8px;
+}
+.input_area {
+  padding: 0.2em;
+}
+
+a.heading-anchor {
+ white-space: normal;
+}
+
+.rendered_html
+code {
+ font-size: .8em;
+}
+
+pre.ipynb {
+  color: black;
+  background: #f7f7f7;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0px;
+  font-size: 13px;
+}
+
+/* remove the prompt div from text cells */
+div.text_cell .prompt {
+    display: none;
+}
+
+/* remove horizontal padding from text cells, */
+/* so it aligns with outer body text */
+div.text_cell_render {
+    padding: 0.5em 0em;
+}
+
+img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+</style>
+
+<link rel="canonical" href="https://florianwilhelm.info/drafts/honey_i_shrunk_the_target_variable.html">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="python,data science,mathematics" />
+        <meta name="description" content="Motivation For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when facing some new supervised learning problem… but it also makes me contemplating. So full of vigour and enthusiasm, they are often completely absorbed by the …" />
+
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Honey, I shrunk the target variable"/>
+        <meta property="og:url" content="https://florianwilhelm.info/drafts/honey_i_shrunk_the_target_variable.html"/>
+        <meta property="og:description" content="Motivation For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when facing some new supervised learning problem… but it also makes me contemplating. So full of vigour and enthusiasm, they are often completely absorbed by the …"/>
+        <meta property="article:published_time" content="2020-05-01" />
+            <meta property="article:section" content="post" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="data science" />
+            <meta property="article:tag" content="mathematics" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="https://florianwilhelm.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="https://florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+
+
+        <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/drafts/honey_i_shrunk_the_target_variable.html"
+                       rel="bookmark"
+                       title="Permalink to Honey, I shrunk the target variable">
+                        Honey, I shrunk the target&nbsp;variable
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2020-05-01T14:00:00+02:00"> May. 01, 2020</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/python/">python</a>
+        /
+	<a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+        /
+	<a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>Motivation</h2>
+<p>For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when
+facing some new supervised learning problem&#8230; but it also makes me contemplating. So full of vigour and enthusiasm, 
+they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
+they chose themselves, like the <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root-mean-square error (<span class="caps">RMSE</span>)</a>. 
+In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
+the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
+logarithm to make it more normally distributed? Isn&#8217;t this better or even required for simple models like linear regression,
+anyways? A little <span class="math">\(\log\)</span> never killed dog, so what could possibly go&nbsp;wrong? </p>
+<p>&nbsp;</p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/shrunk_meme.jpg" alt="Couple looking at spoon with magnifier">
+</p>
+</figure>
+
+<p>&nbsp;</p>
+<p>As you might have guessed from these questions, it&#8217;s not that easy, and transforming your target variable puts you
+directly into the <a href="https://www.youtube.com/watch?v=siwpn14IE7E">danger zone</a>. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
+Without spoiling too much I hope, for the too busy or plain lazy readers, the main take-away&nbsp;is:</p>
+<blockquote>
+<p><strong><span class="caps">TLDR</span></strong>: Applying any non-<a href="https://en.wikipedia.org/wiki/Affine_transformation">affine transformation</a> to your target variable, might have unwanted effects on the error measure you are minimizing.
+            So if you don&#8217;t know exactly what you are doing, just&nbsp;don&#8217;t.</p>
+</blockquote>
+<h2>Let&#8217;s get&nbsp;started</h2>
+<p>Before we start with the gory mathematical details, let&#8217;s first pick and explore a typical use-case where most inexperienced
+data scientists might be tempted to transform the target variable without a second thought. In order to demonstrate this, I chose 
+the <a href="https://www.kaggle.com/orgesleka/used-cars-database">used-cars database from Kaggle</a> and if you want to follow along, you find the code in the notebooks folder of my Github 
+<a href="https://github.com/FlorianWilhelm/used-cars-log-trans/">used-cars-log-trans repository</a>. As the name suggests, the data set contains used cars having car features like <code>vehicleType</code>,
+<code>yearOfRegistration</code> <span class="amp">&amp;</span> <code>monthOfRegistration</code>, <code>gearbox</code>, <code>powerPS</code>, <code>model</code>, <code>kilometer</code> (mileage), <code>fuelType</code>, <code>brand</code> and <code>price</code>.</p>
+<p>Let&#8217;s say the business unit basically asks us to determine the proper market value of a car given the features above to determine
+if its price is actually a good deal, fair deal or a bad deal. The obvious way to approach this problem is create a model
+that predicts the price of a car, which we assume to be its value, given its features. 
+Since we have roughly 370,000 cars in our data set, for most cars 
+we will have many similar cars and thus our model will predict a price that is some kind of average of their prices.
+Consequently, we can think of this predicted price (let&#8217;s call it <code>pred_price</code>) as the actual market value. 
+To determine if the actual <code>price</code> of a vehicle is a good, fair or bad deal, we would then calculate for instance the relative&nbsp;error </p>
+<div class="math">$$\frac{\mathrm{pred\_price} - \mathrm{price}}{\mathrm{price}}$$</div>
+<p>in the simplest case. If the relative error is close to zero we would call it fair, if it is much larger than zero it&#8217;s a 
+good deal and a bad deal if it is much smaller than zero. For the actual subject of this blog post, that serves us already
+as a good motivation for the development of some regression model that will predict the price given some car features.
+The attentive reader has certainly noticed that the prices in our data set will be biased towards a higher price and thus
+also our predicted &#8220;market value&#8221;. This is due to the fact that we don&#8217;t know for which price the car was eventually sold.
+We only know the amount of money the seller wanted to have which is of course higher or equal than what he or she gets in the end.
+For the sake of simplicity, we assume that we have raised this point with the business unit, they noted it duly and we
+thus neglect it for our&nbsp;analysis.</p>
+<h2>Choosing the right error&nbsp;measure</h2>
+<p>At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
+building some kind of fancy model. Nowadays most machine learning frameworks like <a href="https://scikit-learn.org/">Scikit-Learn</a> are so easy to use
+that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> by default.
+But does the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> really make sense for this use-case? First of all is our target measured in some currency,
+so why would try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
+end, i.e. <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root mean squared error</a>, would not change a thing about this fact. Still, we would weight one large residual
+higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
+less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
+<a href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute error</a> (<span class="caps">MAE</span>) might be the more natural choice compared to the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> (<span class="caps">MSE</span>).</p>
+<p>On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
+are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
+Consequently, the <a href="https://en.wikipedia.org/wiki/Mean_absolute_percentage_error">mean absolute percentage error</a> (<span class="caps">MAPE</span>) might even be a better fit than the <span class="caps">MAE</span> for this use-case.
+Having said that, we will keep all those error measures in mind but use to default <span class="caps">MSE</span> criterion in our machine-learning
+algorithm for the sake of simplicity and to help me making the actual point of this blog post&nbsp;;-)</p>
+<h2>Distribution of the target&nbsp;variable</h2>
+<p>Our data contains not only cars that are for sale but people searching for a car having a certain price. Additionally,
+we have people offering damaged cars, wanting to trade their car for another or just an insanely enormous amount of money. 
+For our use-case we gonna keep only real offerings of an undamaged car with a reasonable price between 200.- € and 50,000.- €.
+This is how the distribution of the price looks&nbsp;like.</p>
+<figure>
+<img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
+<figcaption align="center">Distribution plot of the price variable using 1,000.- € bins.</figcaption>
+</figure>
+
+<p>&nbsp;</p>
+<p>It surely does look like a <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">log-normal distribution</a> and just to have visual check, fitting a log-normal distribution
+with the help of the wonderful SciPy gets us&nbsp;this.</p>
+<figure>
+<img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit">
+<figcaption align="center">Log-normal distribution fitted to the distribution of prices.</figcaption>
+</figure>
+
+<p>&nbsp;</p>
+<p>Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
+more <em>normal</em>. And isn&#8217;t this some basic assumption of a linear model&nbsp;anyway? </p>
+<p>Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn&#8217;t need to
+be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
+For the observed outcome <span class="math">\(y_i\)</span> and our model prediction <span class="math">\(\hat y_i\)</span> of the <span class="math">\(i\)</span>-th sample, we&nbsp;have</p>
+<div class="math">\begin{equation}
+\begin{split}
+y^\star(\mathbf{x}_i) &amp;=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
+y(\mathbf{x}_i) &amp;= y^\star(\mathbf{x}_i) + \epsilon, 
+\end{split}\label{eqn:linear-model}
+\end{equation}</div>
+<p>
+&nbsp;</p>
+<p>where <span class="math">\(\mathbf{x}_i\)</span> is the original feature vector, <span class="math">\(\phi_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> a set of (potentially non-linear) functions
+and <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma)\)</span> some random noise with standard deviation <span class="math">\(\sigma\)</span>.</p>
+<p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
+of a person celebrating Carnival only using a single binary feature, i.e. did the person have a one-night-stand over Carnival or not. 
+Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># number of people</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.28</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Obviously, this results in the a bimodal distribution also known as the notorious <a href="https://en.wikipedia.org/wiki/Cologne_Cathedral">Cologne Cathedral distribution</a> as some may call it.
+Thus, although using a linear model, we generated a non-normally distributed target variable with residuals that are normally&nbsp;distributed.</p>
+<figure>
+<img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
+<figcaption align="center">Bimodal distribution generated with a linear model, which is obviously resembling the cathedral of Cologne.</figcaption>
+</figure>
+
+<p>&nbsp;</p>
+<p>Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
+you will never forget that the residuals of a linear model are normally distribution and <em>not</em> the target variable in general. 
+Only in the case that you used a linear model having only an intercept, i.e. <span class="math">\(M=1\)</span> and <span class="math">\(\phi_1(\mathbf{x})\equiv 1\)</span>,
+the target distribution equals the residual distribution (up to some shift) in all data sets. But seriously, who does that in real&nbsp;life?</p>
+<h2>Analysis of the residual&nbsp;distribution</h2>
+<p>Now that we learnt about the distribution of the residual, we want to further analyse it. Especially with respect to
+the error measure that we are trying to minimize as well as the transformation we apply to the target variable beforehand.
+Let&#8217;s take a look at the definition of the <span class="caps">MSE</span> again,&nbsp;i.e.
+</p>
+<div class="math">\begin{equation}
+\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2,\label{eqn:sum_residual}
+\end{equation}</div>
+<p>
+where <span class="math">\(\hat y_i = \hat y(\mathbf{x}_i)\)</span> is our prediction given the feature vector <span class="math">\(\mathbf{x}_i\)</span> and <span class="math">\(y_i\)</span>
+is the observed outcome for the sample <span class="math">\(i\)</span>. In reality we might only have a single or maybe a few samples sharing
+exactly the same feature vector <span class="math">\((\mathbf{x}_i)\)</span> and thus also the same model prediction <span class="math">\(\hat y_i\)</span>. In order to do same actual analysis, 
+we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
+assume we keep <span class="math">\(\mathbf{x}_i\)</span> fixed and would <span class="math">\(\eqref{eqn:sum_residual}\)</span> having all those observed outcomes. Let&#8217;s drop the index <span class="math">\(i\)</span>
+from <span class="math">\(\hat y_i\)</span> as it depends only on our fixed <span class="math">\(\mathbf{x}_i\)</span>. Since we have now an infinite number of outcomes we need
+to incorporate the probability <span class="math">\(p(y)\)</span> of a given outcome <span class="math">\(y\)</span>. Consequently, <span class="math">\(\eqref{eqn:sum_residual}\)</span>&nbsp;becomes
+</p>
+<div class="math">\begin{equation}
+\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\label{eqn:int_residual}
+\end{equation}</div>
+<p>
+as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
+<em>residual distribution</em> I am actually referring to the distribution <span class="math">\(y - \hat y\)</span> with <span class="math">\(y\)</span> being distributed as <span class="math">\(p(y)\)</span> or <span class="math">\(y\sim p(y)\)</span> for short.
+Thus the residual distribution is determined by <span class="math">\(p(y)\)</span> except for a shift of <span class="math">\(\hat y\)</span>.  So what kind of assumptions can we make about it? 
+In case of a linear model as in <span class="math">\(\eqref{eqn:linear-model}\)</span>, we assume <span class="math">\(p(y)\)</span> to be normally distributed but it could also be anything else.
+In our car pricing use-case, we now that <span class="math">\(p(y)\)</span> will be non-negative as no one is gonna give you money if you take the car. Let me know if you have counter-example ;-)
+This rules out a normal distribution and thus a log-normal distribution might be an obvious assumption for <span class="math">\(p(y)\)</span> but we will come back later to&nbsp;that.</p>
+<p>For now, we gonna consider <span class="math">\(\eqref{eqn:int_residual}\)</span> again and note that our model, whatever it is, will somehow try to minimize <span class="math">\(\eqref{eqn:int_residual}\)</span> by choosing a proper <span class="math">\(\hat y\)</span>.
+So let&#8217;s do that analytically by deriving <span class="math">\(\eqref{eqn:int_residual}\)</span> with respect to <span class="math">\(\hat y\)</span> and setting to <span class="math">\(0\)</span>, we have&nbsp;that
+</p>
+<div class="math">$$
+\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
+$$</div>
+<p>
+and&nbsp;subsequently
+</p>
+<div class="math">\begin{equation}
+\hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.\label{eqn:expected-value}
+\end{equation}</div>
+<p>
+Looks familiar? Yes, this is just the definition of the <a href="https://en.wikipedia.org/wiki/Expected_value#Absolutely_continuous_case">expected value in the continuous case</a>! So whenever we are 
+using the <span class="caps">RMSE</span> or <span class="caps">MSE</span> as error measure, we are actually calculating the expected value of <span class="math">\(p(y)\)</span>. So what happens if
+we do calculate this for the <span class="caps">MAE</span>? In this case we&nbsp;have
+</p>
+<div class="math">$$
+\int_{-\infty}^\infty \vert y-\hat y\vert p(y)\, \mathrm{d}y=\int_{\hat y}^\infty (y-\hat y) p(y)\, \mathrm{d}y-\int_{-\infty}^{\hat y} (y-\hat y)p(y)\, \mathrm{d}y,
+$$</div>
+<p> 
+and deriving by <span class="math">\(\hat y\)</span> again, we&nbsp;have
+</p>
+<div class="math">$$
+\int_{-\infty}^{\hat y}  p(y)\, \mathrm{d}y - \int_{\hat y}^\infty  p(y)\, \mathrm{d}y \stackrel{!}{=} 0.
+$$</div>
+<p>
+We thus have <span class="math">\(\hat y = P(X\leq \frac{1}{2})\)</span>, which is, lo and behold, the <a href="https://en.wikipedia.org/wiki/Median#Probability_distributions">median</a> of the distribution <span class="math">\(p(y)\)</span>!</p>
+<p>A small recap at this point. We just learnt that minimizing the <span class="caps">MSE</span> or <span class="caps">RMSE</span> (also <a href="https://en.wikipedia.org/wiki/Sequence_space#%E2%84%93p_spaces">l2-norm</a> as a fancier name) leads
+to the estimation of the expected value of <span class="math">\(p(y)\)</span> while minimizing <span class="caps">MAE</span> (also known as l1-norm) gets us the median of <span class="math">\(p(y)\)</span>.
+Also remember that our feature vector <span class="math">\(\mathbf{x}_i\)</span> is still fixed, so <span class="math">\(y\sim p(y)\)</span> just describes the random fluctuations around
+some true value <span class="math">\(y^\star\)</span> that we just don&#8217;t know and <span class="math">\(\hat y\)</span> is our best guess for it. If we assume a normal distribution
+there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
+minimizing the l1-norm. It may make a huge different though, if we are dealing with a non-symmetrical distribution like
+the log-normal&nbsp;distribution.</p>
+<p>Let&#8217;s just demonstrate this using our used cars example. We have already seen that the distribution of price is rather
+log-normally than normally distributed. If we now use the simplest model we can think of, having only a single variable, 
+(yeah, here comes the linear model with just an intercept again), the target distribution directly determines the residual
+distribution. Now, we find the minimum point using <span class="caps">RMSE</span> and <span class="caps">MAE</span> to compare the results to the mean and median of 
+the price vector <code>y</code>,&nbsp;respectively.  </p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
+<span class="o">&gt;&gt;&gt;</span>     <span class="c1"># not taking the root, i.e. MSE, would not change the actual result</span>
+<span class="o">&gt;&gt;&gt;</span>     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">mae</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
+<span class="o">&gt;&gt;&gt;</span>     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">))</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y</span><span class="p">,))</span>
+      <span class="n">fun</span><span class="p">:</span> <span class="mf">7174.003600843465</span>
+ <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">7052.74958795</span><span class="p">]])</span>
+      <span class="n">jac</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">])</span>
+  <span class="n">message</span><span class="p">:</span> <span class="s1">&#39;Optimization terminated successfully.&#39;</span>
+     <span class="n">nfev</span><span class="p">:</span> <span class="mi">36</span>
+      <span class="n">nit</span><span class="p">:</span> <span class="mi">5</span>
+     <span class="n">njev</span><span class="p">:</span> <span class="mi">12</span>
+   <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">success</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">6703.59325181</span><span class="p">])</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="mf">6704.024314214464</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">gtol</span><span class="o">=</span><span class="mf">2e-4</span><span class="p">),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y</span><span class="p">,))</span>
+      <span class="n">fun</span><span class="p">:</span> <span class="mf">4743.492333474732</span>
+ <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">7862.69627309</span><span class="p">]])</span>
+      <span class="n">jac</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.00018311</span><span class="p">])</span>
+  <span class="n">message</span><span class="p">:</span> <span class="s1">&#39;Optimization terminated successfully.&#39;</span>
+     <span class="n">nfev</span><span class="p">:</span> <span class="mi">120</span>
+      <span class="n">nit</span><span class="p">:</span> <span class="mi">8</span>
+     <span class="n">njev</span><span class="p">:</span> <span class="mi">40</span>
+   <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">success</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">4099.9946168</span><span class="p">])</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="mf">4100.0</span>
+</pre></div>
+
+
+<p>As expected, by looking at the <code>x</code> in the output of <code>minimize</code>, we approximated the mean by minimizing the <span class="caps">RMSE</span> and the median by minimizing the <span class="caps">MSE</span>.</p>
+<h2>Shrinking the target&nbsp;variable</h2>
+<p>There is still some elephant in the room that we haven&#8217;t talked about yet. What happens now if we shrink our target
+variable by applying a log transformation and then minimize the <span class="caps">MSE</span>?</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">y_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="mf">8.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y_log</span><span class="p">,),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+      <span class="n">fun</span><span class="p">:</span> <span class="mf">1.066675943730279</span>
+ <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">1.11749076</span><span class="p">]])</span>
+      <span class="n">jac</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">])</span>
+  <span class="n">message</span><span class="p">:</span> <span class="s1">&#39;Optimization terminated successfully.&#39;</span>
+     <span class="n">nfev</span><span class="p">:</span> <span class="mi">30</span>
+      <span class="n">nit</span><span class="p">:</span> <span class="mi">5</span>
+     <span class="n">njev</span><span class="p">:</span> <span class="mi">10</span>
+   <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">success</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">8.29160403</span><span class="p">])</span>
+</pre></div>
+
+
+<p>So if whe now transform the result <code>x</code> which is roughly <code>8.3</code> back using <code>np.exp(8.3)</code> we get a rounded result of <code>4024</code>.
+<em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6703</code> because that&#8217;s the
+mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
+transformation changed the result. Now our result of <code>4024</code> looks rather like an approximation of the median&#8230; well&#8230;
+it actually is assuming a log-normal distribution as we will fully understand soon. 
+If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
+of the residual distribution would have been much smaller. Still, 
+we would have missed our goal of minimizing the (R)<span class="caps">MSE</span>. Instead we would have unknowingly minimized the <span class="caps">MAE</span>, which
+might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
+is doing and a lucky punch without a clue of what happened, just doesn&#8217;t suit a&nbsp;scientist.</p>
+<p>Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let&#8217;s assume now that we
+have a log-normal distribution, and thus we have <span class="math">\(\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)\)</span>. Consequently,
+the <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf)&nbsp;is
+</p>
+<div class="math">\begin{equation}
+\tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
+\end{equation}</div>
+<p>
+where the only difference to a normal distribution is <span class="math">\(ln(x)\)</span> instead of <span class="math">\(x\)</span> and the additional factor <span class="math">\(\frac{1}{x}\)</span>.
+Also note that that parameters <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are tne well-known parameters of the normal distribution but for the
+log-transformed target.
+So when we now minimize the <span class="caps">RMSE</span> of the log-transformed prices as we did before, we actually infer the parameter
+<span class="math">\(\mu\)</span> of a normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\mathrm{price}\leq \mu)= 0.5\)</span>. 
+Applying any kind of strictly monotonic increasing transformation <span class="math">\(\varphi\)</span> to the price, we trivially see that 
+<span class="math">\(\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\mu)) = 0.5\)</span> and thus the median as well as any other quantile
+is equivariant under the transformation <span class="math">\(\varphi\)</span>. In our specific case from above, we have <span class="math">\(\varphi(x) = \exp(x)\)</span> and
+thus the result is not surprising at all from a mathematical point of&nbsp;view.</p>
+<p>The expected value is not so well-behaved under transformations as the median. Using the definition of the expected
+value <span class="math">\(\eqref{eqn:expected-value}\)</span>, we can easily show that only transformations <span class="math">\(\phi\)</span> of the form <span class="math">\(\phi(x)=ax + b\)</span>,
+with scalars <span class="math">\(a\)</span> and <span class="math">\(b\)</span>, allow us to transform the target, determine the expected value and apply the
+inverse transformation to get the expected value of the original distribution. 
+For the transformed random variable <span class="math">\(\phi(X)\)</span> we have for the expected value&nbsp;that
+</p>
+<div class="math">$$
+\begin{align*}
+E[\phi(X)] &amp;= E[aX + b] \\
+            &amp;= \int (ax + b)p(x)\mathrm{d}x \\
+            &amp;= a\int xp(x)\mathrm{d}x + b \\
+            &amp;=aE[X] + b =\phi(E[X]),
+\end{align*}
+$$</div>
+<p>
+where we used the fact that probability density functions are normalized, i.e. <span class="math">\(\int p(x)\mathrm{d}x=1\)</span>. What a relief!
+That means at least affine transformations are fine when we minimize the (R)<span class="caps">MSE</span>. 
+This is especially important if you belong to the illustrious circle of deep learning specialists. In some cases, 
+the target variable of a regression problem is standardized or <a href="https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)">min-max scaled</a> during training and transformed back afterwards.
+Since these normalization techniques are affine transformations we are on the safe side,&nbsp;though.  </p>
+<p>Coming back to our example where we know that our residual transformation is quite log-normally distributed. Can we 
+somehow still receive the mean of the untransformed target variable? Yes, we can, actually. Using the parameter <span class="math">\(\mu\)</span> that
+we already determined above we just calculate the variance <span class="math">\(\sigma^2\)</span> and have <span class="math">\(\exp(\mu + \frac{\sigma^2}{2})\)</span> for the mean
+of the untransformed distribution. More details on how to do this can be found in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb">notebook</a>
+of the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/">used-cars-log-trans repository</a>. Way more interesting, at least for the mathematically interested reader,
+is the question <em>Why does this work?</em>.</p>
+<p>This is easy to see using some high-school calculus. With <span class="math">\(\tilde y = \log(y)\)</span> and let <span class="math">\(p(y)\)</span> be the pdf of the normal distribution
+as well as <span class="math">\(\tilde p(y)\)</span> the pdf of the log-normal distribution <span class="math">\(\eqref{eqn:log-normal}\)</span>. 
+Using <a href="https://en.wikipedia.org/wiki/Integration_by_substitution">integration by substitution</a> and noting that <span class="math">\(\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y\)</span>, we&nbsp;have
+</p>
+<div class="math">\begin{equation}
+\int y \tilde p(y)\mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\end{equation}</div>
+<p>
+where in the last equation the additional factor of the log-normal distribution was canceled out with <span class="math">\(e^{\tilde y}\)</span> and thus
+became the pdf of a normal distribution due to our substitution. Writing out the exponent in <span class="math">\(p(x)\)</span>, which is <span class="math">\(-\frac{(\tilde y-\mu)^2}{2\sigma^2}\)</span> 
+and completing the square with <span class="math">\(\tilde y\)</span>, we&nbsp;have 
+</p>
+<div class="math">\begin{equation}
+\begin{split}
+\tilde y - \frac{(\tilde y-\mu)^2}{2\sigma^2} &amp;= -\frac{\mu^2 - 2\mu\tilde y + \tilde{y}^2 - 2\sigma^2\tilde y}{2\sigma^2} \\
+            &amp;= -\frac{(\tilde y - (\mu + \sigma^2))^2}{2\sigma^2} + \mu + \frac{\sigma^2}{2}.
+\end{split}\label{eqn:completing_square}
+\end{equation}</div>
+<p>
+Using this result, we can rewrite the last expression of <span class="math">\(\eqref{eqn:mean-log-normal}\)</span> by shifting the parameter <span class="math">\(\mu\)</span> of the
+normal distribution by <span class="math">\(\sigma^2\)</span>. Denoting with <span class="math">\(p_s(y)\)</span> the shifted pdf, we&nbsp;have
+</p>
+<div class="math">$$
+\int e^{\tilde y} p(\tilde y) \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+$$</div>
+<p>
+and subsequently we have proved that the expected value of the log-normal distribution indeed is <span class="math">\(\exp(\mu + \frac{\sigma^2}{2})\)</span>.</p>
+<p>A little recap of this section&#8217;s most important points to remember. When minimizing l2, i.e. (R)<span class="caps">MSE</span>, only affine transformations
+allow us the determine the expected value of original target by applying the inverse transformation to the expected value
+of the transformed target variable. When minimizing l1, i.e. <span class="caps">MAE</span>, all strictly monotonic increasing transformations can be
+applied to determine the median from the transformed target&nbsp;variable.</p>
+<h2>Transforming the target for fun and&nbsp;profit</h2>
+<p>So we have seen that not everything is as it seems or as we might have expected by doing some rather academical analysis.
+But can we somehow use this knowledge in our use-case of predicting the market value of a used car?
+And this is the point where I close the circle to the beginning of the story. I already argued that the <span class="caps">RMSE</span> might not
+be the right error measure to minimize. We already saw that log-transforming the target and still minimizing the <span class="caps">RMSE</span> 
+gave us an approximation to the result we got if we had minimized <span class="caps">MAE</span>, which quite likely is a more appropriate error 
+measure in this use-case than the <span class="caps">RMSE</span>. This is a neat trick if our regression method
+only allows minimizing <span class="caps">MSE</span> or is too slow or unstable when minimizing <span class="caps">MAE</span> directly. A word of caution again, this
+only works if the residual distribution approximates a log-normal distribution. So far we only seen that the target
+distribution is quite log-normal but since we are dealing with positive numbers, and also taking into account the fact 
+that a car seller might be more inclined to start with a higher price, this justifies the assumption that the residual 
+distribution (in case of a multivariate model) will also approximate a log-normal&nbsp;distribution.</p>
+<p>Well, <span class="caps">MAE</span> surely is quite nice, but how about minimizing some relative measure like the <span class="caps">MAPE</span>? Assuming that our regression
+method does not support minimizing it directly, does the log-transformation do any good here? 
+Intuitively, since we know that multiplicative, and thus relative, relationships become additive in log-space, 
+we might expect it to be advantageous and indeed it does help. But before we do some experiments, let&#8217;s first look at some
+other relative error measure, namely the Root Mean Square Percentage Error (<span class="caps">RMSPE</span>),&nbsp;i.e.
+</p>
+<div class="math">$$
+\sqrt{\frac{1}{n}\sum_{i=1}^n\left(\frac{y_i-\hat y_i}{y_i}\right)^2}.
+$$</div>
+<p>
+This error measure was used for evaluation in the <a href="https://www.kaggle.com/c/rossmann-store-sales/">Rossmann Store Sales</a> Kaggle challenge. Since the <span class="caps">RMSPE</span> is a rather
+unusual and uncommon error measure, most participants log-transformed the target and minimized the <span class="caps">RMSE</span> without giving
+too much thought about it, just following their intuition. Some participants in the challenge dug deeper, like Tim Hochberg 
+who proved in a <a href="https://www.kaggle.com/c/rossmann-store-sales/discussion/17026">forum&#8217;s post</a> that minimizing the <span class="caps">RMSE</span> of the log-transformed target is a first-order approximation of the <span class="caps">RMSPE</span> 
+using <a href="https://en.wikipedia.org/wiki/Taylor_series">Taylor series</a> expansion. Although his result is correct, it only tells us that we are asymptotically doing the 
+right thing, i.e. only if we had some really glorious model that perfectly predicts the target, which of course is never true.
+So in practice, the residual distribution might be quite narrow but if it was the <a href="https://en.wikipedia.org/wiki/Dirac_delta_function">Dirac delta function</a> we would have found some
+deterministic relationship between our feature and the target variable, or more likely made a mistake by evaluating some
+over-fitted model on the train set. A nice example of being asymptotically right but practically wrong, by the way.
+In a <a href="https://www.kaggle.com/c/rossmann-store-sales/discussion/17601">reply post</a> to Tim&#8217;s original post, a guy who just calls himself <em><span class="caps">ML</span></em>, pointed
+out the overly optimistic assumptions and proved that a correction of <span class="math">\(-\frac{3}{2}\sigma^2\)</span> is necessary during
+back-transformation assuming a log-normal residual distribution. Since his post is quite scrambled, and also just for the
+fun of it, we will also prove this after some more practical applications using the notation we already established. 
+And while we are at it, we will also show that the necessary correction in case of <span class="caps">MAPE</span> is <span class="math">\(-\sigma^2\)</span>. But for now, we will
+just take for granted the&nbsp;following</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><span class="caps">RMSE</span></th>
+<th><span class="caps">MSE</span></th>
+<th><span class="caps">MAPE</span></th>
+<th><span class="caps">RMSPE</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>correction terms, i.e.</td>
+<td><span class="math">\(+\sigma^2\)</span>,</td>
+<td><span class="math">\(0\)</span>,</td>
+<td><span class="math">\(-\sigma^2\)</span>,</td>
+<td><span class="math">\(-\frac{3}{2}\sigma^2\)</span>,</td>
+</tr>
+</tbody>
+</table>
+<p>which need to be added to the minimum point obtained by the <span class="caps">RMSE</span> minimization of the log-transformed target. Needless to
+say, the correction for <span class="caps">RMSPE</span> was one of the decisive factors to win the Kaggle challenge and make some profit. The 
+winner Gert Jacobusse mentions this in the attached <span class="caps">PDF</span> of his <a href="https://www.kaggle.com/c/rossmann-store-sales/discussion/18024">model documentation post</a>. </p>
+<p>What if we don&#8217;t have an log-normal residual distribution or only a really rough approximation, can we better than applying
+those theoretical corrections terms? Sure, we can! In the end, since we are transforming back using <span class="math">\(\exp\)</span>, it&#8217;s only
+a correction factor close to <span class="math">\(1\)</span> that we are applying. So in case of <span class="caps">RMSPE</span> and for our approximation <span class="math">\(\hat\mu\)</span> of the log-
+normal distribution, we have a factor of <span class="math">\(c=\exp(-\frac{3}{2}\sigma^2)\)</span> for the back-transformed target <span class="math">\(\exp(\hat\mu)\)</span>.
+We can just treat this as another one-dimensional optimization problem and determine the best correction factor numerically. 
+Speaking of numerical computation, we are not gonna determine a factor <span class="math">\(c\)</span> but equivalently a correction term <span class="math">\(\tilde c\)</span>,
+so that <span class="math">\(\exp(\hat \mu + \tilde c)=\hat y\)</span>, which is numerically much more stable. At my former employer <a href="https://blueyonder.com/">Blue Yonder</a>,
+we used to call this the <em>Gronbach factor</em> after our colleague Moritz Gronbach, who would successfully apply this fitted correction
+to all kinds of regression problems with non-negative values. The implementation given the true value, our predicted value
+in log-space and some error measure is actually quite&nbsp;easy:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_corr</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred_log</span><span class="p">,</span> <span class="n">error_func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine correction delta for exp transformation&quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">delta</span><span class="p">:</span> <span class="n">error_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">y_pred_log</span><span class="p">),</span> <span class="n">y_true</span><span class="p">),</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+
+
+<p>Let&#8217;s now get our hands dirty and evaluate how <span class="caps">RMSE</span>, <span class="caps">MSE</span>, <span class="caps">MAPE</span> and <span class="caps">RMSPE</span> behave in our use-case with the raw as well 
+as the log-transformed target using no, the theoretical and the fitted correction. To do so we gonna do some feature engineering and apply some <span class="caps">ML</span> method. 
+Regarding the former, we just do some extremely basic things like calculating the age of a car and average mileage per year,&nbsp;i.e.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;dateOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">ds</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;yearOfRegistration&quot;</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;monthOfRegistration&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;ageInYears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">ds</span><span class="p">:</span> <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;dateCreated&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;dateOfRegistration&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mi">365</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;mileageOverAge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kilometer&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ageInYears&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>In total, combined with the original features, we take as our feature set including the&nbsp;target:</p>
+<div class="highlight"><pre><span></span><span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vehicleType&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;ageInYears&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mileageOverAge&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;gearbox&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;powerPS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kilometer&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;fuelType&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brand&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">]</span>
+</pre></div>
+
+
+<p>and transform all categorical features to integers,&nbsp;i.e.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">):</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+</pre></div>
+
+
+<p>to get our final feature matrix <code>X</code> and target vector <code>y</code> with</p>
+<div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;price&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre></div>
+
+
+<p>As <span class="caps">ML</span> method, let&#8217;s just choose a <a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest</a> as for me it&#8217;s like the <a href="https://en.wikipedia.org/wiki/Volkswagen_Passat">Volkswagen Passat Variant</a> under all <span class="caps">ML</span> algorithms. 
+Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
+In a real world scenario, one would rather select and fine-tune some <a href="https://en.wikipedia.org/wiki/Gradient_boosting">Gradient Boosted Decision Tree</a> like <a href="https://xgboost.readthedocs.io/">XGBoost</a>,
+<a href="https://lightgbm.readthedocs.io/">LightGBM</a> or maybe even better <a href="https://catboost.ai/">CatBoost</a> since categories (e.g. <code>vehicleType</code> and <code>model</code>) surely play an important 
+part in this use-case. We will use the default <span class="caps">MSE</span> criterion of [Scikit-Learn&#8217;s RandomForestRegressor] implementation for
+all&nbsp;experiments. </p>
+<p>To now evaluate this model, we gonna use a 10-fold cross-validation and split off a validation set from the training set 
+in each split to calculate <span class="math">\(\sigma^2\)</span> and fit our correction term. The cross-validation will give us some indication about the variance in 
+our results. In each split of these 10 splits, we then fit the model and predict using&nbsp;the</p>
+<ol>
+<li>untransformed&nbsp;target,</li>
+<li>log-transformed target with no&nbsp;correction,</li>
+<li>log-transformed target with the corresponding sigma2&nbsp;correction,</li>
+<li>log-transformed target with the fitted&nbsp;correction,</li>
+</ol>
+<p>and evaluate the results with <span class="caps">RMSE</span>, <span class="caps">MSE</span>, <span class="caps">MAPE</span> and <span class="caps">RMSPE</span>. To spare you the trivial implementation, which is to be found
+in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb">notebook</a>, we jump directly to the results of the first from 10&nbsp;splits:</p>
+<table>
+<thead>
+<tr>
+<th align="right">split</th>
+<th align="left">target</th>
+<th align="right"><span class="caps">RMSE</span></th>
+<th align="right"><span class="caps">MAE</span></th>
+<th align="right"><span class="caps">MAPE</span></th>
+<th align="right"><span class="caps">RMSPE</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">0</td>
+<td align="left">raw</td>
+<td align="right">2368.36</td>
+<td align="right">1249.34</td>
+<td align="right">0.342704</td>
+<td align="right">1.65172</td>
+</tr>
+<tr>
+<td align="right">0</td>
+<td align="left">log <span class="amp">&amp;</span> no corr</td>
+<td align="right">2464.5</td>
+<td align="right">1253.19</td>
+<td align="right">0.307301</td>
+<td align="right">1.56172</td>
+</tr>
+<tr>
+<td align="right">0</td>
+<td align="left">log <span class="amp">&amp;</span> sigma2 corr</td>
+<td align="right">2475.48</td>
+<td align="right">1253.19</td>
+<td align="right">0.305424</td>
+<td align="right">1.27903</td>
+</tr>
+<tr>
+<td align="right">0</td>
+<td align="left">log <span class="amp">&amp;</span> fitted corr</td>
+<td align="right">2449.23</td>
+<td align="right">1251.35</td>
+<td align="right">0.299577</td>
+<td align="right">0.858787</td>
+</tr>
+</tbody>
+</table>
+<p>For each split, we take now the first row as baseline and calculate the percentage change for all other rows. Then, we 
+calculate for each cell the mean and standard deviation over all 10 splits, resulting&nbsp;in:</p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left"><span class="caps">RMSE</span></th>
+      <th colspan="2" halign="left"><span class="caps">MAE</span></th>
+      <th colspan="2" halign="left"><span class="caps">MAPE</span></th>
+      <th colspan="2" halign="left"><span class="caps">RMSPE</span></th>
+    </tr>
+    <tr>
+      <th>target</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>log <span class="amp">&amp;</span> no corr</th>
+      <td>+3.42%</td>
+      <td>±1.07%p</td>
+      <td>-0.09%</td>
+      <td>±0.61%p</td>
+      <td>-10.99%</td>
+      <td>±0.65%p</td>
+      <td>-12.08%</td>
+      <td>±4.14%p</td>
+    </tr>
+    <tr>
+      <th>log <span class="amp">&amp;</span> sigma2 corr</th>
+      <td>+4.14%</td>
+      <td>±0.84%p</td>
+      <td>-0.09%</td>
+      <td>±0.61%p</td>
+      <td>-11.03%</td>
+      <td>±0.74%p</td>
+      <td>-28.24%</td>
+      <td>±3.35%p</td>
+    </tr>
+    <tr>
+      <th>log <span class="amp">&amp;</span> fitted corr</th>
+      <td>+2.75%</td>
+      <td>±1.00%p</td>
+      <td>-0.19%</td>
+      <td>±0.58%p</td>
+      <td>-13.23%</td>
+      <td>±0.68%p</td>
+      <td>-47.27%</td>
+      <td>±5.37%p</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Let&#8217;s interpret these evaluation results and note that negative percentages mean an improvement over the untransformed
+target, the lower the better. The <span class="caps">RMSE</span> column shows us that if we really wanna get the best results for <span class="caps">RMSE</span>, transforming the target variable
+leads to a worse result compared to a model trained on the original target. The theoretical sigma2 correction makes it even
+worse which tells us that the residuals in log-space are not normally distributed. We can check that using for instance the
+<a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov–Smirnov test</a>. At least the fitted correction improves somewhat over an uncorrected back-transformation. 
+For the <span class="caps">MAE</span> we see an improvement as expected and we know that theoretically there is no need for a correction. Again,
+noting that the log-normal assumption is quite idealistic, we can understand that the fitted correction is better than
+the theoretical optimisation. Coming now to the more appropriate measures for this use-case, we see some nice
+percentage improvements for <span class="caps">MAPE</span>. Applying the log-transformation here gets us a huge performance boost even without
+correction. The sigma2 correction makes it a tad better but is outperformed by the fitted correction. Last but not least,
+<span class="caps">RMSPE</span> brings us the most pleasing results. Transforming without correction is good, sigma2 makes it even better and the
+fitted corrections is simply outstanding, at least percentage-wise compared to the baseline. In absolute numbers, judged
+in the respective error measure, we would still need to improve the model a lot to use it in some production use-case
+but that was not the actual point of this&nbsp;exercise. </p>
+<p>Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
+variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
+disaster. It&#8217;s now up to you and remember that with great power comes great responsibility ;-) The rest of this post
+is only for the inquisitive reader who wants to know exactly where the correction terms for <span class="caps">RSMPE</span> and <span class="caps">MAPE</span> come from.
+So let&#8217;s wash it all down with some more&nbsp;math.</p>
+<h2>Aftermath</h2>
+<p>So you are still reading? I totally appreciate it and bet you&#8217;re one of those people who wants to know for sure. 
+If you ever had religious education, you were certainly a pain in the ass for your teacher and I can feel you.
+But let&#8217;s get started for what you are still here, that is proving that <span class="math">\(-\frac{3}{2}\sigma^2\)</span> is the right correction
+for <span class="caps">RMSPE</span> and <span class="math">\(-\sigma^2\)</span> for <span class="caps">MAPE</span>. Let&#8217;s start with the&nbsp;former.</p>
+<p>We use again our notation <span class="math">\(\tilde \ast = \log(\ast)\)</span> for our variables and also to differentiate between the normal
+and log-normal distribution. To minimize the error, we&nbsp;have
+</p>
+<div class="math">$$
+\mathrm{RMSPE}(\hat y) = \int\left(\frac{y-\hat y}{y}\right)^2\,\tilde p(y)\mathrm{d}y = 1 -2\hat y\int\frac{\tilde p(y)\mathrm{d}y}{y} + {\hat y}^2\int\frac{\tilde p(y)\mathrm{d}y}{y^2}.
+$$</div>
+<p>
+To find the minimum, we derive by <span class="math">\(\hat y\)</span> and set to <span class="math">\(0\)</span>, resulting&nbsp;in
+</p>
+<div class="math">$$\hat y=\frac{\int\frac{\tilde p(y)}{y}\mathrm{d}y}{\int\frac{\tilde p(y)}{y^2}}\mathrm{d}y $$</div>
+<p>
+Thus, we now need to&nbsp;calculate
+</p>
+<div class="math">$$
+f_\alpha = \int\frac{\tilde p(y)\mathrm{d}y}{y^\alpha}
+$$</div>
+<p>
+for (α=1,2). To that end, we substitute <span class="math">\(y=\exp(\tilde y)\)</span> and using <span class="math">\(\mathrm{d}y = e^{-\tilde y}\mathrm{d}\tilde y\)</span>, we&nbsp;have 
+</p>
+<div class="math">$$
+f_\alpha = \int e^{-\alpha\tilde y}\,\tilde p(e^{\tilde y})e^{\tilde y}\mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,p(\tilde y)\mathrm{d}\tilde y.
+$$</div>
+<p>
+Writing out the exponent and completing the square similar to <span class="math">\(\eqref{eqn:completing_square}\)</span>, we&nbsp;obtain
+</p>
+<div class="math">$$
+\log(f_\alpha) = -\alpha \mu +\frac12 \alpha^2\sigma^2,
+$$</div>
+<p>
+leading in total&nbsp;to
+</p>
+<div class="math">$$
+\log(\hat y)=\log(f_1)-\log(f_2) = \mu -\frac{3}{2}\sigma^2.
+$$</div>
+<p>
+Subsequently, the correction term for <span class="caps">RMSPE</span> is <span class="math">\(-\frac{3}{2}\sigma^2\)</span>.</p>
+<p>For <span class="caps">MAPE</span> we&nbsp;have
+</p>
+<div class="math">$$
+\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\mathrm{d}y,
+$$</div>
+<p>
+and after deriving by <span class="math">\(\hat y\)</span> as well as setting to 0, we need to find <span class="math">\(\hat y\)</span> such&nbsp;that
+</p>
+<div class="math">$$
+\int_{\hat y}^{\infty}\frac{1}{y}\,\tilde p(y)\mathrm{d}y - \int_0^{\hat y}\frac{1}{y}\,\tilde p(y)\mathrm{d}y = 0.
+$$</div>
+<p>
+Doing the same substitution as with <span class="caps">RMSPE</span>, results&nbsp;in
+</p>
+<div class="math">$$
+\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\mathrm{d} \tilde y - \int_0^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\mathrm{d}\tilde y = 0.
+$$</div>
+<p>
+Again, we complete the square of the exponent similar to <span class="math">\(\eqref{eqn:completing_square}\)</span>, resulting&nbsp;in
+</p>
+<div class="math">\begin{equation}
+e^{-\mu+\frac{1}{\sigma^2}}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\mathrm{d}\tilde y)\right) = 0,
+\label{eqn:mape-proof}
+\end{equation}</div>
+<p>
+where 
+</p>
+<div class="math">$$
+p_s(x) = {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(x - (\mu - \sigma^2) )^{2}}{2\sigma ^{2}}}\right).
+$$</div>
+<p>
+We need the two integrals in <span class="math">\(\eqref{eqn:mape-proof}\)</span> to be equal to fulfill the equation, thus <span class="math">\(\log(\hat y)\)</span> needs to be
+the median. With the shifted normal distribution <span class="math">\(p_s(x)\)</span>, we have that for <span class="math">\(\log(\hat y) = \mu - \sigma^2\)</span>. Consequently,
+the correction term for <span class="caps">MAPE</span> is <span class="math">\(-\sigma^2\)</span>.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/">Are you sure about that?! Uncertainty Quantification in <span class="caps">AI</span></a></li>
+        <li><a href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/bridging_the_gap_from_ds_to_prod/">Bridging the Gap: from Data Science to&nbsp;Production</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
+        <li><a href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'honey_i_shrunk_the_target_variable';
+                var disqus_url = 'https://florianwilhelm.info/drafts/honey_i_shrunk_the_target_variable.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/causal-inference/">
+                            causal inference
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://florianwilhelm.info/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/deep-learning/">
+                            deep learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gans/">
+                            GANs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
+                            kalman filter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/nlp/">
+                            nlp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/production/">
+                            production
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/programming/">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://florianwilhelm.info/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
+                            recommender systems
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
+                            semi-supervised
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/spark/">
+                            spark
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/template/">
+                            template
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
+                            uncertainty quantification
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2019 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
+</body>
+</html>

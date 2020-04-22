@@ -13,7 +13,7 @@ status: draft
 For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem... but it also makes me contemplating. So full of vigour and enthusiasm, 
 they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
-they chose themselves, like the [root-mean-square error (RMSE)]. 
+they chose themselves, like the [root-mean-square error]. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
 the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn't this better or even required for simple models like linear regression,
@@ -69,13 +69,13 @@ thus neglect it for our analysis.
 
 At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
 building some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
-that one might even forget the error measure that is optimized as in most cases it will be the [mean squared error] by default.
-But does the [mean squared error] really make sense for this use-case? First of all is our target measured in some currency,
+that one might even forget the error measure that is optimized as in most cases it will be the [mean squared error] (MSE) by default.
+But does the MSE really make sense for this use-case? First of all is our target measured in some currency,
 so why would try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
-end, i.e. [root mean squared error], would not change a thing about this fact. Still, we would weight one large residual
+end, i.e. [root mean squared error] (RMSE), would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
-[mean absolute error] (MAE) might be the more natural choice compared to the [mean squared error] (MSE).
+[mean absolute error] (MAE) might be the more natural choice compared to the MSE.
 
 On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
 are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
@@ -398,7 +398,7 @@ just take for granted the following
 
 |                         |    RMSE     |  MSE  | MAPE        | RMSPE                  |
 |-------------------------|-------------|-------|-------------|------------------------|
-| correction terms, i.e.  | $+\sigma^2$,| $0$,  | $-\sigma^2$,| $-\frac{3}{2}\sigma^2$,|
+| correction terms, i.e.  | $+\sigma^2$ | $0$   | $-\sigma^2$ | $-\frac{3}{2}\sigma^2$ |
 
 which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target. Needless to
 say, the correction for RMSPE was one of the decisive factors to win the Kaggle challenge and make some profit. The 
@@ -596,9 +596,7 @@ leading in total to
 $$
 \log(\hat y)=\log(f_1)-\log(f_2) = \mu -\frac{3}{2}\sigma^2.
 $$
-Subsequently, the correction term for RMSPE is $-\frac{3}{2}\sigma^2$.
-
-For MAPE we have
+Subsequently, the correction term for RMSPE is $-\frac{3}{2}\sigma^2$. For MAPE we have
 $$
 \mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\mathrm{d}y,
 $$
@@ -625,10 +623,9 @@ the correction term for MAPE is $-\sigma^2$.
 
 
 [danger zone]: https://www.youtube.com/watch?v=siwpn14IE7E
-[root mean squared error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [Scikit-Learn]: https://scikit-learn.org/
 [used-cars database from Kaggle]: https://www.kaggle.com/orgesleka/used-cars-database
-[root-mean-square error (RMSE)]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
+[root-mean-square error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [affine transformation]: https://en.wikipedia.org/wiki/Affine_transformation
 [used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans/
 [mean absolute error]: https://en.wikipedia.org/wiki/Mean_absolute_error

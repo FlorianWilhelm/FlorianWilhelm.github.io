@@ -250,7 +250,7 @@ Florian Wilhelm            </a>
 <p>For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem&#8230; but it also makes me contemplating. So full of vigour and enthusiasm, 
 they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
-they chose themselves, like the <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root-mean-square error (<span class="caps">RMSE</span>)</a>. 
+they chose themselves, like the <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root-mean-square error</a>. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
 the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn&#8217;t this better or even required for simple models like linear regression,
@@ -295,13 +295,13 @@ thus neglect it for our&nbsp;analysis.</p>
 <h2>Choosing the right error&nbsp;measure</h2>
 <p>At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
 building some kind of fancy model. Nowadays most machine learning frameworks like <a href="https://scikit-learn.org/">Scikit-Learn</a> are so easy to use
-that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> by default.
-But does the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> really make sense for this use-case? First of all is our target measured in some currency,
+that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> (<span class="caps">MSE</span>) by default.
+But does the <span class="caps">MSE</span> really make sense for this use-case? First of all is our target measured in some currency,
 so why would try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
-end, i.e. <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root mean squared error</a>, would not change a thing about this fact. Still, we would weight one large residual
+end, i.e. [root mean squared error] (<span class="caps">RMSE</span>), would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
-<a href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute error</a> (<span class="caps">MAE</span>) might be the more natural choice compared to the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> (<span class="caps">MSE</span>).</p>
+<a href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute error</a> (<span class="caps">MAE</span>) might be the more natural choice compared to the <span class="caps">MSE</span>.</p>
 <p>On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
 are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
 Consequently, the <a href="https://en.wikipedia.org/wiki/Mean_absolute_percentage_error">mean absolute percentage error</a> (<span class="caps">MAPE</span>) might even be a better fit than the <span class="caps">MAE</span> for this use-case.
@@ -629,10 +629,10 @@ just take for granted the&nbsp;following</p>
 <tbody>
 <tr>
 <td>correction terms, i.e.</td>
-<td><span class="math">\(+\sigma^2\)</span>,</td>
-<td><span class="math">\(0\)</span>,</td>
-<td><span class="math">\(-\sigma^2\)</span>,</td>
-<td><span class="math">\(-\frac{3}{2}\sigma^2\)</span>,</td>
+<td><span class="math">\(+\sigma^2\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(-\sigma^2\)</span></td>
+<td><span class="math">\(-\frac{3}{2}\sigma^2\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -878,8 +878,7 @@ leading in total&nbsp;to
 \log(\hat y)=\log(f_1)-\log(f_2) = \mu -\frac{3}{2}\sigma^2.
 $$</div>
 <p>
-Subsequently, the correction term for <span class="caps">RMSPE</span> is <span class="math">\(-\frac{3}{2}\sigma^2\)</span>.</p>
-<p>For <span class="caps">MAPE</span> we&nbsp;have
+Subsequently, the correction term for <span class="caps">RMSPE</span> is <span class="math">\(-\frac{3}{2}\sigma^2\)</span>. For <span class="caps">MAPE</span> we&nbsp;have
 </p>
 <div class="math">$$
 \mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\mathrm{d}y,

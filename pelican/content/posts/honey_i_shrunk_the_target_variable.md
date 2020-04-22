@@ -146,7 +146,7 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 
 <figure>
 <img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
-<figcaption align="center">Bimodal distribution generated with a linear model; obviously resembling the cathedral of Cologne.</figcaption>
+<figcaption align="center">Bimodal distribution generated with a linear model, which is obviously resembling the cathedral of Cologne.</figcaption>
 </figure>
 &nbsp;
 
@@ -213,8 +213,8 @@ the log-normal distribution.
 Let's just demonstrate this using our used cars example. We have already seen that the distribution of price is rather
 log-normally than normally distributed. If we now use the simplest model we can think of, having only a single variable, 
 (yeah, here comes the linear model with just an intercept again), the target distribution directly determines the residual
-distribution. Now, we fit the variable `yhat` to the price vector `y` using RMSE and MSE to compare the results to 
-the mean and median, respectively.  
+distribution. Now, we find the minimum point using RMSE and MAE to compare the results to the mean and median of 
+the price vector `y`, respectively.  
 
 ```python
 >>> def rmse(y_pred, y_true):
@@ -334,17 +334,17 @@ This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ a
 as well as $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
 Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
 \begin{equation}
-\int y \tilde p(y)\mathrm{d}y = \int e^{\tilde y} \tilde p(\tilde y)e^{\tilde y}\mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\int y \tilde p(y)\mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\mathrm{d}\tilde y,\label{eqn:mean-log-normal}
 \end{equation}
 where in the last equation the additional factor of the log-normal distribution was canceled out with $e^{\tilde y}$ and thus
 became the pdf of a normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
 and completing the square with $\tilde y$, we have 
-$$
-\begin{align*}
+\begin{equation}
+\begin{split}
 \tilde y - \frac{(\tilde y-\mu)^2}{2\sigma^2} &= -\frac{\mu^2 - 2\mu\tilde y + \tilde{y}^2 - 2\sigma^2\tilde y}{2\sigma^2} \\
             &= -\frac{(\tilde y - (\mu + \sigma^2))^2}{2\sigma^2} + \mu + \frac{\sigma^2}{2}.
-\end{align*}
-$$
+\end{split}\label{eqn:completing_square}
+\end{equation}
 Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$ by shifting the parameter $\mu$ of the
 normal distribution by $\sigma^2$. Denoting with $p_s(y)$ the shifted pdf, we have
 $$
@@ -388,16 +388,17 @@ using [Taylor series] expansion. Although his result is correct, it only tells u
 right thing, i.e. only if we had some really glorious model that perfectly predicts the target, which of course is never true.
 So in practice, the residual distribution might be quite narrow but if it was the [Dirac delta function] we would have found some
 deterministic relationship between our feature and the target variable, or more likely made a mistake by evaluating some
-over-fitted model on the train set. In a [reply post] to Tim's original post, a guy who just calls himself *ML*, pointed
+over-fitted model on the train set. A nice example of being asymptotically right but practically wrong, by the way.
+In a [reply post] to Tim's original post, a guy who just calls himself *ML*, pointed
 out the overly optimistic assumptions and proved that a correction of $-\frac{3}{2}\sigma^2$ is necessary during
 back-transformation assuming a log-normal residual distribution. Since his post is quite scrambled, and also just for the
 fun of it, we will also prove this after some more practical applications using the notation we already established. 
 And while we are at it, we will also show that the necessary correction in case of MAPE is $-\sigma^2$. But for now, we will
 just take for granted the following
 
-|                   |    RMSE     |  MSE  | MAPE        | RMSPE                  |
-|-------------------|-------------|-------|-------------|------------------------|
-| correction terms  | $+\sigma^2$ | $0$   | $-\sigma^2$ | $-\frac{3}{2}\sigma^2$ |
+|                         |    RMSE     |  MSE  | MAPE        | RMSPE                  |
+|-------------------------|-------------|-------|-------------|------------------------|
+| correction terms, i.e.  | $+\sigma^2$,| $0$,  | $-\sigma^2$,| $-\frac{3}{2}\sigma^2$,|
 
 which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target. Needless to
 say, the correction for RMSPE was one of the decisive factors to win the Kaggle challenge and make some profit. The 
@@ -464,9 +465,9 @@ In a real world scenario, one would rather select and fine-tune some [Gradient B
 part in this use-case. We will use the default MSE criterion of [Scikit-Learn's RandomForestRegressor] implementation for
 all experiments. 
 
-To now evaluate this model we gonna use a 10-fold cross-validation and split a validation set from the training set 
-in each split to fit our correction term. The cross-validation will give us some indication about the variance in 
-our results. In each split we then fit the model and predict using the
+To now evaluate this model, we gonna use a 10-fold cross-validation and split off a validation set from the training set 
+in each split to calculate $\sigma^2$ and fit our correction term. The cross-validation will give us some indication about the variance in 
+our results. In each split of these 10 splits, we then fit the model and predict using the
 
 1. untransformed target,
 2. log-transformed target with no correction,
@@ -474,9 +475,9 @@ our results. In each split we then fit the model and predict using the
 4. log-transformed target with the fitted correction,
 
 and evaluate the results with RMSE, MSE, MAPE and RMSPE. To spare you the trivial implementation, which is to be found
-in the [notebook], we jump directly to the results of the first split:
+in the [notebook], we jump directly to the results of the first from 10 splits:
 
-|   split | target            |    rmse |     mae |     mape |    rmspe |
+|   split | target            |    RMSE |     MAE |     MAPE |    RMSPE |
 |--------:|:------------------|--------:|--------:|---------:|---------:|
 |       0 | raw               | 2368.36 | 1249.34 | 0.342704 | 1.65172  |
 |       0 | log & no corr     | 2464.5  | 1253.19 | 0.307301 | 1.56172  |
@@ -544,35 +545,83 @@ calculate for each cell the mean and standard deviation over all 10 splits, resu
   </tbody>
 </table>
 
-Let's interpret those evaluation results and note that negative percentages mean an improvement over the untransformed
-target. The RMSE columns shows us that if we really wanna get the best results for RMSE, transforming the target variable
+Let's interpret these evaluation results and note that negative percentages mean an improvement over the untransformed
+target, the lower the better. The RMSE column shows us that if we really wanna get the best results for RMSE, transforming the target variable
 leads to a worse result compared to a model trained on the original target. The theoretical sigma2 correction makes it even
 worse which tells us that the residuals in log-space are not normally distributed. We can check that using for instance the
 [Kolmogorov–Smirnov test]. At least the fitted correction improves somewhat over an uncorrected back-transformation. 
 For the MAE we see an improvement as expected and we know that theoretically there is no need for a correction. Again,
 noting that the log-normal assumption is quite idealistic, we can understand that the fitted correction is better than
-the theoretical optimisation. Coming now to the more appropriate measures for this use-case, we see that quite a huge
-percentage improvement for MAPE. So applying the log-transformation here gets us a huge performance boost even without
+the theoretical optimisation. Coming now to the more appropriate measures for this use-case, we see some nice
+percentage improvements for MAPE. Applying the log-transformation here gets us a huge performance boost even without
 correction. The sigma2 correction makes it a tad better but is outperformed by the fitted correction. Last but not least,
-RMSPE brings the most pleasing results. Transforming without correction is good, sigma2 makes it even better and the
+RMSPE brings us the most pleasing results. Transforming without correction is good, sigma2 makes it even better and the
 fitted corrections is simply outstanding, at least percentage-wise compared to the baseline. In absolute numbers, judged
 in the respective error measure, we would still need to improve the model a lot to use it in some production use-case
-but that was not the actual point. 
+but that was not the actual point of this exercise. 
  
-Having proven mathematically and shown in same example use-case, we can conclude finally that transforming the target
+Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
 disaster. It's now up to you and remember that with great power comes great responsibility ;-) The rest of this post
-is only for the inquisitive reader who wants to know exactly where the correction terms for MAPE and RSMPE come from.
+is only for the inquisitive reader who wants to know exactly where the correction terms for RSMPE and MAPE come from.
+So let's wash it all down with some more math.
 
 ## Aftermath
 
 So you are still reading? I totally appreciate it and bet you're one of those people who wants to know for sure. 
 If you ever had religious education, you were certainly a pain in the ass for your teacher and I can feel you.
+But let's get started for what you are still here, that is proving that $-\frac{3}{2}\sigma^2$ is the right correction
+for RMSPE and $-\sigma^2$ for MAPE. Let's start with the former.
 
-For normally distributed residual error and affine transformation.
-This shows again why the normal distribution is a mathematician's BFF, no matter how you or it changes over time, it will still be true to you and itself.
+We use again our notation $\tilde \ast = \log(\ast)$ for our variables and also to differentiate between the normal
+and log-normal distribution. To minimize the error, we have
+$$
+\mathrm{RMSPE}(\hat y) = \int\left(\frac{y-\hat y}{y}\right)^2\,\tilde p(y)\mathrm{d}y = 1 -2\hat y\int\frac{\tilde p(y)\mathrm{d}y}{y} + {\hat y}^2\int\frac{\tilde p(y)\mathrm{d}y}{y^2}.
+$$
+To find the minimum, we derive by $\hat y$ and set to $0$, resulting in
+$$\hat y=\frac{\int\frac{\tilde p(y)}{y}\mathrm{d}y}{\int\frac{\tilde p(y)}{y^2}}\mathrm{d}y $$
+Thus, we now need to calculate
+$$
+f_\alpha = \int\frac{\tilde p(y)\mathrm{d}y}{y^\alpha}
+$$
+for \(α=1,2\). To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\mathrm{d}\tilde y$, we have 
+$$
+f_\alpha = \int e^{-\alpha\tilde y}\,\tilde p(e^{\tilde y})e^{\tilde y}\mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,p(\tilde y)\mathrm{d}\tilde y.
+$$
+Writing out the exponent and completing the square similar to $\eqref{eqn:completing_square}$, we obtain
+$$
+\log(f_\alpha) = -\alpha \mu +\frac12 \alpha^2\sigma^2,
+$$
+leading in total to
+$$
+\log(\hat y)=\log(f_1)-\log(f_2) = \mu -\frac{3}{2}\sigma^2.
+$$
+Subsequently, the correction term for RMSPE is $-\frac{3}{2}\sigma^2$.
 
-
+For MAPE we have
+$$
+\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\mathrm{d}y,
+$$
+and after deriving by $\hat y$ as well as setting to 0, we need to find $\hat y$ such that
+$$
+\int_{\hat y}^{\infty}\frac{1}{y}\,\tilde p(y)\mathrm{d}y - \int_0^{\hat y}\frac{1}{y}\,\tilde p(y)\mathrm{d}y = 0.
+$$
+Doing the same substitution as with RMSPE, results in
+$$
+\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\mathrm{d} \tilde y - \int_0^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\mathrm{d}\tilde y = 0.
+$$
+Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
+\begin{equation}
+e^{-\mu+\frac{1}{\sigma^2}}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\mathrm{d}\tilde y)\right) = 0,
+\label{eqn:mape-proof}
+\end{equation}
+where 
+$$
+p_s(x) = {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(x - (\mu - \sigma^2) )^{2}}{2\sigma ^{2}}}\right).
+$$
+We need the two integrals in $\eqref{eqn:mape-proof}$ to be equal to fulfill the equation, thus $\log(\hat y)$ needs to be
+the median. With the shifted normal distribution $p_s(x)$, we have that for $\log(\hat y) = \mu - \sigma^2$. Consequently,
+the correction term for MAPE is $-\sigma^2$.
 
 
 [danger zone]: https://www.youtube.com/watch?v=siwpn14IE7E

@@ -33,7 +33,7 @@ As you might have guessed from these questions, it's not that easy, and transfor
 directly into the [danger zone]. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
 Without spoiling too much I hope, for the too busy or plain lazy readers, the main take-away is:
 
-> **TLDR**: Applying any non-[affine transformation] to your target variable, might have unwanted effects on the error measure you are minimizing.
+> **TLDR**: Applying any non-[affine transformation] to your target variable might have unwanted effects on the error measure you are minimizing.
             So if you don't know exactly what you are doing, just don't.
 
 
@@ -398,7 +398,7 @@ fun of it, we will also prove this after some more practical applications using 
 And while we are at it, we will also show that the necessary correction in case of MAPE is $-\sigma^2$. But for now, we will
 just take for granted the following
 
-|                         |    RMSE     |  MSE  | MAPE        | RMSPE                  |
+|                         |    (R)MSE   |  MAE  | MAPE        | RMSPE                  |
 |-------------------------|-------------|-------|-------------|------------------------|
 | correction terms, i.e.  | $+\sigma^2$ | $0$   | $-\sigma^2$ | $-\frac{3}{2}\sigma^2$ |
 

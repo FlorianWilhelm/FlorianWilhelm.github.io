@@ -80,7 +80,7 @@ less severe than a single residual of 100.- €. You see where I am getting at. 
 On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
 are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
 Consequently, the [mean absolute percentage error] (MAPE) might even be a better fit than the MAE for this use-case.
-Having said that, we will keep all those error measures in mind but use to default MSE criterion in our machine-learning
+Having said that, we will keep all those error measures in mind but use the default MSE criterion in our machine-learning
 algorithm for the sake of simplicity and to help me making the actual point of this blog post ;-)
 
 

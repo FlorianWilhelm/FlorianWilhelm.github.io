@@ -57,7 +57,7 @@ error
 $$\frac{\mathrm{pred\_price} - \mathrm{price}}{\mathrm{price}}$$
 
 in the simplest case. If the relative error is close to zero we would call it fair, if it is much larger than zero it's a 
-good deal and a bad deal if it is much smaller than zero. For the actual subject of this blog post, that serves us already
+good deal and a bad deal if it is much smaller than zero. For the actual subject of this blog post, this use-case serves us already
 as a good motivation for the development of some regression model that will predict the price given some car features.
 The attentive reader has certainly noticed that the prices in our data set will be biased towards a higher price and thus
 also our predicted "market value". This is due to the fact that we don't know for which price the car was eventually sold.
@@ -71,7 +71,7 @@ At this point, a lot of inexperienced data scientists would directly get into bu
 building some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
 that one might even forget the error measure that is optimized as in most cases it will be the [mean squared error] (MSE) by default.
 But does the MSE really make sense for this use-case? First of all is our target measured in some currency,
-so why would try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
+so why would we try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
 end, i.e. [root mean squared error] (RMSE), would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
@@ -86,9 +86,10 @@ algorithm for the sake of simplicity and to help me making the actual point of t
 
 ## Distribution of the target variable
 
-Our data contains not only cars that are for sale but people searching for a car having a certain price. Additionally,
-we have people offering damaged cars, wanting to trade their car for another or just an insanely enormous amount of money. 
-For our use-case we gonna keep only real offerings of an undamaged car with a reasonable price between 200.- € and 50,000.- €.
+Our data contains not only cars that are for sale but also cars people are searching for with a certain price. Additionally,
+we have people offering damaged cars, wanting to trade their car for another or just hoping to get an insanely enormous amount of money. 
+Sometimes you get lucky. For our use-case, we gonna keep only real offerings of undamaged cars with a reasonable price 
+between 200.- € and 50,000.- € with a first registration not earlier than 1910.
 This is how the distribution of the price looks like.
 
 <figure>
@@ -98,7 +99,7 @@ This is how the distribution of the price looks like.
 &nbsp;
 
 It surely does look like a [log-normal distribution] and just to have visual check, fitting a log-normal distribution
-with the help of the wonderful SciPy gets us this.
+with the help of the wonderful [SciPy] gets us this.
 
 <figure>
 <img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit">
@@ -111,7 +112,7 @@ more *normal*. And isn't this some basic assumption of a linear model anyway?
 
 Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn't need to
 be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
-For the observed outcome $y_i$ and our model prediction $\hat y_i$ of the $i$-th sample, we have
+For the observed outcome $y_i$ and some true latent outcome $y_i^\star$ of the $i$-th sample, we have
 
 \begin{equation}
 \begin{split}
@@ -122,7 +123,7 @@ y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon,
 &nbsp;
 
 where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions
-and $\epsilon\sim\mathcal{N}(0, \sigma)$ some random noise with standard deviation $\sigma$.
+and $\epsilon\sim\mathcal{N}(0, \sigma^2)$ some random noise with variance $\sigma^2$.
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, i.e. did the person have a one-night-stand over Carnival or not. 
@@ -153,7 +154,7 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
 you will never forget that the residuals of a linear model are normally distribution and *not* the target variable in general. 
 Only in the case that you used a linear model having only an intercept, i.e. $M=1$ and $\phi_1(\mathbf{x})\equiv 1$,
-the target distribution equals the residual distribution (up to some shift) in all data sets. But seriously, who does that in real life?
+the target distribution equals the residual distribution (up to some shift) on all data sets. But seriously, who does that in real life?
 
 
 ## Analysis of the residual distribution
@@ -168,9 +169,10 @@ where $\hat y_i = \hat y(\mathbf{x}_i)$ is our prediction given the feature vect
 is the observed outcome for the sample $i$. In reality we might only have a single or maybe a few samples sharing
 exactly the same feature vector $(\mathbf{x}_i)$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
-assume we keep $\mathbf{x}_i$ fixed and would $\eqref{eqn:sum_residual}$ having all those observed outcomes. Let's drop the index $i$
-from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Since we have now an infinite number of outcomes we need
-to incorporate the probability $p(y)$ of a given outcome $y$. Consequently, $\eqref{eqn:sum_residual}$ becomes
+assume we keep $\mathbf{x}_i$ fixed and want to compute $\eqref{eqn:sum_residual}$ having all those observed outcomes. 
+Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$
+and since we have now an infinite number of outcomes, we need to incorporate the probability $p(y)$ of a given outcome $y$ 
+as the summation becomes an integration. Consequently, $\eqref{eqn:sum_residual}$ becomes
 \begin{equation}
 \int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\label{eqn:int_residual}
 \end{equation}
@@ -178,7 +180,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 *residual distribution* I am actually referring to the distribution $y - \hat y$ with $y$ being distributed as $p(y)$ or $y\sim p(y)$ for short.
 Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
 In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $p(y)$ to be normally distributed but it could also be anything else.
-In our car pricing use-case, we now that $p(y)$ will be non-negative as no one is gonna give you money if you take the car. Let me know if you have counter-example ;-)
+In our car pricing use-case, we know that $p(y)$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)
 This rules out a normal distribution and thus a log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
 
 For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
@@ -191,8 +193,8 @@ and subsequently
 \hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.\label{eqn:expected-value}
 \end{equation}
 Looks familiar? Yes, this is just the definition of the [expected value in the continuous case]! So whenever we are 
-using the RMSE or MSE as error measure, we are actually calculating the expected value of $p(y)$. So what happens if
-we do calculate this for the MAE? In this case we have
+using the RMSE or MSE as error measure, we are actually calculating the expected value of $y$ at some fixed $\mathbf{x}$. So what happens if
+we do the same for the MAE? In this case, we have
 $$
 \int_{-\infty}^\infty \vert y-\hat y\vert p(y)\, \mathrm{d}y=\int_{\hat y}^\infty (y-\hat y) p(y)\, \mathrm{d}y-\int_{-\infty}^{\hat y} (y-\hat y)p(y)\, \mathrm{d}y,
 $$ 
@@ -204,10 +206,10 @@ We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [medi
 
 A small recap at this point. We just learnt that minimizing the MSE or RMSE (also [l2-norm] as a fancier name) leads
 to the estimation of the expected value of $p(y)$ while minimizing MAE (also known as l1-norm) gets us the median of $p(y)$.
-Also remember that our feature vector $\mathbf{x}_i$ is still fixed, so $y\sim p(y)$ just describes the random fluctuations around
+Also remember that our feature vector $\mathbf{x}$ is still fixed, so $y\sim p(y)$ just describes the random fluctuations around
 some true value $y^\star$ that we just don't know and $\hat y$ is our best guess for it. If we assume a normal distribution
 there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
-minimizing the l1-norm. It may make a huge different though, if we are dealing with a non-symmetrical distribution like
+minimizing the l1-norm. It may make a huge difference though, if we are dealing with a non-symmetrical distribution like
 the log-normal distribution.
 
 Let's just demonstrate this using our used cars example. We have already seen that the distribution of price is rather
@@ -290,7 +292,7 @@ is doing and a lucky punch without a clue of what happened, just doesn't suit a 
 
 Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let's assume now that we
 have a log-normal distribution, and thus we have $\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)$. Consequently,
-the [probability density function] (pdf) is
+the [probability density function] (pdf) of the price is
 \begin{equation}
 \tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
@@ -302,7 +304,7 @@ $\mu$ of a normal distribution, which is the expected value and also the *median
 Applying any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
 $\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
 is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
-thus the result is not surprising at all from a mathematical point of view.
+thus the result, that we are approximating the median instead of the mean, is not surprising at all from a mathematical point of view.
 
 The expected value is not so well-behaved under transformations as the median. Using the definition of the expected
 value $\eqref{eqn:expected-value}$, we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
@@ -323,8 +325,8 @@ This is especially important if you belong to the illustrious circle of deep lea
 the target variable of a regression problem is standardized or [min-max scaled] during training and transformed back afterwards.
 Since these normalization techniques are affine transformations we are on the safe side, though.  
 
-Coming back to our example where we know that our residual transformation is quite log-normally distributed. Can we 
-somehow still receive the mean of the untransformed target variable? Yes, we can, actually. Using the parameter $\mu$ that
+Coming back to our example where we know that the distribution is quite log-normal. Can we 
+somehow still receive the mean of the untransformed target variable? Yes we can, actually. Using the parameter $\mu$ that
 we already determined above we just calculate the variance $\sigma^2$ and have $\exp(\mu + \frac{\sigma^2}{2})$ for the mean
 of the untransformed distribution. More details on how to do this can be found in the [notebook]
 of the [used-cars-log-trans repository]. Way more interesting, at least for the mathematically interested reader,
@@ -334,7 +336,7 @@ This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ a
 as well as $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
 Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
 \begin{equation}
-\int y \tilde p(y)\mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\int y \tilde p(y)\,\mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
 \end{equation}
 where in the last equation the additional factor of the log-normal distribution was canceled out with $e^{\tilde y}$ and thus
 became the pdf of a normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
@@ -348,31 +350,31 @@ and completing the square with $\tilde y$, we have
 Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$ by shifting the parameter $\mu$ of the
 normal distribution by $\sigma^2$. Denoting with $p_s(y)$ the shifted pdf, we have
 $$
-\int e^{\tilde y} p(\tilde y) \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+\int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
 $$
 and subsequently we have proved that the expected value of the log-normal distribution indeed is $\exp(\mu + \frac{\sigma^2}{2})$.
 
 A little recap of this section's most important points to remember. When minimizing l2, i.e. (R)MSE, only affine transformations
-allow us the determine the expected value of original target by applying the inverse transformation to the expected value
+allow us the determine the expected value of the original target by applying the inverse transformation to the expected value
 of the transformed target variable. When minimizing l1, i.e. MAE, all strictly monotonic increasing transformations can be
-applied to determine the median from the transformed target variable.
+applied to determine the median from the transformed target variable followed by the inverse transformation.
 
 
 ## Transforming the target for fun and profit
 
 So we have seen that not everything is as it seems or as we might have expected by doing some rather academical analysis.
 But can we somehow use this knowledge in our use-case of predicting the market value of a used car?
-And this is the point where I close the circle to the beginning of the story. I already argued that the RMSE might not
-be the right error measure to minimize. We already saw that log-transforming the target and still minimizing the RMSE 
-gave us an approximation to the result we got if we had minimized MAE, which quite likely is a more appropriate error 
+Yeah, this is the point where we close the circle to the beginning of the story. We already argued that the RMSE might not
+be the right error measure to minimize. Log-transforming the target and still minimizing the RMSE 
+gave us an approximation to the result we would have gotten if we had minimized the MAE, which quite likely is a more appropriate error 
 measure in this use-case than the RMSE. This is a neat trick if our regression method
-only allows minimizing MSE or is too slow or unstable when minimizing MAE directly. A word of caution again, this
-only works if the residual distribution approximates a log-normal distribution. So far we only seen that the target
-distribution is quite log-normal but since we are dealing with positive numbers, and also taking into account the fact 
+only allows minimizing the MSE or if it is too slow or unstable when minimizing the MAE directly. A word of caution again, this
+only works if the residual distribution approximates a log-normal distribution. So far we have only seen that the target
+distribution, not the residual distribution, is quite log-normal but since we are dealing with positive numbers, and also taking into account the fact 
 that a car seller might be more inclined to start with a higher price, this justifies the assumption that the residual 
 distribution (in case of a multivariate model) will also approximate a log-normal distribution.
 
-Well, MAE surely is quite nice, but how about minimizing some relative measure like the MAPE? Assuming that our regression
+Well, the MAE surely is quite nice, but how about minimizing some relative measure like the MAPE? Assuming that our regression
 method does not support minimizing it directly, does the log-transformation do any good here? 
 Intuitively, since we know that multiplicative, and thus relative, relationships become additive in log-space, 
 we might expect it to be advantageous and indeed it does help. But before we do some experiments, let's first look at some
@@ -390,7 +392,7 @@ So in practice, the residual distribution might be quite narrow but if it was th
 deterministic relationship between our feature and the target variable, or more likely made a mistake by evaluating some
 over-fitted model on the train set. A nice example of being asymptotically right but practically wrong, by the way.
 In a [reply post] to Tim's original post, a guy who just calls himself *ML*, pointed
-out the overly optimistic assumptions and proved that a correction of $-\frac{3}{2}\sigma^2$ is necessary during
+out the overly optimistic assumption and proved that a correction of $-\frac{3}{2}\sigma^2$ is necessary during
 back-transformation assuming a log-normal residual distribution. Since his post is quite scrambled, and also just for the
 fun of it, we will also prove this after some more practical applications using the notation we already established. 
 And while we are at it, we will also show that the necessary correction in case of MAPE is $-\sigma^2$. But for now, we will
@@ -400,20 +402,20 @@ just take for granted the following
 |-------------------------|-------------|-------|-------------|------------------------|
 | correction terms, i.e.  | $+\sigma^2$ | $0$   | $-\sigma^2$ | $-\frac{3}{2}\sigma^2$ |
 
-which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target. Needless to
-say, the correction for RMSPE was one of the decisive factors to win the Kaggle challenge and make some profit. The 
+which need to be added to the minimum point obtained by the RMSE minimization of the log-transformed target before transforming it back. 
+Needless to say, the correction for RMSPE was one of the decisive factors to win the Kaggle challenge and thus to make some profit. The 
 winner Gert Jacobusse mentions this in the attached PDF of his [model documentation post]. 
 
-What if we don't have an log-normal residual distribution or only a really rough approximation, can we better than applying
+What if we don't have an log-normal residual distribution or only a really rough approximation, can we be better than applying
 those theoretical corrections terms? Sure, we can! In the end, since we are transforming back using $\exp$, it's only
-a correction factor close to $1$ that we are applying. So in case of RMSPE and for our approximation $\hat\mu$ of the log-
-normal distribution, we have a factor of $c=\exp(-\frac{3}{2}\sigma^2)$ for the back-transformed target $\exp(\hat\mu)$.
+a correction factor close to $1$ that we are applying. So in case of RMSPE and for our approximation $\hat\mu$ of the log-normal 
+distribution, we have a factor of $c=\exp(-\frac{3}{2}\sigma^2)$ for the back-transformed target $\exp(\hat\mu)$.
 We can just treat this as another one-dimensional optimization problem and determine the best correction factor numerically. 
 Speaking of numerical computation, we are not gonna determine a factor $c$ but equivalently a correction term $\tilde c$,
 so that $\exp(\hat \mu + \tilde c)=\hat y$, which is numerically much more stable. At my former employer [Blue Yonder],
 we used to call this the *Gronbach factor* after our colleague Moritz Gronbach, who would successfully apply this fitted correction
-to all kinds of regression problems with non-negative values. The implementation given the true value, our predicted value
-in log-space and some error measure is actually quite easy:
+to all kinds of regression problems with non-negative values. The implementation is actually quite easy
+given the true value, our predicted value in log-space and some error measure:
 
 ```python
 def get_corr(y_true, y_pred_log, error_func):
@@ -422,7 +424,7 @@ def get_corr(y_true, y_pred_log, error_func):
     return res.x
 ```
 
-Let's now get our hands dirty and evaluate how RMSE, MSE, MAPE and RMSPE behave in our use-case with the raw as well 
+Let's now get our hands dirty and evaluate how RMSE, MAE, MAPE and RMSPE behave in our use-case with the raw as well 
 as the log-transformed target using no, the theoretical and the fitted correction. To do so we gonna do some feature engineering and apply some ML method. 
 Regarding the former, we just do some extremely basic things like calculating the age of a car and average mileage per year, i.e.
 ```python
@@ -474,7 +476,7 @@ our results. In each split of these 10 splits, we then fit the model and predict
 3. log-transformed target with the corresponding sigma2 correction,
 4. log-transformed target with the fitted correction,
 
-and evaluate the results with RMSE, MSE, MAPE and RMSPE. To spare you the trivial implementation, which is to be found
+and evaluate the results with RMSE, MAE, MAPE and RMSPE. To spare you the trivial implementation, which is to be found
 in the [notebook], we jump directly to the results of the first from 10 splits:
 
 |   split | target            |    RMSE |     MAE |     MAPE |    RMSPE |
@@ -550,8 +552,9 @@ target, the lower the better. The RMSE column shows us that if we really wanna g
 leads to a worse result compared to a model trained on the original target. The theoretical sigma2 correction makes it even
 worse which tells us that the residuals in log-space are not normally distributed. We can check that using for instance the
 [Kolmogorov–Smirnov test]. At least the fitted correction improves somewhat over an uncorrected back-transformation. 
-For the MAE we see an improvement as expected and we know that theoretically there is no need for a correction. Again,
-noting that the log-normal assumption is quite idealistic, we can understand that the fitted correction is better than
+For the MAE, we see an improvement as expected and we know that theoretically there is no need for a correction, thus
+the sigma2 correction cell shows exactly the same result. 
+Again, noting that the log-normal assumption is quite idealistic, we can understand that the fitted correction is better than
 the theoretical optimisation. Coming now to the more appropriate measures for this use-case, we see some nice
 percentage improvements for MAPE. Applying the log-transformation here gets us a huge performance boost even without
 correction. The sigma2 correction makes it a tad better but is outperformed by the fitted correction. Last but not least,
@@ -576,17 +579,19 @@ for RMSPE and $-\sigma^2$ for MAPE. Let's start with the former.
 We use again our notation $\tilde \ast = \log(\ast)$ for our variables and also to differentiate between the normal
 and log-normal distribution. To minimize the error, we have
 $$
-\mathrm{RMSPE}(\hat y) = \int\left(\frac{y-\hat y}{y}\right)^2\,\tilde p(y)\mathrm{d}y = 1 -2\hat y\int\frac{\tilde p(y)\mathrm{d}y}{y} + {\hat y}^2\int\frac{\tilde p(y)\mathrm{d}y}{y^2}.
+\mathrm{RMSPE}(\hat y) = \int\left(\frac{y-\hat y}{y}\right)^2\,\tilde p(y)\, \mathrm{d}y = 1 -2\hat y\int\frac{\tilde p(y)}{y}\, \mathrm{d}y + {\hat y}^2\int\frac{\tilde p(y)}{y^2}\, \mathrm{d}y.
 $$
 To find the minimum, we derive by $\hat y$ and set to $0$, resulting in
-$$\hat y=\frac{\int\frac{\tilde p(y)}{y}\mathrm{d}y}{\int\frac{\tilde p(y)}{y^2}}\mathrm{d}y $$
+$$
+\hat y=\frac{\int\frac{\tilde p(y)}{y}\, \mathrm{d}y}{\int\frac{\tilde p(y)}{y^2}\, \mathrm{d}y}
+$$
 Thus, we now need to calculate
 $$
-f_\alpha = \int\frac{\tilde p(y)\mathrm{d}y}{y^\alpha}
+f_\alpha = \int\frac{\tilde p(y)\, \mathrm{d}y}{y^\alpha}
 $$
-for \(α=1,2\). To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\mathrm{d}\tilde y$, we have 
+for $\alpha =1,2$. To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\, \mathrm{d}\tilde y$, we have 
 $$
-f_\alpha = \int e^{-\alpha\tilde y}\,\tilde p(e^{\tilde y})e^{\tilde y}\mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,p(\tilde y)\mathrm{d}\tilde y.
+f_\alpha = \int e^{-\alpha\tilde y}\,\tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,p(\tilde y)\, \mathrm{d}\tilde y.
 $$
 Writing out the exponent and completing the square similar to $\eqref{eqn:completing_square}$, we obtain
 $$
@@ -598,19 +603,19 @@ $$
 $$
 Subsequently, the correction term for RMSPE is $-\frac{3}{2}\sigma^2$. For MAPE we have
 $$
-\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\mathrm{d}y,
+\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\, \mathrm{d}y,
 $$
 and after deriving by $\hat y$ as well as setting to 0, we need to find $\hat y$ such that
 $$
-\int_{\hat y}^{\infty}\frac{1}{y}\,\tilde p(y)\mathrm{d}y - \int_0^{\hat y}\frac{1}{y}\,\tilde p(y)\mathrm{d}y = 0.
+\int_{\hat y}^{\infty}\frac{1}{y}\,\tilde p(y)\, \mathrm{d}y - \int_0^{\hat y}\frac{1}{y}\,\tilde p(y)\, \mathrm{d}y = 0.
 $$
 Doing the same substitution as with RMSPE, results in
 $$
-\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\mathrm{d} \tilde y - \int_0^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\mathrm{d}\tilde y = 0.
+\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d} \tilde y - \int_0^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d}\tilde y = 0.
 $$
 Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
 \begin{equation}
-e^{-\mu+\frac{1}{\sigma^2}}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\mathrm{d}\tilde y)\right) = 0,
+e^{-\mu+\frac{1}{\sigma^2}}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y)\right) = 0,
 \label{eqn:mape-proof}
 \end{equation}
 where 
@@ -632,6 +637,7 @@ the correction term for MAPE is $-\sigma^2$.
 [mean squared error]: https://en.wikipedia.org/wiki/Mean_squared_error
 [mean absolute percentage error]: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
 [log-normal distribution]: https://en.wikipedia.org/wiki/Log-normal_distribution
+[SciPy]: https://www.scipy.org/
 [Cologne Cathedral distribution]: https://en.wikipedia.org/wiki/Cologne_Cathedral
 [expected value in the continuous case]: https://en.wikipedia.org/wiki/Expected_value#Absolutely_continuous_case
 [median]: https://en.wikipedia.org/wiki/Median#Probability_distributions
@@ -652,6 +658,6 @@ the correction term for MAPE is $-\sigma^2$.
 [CatBoost]: https://catboost.ai/
 [Volkswagen Passat Variant]: https://en.wikipedia.org/wiki/Volkswagen_Passat
 [Blue Yonder]: https://blueyonder.com/
-[Scikit-Learn RandomForestRegressor]: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
+[Scikit-Learn's RandomForestRegressor]: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
 [notebook]: https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb
 [Kolmogorov–Smirnov test]: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test

@@ -6,6 +6,7 @@ category: post
 tags: python, data science, mathematics
 authors: Florian Wilhelm
 status: draft
+summary: Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn't stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it and even how all this can be used to your advantage.
 ---
 
 ## Motivation
@@ -618,7 +619,7 @@ $$
 $$
 Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
 \begin{equation}
-e^{-\mu+\frac{1}{\sigma^2}}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y)\right) = 0,
+e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y)\right) = 0,
 \label{eqn:mape-proof}
 \end{equation}
 where 

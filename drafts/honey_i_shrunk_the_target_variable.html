@@ -148,13 +148,13 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="python,data science,mathematics" />
-        <meta name="description" content="Motivation For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when facing some new supervised learning problem… but it also makes me contemplating. So full of vigour and enthusiasm, they are often completely absorbed by the …" />
+        <meta name="description" content="Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn’t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it and even how all this can be used to your advantage." />
 
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Honey, I shrunk the target variable"/>
         <meta property="og:url" content="https://florianwilhelm.info/drafts/honey_i_shrunk_the_target_variable.html"/>
-        <meta property="og:description" content="Motivation For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when facing some new supervised learning problem… but it also makes me contemplating. So full of vigour and enthusiasm, they are often completely absorbed by the …"/>
+        <meta property="og:description" content="Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn’t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it and even how all this can be used to your advantage."/>
         <meta property="article:published_time" content="2020-05-01" />
             <meta property="article:section" content="post" />
             <meta property="article:tag" content="python" />
@@ -906,7 +906,7 @@ $$</div>
 Again, we complete the square of the exponent similar to <span class="math">\(\eqref{eqn:completing_square}\)</span>, resulting&nbsp;in
 </p>
 <div class="math">\begin{equation}
-e^{-\mu+\frac{1}{\sigma^2}}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y)\right) = 0,
+e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y)\right) = 0,
 \label{eqn:mape-proof}
 \end{equation}</div>
 <p>

@@ -144,7 +144,7 @@ sns.distplot(y)
 plt.xlim(-2, 10)
 ``` 
 
-Obviously, this results in the a bimodal distribution also known as the notorious [Cologne Cathedral distribution] as some may call it.
+Obviously, this results in a bimodal distribution also known as the notorious [Cologne Cathedral distribution] as some may call it.
 Thus, although using a linear model, we generated a non-normally distributed target variable with residuals that are normally distributed.
 
 <figure>

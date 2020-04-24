@@ -114,18 +114,19 @@ more *normal*. And isn't this some basic assumption of a linear model anyway?
 
 Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn't need to
 be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
-For the observed outcome $y_i$ and some true latent outcome $y_i^\star$ of the $i$-th sample, we have
+For the observed outcome $y_i$ and some true latent outcome $\mu_i$ of the $i$-th sample, we have
 
 \begin{equation}
 \begin{split}
-y^\star(\mathbf{x}_i) &=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
-y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon, 
+\mu_i &=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
+y_i &= \mu_i + \epsilon, 
 \end{split}\label{eqn:linear-model}
 \end{equation}
 &nbsp;
 
 where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions,
-$w_j$, $j=1, \ldots, M$ some scalar weights and $\epsilon\sim\mathcal{N}(0, \sigma^2)$ some random noise with variance $\sigma^2$.
+$w_j$, $j=1, \ldots, M$ some scalar weights and $\epsilon$ some random noise that is distributed like the normal distribution
+with mean $0$ and variance $\sigma^2$ (or $\epsilon\sim\mathcal{N}(0, \sigma^2)$ for short).
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
@@ -169,7 +170,7 @@ Let's take a look at the definition of the MSE again, i.e.
 \end{equation}
 where $\hat y_i = \hat y(\mathbf{x}_i)$ is our prediction given the feature vector $\mathbf{x}_i$ and $y_i$
 is the observed outcome for the sample $i$. In reality we might only have a single or maybe a few samples sharing
-exactly the same feature vector $(\mathbf{x}_i)$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
+exactly the same feature vector $\mathbf{x}_i$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
 assume we keep $\mathbf{x}_i$ fixed and want to compute $\eqref{eqn:sum_residual}$ having all those observed outcomes. 
 Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$
@@ -179,7 +180,7 @@ as the summation becomes an integration. Consequently, $\eqref{eqn:sum_residual}
 \int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y,\label{eqn:int_residual}
 \end{equation}
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
-*residual distribution* I am actually referring to the distribution $y - \hat y$ with $y$ being distributed as $p(y)$ or $y\sim p(y)$ for short.
+*residual distribution* I am actually referring to the distribution $y - \hat y$ with $y\sim p(y)$.
 Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
 In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $p(y)$ to be normally distributed but it could also be anything else.
 In our car pricing use-case, we know that $p(y)$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)

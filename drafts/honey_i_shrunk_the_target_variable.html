@@ -332,17 +332,18 @@ with the help of the wonderful <a href="https://www.scipy.org/">SciPy</a> gets u
 more <em>normal</em>. And isn&#8217;t this some basic assumption of a linear model&nbsp;anyway? </p>
 <p>Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn&#8217;t need to
 be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
-For the observed outcome <span class="math">\(y_i\)</span> and some true latent outcome <span class="math">\(y_i^\star\)</span> of the <span class="math">\(i\)</span>-th sample, we&nbsp;have</p>
+For the observed outcome <span class="math">\(y_i\)</span> and some true latent outcome <span class="math">\(\mu_i\)</span> of the <span class="math">\(i\)</span>-th sample, we&nbsp;have</p>
 <div class="math">\begin{equation}
 \begin{split}
-y^\star(\mathbf{x}_i) &amp;=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
-y(\mathbf{x}_i) &amp;= y^\star(\mathbf{x}_i) + \epsilon, 
+\mu_i &amp;=  \sum_{j=1}^M w_j \phi_j(\mathbf{x}_i) , \\
+y_i &amp;= \mu_i + \epsilon, 
 \end{split}\label{eqn:linear-model}
 \end{equation}</div>
 <p>
 &nbsp;</p>
 <p>where <span class="math">\(\mathbf{x}_i\)</span> is the original feature vector, <span class="math">\(\phi_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> a set of (potentially non-linear) functions,
-<span class="math">\(w_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> some scalar weights and <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma^2)\)</span> some random noise with variance <span class="math">\(\sigma^2\)</span>.</p>
+<span class="math">\(w_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> some scalar weights and <span class="math">\(\epsilon\)</span> some random noise that is distributed like the normal distribution
+with mean <span class="math">\(0\)</span> and variance <span class="math">\(\sigma^2\)</span> (or <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma^2)\)</span> for&nbsp;short).</p>
 <p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>
@@ -382,7 +383,7 @@ Let&#8217;s take a look at the definition of the <span class="caps">MSE</span> a
 <p>
 where <span class="math">\(\hat y_i = \hat y(\mathbf{x}_i)\)</span> is our prediction given the feature vector <span class="math">\(\mathbf{x}_i\)</span> and <span class="math">\(y_i\)</span>
 is the observed outcome for the sample <span class="math">\(i\)</span>. In reality we might only have a single or maybe a few samples sharing
-exactly the same feature vector <span class="math">\((\mathbf{x}_i)\)</span> and thus also the same model prediction <span class="math">\(\hat y_i\)</span>. In order to do same actual analysis, 
+exactly the same feature vector <span class="math">\(\mathbf{x}_i\)</span> and thus also the same model prediction <span class="math">\(\hat y_i\)</span>. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
 assume we keep <span class="math">\(\mathbf{x}_i\)</span> fixed and want to compute <span class="math">\(\eqref{eqn:sum_residual}\)</span> having all those observed outcomes. 
 Let&#8217;s drop the index <span class="math">\(i\)</span> from <span class="math">\(\hat y_i\)</span> as it depends only on our fixed <span class="math">\(\mathbf{x}_i\)</span>
@@ -394,7 +395,7 @@ as the summation becomes an integration. Consequently, <span class="math">\(\eqr
 \end{equation}</div>
 <p>
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
-<em>residual distribution</em> I am actually referring to the distribution <span class="math">\(y - \hat y\)</span> with <span class="math">\(y\)</span> being distributed as <span class="math">\(p(y)\)</span> or <span class="math">\(y\sim p(y)\)</span> for short.
+<em>residual distribution</em> I am actually referring to the distribution <span class="math">\(y - \hat y\)</span> with <span class="math">\(y\sim p(y)\)</span>.
 Thus the residual distribution is determined by <span class="math">\(p(y)\)</span> except for a shift of <span class="math">\(\hat y\)</span>.  So what kind of assumptions can we make about it? 
 In case of a linear model as in <span class="math">\(\eqref{eqn:linear-model}\)</span>, we assume <span class="math">\(p(y)\)</span> to be normally distributed but it could also be anything else.
 In our car pricing use-case, we know that <span class="math">\(p(y)\)</span> will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)

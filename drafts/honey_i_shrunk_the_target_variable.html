@@ -341,8 +341,8 @@ y(\mathbf{x}_i) &amp;= y^\star(\mathbf{x}_i) + \epsilon,
 \end{equation}</div>
 <p>
 &nbsp;</p>
-<p>where <span class="math">\(\mathbf{x}_i\)</span> is the original feature vector, <span class="math">\(\phi_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> a set of (potentially non-linear) functions
-and <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma^2)\)</span> some random noise with variance <span class="math">\(\sigma^2\)</span>.</p>
+<p>where <span class="math">\(\mathbf{x}_i\)</span> is the original feature vector, <span class="math">\(\phi_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> a set of (potentially non-linear) functions,
+<span class="math">\(w_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> some scalar weights and <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma^2)\)</span> some random noise with variance <span class="math">\(\sigma^2\)</span>.</p>
 <p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, i.e. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>

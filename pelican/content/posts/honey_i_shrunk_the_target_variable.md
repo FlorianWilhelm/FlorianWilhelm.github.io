@@ -124,8 +124,8 @@ y(\mathbf{x}_i) &= y^\star(\mathbf{x}_i) + \epsilon,
 \end{equation}
 &nbsp;
 
-where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions
-and $\epsilon\sim\mathcal{N}(0, \sigma^2)$ some random noise with variance $\sigma^2$.
+where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions,
+$w_j$, $j=1, \ldots, M$ some scalar weights and $\epsilon\sim\mathcal{N}(0, \sigma^2)$ some random noise with variance $\sigma^2$.
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, i.e. did the person have a one-night-stand over Carnival or not. 

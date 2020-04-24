@@ -30,7 +30,8 @@ anyways? A little $\log$ never killed dog, so what could possibly go wrong?
 &nbsp;
 
 As you might have guessed from these questions, it's not that easy, and transforming your target variable puts you
-directly into the [danger zone]. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
+directly into the [danger zone]. In this blog post, I want to elaborate on why this is so from a mathematical perspective
+but also by demonstrating it in some practical examples.
 Without spoiling too much I hope, for the too busy or plain lazy readers, the main take-away is:
 
 > **TLDR**: Applying any non-[affine transformation] to your target variable might have unwanted effects on the error measure you are minimizing.
@@ -565,9 +566,9 @@ but that was not the actual point of this exercise.
  
 Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
-disaster. It's now up to you and remember that with great power comes great responsibility ;-) The rest of this post
-is only for the inquisitive reader who wants to know exactly where the correction terms for RSMPE and MAPE come from.
-So let's wash it all down with some more math.
+disaster. It's bit like wielding a double handed sword in a fight. Limbs will be cut off, just make sure it's not one of yours.
+The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for RSMPE 
+and MAPE come from. So let's wash it all down with some more math.
 
 ## Aftermath
 
@@ -587,7 +588,7 @@ $$
 $$
 Thus, we now need to calculate
 $$
-f_\alpha = \int\frac{\tilde p(y)\, \mathrm{d}y}{y^\alpha}
+f_\alpha = \int\frac{\tilde p(y)}{y^\alpha}\, \mathrm{d}y
 $$
 for $\alpha =1,2$. To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\, \mathrm{d}\tilde y$, we have 
 $$
@@ -630,7 +631,7 @@ the correction term for MAPE is $-\sigma^2$.
 [danger zone]: https://www.youtube.com/watch?v=siwpn14IE7E
 [Scikit-Learn]: https://scikit-learn.org/
 [used-cars database from Kaggle]: https://www.kaggle.com/orgesleka/used-cars-database
-[root-mean-square error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
+[root mean squared error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [affine transformation]: https://en.wikipedia.org/wiki/Affine_transformation
 [used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans/
 [mean absolute error]: https://en.wikipedia.org/wiki/Mean_absolute_error

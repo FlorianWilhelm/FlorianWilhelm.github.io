@@ -250,7 +250,7 @@ Florian Wilhelm            </a>
 <p>For me it is often a joyful sight to see how young, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem&#8230; but it also makes me contemplating. So full of vigour and enthusiasm, 
 they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
-they chose themselves, like the <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root-mean-square error</a>. 
+they chose themselves, like the [root-mean-square error]. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
 the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn&#8217;t this better or even required for simple models like linear regression,
@@ -264,7 +264,8 @@ anyways? A little <span class="math">\(\log\)</span> never killed dog, so what c
 
 <p>&nbsp;</p>
 <p>As you might have guessed from these questions, it&#8217;s not that easy, and transforming your target variable puts you
-directly into the <a href="https://www.youtube.com/watch?v=siwpn14IE7E">danger zone</a>. In this blog post, I want to elaborate on why this is so from a mathematical perspective.
+directly into the <a href="https://www.youtube.com/watch?v=siwpn14IE7E">danger zone</a>. In this blog post, I want to elaborate on why this is so from a mathematical perspective
+but also by demonstrating it in some practical examples.
 Without spoiling too much I hope, for the too busy or plain lazy readers, the main take-away&nbsp;is:</p>
 <blockquote>
 <p><strong><span class="caps">TLDR</span></strong>: Applying any non-<a href="https://en.wikipedia.org/wiki/Affine_transformation">affine transformation</a> to your target variable might have unwanted effects on the error measure you are minimizing.
@@ -298,7 +299,7 @@ building some kind of fancy model. Nowadays most machine learning frameworks lik
 that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> (<span class="caps">MSE</span>) by default.
 But does the <span class="caps">MSE</span> really make sense for this use-case? First of all is our target measured in some currency,
 so why would we try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
-end, i.e. [root mean squared error] (<span class="caps">RMSE</span>), would not change a thing about this fact. Still, we would weight one large residual
+end, i.e. <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root mean squared error</a> (<span class="caps">RMSE</span>), would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
 <a href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute error</a> (<span class="caps">MAE</span>) might be the more natural choice compared to the <span class="caps">MSE</span>.</p>
@@ -838,9 +839,9 @@ in the respective error measure, we would still need to improve the model a lot 
 but that was not the actual point of this&nbsp;exercise. </p>
 <p>Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
-disaster. It&#8217;s now up to you and remember that with great power comes great responsibility ;-) The rest of this post
-is only for the inquisitive reader who wants to know exactly where the correction terms for <span class="caps">RSMPE</span> and <span class="caps">MAPE</span> come from.
-So let&#8217;s wash it all down with some more&nbsp;math.</p>
+disaster. It&#8217;s bit like wielding a double handed sword in a fight. Limbs will be cut off, just make sure it&#8217;s not one of yours.
+The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for <span class="caps">RSMPE</span> 
+and <span class="caps">MAPE</span> come from. So let&#8217;s wash it all down with some more&nbsp;math.</p>
 <h2>Aftermath</h2>
 <p>So you are still reading? I totally appreciate it and bet you&#8217;re one of those people who wants to know for sure. 
 If you ever had religious education, you were certainly a pain in the ass for your teacher and I can feel you.
@@ -862,7 +863,7 @@ $$</div>
 Thus, we now need to&nbsp;calculate
 </p>
 <div class="math">$$
-f_\alpha = \int\frac{\tilde p(y)\, \mathrm{d}y}{y^\alpha}
+f_\alpha = \int\frac{\tilde p(y)}{y^\alpha}\, \mathrm{d}y
 $$</div>
 <p>
 for <span class="math">\(\alpha =1,2\)</span>. To that end, we substitute <span class="math">\(y=\exp(\tilde y)\)</span> and using <span class="math">\(\mathrm{d}y = e^{-\tilde y}\, \mathrm{d}\tilde y\)</span>, we&nbsp;have 

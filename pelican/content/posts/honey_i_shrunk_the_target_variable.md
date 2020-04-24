@@ -407,13 +407,15 @@ which need to be added to the minimum point obtained by the RMSE minimization of
 Needless to say, the correction for RMSPE was one of the decisive factors to win the Kaggle challenge and thus to make some profit. The 
 winner Gert Jacobusse mentions this in the attached PDF of his [model documentation post]. 
 
-What if we don't have an log-normal residual distribution or only a really rough approximation, can we be better than applying
+What if we don't have a log-normal residual distribution or only a really rough approximation, can we be better than applying
 those theoretical corrections terms? Sure, we can! In the end, since we are transforming back using $\exp$, it's only
 a correction factor close to $1$ that we are applying. So in case of RMSPE and for our approximation $\hat\mu$ of the log-normal 
 distribution, we have a factor of $c=\exp(-\frac{3}{2}\sigma^2)$ for the back-transformed target $\exp(\hat\mu)$.
 We can just treat this as another one-dimensional optimization problem and determine the best correction factor numerically. 
 Speaking of numerical computation, we are not gonna determine a factor $c$ but equivalently a correction term $\tilde c$,
-so that $\exp(\hat \mu + \tilde c)=\hat y$, which is numerically much more stable. At my former employer [Blue Yonder],
+so that $\exp(\hat \mu + \tilde c)=\hat y$, which is numerically much more stable. 
+
+At my former employer [Blue Yonder],
 we used to call this the *Gronbach factor* after our colleague Moritz Gronbach, who would successfully apply this fitted correction
 to all kinds of regression problems with non-negative values. The implementation is actually quite easy
 given the true value, our predicted value in log-space and some error measure:

@@ -642,13 +642,14 @@ just take for granted the&nbsp;following</p>
 <p>which need to be added to the minimum point obtained by the <span class="caps">RMSE</span> minimization of the log-transformed target before transforming it back. 
 Needless to say, the correction for <span class="caps">RMSPE</span> was one of the decisive factors to win the Kaggle challenge and thus to make some profit. The 
 winner Gert Jacobusse mentions this in the attached <span class="caps">PDF</span> of his <a href="https://www.kaggle.com/c/rossmann-store-sales/discussion/18024">model documentation post</a>. </p>
-<p>What if we don&#8217;t have an log-normal residual distribution or only a really rough approximation, can we be better than applying
+<p>What if we don&#8217;t have a log-normal residual distribution or only a really rough approximation, can we be better than applying
 those theoretical corrections terms? Sure, we can! In the end, since we are transforming back using <span class="math">\(\exp\)</span>, it&#8217;s only
 a correction factor close to <span class="math">\(1\)</span> that we are applying. So in case of <span class="caps">RMSPE</span> and for our approximation <span class="math">\(\hat\mu\)</span> of the log-normal 
 distribution, we have a factor of <span class="math">\(c=\exp(-\frac{3}{2}\sigma^2)\)</span> for the back-transformed target <span class="math">\(\exp(\hat\mu)\)</span>.
 We can just treat this as another one-dimensional optimization problem and determine the best correction factor numerically. 
 Speaking of numerical computation, we are not gonna determine a factor <span class="math">\(c\)</span> but equivalently a correction term <span class="math">\(\tilde c\)</span>,
-so that <span class="math">\(\exp(\hat \mu + \tilde c)=\hat y\)</span>, which is numerically much more stable. At my former employer <a href="https://blueyonder.com/">Blue Yonder</a>,
+so that <span class="math">\(\exp(\hat \mu + \tilde c)=\hat y\)</span>, which is numerically much more&nbsp;stable. </p>
+<p>At my former employer <a href="https://blueyonder.com/">Blue Yonder</a>,
 we used to call this the <em>Gronbach factor</em> after our colleague Moritz Gronbach, who would successfully apply this fitted correction
 to all kinds of regression problems with non-negative values. The implementation is actually quite easy
 given the true value, our predicted value in log-space and some error&nbsp;measure:</p>

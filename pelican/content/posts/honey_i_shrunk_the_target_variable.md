@@ -615,7 +615,7 @@ $$
 $$
 Doing the same substitution as with RMSPE, results in
 $$
-\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d} \tilde y - \int_0^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d}\tilde y = 0.
+\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d}\tilde y = 0.
 $$
 Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
 \begin{equation}

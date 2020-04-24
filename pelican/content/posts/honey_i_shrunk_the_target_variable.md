@@ -176,7 +176,7 @@ Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathb
 and since we have now an infinite number of outcomes, we need to incorporate the probability $p(y)$ of a given outcome $y$ 
 as the summation becomes an integration. Consequently, $\eqref{eqn:sum_residual}$ becomes
 \begin{equation}
-\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\label{eqn:int_residual}
+\int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y,\label{eqn:int_residual}
 \end{equation}
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
 *residual distribution* I am actually referring to the distribution $y - \hat y$ with $y$ being distributed as $p(y)$ or $y\sim p(y)$ for short.
@@ -188,11 +188,11 @@ This rules out a normal distribution and thus a log-normal distribution might be
 For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
 So let's do that analytically by deriving $\eqref{eqn:int_residual}$ with respect to $\hat y$ and setting to $0$, we have that
 $$
-\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
+\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\, \mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
 $$
 and subsequently
 \begin{equation}
-\hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.\label{eqn:expected-value}
+\hat y = \int_{-\infty}^\infty yp(y)\, \mathrm{d}y.\label{eqn:expected-value}
 \end{equation}
 Looks familiar? Yes, this is just the definition of the [expected value in the continuous case]! So whenever we are 
 using the RMSE or MSE as error measure, we are actually calculating the expected value of $y$ at some fixed $\mathbf{x}$. So what happens if
@@ -316,8 +316,8 @@ For the transformed random variable $\phi(X)$ we have for the expected value tha
 $$
 \begin{align*}
 E[\phi(X)] &= E[aX + b] \\
-            &= \int (ax + b)p(x)\mathrm{d}x \\
-            &= a\int xp(x)\mathrm{d}x + b \\
+            &= \int (ax + b)p(x)\, \mathrm{d}x \\
+            &= a\int xp(x)\, \mathrm{d}x + b \\
             &=aE[X] + b =\phi(E[X]),
 \end{align*}
 $$
@@ -338,7 +338,7 @@ This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ a
 as well as $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
 Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
 \begin{equation}
-\int y \tilde p(y)\,\mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\int y \tilde p(y)\, \mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
 \end{equation}
 where in the last equation the additional factor of the log-normal distribution was canceled out with $e^{\tilde y}$ and thus
 became the pdf of a normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 

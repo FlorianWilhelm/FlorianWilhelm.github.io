@@ -390,7 +390,7 @@ and since we have now an infinite number of outcomes, we need to incorporate the
 as the summation becomes an integration. Consequently, <span class="math">\(\eqref{eqn:sum_residual}\)</span>&nbsp;becomes
 </p>
 <div class="math">\begin{equation}
-\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y,\label{eqn:int_residual}
+\int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y,\label{eqn:int_residual}
 \end{equation}</div>
 <p>
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
@@ -403,13 +403,13 @@ This rules out a normal distribution and thus a log-normal distribution might be
 So let&#8217;s do that analytically by deriving <span class="math">\(\eqref{eqn:int_residual}\)</span> with respect to <span class="math">\(\hat y\)</span> and setting to <span class="math">\(0\)</span>, we have&nbsp;that
 </p>
 <div class="math">$$
-\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
+\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\, \mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
 $$</div>
 <p>
 and&nbsp;subsequently
 </p>
 <div class="math">\begin{equation}
-\hat y = \int_{-\infty}^\infty yp(y)\mathrm{d}y.\label{eqn:expected-value}
+\hat y = \int_{-\infty}^\infty yp(y)\, \mathrm{d}y.\label{eqn:expected-value}
 \end{equation}</div>
 <p>
 Looks familiar? Yes, this is just the definition of the <a href="https://en.wikipedia.org/wiki/Expected_value#Absolutely_continuous_case">expected value in the continuous case</a>! So whenever we are 
@@ -534,8 +534,8 @@ For the transformed random variable <span class="math">\(\phi(X)\)</span> we hav
 <div class="math">$$
 \begin{align*}
 E[\phi(X)] &amp;= E[aX + b] \\
-            &amp;= \int (ax + b)p(x)\mathrm{d}x \\
-            &amp;= a\int xp(x)\mathrm{d}x + b \\
+            &amp;= \int (ax + b)p(x)\, \mathrm{d}x \\
+            &amp;= a\int xp(x)\, \mathrm{d}x + b \\
             &amp;=aE[X] + b =\phi(E[X]),
 \end{align*}
 $$</div>
@@ -556,7 +556,7 @@ as well as <span class="math">\(\tilde p(y)\)</span> the pdf of the log-normal d
 Using <a href="https://en.wikipedia.org/wiki/Integration_by_substitution">integration by substitution</a> and noting that <span class="math">\(\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y\)</span>, we&nbsp;have
 </p>
 <div class="math">\begin{equation}
-\int y \tilde p(y)\,\mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\int y \tilde p(y)\, \mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
 \end{equation}</div>
 <p>
 where in the last equation the additional factor of the log-normal distribution was canceled out with <span class="math">\(e^{\tilde y}\)</span> and thus

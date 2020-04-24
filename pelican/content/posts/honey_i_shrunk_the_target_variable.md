@@ -619,7 +619,7 @@ $$
 $$
 Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
 \begin{equation}
-e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y)\right) = 0,
+e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y\right) = 0,
 \label{eqn:mape-proof}
 \end{equation}
 where 

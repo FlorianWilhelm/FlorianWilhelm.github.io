@@ -568,8 +568,8 @@ but that was not the actual point of this exercise.
  
 Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
-disaster. It's bit like wielding a double handed sword in a fight. Limbs will be cut off, just make sure it's not one of yours.
-The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for RSMPE 
+disaster. It's a bit like wielding a double handed sword in a fight. Limbs will be cut off, just make sure it's not one of yours.
+The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for RMSPE 
 and MAPE come from. So let's wash it all down with some more math.
 
 ## Aftermath

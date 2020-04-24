@@ -475,7 +475,7 @@ To now evaluate this model, we gonna use a 10-fold cross-validation and split of
 in each split to calculate $\sigma^2$ and fit our correction term. The cross-validation will give us some indication about the variance in 
 our results. In each split of these 10 splits, we then fit the model and predict using the
 
-1. untransformed target,
+1. raw, i.e. untransformed, target,
 2. log-transformed target with no correction,
 3. log-transformed target with the corresponding sigma2 correction,
 4. log-transformed target with the fitted correction,
@@ -486,7 +486,7 @@ in the [notebook], we jump directly to the results of the first from 10 splits:
 |   split | target            |    RMSE |     MAE |     MAPE |    RMSPE |
 |--------:|:------------------|--------:|--------:|---------:|---------:|
 |       0 | raw               | 2368.36 | 1249.34 | 0.342704 | 1.65172  |
-|       0 | log & no corr     | 2464.5  | 1253.19 | 0.307301 | 1.56172  |
+|       0 | log & no corr     | 2464.50 | 1253.19 | 0.307301 | 1.56172  |
 |       0 | log & sigma2 corr | 2475.48 | 1253.19 | 0.305424 | 1.27903  |
 |       0 | log & fitted corr | 2449.23 | 1251.35 | 0.299577 | 0.858787 |
 

@@ -479,7 +479,7 @@ the price vector <code>y</code>,&nbsp;respectively.  </p>
 </pre></div>
 
 
-<p>As expected, by looking at the <code>x</code> in the output of <code>minimize</code>, we approximated the mean by minimizing the <span class="caps">RMSE</span> and the median by minimizing the <span class="caps">MSE</span>.</p>
+<p>As expected, by looking at the <code>x</code> in the output of <code>minimize</code>, we approximated the mean by minimizing the <span class="caps">RMSE</span> and the median by minimizing the <span class="caps">MAE</span>.</p>
 <h2>Shrinking the target&nbsp;variable</h2>
 <p>There is still some elephant in the room that we haven&#8217;t talked about yet. What happens now if we shrink our target
 variable by applying a log transformation and then minimize the <span class="caps">MSE</span>?</p>
@@ -498,7 +498,7 @@ variable by applying a log transformation and then minimize the <span class="cap
 </pre></div>
 
 
-<p>So if whe now transform the result <code>x</code> which is roughly <code>8.3</code> back using <code>np.exp(8.3)</code> we get a rounded result of <code>4024</code>.
+<p>So if we now transform the result <code>x</code> which is roughly <code>8.3</code> back using <code>np.exp(8.3)</code> we get a rounded result of <code>4024</code>.
 <em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6703</code> because that&#8217;s the
 mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
 transformation changed the result. Now our result of <code>4024</code> looks rather like an approximation of the median&#8230; well&#8230;
@@ -517,12 +517,12 @@ the <a href="https://en.wikipedia.org/wiki/Probability_density_function">probabi
 \end{equation}</div>
 <p>
 where the only difference to a normal distribution is <span class="math">\(ln(x)\)</span> instead of <span class="math">\(x\)</span> and the additional factor <span class="math">\(\frac{1}{x}\)</span>.
-Also note that that parameters <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are tne well-known parameters of the normal distribution but for the
+Also note that that parameters <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the <span class="caps">RMSE</span> of the log-transformed prices as we did before, we actually infer the parameter
-<span class="math">\(\mu\)</span> of a normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\mathrm{price}\leq \mu)= 0.5\)</span>. 
+<span class="math">\(\mu\)</span> of a normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5\)</span>. 
 Applying any kind of strictly monotonic increasing transformation <span class="math">\(\varphi\)</span> to the price, we trivially see that 
-<span class="math">\(\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\mu)) = 0.5\)</span> and thus the median as well as any other quantile
+<span class="math">\(\operatorname {P} (\varphi(\log(\mathrm{price}))\leq \varphi(\mu)) = 0.5\)</span> and thus the median as well as any other quantile
 is equivariant under the transformation <span class="math">\(\varphi\)</span>. In our specific case from above, we have <span class="math">\(\varphi(x) = \exp(x)\)</span> and
 thus the result, that we are approximating the median instead of the mean, is not surprising at all from a mathematical point of&nbsp;view.</p>
 <p>The expected value is not so well-behaved under transformations as the median. Using the definition of the expected

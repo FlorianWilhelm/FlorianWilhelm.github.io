@@ -259,7 +259,7 @@ the price vector `y`, respectively.
 4100.0
 ```
 
-As expected, by looking at the `x` in the output of `minimize`, we approximated the mean by minimizing the RMSE and the median by minimizing the MSE.
+As expected, by looking at the `x` in the output of `minimize`, we approximated the mean by minimizing the RMSE and the median by minimizing the MAE.
 
 ## Shrinking the target variable
 
@@ -280,7 +280,7 @@ variable by applying a log transformation and then minimize the MSE?
   success: True
         x: array([8.29160403])
 ``` 
-So if whe now transform the result `x` which is roughly `8.3` back using `np.exp(8.3)` we get a rounded result of `4024`.
+So if we now transform the result `x` which is roughly `8.3` back using `np.exp(8.3)` we get a rounded result of `4024`.
 *Wait a second! What just happened!?* We would have expected the final result to be around `6703` because that's the
 mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
 transformation changed the result. Now our result of `4024` looks rather like an approximation of the median... well...
@@ -298,12 +298,12 @@ the [probability density function] (pdf) of the price is
 \tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
 where the only difference to a normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
-Also note that that parameters $\mu$ and $\sigma$ are tne well-known parameters of the normal distribution but for the
+Also note that that parameters $\mu$ and $\sigma$ are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
-$\mu$ of a normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\mathrm{price}\leq \mu)= 0.5$. 
+$\mu$ of a normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5$. 
 Applying any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
-$\operatorname {P} (\varphi(\mathrm{price})\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
+$\operatorname {P} (\varphi(\log(\mathrm{price}))\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
 is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
 thus the result, that we are approximating the median instead of the mean, is not surprising at all from a mathematical point of view.
 

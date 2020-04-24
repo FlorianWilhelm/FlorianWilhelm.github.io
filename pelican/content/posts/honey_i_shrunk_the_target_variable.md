@@ -128,7 +128,7 @@ where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ 
 $w_j$, $j=1, \ldots, M$ some scalar weights and $\epsilon\sim\mathcal{N}(0, \sigma^2)$ some random noise with variance $\sigma^2$.
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
-of a person celebrating Carnival only using a single binary feature, i.e. did the person have a one-night-stand over Carnival or not. 
+of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot it:
 
 ```python

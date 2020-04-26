@@ -184,7 +184,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
 In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $p(y)$ to be normally distributed but it could also be anything else.
 In our car pricing use-case, we know that $p(y)$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)
-This rules out a normal distribution and thus a log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
+This rules out the normal distribution and thus the log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
 
 For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
 So let's do that analytically by deriving $\eqref{eqn:int_residual}$ with respect to $\hat y$ and setting to $0$, we have that
@@ -210,7 +210,7 @@ We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [medi
 A small recap at this point. We just learnt that minimizing the MSE or RMSE (also [l2-norm] as a fancier name) leads
 to the estimation of the expected value of $p(y)$ while minimizing MAE (also known as l1-norm) gets us the median of $p(y)$.
 Also remember that our feature vector $\mathbf{x}$ is still fixed, so $y\sim p(y)$ just describes the random fluctuations around
-some true value $y^\star$ that we just don't know and $\hat y$ is our best guess for it. If we assume a normal distribution
+some true value $y^\star$ that we just don't know and $\hat y$ is our best guess for it. If we assume the normal distribution
 there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
 minimizing the l1-norm. It may make a huge difference though, if we are dealing with a non-symmetrical distribution like
 the log-normal distribution.
@@ -299,11 +299,11 @@ the [probability density function] (pdf) of the price is
 \begin{equation}
 \tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
-where the only difference to a normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
+where the only difference to the normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
 Also note that that parameters $\mu$ and $\sigma$ are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
-$\mu$ of a normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5$. 
+$\mu$ of the normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5$. 
 Applying any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
 $\operatorname {P} (\varphi(\log(\mathrm{price}))\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
 is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
@@ -342,7 +342,7 @@ Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\
 \int y \tilde p(y)\, \mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
 \end{equation}
 where in the last equation the additional factor of the log-normal distribution was canceled out with $e^{\tilde y}$ and thus
-became the pdf of a normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
+became the pdf of the normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
 and completing the square with $\tilde y$, we have 
 \begin{equation}
 \begin{split}
@@ -482,7 +482,7 @@ our results. In each split of these 10 splits, we then fit the model and predict
 4. log-transformed target with the fitted correction,
 
 and evaluate the results with RMSE, MAE, MAPE and RMSPE. To spare you the trivial implementation, which is to be found
-in the [notebook], we jump directly to the results of the first from 10 splits:
+in the [notebook], we jump directly to the results of the first of 10 splits:
 
 |   split | target            |    RMSE |     MAE |     MAPE |    RMSPE |
 |--------:|:------------------|--------:|--------:|---------:|---------:|

@@ -399,7 +399,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 Thus the residual distribution is determined by <span class="math">\(p(y)\)</span> except for a shift of <span class="math">\(\hat y\)</span>.  So what kind of assumptions can we make about it? 
 In case of a linear model as in <span class="math">\(\eqref{eqn:linear-model}\)</span>, we assume <span class="math">\(p(y)\)</span> to be normally distributed but it could also be anything else.
 In our car pricing use-case, we know that <span class="math">\(p(y)\)</span> will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)
-This rules out a normal distribution and thus a log-normal distribution might be an obvious assumption for <span class="math">\(p(y)\)</span> but we will come back later to&nbsp;that.</p>
+This rules out the normal distribution and thus the log-normal distribution might be an obvious assumption for <span class="math">\(p(y)\)</span> but we will come back later to&nbsp;that.</p>
 <p>For now, we gonna consider <span class="math">\(\eqref{eqn:int_residual}\)</span> again and note that our model, whatever it is, will somehow try to minimize <span class="math">\(\eqref{eqn:int_residual}\)</span> by choosing a proper <span class="math">\(\hat y\)</span>.
 So let&#8217;s do that analytically by deriving <span class="math">\(\eqref{eqn:int_residual}\)</span> with respect to <span class="math">\(\hat y\)</span> and setting to <span class="math">\(0\)</span>, we have&nbsp;that
 </p>
@@ -431,7 +431,7 @@ We thus have <span class="math">\(\hat y = P(X\leq \frac{1}{2})\)</span>, which 
 <p>A small recap at this point. We just learnt that minimizing the <span class="caps">MSE</span> or <span class="caps">RMSE</span> (also <a href="https://en.wikipedia.org/wiki/Sequence_space#%E2%84%93p_spaces">l2-norm</a> as a fancier name) leads
 to the estimation of the expected value of <span class="math">\(p(y)\)</span> while minimizing <span class="caps">MAE</span> (also known as l1-norm) gets us the median of <span class="math">\(p(y)\)</span>.
 Also remember that our feature vector <span class="math">\(\mathbf{x}\)</span> is still fixed, so <span class="math">\(y\sim p(y)\)</span> just describes the random fluctuations around
-some true value <span class="math">\(y^\star\)</span> that we just don&#8217;t know and <span class="math">\(\hat y\)</span> is our best guess for it. If we assume a normal distribution
+some true value <span class="math">\(y^\star\)</span> that we just don&#8217;t know and <span class="math">\(\hat y\)</span> is our best guess for it. If we assume the normal distribution
 there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
 minimizing the l1-norm. It may make a huge difference though, if we are dealing with a non-symmetrical distribution like
 the log-normal&nbsp;distribution.</p>
@@ -517,11 +517,11 @@ the <a href="https://en.wikipedia.org/wiki/Probability_density_function">probabi
 \tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}</div>
 <p>
-where the only difference to a normal distribution is <span class="math">\(ln(x)\)</span> instead of <span class="math">\(x\)</span> and the additional factor <span class="math">\(\frac{1}{x}\)</span>.
+where the only difference to the normal distribution is <span class="math">\(ln(x)\)</span> instead of <span class="math">\(x\)</span> and the additional factor <span class="math">\(\frac{1}{x}\)</span>.
 Also note that that parameters <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the <span class="caps">RMSE</span> of the log-transformed prices as we did before, we actually infer the parameter
-<span class="math">\(\mu\)</span> of a normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5\)</span>. 
+<span class="math">\(\mu\)</span> of the normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5\)</span>. 
 Applying any kind of strictly monotonic increasing transformation <span class="math">\(\varphi\)</span> to the price, we trivially see that 
 <span class="math">\(\operatorname {P} (\varphi(\log(\mathrm{price}))\leq \varphi(\mu)) = 0.5\)</span> and thus the median as well as any other quantile
 is equivariant under the transformation <span class="math">\(\varphi\)</span>. In our specific case from above, we have <span class="math">\(\varphi(x) = \exp(x)\)</span> and
@@ -561,7 +561,7 @@ Using <a href="https://en.wikipedia.org/wiki/Integration_by_substitution">integr
 \end{equation}</div>
 <p>
 where in the last equation the additional factor of the log-normal distribution was canceled out with <span class="math">\(e^{\tilde y}\)</span> and thus
-became the pdf of a normal distribution due to our substitution. Writing out the exponent in <span class="math">\(p(x)\)</span>, which is <span class="math">\(-\frac{(\tilde y-\mu)^2}{2\sigma^2}\)</span> 
+became the pdf of the normal distribution due to our substitution. Writing out the exponent in <span class="math">\(p(x)\)</span>, which is <span class="math">\(-\frac{(\tilde y-\mu)^2}{2\sigma^2}\)</span> 
 and completing the square with <span class="math">\(\tilde y\)</span>, we&nbsp;have 
 </p>
 <div class="math">\begin{equation}
@@ -717,7 +717,7 @@ our results. In each split of these 10 splits, we then fit the model and predict
 <li>log-transformed target with the fitted&nbsp;correction,</li>
 </ol>
 <p>and evaluate the results with <span class="caps">RMSE</span>, <span class="caps">MAE</span>, <span class="caps">MAPE</span> and <span class="caps">RMSPE</span>. To spare you the trivial implementation, which is to be found
-in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb">notebook</a>, we jump directly to the results of the first from 10&nbsp;splits:</p>
+in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb">notebook</a>, we jump directly to the results of the first of 10&nbsp;splits:</p>
 <table>
 <thead>
 <tr>

@@ -487,24 +487,24 @@ the price vector <code>y</code>,&nbsp;respectively.  </p>
 <p>There is still some elephant in the room that we haven&#8217;t talked about yet. What happens now if we shrink our target
 variable by applying a log transformation and then minimize the <span class="caps">MSE</span>?</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">y_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="mf">8.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y_log</span><span class="p">,),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
-      <span class="n">fun</span><span class="p">:</span> <span class="mf">1.066675943730279</span>
- <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">1.11749076</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y_log</span><span class="p">,),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
+      <span class="n">fun</span><span class="p">:</span> <span class="mf">1.0632889349620418</span>
+ <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">1.06895454</span><span class="p">]])</span>
       <span class="n">jac</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">])</span>
   <span class="n">message</span><span class="p">:</span> <span class="s1">&#39;Optimization terminated successfully.&#39;</span>
-     <span class="n">nfev</span><span class="p">:</span> <span class="mi">30</span>
-      <span class="n">nit</span><span class="p">:</span> <span class="mi">5</span>
-     <span class="n">njev</span><span class="p">:</span> <span class="mi">10</span>
+     <span class="n">nfev</span><span class="p">:</span> <span class="mi">36</span>
+      <span class="n">nit</span><span class="p">:</span> <span class="mi">6</span>
+     <span class="n">njev</span><span class="p">:</span> <span class="mi">12</span>
    <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
   <span class="n">success</span><span class="p">:</span> <span class="kc">True</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">8.29160403</span><span class="p">])</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">8.31228458</span><span class="p">])</span>
 </pre></div>
 
 
-<p>So if we now transform the result <code>x</code> which is roughly <code>8.3</code> back using <code>np.exp(8.3)</code> we get a rounded result of <code>4024</code>.
+<p>So if we now transform the result <code>x</code> which is roughly <code>8.31</code> back using <code>np.exp(8.31)</code> we get a rounded result of <code>4064</code>.
 <em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6703</code> because that&#8217;s the
 mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
-transformation changed the result. Now our result of <code>4024</code> looks rather like an approximation of the median&#8230; well&#8230;
+transformation changed the result. Now our result of <code>4064</code> looks rather like an approximation of the median&#8230; well&#8230;
 it actually is assuming a log-normal distribution as we will fully understand soon. 
 If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
 of the residual distribution would have been much smaller. Still, 

@@ -272,22 +272,22 @@ variable by applying a log transformation and then minimize the MSE?
 
 ```python 
 >>> y_log = np.log(df.price.to_numpy())
->>> sp.optimize.minimize(rmse, 8., args=(y_log,), tol=1e-16)
-      fun: 1.066675943730279
- hess_inv: array([[1.11749076]])
+>>> sp.optimize.minimize(rmse, 1., args=(y_log,), tol=1e-16)
+      fun: 1.0632889349620418
+ hess_inv: array([[1.06895454]])
       jac: array([0.])
   message: 'Optimization terminated successfully.'
-     nfev: 30
-      nit: 5
-     njev: 10
+     nfev: 36
+      nit: 6
+     njev: 12
    status: 0
   success: True
-        x: array([8.29160403])
+        x: array([8.31228458])
 ``` 
-So if we now transform the result `x` which is roughly `8.3` back using `np.exp(8.3)` we get a rounded result of `4024`.
+So if we now transform the result `x` which is roughly `8.31` back using `np.exp(8.31)` we get a rounded result of `4064`.
 *Wait a second! What just happened!?* We would have expected the final result to be around `6703` because that's the
 mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
-transformation changed the result. Now our result of `4024` looks rather like an approximation of the median... well...
+transformation changed the result. Now our result of `4064` looks rather like an approximation of the median... well...
 it actually is assuming a log-normal distribution as we will fully understand soon. 
 If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
 of the residual distribution would have been much smaller. Still, 

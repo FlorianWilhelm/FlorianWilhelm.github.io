@@ -14,7 +14,7 @@ summary: Feature engineering takes up a huge part in the work-life of a data sci
 For me it is often a joyful sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem... but it also makes me contemplating. So full of vigour and enthusiasm, 
 they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
-they chose themselves, like the [root-mean-square error]. 
+they chose themselves, like the [root mean square error]. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
 the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn't this better or even required for simple models like linear regression,

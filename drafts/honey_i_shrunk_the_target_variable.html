@@ -296,10 +296,10 @@ thus neglect it for our&nbsp;analysis.</p>
 <h2>Choosing the right error&nbsp;measure</h2>
 <p>At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
 building some kind of fancy model. Nowadays most machine learning frameworks like <a href="https://scikit-learn.org/">Scikit-Learn</a> are so easy to use
-that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> (<span class="caps">MSE</span>) by default.
+that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean square error</a> (<span class="caps">MSE</span>) by default.
 But does the <span class="caps">MSE</span> really make sense for this use-case? First of all is our target measured in some currency,
 so why would we try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
-end, i.e. <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root mean squared error</a> (<span class="caps">RMSE</span>), would not change a thing about this fact. Still, we would weight one large residual
+end, i.e. <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root mean square error</a> (<span class="caps">RMSE</span>), would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
 <a href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute error</a> (<span class="caps">MAE</span>) might be the more natural choice compared to the <span class="caps">MSE</span>.</p>

@@ -71,10 +71,10 @@ thus neglect it for our analysis.
 
 At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
 building some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
-that one might even forget the error measure that is optimized as in most cases it will be the [mean squared error] (MSE) by default.
+that one might even forget the error measure that is optimized as in most cases it will be the [mean square error] (MSE) by default.
 But does the MSE really make sense for this use-case? First of all is our target measured in some currency,
 so why would we try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
-end, i.e. [root mean squared error] (RMSE), would not change a thing about this fact. Still, we would weight one large residual
+end, i.e. [root mean square error] (RMSE), would not change a thing about this fact. Still, we would weight one large residual
 higher than many small residuals which sum up to the exact same value as if 10 times a residual of 10.- € is somehow
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
 [mean absolute error] (MAE) might be the more natural choice compared to the MSE.
@@ -637,11 +637,11 @@ the correction term for MAPE is $-\sigma^2$.
 [danger zone]: https://www.youtube.com/watch?v=siwpn14IE7E
 [Scikit-Learn]: https://scikit-learn.org/
 [used-cars database from Kaggle]: https://www.kaggle.com/orgesleka/used-cars-database
-[root mean squared error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
+[root mean square error]: https://en.wikipedia.org/wiki/Root-mean-square_deviation
 [affine transformation]: https://en.wikipedia.org/wiki/Affine_transformation
 [used-cars-log-trans repository]: https://github.com/FlorianWilhelm/used-cars-log-trans/
 [mean absolute error]: https://en.wikipedia.org/wiki/Mean_absolute_error
-[mean squared error]: https://en.wikipedia.org/wiki/Mean_squared_error
+[mean square error]: https://en.wikipedia.org/wiki/Mean_squared_error
 [mean absolute percentage error]: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
 [log-normal distribution]: https://en.wikipedia.org/wiki/Log-normal_distribution
 [SciPy]: https://www.scipy.org/

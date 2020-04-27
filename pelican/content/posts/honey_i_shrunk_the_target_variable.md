@@ -491,7 +491,7 @@ in the [notebook], we jump directly to the results of the first of 10 splits:
 |       0 | raw               | 2368.36 | 1249.34 | 0.342704 | 1.65172  |
 |       0 | log & no corr     | 2464.50 | 1253.19 | 0.307301 | 1.56172  |
 |       0 | log & sigma2 corr | 2475.48 | 1253.19 | 0.305424 | 1.27903  |
-|       0 | log & fitted corr | 2449.23 | 1251.35 | 0.299577 | 0.858787 |
+|       0 | log & fitted corr | 2449.23 | 1251.35 | 0.299577 | 0.85879  |
 
 For each split, we take now the first row as baseline and calculate the percentage change for all other rows. Then, we 
 calculate for each cell the mean and standard deviation over all 10 splits, resulting in:

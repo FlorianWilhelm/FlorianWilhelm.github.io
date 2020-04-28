@@ -130,9 +130,9 @@ with mean $0$ and variance $\sigma^2$ (or $\epsilon\sim\mathcal{N}(0, \sigma^2)$
 $\phi_j$, that's where all your feature engineering skills and domain knowledge go into to transform the raw features
 into more suitable ones.
 
-One of reasons for this common misconception might be that the literature often states that the dependent variable $y$ *conditioned*
+One of the reasons for this common misconception might be that the literature often states that the dependent variable $y$ *conditioned*
 on the predictor $\mathbf{x}$ is normally distributed in a linear model. So for a fixed $\mathbf{x}$ we have according to
-$\eqref{eqn:linear-model}$ a fixed $\mu$ and thus $y$ can be imagined as a realization of a random variable $Y\sim\mathcal{N}(\mu, \sigma^2)$.
+$\eqref{eqn:linear-model}$ also a fixed $\mu$ and thus $y$ can be imagined as a realization of a random variable $Y=\mathcal{N}(\mu, \sigma^2)$.
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
@@ -179,11 +179,10 @@ is the observed outcome for the sample $i$. In reality we might only have a sing
 exactly the same feature vector $\mathbf{x}_i$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
 assume we keep $\mathbf{x}_i$ fixed and want to compute $\eqref{eqn:sum_residual}$ having all those observed outcomes.
-Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Also we can imagine all these
-$y$ to be realizations of some random variable $Y$. To handle now an infinite number of possible realizations,
+Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Also we can imagine all these outcomes
+$y$ to be realizations of some random variable $Y$ conditioned on $\mathbf{x}$. To handle now an infinite number of possible realizations,
 we need to introduce the probability $f(y)$ of some realization $y$, or more precisely the [probability density function] (pdf) 
-since $Y$ is a *continuous* random variable.
-Consequently, as the summation becomes an integration, $\eqref{eqn:sum_residual}$ becomes
+since $Y$ is a *continuous* random variable. Consequently, as the summation becomes an integration, the discrete MSE in $\eqref{eqn:sum_residual}$ becomes
 \begin{equation}
 \int_{-\infty}^\infty (y - \hat y)^2f(y)\, \mathrm{d}y,\label{eqn:int_residual}
 \end{equation}

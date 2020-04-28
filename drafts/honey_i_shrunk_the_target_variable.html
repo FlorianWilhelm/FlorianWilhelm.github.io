@@ -346,9 +346,9 @@ y_i &amp;= \mu_i + \epsilon,
 with mean <span class="math">\(0\)</span> and variance <span class="math">\(\sigma^2\)</span> (or <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma^2)\)</span> for short). If you wonder about the
 <span class="math">\(\phi_j\)</span>, that&#8217;s where all your feature engineering skills and domain knowledge go into to transform the raw features
 into more suitable&nbsp;ones.</p>
-<p>One of reasons for this common misconception might be that the literature often states that the dependent variable <span class="math">\(y\)</span> <em>conditioned</em>
+<p>One of the reasons for this common misconception might be that the literature often states that the dependent variable <span class="math">\(y\)</span> <em>conditioned</em>
 on the predictor <span class="math">\(\mathbf{x}\)</span> is normally distributed in a linear model. So for a fixed <span class="math">\(\mathbf{x}\)</span> we have according to
-<span class="math">\(\eqref{eqn:linear-model}\)</span> a fixed <span class="math">\(\mu\)</span> and thus <span class="math">\(y\)</span> can be imagined as a realization of a random variable <span class="math">\(Y\sim\mathcal{N}(\mu, \sigma^2)\)</span>.</p>
+<span class="math">\(\eqref{eqn:linear-model}\)</span> also a fixed <span class="math">\(\mu\)</span> and thus <span class="math">\(y\)</span> can be imagined as a realization of a random variable <span class="math">\(Y=\mathcal{N}(\mu, \sigma^2)\)</span>.</p>
 <p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>
@@ -391,11 +391,10 @@ is the observed outcome for the sample <span class="math">\(i\)</span>. In reali
 exactly the same feature vector <span class="math">\(\mathbf{x}_i\)</span> and thus also the same model prediction <span class="math">\(\hat y_i\)</span>. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
 assume we keep <span class="math">\(\mathbf{x}_i\)</span> fixed and want to compute <span class="math">\(\eqref{eqn:sum_residual}\)</span> having all those observed outcomes.
-Let&#8217;s drop the index <span class="math">\(i\)</span> from <span class="math">\(\hat y_i\)</span> as it depends only on our fixed <span class="math">\(\mathbf{x}_i\)</span>. Also we can imagine all these
-<span class="math">\(y\)</span> to be realizations of some random variable <span class="math">\(Y\)</span>. To handle now an infinite number of possible realizations,
+Let&#8217;s drop the index <span class="math">\(i\)</span> from <span class="math">\(\hat y_i\)</span> as it depends only on our fixed <span class="math">\(\mathbf{x}_i\)</span>. Also we can imagine all these outcomes
+<span class="math">\(y\)</span> to be realizations of some random variable <span class="math">\(Y\)</span> conditioned on <span class="math">\(\mathbf{x}\)</span>. To handle now an infinite number of possible realizations,
 we need to introduce the probability <span class="math">\(f(y)\)</span> of some realization <span class="math">\(y\)</span>, or more precisely the <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) 
-since <span class="math">\(Y\)</span> is a <em>continuous</em> random variable.
-Consequently, as the summation becomes an integration, <span class="math">\(\eqref{eqn:sum_residual}\)</span>&nbsp;becomes
+since <span class="math">\(Y\)</span> is a <em>continuous</em> random variable. Consequently, as the summation becomes an integration, the discrete <span class="caps">MSE</span> in <span class="math">\(\eqref{eqn:sum_residual}\)</span>&nbsp;becomes
 </p>
 <div class="math">\begin{equation}
 \int_{-\infty}^\infty (y - \hat y)^2f(y)\, \mathrm{d}y,\label{eqn:int_residual}

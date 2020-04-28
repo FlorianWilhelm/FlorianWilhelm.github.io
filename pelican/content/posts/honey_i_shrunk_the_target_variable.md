@@ -12,7 +12,7 @@ summary: Feature engineering takes up a huge part in the work-life of a data sci
 ## Motivation
 
 For me it is often a joyful sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
-facing some new supervised learning problem... but it also makes me contemplating. So full of vigour and enthusiasm, 
+facing some new supervised learning problem... but it also makes me contemplate. So full of vigour and enthusiasm, 
 they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
 they chose themselves, like the [root mean square error]. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
@@ -70,7 +70,7 @@ thus neglect it for our analysis.
 ## Choosing the right error measure
 
 At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
-building some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
+build some kind of fancy model. Nowadays most machine learning frameworks like [Scikit-Learn] are so easy to use
 that one might even forget the error measure that is optimized as in most cases it will be the [mean square error] (MSE) by default.
 But does the MSE really make sense for this use-case? First of all is our target measured in some currency,
 so why would we try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
@@ -80,10 +80,10 @@ less severe than a single residual of 100.- €. You see where I am getting at. 
 [mean absolute error] (MAE) might be the more natural choice compared to the MSE.
 
 On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
-are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
+are looking at cars at around 10,000.- € but it might be negligible if your luxury vehicle is around 100,000.- € anyway.
 Consequently, the [mean absolute percentage error] (MAPE) might even be a better fit than the MAE for this use-case.
 Having said that, we will keep all those error measures in mind but use the default MSE criterion in our machine-learning
-algorithm for the sake of simplicity and to help me making the actual point of this blog post ;-)
+algorithm for the sake of simplicity and to help me make the actual point of this blog post ;-)
 
 
 ## Distribution of the target variable
@@ -92,7 +92,7 @@ Our data contains not only cars that are for sale but also cars people are searc
 we have people offering damaged cars, wanting to trade their car for another or just hoping to get an insanely enormous amount of money. 
 Sometimes you get lucky. For our use-case, we gonna keep only real offerings of undamaged cars with a reasonable price 
 between 200.- € and 50,000.- € with a first registration not earlier than 1910.
-This is how the distribution of the price looks like.
+This is what the distribution of the price looks like.
 
 <figure>
 <img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
@@ -127,8 +127,12 @@ y_i &= \mu_i + \epsilon,
 where $\mathbf{x}_i$ is the original feature vector, $\phi_j$, $j=1, \ldots, M$ a set of (potentially non-linear) functions,
 $w_j$, $j=1, \ldots, M$ some scalar weights and $\epsilon$ some random noise that is distributed like the normal distribution
 with mean $0$ and variance $\sigma^2$ (or $\epsilon\sim\mathcal{N}(0, \sigma^2)$ for short). If you wonder about the
-$\phi_j$, that's where all your feature engineering skills and domain knowledge goes into to transform the raw features
+$\phi_j$, that's where all your feature engineering skills and domain knowledge go into to transform the raw features
 into more suitable ones.
+
+One of reasons for this common misconception might be that the literature often states that the dependent variable $y$ *conditioned*
+on the predictor $\mathbf{x}$ is normally distributed in a linear model. So for a fixed $\mathbf{x}$ we have according to
+$\eqref{eqn:linear-model}$ a fixed $\mu$ and consequently $y\sim\mathcal{N}(\mu, \sigma^2)$.
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
@@ -185,7 +189,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 *residual distribution* I am actually referring to the distribution $y - \hat y$ with $y\sim p(y)$.
 Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
 In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $p(y)$ to be normally distributed but it could also be anything else.
-In our car pricing use-case, we know that $p(y)$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)
+In our car pricing use-case, we know that $p(y)$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have a counter-example ;-)
 This rules out the normal distribution and thus the log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
 
 For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
@@ -212,7 +216,7 @@ We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [medi
 A small recap at this point. We just learnt that minimizing the MSE or RMSE (also [l2-norm] as a fancier name) leads
 to the estimation of the expected value of $p(y)$ while minimizing MAE (also known as l1-norm) gets us the median of $p(y)$.
 Also remember that our feature vector $\mathbf{x}$ is still fixed, so $y\sim p(y)$ just describes the random fluctuations around
-some true value $y^\star$ that we just don't know and $\hat y$ is our best guess for it. If we assume the normal distribution
+some true value $y^\star$, which we just don't know, and $\hat y$ is our best guess for it. If we assume the normal distribution
 there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
 minimizing the l1-norm. It may make a huge difference though, if we are dealing with a non-symmetrical distribution like
 the log-normal distribution.
@@ -285,13 +289,13 @@ variable by applying a log transformation and then minimize the MSE?
         x: array([8.31228458])
 ``` 
 So if we now transform the result `x` which is roughly `8.31` back using `np.exp(8.31)` we get a rounded result of `4064`.
-*Wait a second! What just happened!?* We would have expected the final result to be around `6703` because that's the
+*Wait a second! What just happened!?* We would have expected the final result to be around `6704` because that's the
 mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
 transformation changed the result. Now our result of `4064` looks rather like an approximation of the median... well...
 it actually is assuming a log-normal distribution as we will fully understand soon. 
 If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
 of the residual distribution would have been much smaller. Still, 
-we would have missed our goal of minimizing the (R)MSE. Instead we would have unknowingly minimized the MAE, which
+we would have missed our actual goal of minimizing the (R)MSE on the raw target. Instead we would have unknowingly minimized the MAE, which
 might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
 is doing and a lucky punch without a clue of what happened, just doesn't suit a scientist.
 
@@ -306,7 +310,7 @@ Also note that that parameters $\mu$ and $\sigma$ are the well-known parameters 
 log-transformed target.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
 $\mu$ of the normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5$. 
-Applying any kind of strictly monotonic increasing transformation $\varphi$ to the price, we trivially see that 
+Applying any kind of strictly monotonic increasing transformation $\varphi$ to the price, we see that 
 $\operatorname {P} (\varphi(\log(\mathrm{price}))\leq \varphi(\mu)) = 0.5$ and thus the median as well as any other quantile
 is equivariant under the transformation $\varphi$. In our specific case from above, we have $\varphi(x) = \exp(x)$ and
 thus the result, that we are approximating the median instead of the mean, is not surprising at all from a mathematical point of view.
@@ -467,7 +471,7 @@ to get our final feature matrix `X` and target vector `y` with
 y = df['price'].to_numpy()
 X = df.drop(columns='price').to_numpy()
 ```
-As ML method, let's just choose a [Random Forest] as for me it's like the [Volkswagen Passat Variant] under all ML algorithms. 
+As ML method, let's just choose a [Random Forest] as for me it's like the [Volkswagen Passat Variant] among all ML algorithms. 
 Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
 In a real world scenario, one would rather select and fine-tune some [Gradient Boosted Decision Tree] like [XGBoost],
 [LightGBM] or maybe even better [CatBoost] since categories (e.g. `vehicleType` and `model`) surely play an important 
@@ -493,7 +497,7 @@ in the [notebook], we jump directly to the results of the first of 10 splits:
 |       0 | log & sigma2 corr | 2475.48 | 1253.19 | 0.305424 | 1.27903  |
 |       0 | log & fitted corr | 2449.23 | 1251.35 | 0.299577 | 0.85879  |
 
-For each split, we take now the first row as baseline and calculate the percentage change for all other rows. Then, we 
+For each split, we take now the raw target, i.e. the first row, as baseline and calculate the percentage change for all other rows. Then, we 
 calculate for each cell the mean and standard deviation over all 10 splits, resulting in:
 
 <table border="1" class="dataframe">

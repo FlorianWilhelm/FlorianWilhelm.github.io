@@ -248,7 +248,7 @@ Florian Wilhelm            </a>
                 </div>
                 <h2>Motivation</h2>
 <p>For me it is often a joyful sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
-facing some new supervised learning problem&#8230; but it also makes me contemplating. So full of vigour and enthusiasm, 
+facing some new supervised learning problem&#8230; but it also makes me contemplate. So full of vigour and enthusiasm, 
 they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
 they chose themselves, like the <a href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">root mean square error</a>. 
 In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
@@ -295,7 +295,7 @@ For the sake of simplicity, we assume that we have raised this point with the bu
 thus neglect it for our&nbsp;analysis.</p>
 <h2>Choosing the right error&nbsp;measure</h2>
 <p>At this point, a lot of inexperienced data scientists would directly get into business of feature engineering and
-building some kind of fancy model. Nowadays most machine learning frameworks like <a href="https://scikit-learn.org/">Scikit-Learn</a> are so easy to use
+build some kind of fancy model. Nowadays most machine learning frameworks like <a href="https://scikit-learn.org/">Scikit-Learn</a> are so easy to use
 that one might even forget the error measure that is optimized as in most cases it will be the <a href="https://en.wikipedia.org/wiki/Mean_squared_error">mean square error</a> (<span class="caps">MSE</span>) by default.
 But does the <span class="caps">MSE</span> really make sense for this use-case? First of all is our target measured in some currency,
 so why would we try to minimize some squared difference? Squared Euro? Very clearly, even taking the square root in the 
@@ -304,16 +304,16 @@ higher than many small residuals which sum up to the exact same value as if 10 t
 less severe than a single residual of 100.- €. You see where I am getting at. In our use-case an error measure like the 
 <a href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute error</a> (<span class="caps">MAE</span>) might be the more natural choice compared to the <span class="caps">MSE</span>.</p>
 <p>On the other hand, is it really that important if a car costs you 1,000.- € more or less? It definitely does if you
-are looking at cars at around 10,000.- € but it might be neglectable if your luxury vehicle is around 100,000.- € anyway.
+are looking at cars at around 10,000.- € but it might be negligible if your luxury vehicle is around 100,000.- € anyway.
 Consequently, the <a href="https://en.wikipedia.org/wiki/Mean_absolute_percentage_error">mean absolute percentage error</a> (<span class="caps">MAPE</span>) might even be a better fit than the <span class="caps">MAE</span> for this use-case.
 Having said that, we will keep all those error measures in mind but use the default <span class="caps">MSE</span> criterion in our machine-learning
-algorithm for the sake of simplicity and to help me making the actual point of this blog post&nbsp;;-)</p>
+algorithm for the sake of simplicity and to help me make the actual point of this blog post&nbsp;;-)</p>
 <h2>Distribution of the target&nbsp;variable</h2>
 <p>Our data contains not only cars that are for sale but also cars people are searching for with a certain price. Additionally,
 we have people offering damaged cars, wanting to trade their car for another or just hoping to get an insanely enormous amount of money. 
 Sometimes you get lucky. For our use-case, we gonna keep only real offerings of undamaged cars with a reasonable price 
 between 200.- € and 50,000.- € with a first registration not earlier than 1910.
-This is how the distribution of the price looks&nbsp;like.</p>
+This is what the distribution of the price looks&nbsp;like.</p>
 <figure>
 <img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
 <figcaption align="center">Distribution plot of the price variable using 1,000.- € bins.</figcaption>
@@ -344,8 +344,11 @@ y_i &amp;= \mu_i + \epsilon,
 <p>where <span class="math">\(\mathbf{x}_i\)</span> is the original feature vector, <span class="math">\(\phi_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> a set of (potentially non-linear) functions,
 <span class="math">\(w_j\)</span>, <span class="math">\(j=1, \ldots, M\)</span> some scalar weights and <span class="math">\(\epsilon\)</span> some random noise that is distributed like the normal distribution
 with mean <span class="math">\(0\)</span> and variance <span class="math">\(\sigma^2\)</span> (or <span class="math">\(\epsilon\sim\mathcal{N}(0, \sigma^2)\)</span> for short). If you wonder about the
-<span class="math">\(\phi_j\)</span>, that&#8217;s where all your feature engineering skills and domain knowledge goes into to transform the raw features
+<span class="math">\(\phi_j\)</span>, that&#8217;s where all your feature engineering skills and domain knowledge go into to transform the raw features
 into more suitable&nbsp;ones.</p>
+<p>One of reasons for this common misconception might be that the literature often states that the dependent variable <span class="math">\(y\)</span> <em>conditioned</em>
+on the predictor <span class="math">\(\mathbf{x}\)</span> is normally distributed in a linear model. So for a fixed <span class="math">\(\mathbf{x}\)</span> we have according to
+<span class="math">\(\eqref{eqn:linear-model}\)</span> a fixed <span class="math">\(\mu\)</span> and consequently <span class="math">\(y\sim\mathcal{N}(\mu, \sigma^2)\)</span>.</p>
 <p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>
@@ -400,7 +403,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 <em>residual distribution</em> I am actually referring to the distribution <span class="math">\(y - \hat y\)</span> with <span class="math">\(y\sim p(y)\)</span>.
 Thus the residual distribution is determined by <span class="math">\(p(y)\)</span> except for a shift of <span class="math">\(\hat y\)</span>.  So what kind of assumptions can we make about it? 
 In case of a linear model as in <span class="math">\(\eqref{eqn:linear-model}\)</span>, we assume <span class="math">\(p(y)\)</span> to be normally distributed but it could also be anything else.
-In our car pricing use-case, we know that <span class="math">\(p(y)\)</span> will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have counter-example ;-)
+In our car pricing use-case, we know that <span class="math">\(p(y)\)</span> will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have a counter-example ;-)
 This rules out the normal distribution and thus the log-normal distribution might be an obvious assumption for <span class="math">\(p(y)\)</span> but we will come back later to&nbsp;that.</p>
 <p>For now, we gonna consider <span class="math">\(\eqref{eqn:int_residual}\)</span> again and note that our model, whatever it is, will somehow try to minimize <span class="math">\(\eqref{eqn:int_residual}\)</span> by choosing a proper <span class="math">\(\hat y\)</span>.
 So let&#8217;s do that analytically by deriving <span class="math">\(\eqref{eqn:int_residual}\)</span> with respect to <span class="math">\(\hat y\)</span> and setting to <span class="math">\(0\)</span>, we have&nbsp;that
@@ -433,7 +436,7 @@ We thus have <span class="math">\(\hat y = P(X\leq \frac{1}{2})\)</span>, which 
 <p>A small recap at this point. We just learnt that minimizing the <span class="caps">MSE</span> or <span class="caps">RMSE</span> (also <a href="https://en.wikipedia.org/wiki/Sequence_space#%E2%84%93p_spaces">l2-norm</a> as a fancier name) leads
 to the estimation of the expected value of <span class="math">\(p(y)\)</span> while minimizing <span class="caps">MAE</span> (also known as l1-norm) gets us the median of <span class="math">\(p(y)\)</span>.
 Also remember that our feature vector <span class="math">\(\mathbf{x}\)</span> is still fixed, so <span class="math">\(y\sim p(y)\)</span> just describes the random fluctuations around
-some true value <span class="math">\(y^\star\)</span> that we just don&#8217;t know and <span class="math">\(\hat y\)</span> is our best guess for it. If we assume the normal distribution
+some true value <span class="math">\(y^\star\)</span>, which we just don&#8217;t know, and <span class="math">\(\hat y\)</span> is our best guess for it. If we assume the normal distribution
 there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
 minimizing the l1-norm. It may make a huge difference though, if we are dealing with a non-symmetrical distribution like
 the log-normal&nbsp;distribution.</p>
@@ -502,13 +505,13 @@ variable by applying a log transformation and then minimize the <span class="cap
 
 
 <p>So if we now transform the result <code>x</code> which is roughly <code>8.31</code> back using <code>np.exp(8.31)</code> we get a rounded result of <code>4064</code>.
-<em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6703</code> because that&#8217;s the
+<em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6704</code> because that&#8217;s the
 mean value we had before. Somehow, transforming the target variable, minimizing the same error measure as before and applying the inverse
 transformation changed the result. Now our result of <code>4064</code> looks rather like an approximation of the median&#8230; well&#8230;
 it actually is assuming a log-normal distribution as we will fully understand soon. 
 If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
 of the residual distribution would have been much smaller. Still, 
-we would have missed our goal of minimizing the (R)<span class="caps">MSE</span>. Instead we would have unknowingly minimized the <span class="caps">MAE</span>, which
+we would have missed our actual goal of minimizing the (R)<span class="caps">MSE</span> on the raw target. Instead we would have unknowingly minimized the <span class="caps">MAE</span>, which
 might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
 is doing and a lucky punch without a clue of what happened, just doesn&#8217;t suit a&nbsp;scientist.</p>
 <p>Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let&#8217;s assume now that we
@@ -524,7 +527,7 @@ Also note that that parameters <span class="math">\(\mu\)</span> and <span class
 log-transformed target.
 So when we now minimize the <span class="caps">RMSE</span> of the log-transformed prices as we did before, we actually infer the parameter
 <span class="math">\(\mu\)</span> of the normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5\)</span>. 
-Applying any kind of strictly monotonic increasing transformation <span class="math">\(\varphi\)</span> to the price, we trivially see that 
+Applying any kind of strictly monotonic increasing transformation <span class="math">\(\varphi\)</span> to the price, we see that 
 <span class="math">\(\operatorname {P} (\varphi(\log(\mathrm{price}))\leq \varphi(\mu)) = 0.5\)</span> and thus the median as well as any other quantile
 is equivariant under the transformation <span class="math">\(\varphi\)</span>. In our specific case from above, we have <span class="math">\(\varphi(x) = \exp(x)\)</span> and
 thus the result, that we are approximating the median instead of the mean, is not surprising at all from a mathematical point of&nbsp;view.</p>
@@ -703,7 +706,7 @@ Regarding the former, we just do some extremely basic things like calculating th
 </pre></div>
 
 
-<p>As <span class="caps">ML</span> method, let&#8217;s just choose a <a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest</a> as for me it&#8217;s like the <a href="https://en.wikipedia.org/wiki/Volkswagen_Passat">Volkswagen Passat Variant</a> under all <span class="caps">ML</span> algorithms. 
+<p>As <span class="caps">ML</span> method, let&#8217;s just choose a <a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest</a> as for me it&#8217;s like the <a href="https://en.wikipedia.org/wiki/Volkswagen_Passat">Volkswagen Passat Variant</a> among all <span class="caps">ML</span> algorithms. 
 Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
 In a real world scenario, one would rather select and fine-tune some <a href="https://en.wikipedia.org/wiki/Gradient_boosting">Gradient Boosted Decision Tree</a> like <a href="https://xgboost.readthedocs.io/">XGBoost</a>,
 <a href="https://lightgbm.readthedocs.io/">LightGBM</a> or maybe even better <a href="https://catboost.ai/">CatBoost</a> since categories (e.g. <code>vehicleType</code> and <code>model</code>) surely play an important 
@@ -766,7 +769,7 @@ in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/maste
 </tr>
 </tbody>
 </table>
-<p>For each split, we take now the first row as baseline and calculate the percentage change for all other rows. Then, we 
+<p>For each split, we take now the raw target, i.e. the first row, as baseline and calculate the percentage change for all other rows. Then, we 
 calculate for each cell the mean and standard deviation over all 10 splits, resulting&nbsp;in:</p>
 <table border="1" class="dataframe">
   <thead>

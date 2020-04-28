@@ -23,19 +23,21 @@ and supervised bachelor and master students.
 
 ----------
 
-After my postdoctoral position I started as a Data Scientist at [Blue Yonder](http://www.blue-yonder.com/),
+After my postdoctoral position I started as a Data Scientist at [Blue Yonder](https://blueyonder.com/),
 the leading provider of AI solutions for retail.
-Right now I enjoy working on innovative Data Science projects with experts every day at [inovex](https://www.inovex.de/en/).
+Right now I enjoy working on innovative Data Science projects with experts every day at [inovex](https://www.inovex.de/en/)
+where I am *Head of Data Science*.
 With more than five years of project experience in the field of Predictive & Prescriptive Analytics and
-Big Data, I have acquired profound knowledge in the domains of mathematical modelling, statistics,
+Big Data, I have acquired profound knowledge in the domains of mathematical modelling, data science, statistics,
 machine learning, high-performance computing and data mining.
 
-For the last years I programmed mostly with the Python Data Science stack ([NumPy](http://www.numpy.org/),
-[SciPy](http://www.scipy.org/), [Scikit-Learn](http://scikit-learn.org/),
-[Pandas](http://pandas.pydata.org/), [Matplotlib](http://matplotlib.org/),
-[Jupyter](http://jupyter.org/), etc.) to which I also contributed several extensions.
-Due to my participation in many industry projects, I have also gained experience
-in the Hadoop stack including Hive and Spark as well as R.
+For the last years I programmed mostly with the Python Data Science stack ([NumPy](https://numpy.org/),
+[SciPy](https://www.scipy.org/), [Scikit-Learn](https://scikit-learn.org/),
+[Pandas](https://pandas.pydata.org/), [Matplotlib](https://matplotlib.org/),
+[Jupyter](https://jupyter.org/), etc.) to which I also contributed several extensions.
+Due to my participation in many industry projects, I have also gained much experience
+in [Databricks Spark](https://databricks.com/de/spark/about), bringing data science to production and in general
+the development of data products. 
 
 If you want to know more, please read all about my professional details in my
 [résumé]({filename}/documents/Resume.pdf) or on

@@ -132,7 +132,7 @@ into more suitable ones.
 
 One of reasons for this common misconception might be that the literature often states that the dependent variable $y$ *conditioned*
 on the predictor $\mathbf{x}$ is normally distributed in a linear model. So for a fixed $\mathbf{x}$ we have according to
-$\eqref{eqn:linear-model}$ a fixed $\mu$ and consequently $y\sim\mathcal{N}(\mu, \sigma^2)$.
+$\eqref{eqn:linear-model}$ a fixed $\mu$ and thus $y$ can be imagined as a realization of a random variable $Y\sim\mathcal{N}(\mu, \sigma^2)$.
 
 To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
@@ -178,44 +178,46 @@ where $\hat y_i = \hat y(\mathbf{x}_i)$ is our prediction given the feature vect
 is the observed outcome for the sample $i$. In reality we might only have a single or maybe a few samples sharing
 exactly the same feature vector $\mathbf{x}_i$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
 we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
-assume we keep $\mathbf{x}_i$ fixed and want to compute $\eqref{eqn:sum_residual}$ having all those observed outcomes. 
-Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$
-and since we have now an infinite number of outcomes, we need to incorporate the probability $p(y)$ of a given outcome $y$ 
-as the summation becomes an integration. Consequently, $\eqref{eqn:sum_residual}$ becomes
+assume we keep $\mathbf{x}_i$ fixed and want to compute $\eqref{eqn:sum_residual}$ having all those observed outcomes.
+Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Also we can imagine all these
+$y$ to be realizations of some random variable $Y$. To handle now an infinite number of possible realizations,
+we need to introduce the probability $f(y)$ of some realization $y$, or more precisely the [probability density function] (pdf) 
+since $Y$ is a *continuous* random variable.
+Consequently, as the summation becomes an integration, $\eqref{eqn:sum_residual}$ becomes
 \begin{equation}
-\int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y,\label{eqn:int_residual}
+\int_{-\infty}^\infty (y - \hat y)^2f(y)\, \mathrm{d}y,\label{eqn:int_residual}
 \end{equation}
 as you might have expected. Now this is awesome, as it allows us to apply some good, old-school calculus. By the way, when I am talking about the
-*residual distribution* I am actually referring to the distribution $y - \hat y$ with $y\sim p(y)$.
-Thus the residual distribution is determined by $p(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
-In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $p(y)$ to be normally distributed but it could also be anything else.
-In our car pricing use-case, we know that $p(y)$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have a counter-example ;-)
-This rules out the normal distribution and thus the log-normal distribution might be an obvious assumption for $p(y)$ but we will come back later to that.
+*residual distribution* I am actually referring to the distribution $y - \hat y$ with $y\sim f(y)$.
+Thus the residual distribution is determined by $f(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
+In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $f(y)$ to be the pdf of a normal distribution but it could also be anything else.
+In our car pricing use-case, we know that $y$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have a counter-example ;-)
+This rules out the normal distribution and thus the pdf of the log-normal distribution might be an obvious assumption for $f(y)$ but we will come back later to that.
 
 For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
 So let's do that analytically by deriving $\eqref{eqn:int_residual}$ with respect to $\hat y$ and setting to $0$, we have that
 $$
-\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2p(y)\, \mathrm{d}y = -2\int_{-\infty}^\infty yp(y)\, \mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
+\frac{d}{d\hat y}\int_{-\infty}^\infty (y - \hat y)^2f(y)\, \mathrm{d}y = -2\int_{-\infty}^\infty yf(y)\, \mathrm{d}y + 2\hat y \stackrel{!}{=} 0,
 $$
 and subsequently
 \begin{equation}
-\hat y = \int_{-\infty}^\infty yp(y)\, \mathrm{d}y.\label{eqn:expected-value}
+\hat y = \int_{-\infty}^\infty yf(y)\, \mathrm{d}y.\label{eqn:expected-value}
 \end{equation}
 Looks familiar? Yes, this is just the definition of the [expected value in the continuous case]! So whenever we are 
 using the RMSE or MSE as error measure, we are actually calculating the expected value of $y$ at some fixed $\mathbf{x}$. So what happens if
 we do the same for the MAE? In this case, we have
 $$
-\int_{-\infty}^\infty \vert y-\hat y\vert p(y)\, \mathrm{d}y=\int_{\hat y}^\infty (y-\hat y) p(y)\, \mathrm{d}y-\int_{-\infty}^{\hat y} (y-\hat y)p(y)\, \mathrm{d}y,
+\int_{-\infty}^\infty \vert y-\hat y\vert f(y)\, \mathrm{d}y=\int_{\hat y}^\infty (y-\hat y) f(y)\, \mathrm{d}y-\int_{-\infty}^{\hat y} (y-\hat y)f(y)\, \mathrm{d}y,
 $$ 
 and deriving by $\hat y$ again, we have
 $$
-\int_{-\infty}^{\hat y}  p(y)\, \mathrm{d}y - \int_{\hat y}^\infty  p(y)\, \mathrm{d}y \stackrel{!}{=} 0.
+\int_{-\infty}^{\hat y}  f(y)\, \mathrm{d}y - \int_{\hat y}^\infty  f(y)\, \mathrm{d}y \stackrel{!}{=} 0.
 $$
-We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [median] of the distribution $p(y)$!
+We thus have $\hat y = P(X\leq \frac{1}{2})$, which is, lo and behold, the [median] of the distribution with pdf $f(y)$!
 
 A small recap at this point. We just learnt that minimizing the MSE or RMSE (also [l2-norm] as a fancier name) leads
-to the estimation of the expected value of $p(y)$ while minimizing MAE (also known as l1-norm) gets us the median of $p(y)$.
-Also remember that our feature vector $\mathbf{x}$ is still fixed, so $y\sim p(y)$ just describes the random fluctuations around
+to the estimation of the expected value while minimizing MAE (also known as l1-norm) gets us the median of some distribution.
+Also remember that our feature vector $\mathbf{x}$ is still fixed, so $y\sim f(y)$ just describes the random fluctuations around
 some true value $y^\star$, which we just don't know, and $\hat y$ is our best guess for it. If we assume the normal distribution
 there is no reason to abandon all the nice mathematical properties of the l2-norm since the result will be theoretically the same as
 minimizing the l1-norm. It may make a huge difference though, if we are dealing with a non-symmetrical distribution like
@@ -301,9 +303,9 @@ is doing and a lucky punch without a clue of what happened, just doesn't suit a 
 
 Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let's assume now that we
 have a log-normal distribution, and thus we have $\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)$. Consequently,
-the [probability density function] (pdf) of the price is
+the pdf of the price is
 \begin{equation}
-\tilde p(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
+\tilde f(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
 where the only difference to the normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
 Also note that that parameters $\mu$ and $\sigma$ are the well-known parameters of the normal distribution but for the
@@ -323,12 +325,12 @@ For the transformed random variable $\phi(X)$ we have for the expected value tha
 $$
 \begin{align*}
 E[\phi(X)] &= E[aX + b] \\
-            &= \int (ax + b)p(x)\, \mathrm{d}x \\
-            &= a\int xp(x)\, \mathrm{d}x + b \\
+            &= \int (ax + b)f(x)\, \mathrm{d}x \\
+            &= a\int xf(x)\, \mathrm{d}x + b \\
             &=aE[X] + b =\phi(E[X]),
 \end{align*}
 $$
-where we used the fact that probability density functions are normalized, i.e. $\int p(x)\mathrm{d}x=1$. What a relief!
+where we used the fact that probability density functions are normalized, i.e. $\int f(x)\mathrm{d}x=1$. What a relief!
 That means at least affine transformations are fine when we minimize the (R)MSE. 
 This is especially important if you belong to the illustrious circle of deep learning specialists. In some cases, 
 the target variable of a regression problem is standardized or [min-max scaled] during training and transformed back afterwards.
@@ -341,14 +343,14 @@ of the untransformed distribution. More details on how to do this can be found i
 of the [used-cars-log-trans repository]. Way more interesting, at least for the mathematically interested reader,
 is the question *Why does this work?*.
 
-This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ and let $p(y)$ be the pdf of the normal distribution
-as well as $\tilde p(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
+This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ and let $f(y)$ be the pdf of the normal distribution
+as well as $\tilde f(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
 Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
 \begin{equation}
-\int y \tilde p(y)\, \mathrm{d}y = \int e^{\tilde y} \tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
+\int y \tilde f(y)\, \mathrm{d}y = \int e^{\tilde y} \tilde f(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{\tilde y} f(\tilde y)\, \mathrm{d}\tilde y,\label{eqn:mean-log-normal}
 \end{equation}
 where in the last equation the additional factor of the log-normal distribution was canceled out with $e^{\tilde y}$ and thus
-became the pdf of the normal distribution due to our substitution. Writing out the exponent in $p(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
+became the pdf of the normal distribution due to our substitution. Writing out the exponent in $f(x)$, which is $-\frac{(\tilde y-\mu)^2}{2\sigma^2}$ 
 and completing the square with $\tilde y$, we have 
 \begin{equation}
 \begin{split}
@@ -359,7 +361,7 @@ and completing the square with $\tilde y$, we have
 Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$ by shifting the parameter $\mu$ of the
 normal distribution by $\sigma^2$. Denoting with $p_s(y)$ the shifted pdf, we have
 $$
-\int e^{\tilde y} p(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+\int e^{\tilde y} f(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
 $$
 and subsequently we have proved that the expected value of the log-normal distribution indeed is $\exp(\mu + \frac{\sigma^2}{2})$.
 
@@ -590,19 +592,19 @@ for RMSPE and $-\sigma^2$ for MAPE. Let's start with the former.
 We use again our notation $\tilde \ast = \log(\ast)$ for our variables and also to differentiate between the normal
 and log-normal distribution. To minimize the error, we have
 $$
-\mathrm{RMSPE}(\hat y) = \int\left(\frac{y-\hat y}{y}\right)^2\,\tilde p(y)\, \mathrm{d}y = 1 -2\hat y\int\frac{\tilde p(y)}{y}\, \mathrm{d}y + {\hat y}^2\int\frac{\tilde p(y)}{y^2}\, \mathrm{d}y.
+\mathrm{RMSPE}(\hat y) = \int\left(\frac{y-\hat y}{y}\right)^2\,\tilde f(y)\, \mathrm{d}y = 1 -2\hat y\int\frac{\tilde f(y)}{y}\, \mathrm{d}y + {\hat y}^2\int\frac{\tilde f(y)}{y^2}\, \mathrm{d}y.
 $$
 To find the minimum, we derive by $\hat y$ and set to $0$, resulting in
 $$
-\hat y=\frac{\int\frac{\tilde p(y)}{y}\, \mathrm{d}y}{\int\frac{\tilde p(y)}{y^2}\, \mathrm{d}y}
+\hat y=\frac{\int\frac{\tilde f(y)}{y}\, \mathrm{d}y}{\int\frac{\tilde f(y)}{y^2}\, \mathrm{d}y}
 $$
 Thus, we now need to calculate
 $$
-f_\alpha = \int\frac{\tilde p(y)}{y^\alpha}\, \mathrm{d}y
+f_\alpha = \int\frac{\tilde f(y)}{y^\alpha}\, \mathrm{d}y
 $$
 for $\alpha =1,2$. To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\, \mathrm{d}\tilde y$, we have 
 $$
-f_\alpha = \int e^{-\alpha\tilde y}\,\tilde p(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,p(\tilde y)\, \mathrm{d}\tilde y.
+f_\alpha = \int e^{-\alpha\tilde y}\,\tilde f(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,f(\tilde y)\, \mathrm{d}\tilde y.
 $$
 Writing out the exponent and completing the square similar to $\eqref{eqn:completing_square}$, we obtain
 $$
@@ -614,15 +616,15 @@ $$
 $$
 Subsequently, the correction term for RMSPE is $-\frac{3}{2}\sigma^2$. For MAPE we have
 $$
-\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde p(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde p(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde p(y)\, \mathrm{d}y,
+\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde f(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde f(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y,
 $$
 and after deriving by $\hat y$ as well as setting to 0, we need to find $\hat y$ such that
 $$
-\int_{\hat y}^{\infty}\frac{1}{y}\,\tilde p(y)\, \mathrm{d}y - \int_0^{\hat y}\frac{1}{y}\,\tilde p(y)\, \mathrm{d}y = 0.
+\int_{\hat y}^{\infty}\frac{1}{y}\,\tilde f(y)\, \mathrm{d}y - \int_0^{\hat y}\frac{1}{y}\,\tilde f(y)\, \mathrm{d}y = 0.
 $$
 Doing the same substitution as with RMSPE, results in
 $$
-\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}e^{-\tilde y}\,p(\tilde y)\, \mathrm{d}\tilde y = 0.
+\int_{\log(\hat y)}^{\infty}e^{-\tilde y}\,f(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}e^{-\tilde y}\,f(\tilde y)\, \mathrm{d}\tilde y = 0.
 $$
 Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
 \begin{equation}

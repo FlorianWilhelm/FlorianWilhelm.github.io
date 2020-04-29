@@ -605,7 +605,7 @@ $$
 $$
 Thus, we now need to calculate
 $$
-f_\alpha = \int\frac{\tilde f(y)}{y^\alpha}\, \mathrm{d}y
+q_\alpha = \int\frac{\tilde f(y)}{y^\alpha}\, \mathrm{d}y
 $$
 for $\alpha =1,2$. To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\, \mathrm{d}\tilde y$, we have 
 $$

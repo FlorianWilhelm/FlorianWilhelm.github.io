@@ -432,7 +432,10 @@ given the true value, our predicted value in log-space and some error measure:
 ```python
 def get_corr(y_true, y_pred_log, error_func, **kwargs):
     """Determine correction delta for exp transformation"""
-    res = sp.optimize.minimize(lambda delta: error_func(np.exp(delta + y_pred_log), y_true), 0., **kwargs)
+    def cost_func(delta):
+        return error_func(np.exp(delta + y_pred_log), y_true)
+    
+    res = sp.optimize.minimize(cost_func, 0., **kwargs)
     if res.success:
         return res.x
     else:

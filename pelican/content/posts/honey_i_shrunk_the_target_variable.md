@@ -430,10 +430,13 @@ to all kinds of regression problems with non-negative values. The implementation
 given the true value, our predicted value in log-space and some error measure:
 
 ```python
-def get_corr(y_true, y_pred_log, error_func):
+def get_corr(y_true, y_pred_log, error_func, **kwargs):
     """Determine correction delta for exp transformation"""
-    res = sp.optimize.minimize(lambda delta: error_func(np.exp(delta + y_pred_log), y_true), 0.)
-    return res.x
+    res = sp.optimize.minimize(lambda delta: error_func(np.exp(delta + y_pred_log), y_true), 0., **kwargs)
+    if res.success:
+        return res.x
+    else:
+        raise RuntimeError(f"Finding correction term failed!\n{res}")
 ```
 
 Let's now get our hands dirty and evaluate how RMSE, MAE, MAPE and RMSPE behave in our use-case with the raw as well 
@@ -442,7 +445,7 @@ Regarding the former, we just do some extremely basic things like calculating th
 ```python
 df['monthOfRegistration'] = df['monthOfRegistration'].replace(0, 7)
 df['dateOfRegistration'] = df.apply(
-    lambda ds: datetime(ds["yearOfRegistration"], ds["monthOfRegistration"], 1), axis=1)
+    lambda ds: datetime(ds['yearOfRegistration'], ds['monthOfRegistration'], 1), axis=1)
 df['ageInYears'] = df.apply(
     lambda ds: (ds['dateCreated'] - ds['dateOfRegistration']).days / 365, axis=1)
 df['mileageOverAge'] = df['kilometer'] / df['ageInYears']

@@ -358,9 +358,9 @@ and completing the square with $\tilde y$, we have
 \end{split}\label{eqn:completing_square}
 \end{equation}
 Using this result, we can rewrite the last expression of $\eqref{eqn:mean-log-normal}$ by shifting the parameter $\mu$ of the
-normal distribution by $\sigma^2$. Denoting with $p_s(y)$ the shifted pdf, we have
+normal distribution by $\sigma^2$. Denoting with $f_s(y)$ the shifted pdf, we have
 $$
-\int e^{\tilde y} f(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+\int e^{\tilde y} f(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int f_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
 $$
 and subsequently we have proved that the expected value of the log-normal distribution indeed is $\exp(\mu + \frac{\sigma^2}{2})$.
 
@@ -627,15 +627,15 @@ $$
 $$
 Again, we complete the square of the exponent similar to $\eqref{eqn:completing_square}$, resulting in
 \begin{equation}
-e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y\right) = 0,
+e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}f_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}f_s(\tilde y)\, \mathrm{d}\tilde y\right) = 0,
 \label{eqn:mape-proof}
 \end{equation}
 where 
 $$
-p_s(x) = {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(x - (\mu - \sigma^2) )^{2}}{2\sigma ^{2}}}\right).
+f_s(x) = {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(x - (\mu - \sigma^2) )^{2}}{2\sigma ^{2}}}\right).
 $$
 We need the two integrals in $\eqref{eqn:mape-proof}$ to be equal to fulfill the equation, thus $\log(\hat y)$ needs to be
-the median. With the shifted normal distribution $p_s(x)$, we have that for $\log(\hat y) = \mu - \sigma^2$. Consequently,
+the median. With the shifted normal distribution $f_s(x)$, we have that for $\log(\hat y) = \mu - \sigma^2$. Consequently,
 the correction term for MAPE is $-\sigma^2$.
 
 

@@ -578,10 +578,10 @@ and completing the square with <span class="math">\(\tilde y\)</span>, we&nbsp;h
 \end{equation}</div>
 <p>
 Using this result, we can rewrite the last expression of <span class="math">\(\eqref{eqn:mean-log-normal}\)</span> by shifting the parameter <span class="math">\(\mu\)</span> of the
-normal distribution by <span class="math">\(\sigma^2\)</span>. Denoting with <span class="math">\(p_s(y)\)</span> the shifted pdf, we&nbsp;have
+normal distribution by <span class="math">\(\sigma^2\)</span>. Denoting with <span class="math">\(f_s(y)\)</span> the shifted pdf, we&nbsp;have
 </p>
 <div class="math">$$
-\int e^{\tilde y} f(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int p_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
+\int e^{\tilde y} f(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{1}{2}\sigma^2}\int f_s(\tilde y)\, \mathrm{d}\tilde y = e^{\mu + \frac{\sigma^2}{2}},
 $$</div>
 <p>
 and subsequently we have proved that the expected value of the log-normal distribution indeed is <span class="math">\(\exp(\mu + \frac{\sigma^2}{2})\)</span>.</p>
@@ -913,18 +913,18 @@ $$</div>
 Again, we complete the square of the exponent similar to <span class="math">\(\eqref{eqn:completing_square}\)</span>, resulting&nbsp;in
 </p>
 <div class="math">\begin{equation}
-e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}p_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}p_s(\tilde y)\, \mathrm{d}\tilde y\right) = 0,
+e^{-\mu+\frac{1}{2}\sigma^2}\left(\int_{\log(\hat y)}^{\infty}f_s(\tilde y)\, \mathrm{d} \tilde y - \int_{-\infty}^{\log(\hat y)}f_s(\tilde y)\, \mathrm{d}\tilde y\right) = 0,
 \label{eqn:mape-proof}
 \end{equation}</div>
 <p>
 where 
 </p>
 <div class="math">$$
-p_s(x) = {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(x - (\mu - \sigma^2) )^{2}}{2\sigma ^{2}}}\right).
+f_s(x) = {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(x - (\mu - \sigma^2) )^{2}}{2\sigma ^{2}}}\right).
 $$</div>
 <p>
 We need the two integrals in <span class="math">\(\eqref{eqn:mape-proof}\)</span> to be equal to fulfill the equation, thus <span class="math">\(\log(\hat y)\)</span> needs to be
-the median. With the shifted normal distribution <span class="math">\(p_s(x)\)</span>, we have that for <span class="math">\(\log(\hat y) = \mu - \sigma^2\)</span>. Consequently,
+the median. With the shifted normal distribution <span class="math">\(f_s(x)\)</span>, we have that for <span class="math">\(\log(\hat y) = \mu - \sigma^2\)</span>. Consequently,
 the correction term for <span class="caps">MAPE</span> is <span class="math">\(-\sigma^2\)</span>.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

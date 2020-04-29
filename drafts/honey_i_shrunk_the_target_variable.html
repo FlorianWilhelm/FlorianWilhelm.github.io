@@ -278,8 +278,8 @@ the <a href="https://www.kaggle.com/orgesleka/used-cars-database">used-cars data
 <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/">used-cars-log-trans repository</a>. As the name suggests, the data set contains used cars having car features like <code>vehicleType</code>,
 <code>yearOfRegistration</code> <span class="amp">&amp;</span> <code>monthOfRegistration</code>, <code>gearbox</code>, <code>powerPS</code>, <code>model</code>, <code>kilometer</code> (mileage), <code>fuelType</code>, <code>brand</code> and <code>price</code>.</p>
 <p>Let&#8217;s say the business unit basically asks us to determine the proper market value of a car given the features above to determine
-if its price is actually a good deal, fair deal or a bad deal. The obvious way to approach this problem is create a model
-that predicts the price of a car, which we assume to be its value, given its features. 
+if its price is actually a good deal, fair deal or a bad deal. The obvious way to approach this problem is to create a model
+that predicts the price of a car, which we assume to be its market value, given its features. 
 Since we have roughly 370,000 cars in our data set, for most cars 
 we will have many similar cars and thus our model will predict a price that is some kind of average of their prices.
 Consequently, we can think of this predicted price (let&#8217;s call it <code>pred_price</code>) as the actual market value. 
@@ -331,7 +331,7 @@ with the help of the wonderful <a href="https://www.scipy.org/">SciPy</a> gets u
 <p>Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
 more <em>normal</em>. And isn&#8217;t this some basic assumption of a linear model&nbsp;anyway? </p>
 <p>Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn&#8217;t need to
-be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
+be normally distributed, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
 For the observed outcome <span class="math">\(y_i\)</span> and some true latent outcome <span class="math">\(\mu_i\)</span> of the <span class="math">\(i\)</span>-th sample, we&nbsp;have</p>
 <div class="math">\begin{equation}
 \begin{split}
@@ -374,7 +374,7 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 
 <p>&nbsp;</p>
 <p>Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
-you will never forget that the residuals of a linear model are normally distribution and <em>not</em> the target variable in general. 
+you will never forget that the residuals of a linear model are normally distributed and <em>not</em> the target variable in general. 
 Only in the case that you used a linear model having only an intercept, i.e. <span class="math">\(M=1\)</span> and <span class="math">\(\phi_1(\mathbf{x})\equiv 1\)</span>,
 the target distribution equals the residual distribution (up to some shift) on all data sets. But seriously, who does that in real&nbsp;life?</p>
 <h2>Analysis of the residual&nbsp;distribution</h2>
@@ -388,11 +388,11 @@ Let&#8217;s take a look at the definition of the <span class="caps">MSE</span> a
 <p>
 where <span class="math">\(\hat y_i = \hat y(\mathbf{x}_i)\)</span> is our prediction given the feature vector <span class="math">\(\mathbf{x}_i\)</span> and <span class="math">\(y_i\)</span>
 is the observed outcome for the sample <span class="math">\(i\)</span>. In reality we might only have a single or maybe a few samples sharing
-exactly the same feature vector <span class="math">\(\mathbf{x}_i\)</span> and thus also the same model prediction <span class="math">\(\hat y_i\)</span>. In order to do same actual analysis, 
-we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
+exactly the same feature vector <span class="math">\(\mathbf{x}_i\)</span> and thus also the same model prediction <span class="math">\(\hat y_i\)</span>. In order to do some actual analysis, 
+we now assume that we have an infinite number of observed outcomes for a given feature vector. Now
 assume we keep <span class="math">\(\mathbf{x}_i\)</span> fixed and want to compute <span class="math">\(\eqref{eqn:sum_residual}\)</span> having all those observed outcomes.
 Let&#8217;s drop the index <span class="math">\(i\)</span> from <span class="math">\(\hat y_i\)</span> as it depends only on our fixed <span class="math">\(\mathbf{x}_i\)</span>. Also we can imagine all these outcomes
-<span class="math">\(y\)</span> to be realizations of some random variable <span class="math">\(Y\)</span> conditioned on <span class="math">\(\mathbf{x}\)</span>. To handle now an infinite number of possible realizations,
+<span class="math">\(y\)</span> to be realizations of some random variable <span class="math">\(Y\)</span> conditioned on <span class="math">\(\mathbf{x}\)</span>. To now handle an infinite number of possible realizations,
 we need to introduce the probability <span class="math">\(f(y)\)</span> of some realization <span class="math">\(y\)</span>, or more precisely the <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability density function</a> (pdf) 
 since <span class="math">\(Y\)</span> is a <em>continuous</em> random variable. Consequently, as the summation becomes an integration, the discrete <span class="caps">MSE</span> in <span class="math">\(\eqref{eqn:sum_residual}\)</span>&nbsp;becomes
 </p>
@@ -405,7 +405,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 Thus the residual distribution is determined by <span class="math">\(f(y)\)</span> except for a shift of <span class="math">\(\hat y\)</span>.  So what kind of assumptions can we make about it? 
 In case of a linear model as in <span class="math">\(\eqref{eqn:linear-model}\)</span>, we assume <span class="math">\(f(y)\)</span> to be the pdf of a normal distribution but it could also be anything else.
 In our car pricing use-case, we know that <span class="math">\(y\)</span> will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have a counter-example ;-)
-This rules out the normal distribution and thus the pdf of the log-normal distribution might be an obvious assumption for <span class="math">\(f(y)\)</span> but we will come back later to&nbsp;that.</p>
+This rules out the normal distribution and demands a right skewed distribution, thus the pdf of the log-normal distribution might be an obvious assumption for <span class="math">\(f(y)\)</span> but we will come back later to&nbsp;that.</p>
 <p>For now, we gonna consider <span class="math">\(\eqref{eqn:int_residual}\)</span> again and note that our model, whatever it is, will somehow try to minimize <span class="math">\(\eqref{eqn:int_residual}\)</span> by choosing a proper <span class="math">\(\hat y\)</span>.
 So let&#8217;s do that analytically by deriving <span class="math">\(\eqref{eqn:int_residual}\)</span> with respect to <span class="math">\(\hat y\)</span> and setting to <span class="math">\(0\)</span>, we have&nbsp;that
 </p>
@@ -515,7 +515,7 @@ of the residual distribution would have been much smaller. Still,
 we would have missed our actual goal of minimizing the (R)<span class="caps">MSE</span> on the raw target. Instead we would have unknowingly minimized the <span class="caps">MAE</span>, which
 might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
 is doing and a lucky punch without a clue of what happened, just doesn&#8217;t suit a&nbsp;scientist.</p>
-<p>Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let&#8217;s assume now that we
+<p>Before, we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let&#8217;s assume now that we
 have a log-normal distribution, and thus we have <span class="math">\(\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)\)</span>. Consequently,
 the pdf of the price&nbsp;is
 </p>
@@ -524,7 +524,7 @@ the pdf of the price&nbsp;is
 \end{equation}</div>
 <p>
 where the only difference to the normal distribution is <span class="math">\(ln(x)\)</span> instead of <span class="math">\(x\)</span> and the additional factor <span class="math">\(\frac{1}{x}\)</span>.
-Also note that that parameters <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are the well-known parameters of the normal distribution but for the
+Also note that parameters <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the <span class="caps">RMSE</span> of the log-transformed prices as we did before, we actually infer the parameter
 <span class="math">\(\mu\)</span> of the normal distribution, which is the expected value and also the <em>median</em>, i.e. <span class="math">\(\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5\)</span>. 
@@ -552,7 +552,7 @@ That means at least affine transformations are fine when we minimize the (R)<spa
 This is especially important if you belong to the illustrious circle of deep learning specialists. In some cases, 
 the target variable of a regression problem is standardized or <a href="https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)">min-max scaled</a> during training and transformed back afterwards.
 Since these normalization techniques are affine transformations we are on the safe side,&nbsp;though.  </p>
-<p>Coming back to our example where we know that the distribution is quite log-normal. Can we 
+<p>Let&#8217;s come back to our example where we know that the distribution is quite log-normal. Can we 
 somehow still receive the mean of the untransformed target variable? Yes we can, actually. Using the parameter <span class="math">\(\mu\)</span> that
 we already determined above we just calculate the variance <span class="math">\(\sigma^2\)</span> and have <span class="math">\(\exp(\mu + \frac{\sigma^2}{2})\)</span> for the mean
 of the untransformed distribution. More details on how to do this can be found in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/master/notebooks/used-cars.ipynb">notebook</a>

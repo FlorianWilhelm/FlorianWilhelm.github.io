@@ -48,8 +48,8 @@ the [used-cars database from Kaggle] and if you want to follow along, you find t
 `yearOfRegistration` & `monthOfRegistration`, `gearbox`, `powerPS`, `model`, `kilometer` (mileage), `fuelType`, `brand` and `price`.
 
 Let's say the business unit basically asks us to determine the proper market value of a car given the features above to determine
-if its price is actually a good deal, fair deal or a bad deal. The obvious way to approach this problem is create a model
-that predicts the price of a car, which we assume to be its value, given its features. 
+if its price is actually a good deal, fair deal or a bad deal. The obvious way to approach this problem is to create a model
+that predicts the price of a car, which we assume to be its market value, given its features. 
 Since we have roughly 370,000 cars in our data set, for most cars 
 we will have many similar cars and thus our model will predict a price that is some kind of average of their prices.
 Consequently, we can think of this predicted price (let's call it `pred_price`) as the actual market value. 
@@ -113,7 +113,7 @@ Seeing this, you might feel the itch to just apply now the logarithm to our targ
 more *normal*. And isn't this some basic assumption of a linear model anyway? 
 
 Well, this is a common misconception. The dependent variable, i.e. target variable, of a linear model doesn't need to
-be normally distribution, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
+be normally distributed, only the residuals are. This can be seen easily by revisiting the formula of a linear model. 
 For the observed outcome $y_i$ and some true latent outcome $\mu_i$ of the $i$-th sample, we have
 
 \begin{equation}
@@ -161,7 +161,7 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 &nbsp;
 
 Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
-you will never forget that the residuals of a linear model are normally distribution and *not* the target variable in general. 
+you will never forget that the residuals of a linear model are normally distributed and *not* the target variable in general. 
 Only in the case that you used a linear model having only an intercept, i.e. $M=1$ and $\phi_1(\mathbf{x})\equiv 1$,
 the target distribution equals the residual distribution (up to some shift) on all data sets. But seriously, who does that in real life?
 
@@ -176,11 +176,11 @@ Let's take a look at the definition of the MSE again, i.e.
 \end{equation}
 where $\hat y_i = \hat y(\mathbf{x}_i)$ is our prediction given the feature vector $\mathbf{x}_i$ and $y_i$
 is the observed outcome for the sample $i$. In reality we might only have a single or maybe a few samples sharing
-exactly the same feature vector $\mathbf{x}_i$ and thus also the same model prediction $\hat y_i$. In order to do same actual analysis, 
-we assume now that we have an infinite number of observed outcomes for a given feature vector. Now
+exactly the same feature vector $\mathbf{x}_i$ and thus also the same model prediction $\hat y_i$. In order to do some actual analysis, 
+we now assume that we have an infinite number of observed outcomes for a given feature vector. Now
 assume we keep $\mathbf{x}_i$ fixed and want to compute $\eqref{eqn:sum_residual}$ having all those observed outcomes.
 Let's drop the index $i$ from $\hat y_i$ as it depends only on our fixed $\mathbf{x}_i$. Also we can imagine all these outcomes
-$y$ to be realizations of some random variable $Y$ conditioned on $\mathbf{x}$. To handle now an infinite number of possible realizations,
+$y$ to be realizations of some random variable $Y$ conditioned on $\mathbf{x}$. To now handle an infinite number of possible realizations,
 we need to introduce the probability $f(y)$ of some realization $y$, or more precisely the [probability density function] (pdf) 
 since $Y$ is a *continuous* random variable. Consequently, as the summation becomes an integration, the discrete MSE in $\eqref{eqn:sum_residual}$ becomes
 \begin{equation}
@@ -191,7 +191,7 @@ as you might have expected. Now this is awesome, as it allows us to apply some g
 Thus the residual distribution is determined by $f(y)$ except for a shift of $\hat y$.  So what kind of assumptions can we make about it? 
 In case of a linear model as in $\eqref{eqn:linear-model}$, we assume $f(y)$ to be the pdf of a normal distribution but it could also be anything else.
 In our car pricing use-case, we know that $y$ will be non-negative as no one is gonna give you money if you take a working car. Let me know if you have a counter-example ;-)
-This rules out the normal distribution and thus the pdf of the log-normal distribution might be an obvious assumption for $f(y)$ but we will come back later to that.
+This rules out the normal distribution and demands a right skewed distribution, thus the pdf of the log-normal distribution might be an obvious assumption for $f(y)$ but we will come back later to that.
 
 For now, we gonna consider $\eqref{eqn:int_residual}$ again and note that our model, whatever it is, will somehow try to minimize $\eqref{eqn:int_residual}$ by choosing a proper $\hat y$.
 So let's do that analytically by deriving $\eqref{eqn:int_residual}$ with respect to $\hat y$ and setting to $0$, we have that
@@ -300,14 +300,14 @@ we would have missed our actual goal of minimizing the (R)MSE on the raw target.
 might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
 is doing and a lucky punch without a clue of what happened, just doesn't suit a scientist.
 
-Before we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let's assume now that we
+Before, we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let's assume now that we
 have a log-normal distribution, and thus we have $\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)$. Consequently,
 the pdf of the price is
 \begin{equation}
 \tilde f(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
 where the only difference to the normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
-Also note that that parameters $\mu$ and $\sigma$ are the well-known parameters of the normal distribution but for the
+Also note that parameters $\mu$ and $\sigma$ are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter
 $\mu$ of the normal distribution, which is the expected value and also the *median*, i.e. $\operatorname {P} (\log(\mathrm{price})\leq \mu)= 0.5$. 
@@ -335,7 +335,7 @@ This is especially important if you belong to the illustrious circle of deep lea
 the target variable of a regression problem is standardized or [min-max scaled] during training and transformed back afterwards.
 Since these normalization techniques are affine transformations we are on the safe side, though.  
 
-Coming back to our example where we know that the distribution is quite log-normal. Can we 
+Let's come back to our example where we know that the distribution is quite log-normal. Can we 
 somehow still receive the mean of the untransformed target variable? Yes we can, actually. Using the parameter $\mu$ that
 we already determined above we just calculate the variance $\sigma^2$ and have $\exp(\mu + \frac{\sigma^2}{2})$ for the mean
 of the untransformed distribution. More details on how to do this can be found in the [notebook]

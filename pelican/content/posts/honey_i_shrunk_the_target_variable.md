@@ -134,7 +134,7 @@ One of the reasons for this common misconception might be that the literature of
 on the predictor $\mathbf{x}$ is normally distributed in a linear model. So for a fixed $\mathbf{x}$ we have according to
 $\eqref{eqn:linear-model}$ also a fixed $\mu$ and thus $y$ can be imagined as a realization of a random variable $Y=\mathcal{N}(\mu, \sigma^2)$.
 
-To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in same strange log scale)
+To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in some strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot it:
 

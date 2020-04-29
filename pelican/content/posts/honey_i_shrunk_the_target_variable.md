@@ -609,15 +609,15 @@ f_\alpha = \int\frac{\tilde f(y)}{y^\alpha}\, \mathrm{d}y
 $$
 for $\alpha =1,2$. To that end, we substitute $y=\exp(\tilde y)$ and using $\mathrm{d}y = e^{-\tilde y}\, \mathrm{d}\tilde y$, we have 
 $$
-f_\alpha = \int e^{-\alpha\tilde y}\,\tilde f(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,f(\tilde y)\, \mathrm{d}\tilde y.
+q_\alpha = \int e^{-\alpha\tilde y}\,\tilde f(e^{\tilde y})e^{\tilde y}\, \mathrm{d}\tilde y = \int e^{-\alpha\tilde y}\,f(\tilde y)\, \mathrm{d}\tilde y.
 $$
 Writing out the exponent and completing the square similar to $\eqref{eqn:completing_square}$, we obtain
 $$
-\log(f_\alpha) = -\alpha \mu +\frac12 \alpha^2\sigma^2,
+\log(q_\alpha) = -\alpha \mu +\frac12 \alpha^2\sigma^2,
 $$
 leading in total to
 $$
-\log(\hat y)=\log(f_1)-\log(f_2) = \mu -\frac{3}{2}\sigma^2.
+\log(\hat y)=\log(q_1)-\log(q_2) = \mu -\frac{3}{2}\sigma^2.
 $$
 Subsequently, the correction term for RMSPE is $-\frac{3}{2}\sigma^2$. For MAPE we have
 $$

@@ -487,7 +487,7 @@ all experiments.
 
 To now evaluate this model, we gonna use a 10-fold cross-validation and split off a validation set from the training set 
 in each split to calculate $\sigma^2$ and fit our correction term. The cross-validation will give us some indication about the variance in 
-our results. In each split of these 10 splits, we then fit the model and predict using the
+our results. In each of these 10 splits, we then fit the model and predict using the
 
 1. raw, i.e. untransformed, target,
 2. log-transformed target with no correction,
@@ -504,7 +504,7 @@ in the [notebook], we jump directly to the results of the first of 10 splits:
 |       0 | log & sigma2 corr | 2475.48 | 1253.19 | 0.305424 | 1.27903  |
 |       0 | log & fitted corr | 2449.23 | 1251.35 | 0.299577 | 0.85879  |
 
-For each split, we take now the raw target, i.e. the first row, as baseline and calculate the percentage change for all other rows. Then, we 
+For each split, we take now the errors on the raw target, i.e. the first row, as baseline and calculate the percentage change along each column for the other rows. Then, we 
 calculate for each cell the mean and standard deviation over all 10 splits, resulting in:
 
 <table border="1" class="dataframe">
@@ -565,7 +565,7 @@ calculate for each cell the mean and standard deviation over all 10 splits, resu
   </tbody>
 </table>
 
-Let's interpret these evaluation results and note that negative percentages mean an improvement over the untransformed
+Let's interpret these evaluation results and note that negative percentages mean an improvement over the error on the untransformed
 target, the lower the better. The RMSE column shows us that if we really wanna get the best results for RMSE, transforming the target variable
 leads to a worse result compared to a model trained on the original target. The theoretical sigma2 correction makes it even
 worse which tells us that the residuals in log-space are not normally distributed. We can check that using for instance the

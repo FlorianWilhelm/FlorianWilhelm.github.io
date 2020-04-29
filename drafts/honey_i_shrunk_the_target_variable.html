@@ -721,7 +721,7 @@ part in this use-case. We will use the default <span class="caps">MSE</span> cri
 all&nbsp;experiments. </p>
 <p>To now evaluate this model, we gonna use a 10-fold cross-validation and split off a validation set from the training set 
 in each split to calculate <span class="math">\(\sigma^2\)</span> and fit our correction term. The cross-validation will give us some indication about the variance in 
-our results. In each split of these 10 splits, we then fit the model and predict using&nbsp;the</p>
+our results. In each of these 10 splits, we then fit the model and predict using&nbsp;the</p>
 <ol>
 <li>raw, i.e. untransformed,&nbsp;target,</li>
 <li>log-transformed target with no&nbsp;correction,</li>
@@ -776,7 +776,7 @@ in the <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/blob/maste
 </tr>
 </tbody>
 </table>
-<p>For each split, we take now the raw target, i.e. the first row, as baseline and calculate the percentage change for all other rows. Then, we 
+<p>For each split, we take now the errors on the raw target, i.e. the first row, as baseline and calculate the percentage change along each column for the other rows. Then, we 
 calculate for each cell the mean and standard deviation over all 10 splits, resulting&nbsp;in:</p>
 <table border="1" class="dataframe">
   <thead>
@@ -836,7 +836,7 @@ calculate for each cell the mean and standard deviation over all 10 splits, resu
   </tbody>
 </table>
 
-<p>Let&#8217;s interpret these evaluation results and note that negative percentages mean an improvement over the untransformed
+<p>Let&#8217;s interpret these evaluation results and note that negative percentages mean an improvement over the error on the untransformed
 target, the lower the better. The <span class="caps">RMSE</span> column shows us that if we really wanna get the best results for <span class="caps">RMSE</span>, transforming the target variable
 leads to a worse result compared to a model trained on the original target. The theoretical sigma2 correction makes it even
 worse which tells us that the residuals in log-space are not normally distributed. We can check that using for instance the

@@ -319,8 +319,8 @@ thus the result, that we are approximating the median instead of the mean, is no
 The expected value is not so well-behaved under transformations as the median. Using the definition of the expected
 value $\eqref{eqn:expected-value}$, we can easily show that only transformations $\phi$ of the form $\phi(x)=ax + b$,
 with scalars $a$ and $b$, allow us to transform the target, determine the expected value and apply the
-inverse transformation to get the expected value of the original distribution. 
-For the transformed random variable $\phi(X)$ we have for the expected value that
+inverse transformation to get the expected value of the original distribution. In math-speak, a transformation of the form 
+$\phi(x)=ax + b$ is also called an [affine transformation]. For the transformed random variable $\phi(X)$ we have for the expected value that
 $$
 \begin{align*}
 E[\phi(X)] &= E[aX + b] \\

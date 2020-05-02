@@ -308,6 +308,13 @@ are looking at cars at around 10,000.- € but it might be negligible if your lu
 Consequently, the <a href="https://en.wikipedia.org/wiki/Mean_absolute_percentage_error">mean absolute percentage error</a> (<span class="caps">MAPE</span>) might even be a better fit than the <span class="caps">MAE</span> for this use-case.
 Having said that, we will keep all those error measures in mind but use the default <span class="caps">MSE</span> criterion in our machine-learning
 algorithm for the sake of simplicity and to help me make the actual point of this blog post&nbsp;;-)</p>
+<p>Nevertheless, one crucial aspect should be kept in mind for the rest of this post. In the end, after the fun part of modeling,
+a data scientist has to communicate the results to business people and the assessment of the quality of the results gonna
+play an important role in this. This assessment will most likely be conducted using the raw, i.e. untransformed, target as well as 
+the chosen error measure to answer the question if the results are good enough for the use-case at hand and consequently
+if the model can go to production as a first iteration. Practically, that means that even if we decide to train a model
+on a transformed target, we have to transform the predictions of the model back for evaluation. Results are always
+communicated based on the original&nbsp;target.</p>
 <h2>Distribution of the target&nbsp;variable</h2>
 <p>Our data contains not only cars that are for sale but also cars people are searching for with a certain price. Additionally,
 we have people offering damaged cars, wanting to trade their car for another or just hoping to get an insanely enormous amount of money. 

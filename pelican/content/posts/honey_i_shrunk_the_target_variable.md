@@ -85,6 +85,13 @@ Consequently, the [mean absolute percentage error] (MAPE) might even be a better
 Having said that, we will keep all those error measures in mind but use the default MSE criterion in our machine-learning
 algorithm for the sake of simplicity and to help me make the actual point of this blog post ;-)
 
+Nevertheless, one crucial aspect should be kept in mind for the rest of this post. In the end, after the fun part of modeling,
+a data scientist has to communicate the results to business people and the assessment of the quality of the results gonna
+play an important role in this. This assessment will most likely be conducted using the raw, i.e. untransformed, target as well as 
+the chosen error measure to answer the question if the results are good enough for the use-case at hand and consequently
+if the model can go to production as a first iteration. Practically, that means that even if we decide to train a model
+on a transformed target, we have to transform the predictions of the model back for evaluation. Results are always
+communicated based on the original target.
 
 ## Distribution of the target variable
 

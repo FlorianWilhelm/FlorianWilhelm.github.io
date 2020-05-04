@@ -11,7 +11,7 @@ summary: Feature engineering takes up a huge part in the work-life of a data sci
 
 ## Motivation
 
-For me it is often a irritating sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
+For me it is often an irritating sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem... but it also makes me contemplate about my past when I started doing data science. 
 So full of vigour and enthusiasm, I was often completely absorbed by the idea of minimizing whatever error measure I was given or maybe some random one 
 I chose myself, like the [root mean square error]. 

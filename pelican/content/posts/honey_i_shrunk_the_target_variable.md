@@ -1,22 +1,22 @@
 ---
 title: Honey, I shrunk the target variable
-date: 2020-05-01 14:00
-modified: 2020-05-01 14:00
+date: 2020-05-04 12:00
+modified: 2020-05-04 12:00
 category: post
 tags: python, data science, mathematics
 authors: Florian Wilhelm
 status: draft
-summary: Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn't stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it and even how all this can be used to your advantage.
+summary: Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn't stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your advantage.
 ---
 
 ## Motivation
 
-For me it is often a joyful sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
-facing some new supervised learning problem... but it also makes me contemplate. So full of vigour and enthusiasm, 
-they are often completely absorbed by the idea of minimizing whatever error measure they were given or maybe some random one 
-they chose themselves, like the [root mean square error]. 
-In their drive, they construct many derived features using clever transformations and sometimes they do not even stop at
-the target variable. Why should they? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
+For me it is often a irritating sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
+facing some new supervised learning problem... but it also makes me contemplate about my past when I started doing data science. 
+So full of vigour and enthusiasm, I was often completely absorbed by the idea of minimizing whatever error measure I was given or maybe some random one 
+I chose myself, like the [root mean square error]. 
+In my drive, I used to construct many derived features using clever transformations and sometimes did not even stop at
+the target variable. Why should I? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn't this better or even required for simple models like linear regression,
 anyways? A little $\log$ never killed dog, so what could possibly go wrong? 
 
@@ -86,8 +86,8 @@ Having said that, we will keep all those error measures in mind but use the defa
 algorithm for the sake of simplicity and to help me make the actual point of this blog post ;-)
 
 Nevertheless, one crucial aspect should be kept in mind for the rest of this post. In the end, after the fun part of modeling,
-a data scientist has to communicate the results to business people and the assessment of the quality of the results gonna
-play an important role in this. This assessment will most likely be conducted using the raw, i.e. untransformed, target as well as 
+a data scientist has to communicate the results to business people and the assessment of the quality of the results is going to
+play an important role in this. This assessment will almost always be conducted using the raw, i.e. untransformed, target as well as 
 the chosen error measure to answer the question if the results are good enough for the use-case at hand and consequently
 if the model can go to production as a first iteration. Practically, that means that even if we decide to train a model
 on a transformed target, we have to transform the predictions of the model back for evaluation. Results are always
@@ -304,8 +304,8 @@ it actually is assuming a log-normal distribution as we will fully understand so
 If we had applied some full-blown machine learning model, the difference would have been much smaller since the variance 
 of the residual distribution would have been much smaller. Still, 
 we would have missed our actual goal of minimizing the (R)MSE on the raw target. Instead we would have unknowingly minimized the MAE, which
-might actually be better suited for our use-case at hand. Nevertheless, a data scientist should know what he or she
-is doing and a lucky punch without a clue of what happened, just doesn't suit a scientist.
+might actually be better suited for our use-case at hand. Nevertheless, being a data *scientist*, we should know what we
+are doing and a lucky punch without a clue of what happened, just doesn't suit a scientist.
 
 Before, we showed that the distribution of prices, and thus our target, resembles a log-normal distribution. So let's assume now that we
 have a log-normal distribution, and thus we have $\log(\mathrm{price})\sim\mathcal{N}(\mu,\sigma^2)$. Consequently,
@@ -313,7 +313,7 @@ the pdf of the price is
 \begin{equation}
 \tilde f(x) = \frac {1}{x}\cdot {\frac {1}{ {\sqrt {2\pi\sigma^2 \,}}}}\exp \left(-{\frac {(\ln(x) -\mu )^{2}}{2\sigma ^{2}}}\right),\label{eqn:log-normal}
 \end{equation}
-where the only difference to the normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
+where the only difference to the pdf of the normal distribution is $ln(x)$ instead of $x$ and the additional factor $\frac{1}{x}$.
 Also note that parameters $\mu$ and $\sigma$ are the well-known parameters of the normal distribution but for the
 log-transformed target.
 So when we now minimize the RMSE of the log-transformed prices as we did before, we actually infer the parameter

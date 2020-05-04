@@ -5,7 +5,7 @@ modified: 2020-05-04 12:00
 category: post
 tags: python, data science, mathematics
 authors: Florian Wilhelm
-status: draft
+status: published
 summary: Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn't stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your advantage.
 ---
 
@@ -85,8 +85,8 @@ Consequently, the [mean absolute percentage error] (MAPE) might even be a better
 Having said that, we will keep all those error measures in mind but use the default MSE criterion in our machine-learning
 algorithm for the sake of simplicity and to help me make the actual point of this blog post ;-)
 
-Nevertheless, one crucial aspect should be kept in mind for the rest of this post. In the end, after the fun part of modeling,
-a data scientist has to communicate the results to business people and the assessment of the quality of the results is going to
+Nevertheless, one crucial aspect should be kept in mind for the rest of this post. In the end after the fun part of modeling,
+we, as data scientists, have to communicate the results to business people and the assessment of the quality of the results is going to
 play an important role in this. This assessment will almost always be conducted using the raw, i.e. untransformed, target as well as 
 the chosen error measure to answer the question if the results are good enough for the use-case at hand and consequently
 if the model can go to production as a first iteration. Practically, that means that even if we decide to train a model
@@ -349,7 +349,7 @@ of the untransformed distribution. More details on how to do this can be found i
 of the [used-cars-log-trans repository]. Way more interesting, at least for the mathematically interested reader,
 is the question *Why does this work?*.
 
-This is easy to see using some high-school calculus. With $\tilde y = \log(y)$ and let $f(y)$ be the pdf of the normal distribution
+This is easy to see using some calculus. With $\tilde y = \log(y)$ and let $f(y)$ be the pdf of the normal distribution
 as well as $\tilde f(y)$ the pdf of the log-normal distribution $\eqref{eqn:log-normal}$. 
 Using [integration by substitution] and noting that $\mathrm{d}y = e^{\tilde y}\mathrm{d}\tilde y$, we have
 \begin{equation}
@@ -590,7 +590,7 @@ but that was not the actual point of this exercise.
  
 Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
-disaster. It's a bit like wielding a double handed sword in a fight. Limbs will be cut off, just make sure it's not one of yours.
+disaster. It's a bit like wielding a double handed sword in a fight. Limbs will be cut off, we should just make sure they are not one of ours.
 The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for RMSPE 
 and MAPE come from. So let's wash it all down with some more math.
 

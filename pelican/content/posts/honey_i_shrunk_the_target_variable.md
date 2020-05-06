@@ -18,7 +18,7 @@ I chose myself, like the [root mean square error].
 In my drive, I used to construct many derived features using clever transformations and sometimes did not even stop at
 the target variable. Why should I? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn't this better or even required for simple models like linear regression,
-anyways? A little $\log$ never killed dog, so what could possibly go wrong? 
+anyways? A little $\log$ never killed a dog, so what could possibly go wrong? 
 
 &nbsp;
 

@@ -7,7 +7,7 @@ I chose myself, like the &lt;a href="https://en.wikipedia.org/wiki/Root-mean-squ
 In my drive, I used to construct many derived features using clever transformations and sometimes did not even stop at
 the target variable. Why should I? If the target variable is for instance non-negative and quite right-skewed, why not transform it using the
 logarithm to make it more normally distributed? Isn&amp;#8217;t this better or even required for simple models like linear regression,
-anyways? A little &lt;span class="math"&gt;\(\log\)&lt;/span&gt; never killed dog, so what could possibly go&amp;nbsp;wrong? &lt;/p&gt;
+anyways? A little &lt;span class="math"&gt;\(\log\)&lt;/span&gt; never killed a dog, so what could possibly go&amp;nbsp;wrong? &lt;/p&gt;
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;figure&gt;
 &lt;p align="center"&gt;

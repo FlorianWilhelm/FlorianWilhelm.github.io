@@ -1,4 +1,0 @@
-pelican
-Markdown
-typogrify
-BeautifulSoup4

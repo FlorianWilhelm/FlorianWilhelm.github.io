@@ -1,0 +1,11 @@
+name: pelican
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - beautifulsoup4
+  - markdown
+  - python=3.8
+  - pelican
+prefix: /Users/fwilhelm/opt/miniconda3/envs/pelican
+

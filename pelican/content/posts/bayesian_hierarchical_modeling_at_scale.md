@@ -49,7 +49,7 @@ which is sometimes also referred to as *partially pooled model*.
 
 &nbsp;
 <figure>
-<img class="noZoom" src="/images/hierarchical_model.png" alt="hierarchical model">
+<img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
 <figcaption align="center">Hierarchical model as a combination of a pooled and an unpooled model. 
 Image taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
 </figcaption>
@@ -117,8 +117,7 @@ All code of this little experiment can be found under my [bhm-at-scale repositor
 so that you can follow along easily.
 The steps 1-3 are performed in the [preprocessing notebook](https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/01-preprocessing.ipynb)
 and are actually not that interesting, thus we will skip it here. Fitting the model and some evaluation is done in the
-[model notebook](https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb) while some visualisation
-is done in the [visualize notebook](https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-visualize.ipynb).
+[model notebook] while some visualisation is done in the [evaluation notebook].
 
 But before we start to get technical, let's take a minute and frame again the forecasting problem from a more mathematical side.
 The data of each store is a time-series of feature vectors and target scalars. We want to find a mapping such that the
@@ -151,31 +150,284 @@ For these reasons we will use the NB that allows us the quantify the uncertainti
 
 So now that we settled with NB as the distribution that we want to fit to the daily sales of our stores $\mathbf{y}$, we can think
 about incorporating our features $\mathbf{x}$. We want to use a linear model to map $\mathbf{x}$ to $\mathbf{\mu}$ such
-that we can use it later to calculate $\alpha$ and $\beta$ of NB. 
+that we can use it later to calculate $\alpha$ and $\beta$ of NB. Using again the fact that we are dealing with non-negative
+numbers and also considering that we expect effects to be multiplicative, e.g. 10% more during a promotion, our ansatz is
+
+$$\mu = \exp(\mathbf{\theta}^\top\mathbf{x}),$$
+
+where $\mathbf{\theta}$ is a vector of coefficients. For each store $i$ and each feature $j$ we will have a separate
+coefficient $\theta_{ij}$. The $\theta_{ij}$ are regularized by parameters $\theta^\mu_j$ and $\theta^{\sigma^2}_j$ on 
+the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
+infer individual $r_i$ for each store $i$ as well as global parameters $r^\mu$ and $r^{\sigma^2}$ over all stores. 
+And that's already most of it. The following plot depicts the graphical model explained above.
 
 <figure>
 <p align="center">
-<img class="noZoom" src="/images/bhm_model.png" alt="hierarchical model" width="60%">
+<img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%">
 </p>
-<figcaption align="center">Hierarchical model as a combination of a pooled and an unpooled model. 
-Image taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
+<figcaption align="center">
+Graphical representation of a hierarchical model (centered version) as defined above.
+</figcaption>
+</figure>
+&nbsp;
+
+Those boxes, which are called [plates](https://en.wikipedia.org/wiki/Plate_notation), tell you how many times a parameter is repeated.
+Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
+The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
+This also helps them to increase performance by taking optimizations into account that are not possible in the general case.
+Shaded circles are observed values, which is the number of sales on a given day $k$ and store $i$ in our case.
+
+## Implementation
+
+Let's take a quick look into our model code which is just a normal Python. It's our *model* since we assume that given
+the right parameters it would be able to generate sales for a given store and day resembling the observed sales for this store and day.
+
+```python
+import numpyro
+import numpyro.distributions as dist
+from jax.numpy import DeviceArray
+import jax.numpy as jnp
+from jax import random
+
+
+def model(X: DeviceArray) -> DeviceArray:
+    """Gamma-Poisson hierarchical model for daily sales forecasting
+
+    Args:
+        X: input data
+
+    Returns:
+        output data
+    """
+    n_stores, n_days, n_features = X.shape
+    n_features -= 1  # remove one dim for target
+    eps = 1e-12  # epsilon
+
+    plate_features = numpyro.plate("features", n_features, dim=-1)
+    plate_stores = numpyro.plate("stores", n_stores, dim=-2)
+    plate_days = numpyro.plate("timesteps", n_days, dim=-1)
+
+    disp_param_mu = numpyro.sample(
+        "disp_param_mu",
+        dist.Normal(loc=4., scale=1.)
+    )
+    disp_param_sigma = numpyro.sample(
+        "disp_param_sigma",
+        dist.HalfNormal(scale=1.)
+    )
+
+    with plate_stores:
+        disp_param_offsets = numpyro.sample(
+            "disp_param_offsets",
+            dist.Normal(
+                loc=jnp.zeros((n_stores, 1)),
+                scale=0.1)
+        )
+        disp_params = disp_param_mu + disp_param_offsets*disp_param_sigma
+        disp_params = numpyro.sample(
+            "disp_params",
+            dist.Delta(disp_params),
+            obs=disp_params
+        )
+
+    with plate_features:
+        coef_mus = numpyro.sample(
+            "coef_mus",
+            dist.Normal(loc=jnp.zeros(n_features),
+                        scale=jnp.ones(n_features))
+        )
+        coef_sigmas = numpyro.sample(
+            "coef_sigmas",
+            dist.HalfNormal(scale=2.*jnp.ones(n_features))
+        )
+
+        with plate_stores:
+            coef_offsets = numpyro.sample(
+                "coef_offsets",
+                dist.Normal(
+                    loc=jnp.zeros((n_stores, n_features)),
+                    scale=1.)
+            )
+            coefs = coef_mus + coef_offsets * coef_sigmas
+            coefs = numpyro.sample(
+                "coefs",
+                dist.Delta(coefs),
+                obs=coefs
+            )
+
+    with plate_days, plate_stores:
+        targets = X[..., -1]
+        features = jnp.nan_to_num(X[..., :-1])  # padded features to 0
+        is_observed = jnp.where(jnp.isnan(targets), jnp.zeros_like(targets), jnp.ones_like(targets))
+        not_observed = 1 - is_observed
+        means = (is_observed * jnp.exp(jnp.sum(jnp.expand_dims(coefs, axis=1) * features, axis=2))
+                 + not_observed*eps)
+
+        betas = is_observed*jnp.exp(-disp_params) + not_observed
+        alphas = means * betas
+        return numpyro.sample("days", dist.GammaPoisson(alphas, betas), obs=jnp.nan_to_num(targets))
+```
+
+Note that `disp_param` is $r$ and `coef` is $\theta$ in the source code above for better readability. You will
+recognize a lot of what we have talked about and I don't want to go into the syntactical details of NumPyro. My suggestion
+would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
+NumPyro reference. 
+
+Reading the source code more thoroughly you might wonder about the definition of the coefficients as `coefs = coef_mus + coef_offsets * coef_sigmas`.
+The explanations of the model I have given and also the plot actually shows the *centered version* of an
+hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
+the direct dependency of the local parameters on the global ones make it hard for a sampler like MCMC but also SVI to explore
+certain regions of the local parameters. This is called *funnel* and can be imagined as walking with the the same step length
+on a bridge that gets narrower and narrower. From the point on where the bridge is about as wide as your step length, you might
+become a bit hesitant to explore more of it. As very often the case, a reparameterization overcomes this problem resulting
+in the *non-centered* version of a hierarchical model. This is the version used in the implementation. If you want to know more about this a really great 
+[blog post by Thomas Wiecki](https://twiecki.io/blog/2017/02/08/bayesian-hierchical-non-centered/) gives you all the details about it.
+
+Another thing that wasn't mentioned yet are the `is_observed` and `not_observed` variables which are just a nice gimmick.
+Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
+the target variable $y$ to *not observed* instead of 0. During training, these target values are just ignored and later
+allows the model to answer a store manager's question: "How many sales would I have had if I had opened my store on that day".
+
+Until know we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
+Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
+parameters have to be defined since its SVI. This is done in a separate function called *guide*. 
+
+```python
+def guide(X: DeviceArray):
+    """Guide with parameters of the posterior
+
+    Args:
+        X: input data
+    """
+    n_stores, n_days, n_features = X.shape
+    n_features -= 1  # remove one dim for target
+
+    plate_features = numpyro.plate("features", n_features, dim=-1)
+    plate_stores = numpyro.plate("stores", n_stores, dim=-2)
+
+    numpyro.sample(
+        "disp_param_mu",
+        dist.Normal(loc=numpyro.param("loc_disp_param_mu", 4.*jnp.ones(1)),
+                    scale=numpyro.param("scale_disp_param_mu", 1.*jnp.ones(1),
+                                        constraint=dist.constraints.positive))
+    )
+    numpyro.sample(
+        "disp_param_sigma",
+        dist.TransformedDistribution(
+            dist.Normal(loc=numpyro.param("loc_disp_param_logsigma", 1.0*jnp.ones(1)),
+                        scale=numpyro.param("scale_disp_param_logsigma", 0.1*jnp.ones(1),
+                                            constraint=dist.constraints.positive)),
+            transforms=dist.transforms.ExpTransform())
+    )
+
+    with plate_stores:
+        numpyro.sample(
+            "disp_param_offsets",
+            dist.Normal(loc=numpyro.param("loc_disp_param_offsets", jnp.zeros((n_stores, 1))),
+                        scale=numpyro.param("scale_disp_param_offsets", 0.1*jnp.ones((n_stores, 1)),
+                                            constraint=dist.constraints.positive))
+        )
+
+    with plate_features:
+        numpyro.sample(
+            "coef_mus",
+            dist.Normal(loc=numpyro.param("loc_coef_mus", jnp.ones(n_features)),
+                        scale=numpyro.param("scale_coef_mus", 0.5*jnp.ones(n_features),
+                                            constraint=dist.constraints.positive))
+        )
+        numpyro.sample(
+            "coef_sigmas",
+            dist.TransformedDistribution(
+                dist.Normal(loc=numpyro.param("loc_coef_logsigmas", jnp.zeros(n_features)),
+                            scale=numpyro.param("scale_coef_logsigmas", 0.5*jnp.ones(n_features),
+                                                constraint=dist.constraints.positive)),
+                transforms=dist.transforms.ExpTransform())
+        )
+
+        with plate_stores:
+            numpyro.sample(
+                "coef_offsets",
+                dist.Normal(
+                    loc=numpyro.param("loc_coef_offsets", jnp.zeros((n_stores, n_features))),
+                    scale=numpyro.param("scale_coef_offsets", 0.5*jnp.ones((n_stores, n_features)),
+                                        constraint=dist.constraints.positive)
+                    )
+                )
+```
+
+The structure of the guide reflects the structure of the model. The link between them are the names of the *sample sites*
+like "coef_offsets". This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
+behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
+You can see in the actual implementation, i.e. [model.py], that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables
+like:
+
+```python
+class Site:
+    disp_param_mu = "disp_param_mu"
+    disp_param_sigma = "disp_param_sigma"
+    disp_param_offsets = "disp_param_offsets"
+    disp_params = "disp_params"
+    coef_mus = "coef_mus"
+    coef_sigmas = "coef_sigmas"
+    coef_offsets = "coef_offsets"
+    coefs = "coefs"
+    days = "days"
+```
+Using variables like `Site.coef_offsets` instead of strings like `"coef_offsets"`, allows your IDE to inform you about any typos as you go. Problem solved.
+
+Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
+that we have already fitted the global parameters but want to only determine the local parameters on new stores with little data.
+The predictive model assumes global and local parameters to be already inferred so that we can use it to predict the number
+of sales on days beyond our training interval. As these functions are only slide variants, I spare you the details and refer you to the implementation in [model.py].
+
+Most parts of the [model notebook] actually deal with training the model on stores from the training data with a long sales history.
+Then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
+This works really well although the number of features is much higher than 7! The notebook also shows traditional Poisson regression
+using Scikit-Learn overfits the training set and yields implausible coefficients. Even comparing the coefficients of our BHM model
+trained on just the 7 days with a cheating model trained on the whole test set, we see that they are quite similar. 
+
+## Visualization
+
+ 
+
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast">
+</p>
+<figcaption align="center">
+Graphical representation of a hierarchical model (centered version) as defined above.
 </figcaption>
 </figure>
 
-Model that generates the data and reference to plates.
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_weekday_effect.png" alt="plot weekday effect">
+</p>
+<figcaption align="center">
+Graphical representation of a hierarchical model (centered version) as defined above.
+</figcaption>
+</figure>
+
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_promo_effect.png" alt="plot of promotion effect">
+</p>
+<figcaption align="center">
+Graphical representation of a hierarchical model (centered version) as defined above.
+</figcaption>
+</figure>
 
 
-https://minimizeregret.com/post/2018/01/04/understanding-the-negative-binomial-distribution/
 
+## Final Remarks
 
 Use-cases
 - Kanabalisation
 
-
 A saying in the French mathematics world is *Poisson sans boisson est poison!*. 
 
-No intercept needed! because every day is a day
-Mention the fact that sampling site names as string are error-prone.
 
-https://twiecki.io/blog/2017/02/08/bayesian-hierchical-non-centered/
-https://docs.pymc.io/notebooks/multilevel_modeling.html#:~:text=Hierarchical%20or%20multilevel%20modeling%20is,parameters%20are%20given%20probability%20models.&text=A%20hierarchical%20model%20is%20a,are%20nested%20within%20one%20another.
+
+[model.py]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py
+[model notebook]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb
+[evaluation notebook]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb

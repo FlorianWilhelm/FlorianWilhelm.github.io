@@ -474,6 +474,7 @@ Density plot of the promotion effect over all stores with the red line showing t
 </figcaption>
 </figure>
 &nbsp;
+
 These are just some things one could start to look into to derive useful insights for the store management. 
 The rest is up to your imagination and also depending on your use-case. Imagine we had a data-set that features not 
 only the aggregated sales but also the ones of individual products. We could build hierarchies over the product hierarchies

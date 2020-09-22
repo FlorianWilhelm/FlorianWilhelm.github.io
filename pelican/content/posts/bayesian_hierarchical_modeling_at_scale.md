@@ -1,7 +1,7 @@
 ---
 title: Finally! Bayesian Hierarchical Modeling at Scale
-date: 2018-07-25 18:00
-modified: 2018-07-25 18:00
+date: 2020-10-01 18:00
+modified: 2020-10-01 18:00
 category: post
 tags: data science, mathematics, production
 authors: Florian Wilhelm
@@ -69,7 +69,7 @@ anymore. For the latter, I mostly used sampling methods, e.g. [Markov chain Mont
 with PyMC3, which are computationally demanding, while [variational inference (VI) methods](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
 are much faster. But also using VI, which PyMC3 supports, never really allowed me to deal with larger data-sets rendering
 Bayesian Hierarchical Modeling (BHM) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs
-due to large data-sets.
+when dealing with larger data-sets.
 
 Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
 could make good use of BHM. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate was [Pyro](http://pyro.ai/)
@@ -145,7 +145,7 @@ What retailers really care about is optimal replenishment, meaning that they wan
 to order so that there is an optimal amount of stocks available in their store. In order to provide optimal replenishment
 suggestions you need sales forecasts that provide probability distributions, not only point estimations. With the help
 of those distributions the replenishment system basically runs an optimization with respect to some cost function, e.g.
-cost of missed sale is weighted 3 times the cost of an written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
+cost of missed sale is weighted 3 times the cost of a written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
 For these reasons we will use the NB that allows us the quantify the uncertainties in our sales predictions.
 
 So now that we settled with NB as the distribution that we want to fit to the daily sales of our stores $\mathbf{y}$, we can think
@@ -159,7 +159,7 @@ where $\mathbf{\theta}$ is a vector of coefficients. For each store $i$ and each
 coefficient $\theta_{ij}$. The $\theta_{ij}$ are regularized by parameters $\theta^\mu_j$ and $\theta^{\sigma^2}_j$ on 
 the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
 infer individual $r_i$ for each store $i$ as well as global parameters $r^\mu$ and $r^{\sigma^2}$ over all stores. 
-And that's already most of it. The following plot depicts the graphical model explained above.
+And that's already most of it. The following plot depicts the graphical model outlined so far.
 
 <figure>
 <p align="center">
@@ -179,8 +179,8 @@ Shaded circles are observed values, which is the number of sales on a given day 
 
 ## Implementation
 
-Let's take a quick look into our model code which is just a normal Python. It's our *model* since we assume that given
-the right parameters it would be able to generate sales for a given store and day resembling the observed sales for this store and day.
+Let's take a quick look into our model code which is just a normal Python. It's good to keep in mind, that we call this a *model* since we assume that given
+the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
 
 ```python
 import numpyro
@@ -273,14 +273,14 @@ recognize a lot of what we have talked about and I don't want to go into the syn
 would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
 NumPyro reference. 
 
-Reading the source code more thoroughly you might wonder about the definition of the coefficients as `coefs = coef_mus + coef_offsets * coef_sigmas`.
-The explanations of the model I have given and also the plot actually shows the *centered version* of an
+Reading the source code more thoroughly, you might wonder about the definition of the coefficients as `coefs = coef_mus + coef_offsets * coef_sigmas`.
+The explanations of the model I have given and also the plot, actually shows the *centered version* of a
 hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
 the direct dependency of the local parameters on the global ones make it hard for a sampler like MCMC but also SVI to explore
-certain regions of the local parameters. This is called *funnel* and can be imagined as walking with the the same step length
+certain regions of the local parameter space. This effect is called *funnel* and can be imagined as walking with the the same step length
 on a bridge that gets narrower and narrower. From the point on where the bridge is about as wide as your step length, you might
 become a bit hesitant to explore more of it. As very often the case, a reparameterization overcomes this problem resulting
-in the *non-centered* version of a hierarchical model. This is the version used in the implementation. If you want to know more about this a really great 
+in the *non-centered* version of a hierarchical model. This is the version used in the implementation. If you want to know more about this, a really great 
 [blog post by Thomas Wiecki](https://twiecki.io/blog/2017/02/08/bayesian-hierchical-non-centered/) gives you all the details about it.
 
 Another thing that wasn't mentioned yet are the `is_observed` and `not_observed` variables which are just a nice gimmick.
@@ -373,61 +373,127 @@ class Site:
     coefs = "coefs"
     days = "days"
 ```
-Using variables like `Site.coef_offsets` instead of strings like `"coef_offsets"`, allows your IDE to inform you about any typos as you go. Problem solved.
+Then using variables like `Site.coef_offsets` instead of strings like `"coef_offsets"` as identifiers of sample sites, allows your IDE to inform you about any typos as you go. Problem solved.
 
 Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
-that we have already fitted the global parameters but want to only determine the local parameters on new stores with little data.
+that we have already fitted the global parameters but want to only determine the local parameters of new stores with little data.
 The predictive model assumes global and local parameters to be already inferred so that we can use it to predict the number
-of sales on days beyond our training interval. As these functions are only slide variants, I spare you the details and refer you to the implementation in [model.py].
+of sales on days beyond our training interval. As these functions are only slide variations, I spare you the details and refer you to the implementation in [model.py].
 
-Most parts of the [model notebook] actually deal with training the model on stores from the training data with a long sales history.
-Then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
-This works really well although the number of features is much higher than 7! The notebook also shows traditional Poisson regression
-using Scikit-Learn overfits the training set and yields implausible coefficients. Even comparing the coefficients of our BHM model
-trained on just the 7 days with a cheating model trained on the whole test set, we see that they are quite similar. 
+Most parts of the [model notebook] actually deal with training the model on stores from the training data with a long sales history,
+then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
+This works really well although the number of features, which is 23, is much higher than 7! Let's take a look at the coefficients 
+of a store from the test set as detailed in the [model notebook]:
+
+```commandline
+[2.7901888  2.6591218  2.6881874  2.6126788  2.656775   2.554397
+ 2.4938385  0.33227605 3.115691   2.9264386  2.692092   2.9548435
+ 0.05613964 0.06542112 2.8379264  2.9023972  3.5701406  3.2074358
+ 4.0569873  2.9304545  2.7463424  2.823191   2.959007  ]
+```
+The notebook also shows traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
+Comparing the coefficients from above to the ones of the Poisson regression for the same store, i.e.
+
+```commandline
+[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+ -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
+ -0.09434899  0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.        ]
+```
+
+we see that they are highly different and zero for features that weren't encountered in the data of just 7 days.
+Now comparing the coefficients of our BHM model trained on just the 7 days with the coefficients of a cheating model trained on the whole test set, i.e.
+
+```commandline
+[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+  2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
+ -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
+  4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
+```
+
+we see that they are quite similar. That's the magic of a hierarchical model! We start with plausible defaults from a 
+global perspective and adapt locally depending on the amount of data.
+
+Running the code from the [model notebook] on your laptop will be matter of a few minutes for the training on 1000 stores
+haven 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
+and $23\cdot 1000+1000+2\cdot 23+2=24048$ parameters in our graphical model. Since each parameter is fitted with the help of a 
+parameterized distribution, as we are doing SVI (check out the *guide* function), the number of actual variables is twice as much leading to roughly 50,000
+variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not Big Data, 
+it's still impressive that using NumPyro you can fit a model like that within a few minutes on your
+laptop and the implementation is not even using batching that would speed it up even further. In one of my customer
+projects we used a way larger model and much more data. Some workstation was still able to handle it and you have to
+take my word for it that NumPyro really scales well beyond this little demonstration. 
 
 ## Visualization
 
- 
+There is now tons of things one could do with the results of our hierarchical model. One could check out the
+actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
+I will leave most of that to the interested reader and give only a few tidbits here from the [evaluation notebook].
+First of all let's look at the sales prediction for one of the stores from the test set:
 
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast">
 </p>
 <figcaption align="center">
-Graphical representation of a hierarchical model (centered version) as defined above.
+Sales forecast of one store from the test set.
 </figcaption>
 </figure>
+&nbsp;
+
+Only judging by the eye, we see that predicted mean (bue dashed line) follows the number sales (blue bars) quite good.
+The background is shaded according to some important features like promotions and holidays which explain some of the variations
+in our predictions. Just for information, also the number of customers are displayed but not used in the prediction of course.
+Also, we see the 50% and 90% [credible intervals](https://en.wikipedia.org/wiki/Credible_interval) as shaded blue areas
+around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
+was closed, we predict not 0 but what would have likely happened if it wasn't closed, which was part of our model.
+
+We could also start looking into the effects of certain features like the weekdays. The following plot shows for each
+weekday starting with Monday a density over the means of all stores. 
 
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_weekday_effect.png" alt="plot weekday effect">
 </p>
 <figcaption align="center">
-Graphical representation of a hierarchical model (centered version) as defined above.
+Density plot of the means of the weekday coefficients over all stores. 
 </figcaption>
 </figure>
+&nbsp;
+
+We can see that on average there seem to be more sales on Mondays and also a high variance for the means on Saturdays and
+Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
+we could also start looking into the distribution of the promotion effect over all stores.  
 
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_promo_effect.png" alt="plot of promotion effect">
 </p>
 <figcaption align="center">
-Graphical representation of a hierarchical model (centered version) as defined above.
+Density plot of the promotion effect over all stores with the red line showing the median.
 </figcaption>
 </figure>
-
-
+&nbsp;
+These are just some things one could start to look into to derive useful insights for the store management. 
+The rest is up to your imagination and also depending on your use-case. Imagine we had a data-set that features not 
+only the aggregated sales but also the ones of individual products. We could build hierarchies over the product hierarchies
+and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
+We could also use BHM to address [censored data], which is also an important task when doing sales forecasts. Canonically,
+one assumes that the demand for a product equals its sales but this only holds if there was no out-of-stock situation
+in which we only know that demand ≥ sales. You see, there are so many possible extensions to this model.
+ 
 
 ## Final Remarks
 
-Use-cases
-- Kanabalisation
-
-A saying in the French mathematics world is *Poisson sans boisson est poison!*. 
-
+We have seen that BHM allows us to combine the advantages of a pooled and unpooled model. Using some retailer's data,
+we implemented some simple BHM thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and
+explainability. From a practical perspective, we have seen that BHM even scales really well with the help of NumPyro.
+On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
+Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
+practical data-set sizes with the help of NumPyro! Cheers to that and let's follow a famous saying in the French mathematics world *Poisson sans boisson est poison*! 
 
 
 [model.py]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py
 [model notebook]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb
 [evaluation notebook]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb
+[censored data]: https://en.wikipedia.org/wiki/Censoring_(statistics)

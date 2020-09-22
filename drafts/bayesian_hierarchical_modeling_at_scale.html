@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Finally! Bayesian Hierarchical Modeling at Scale - Florian Wilhelm</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+
+/*some stuff for output/input prompts*/
+div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
+div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
+div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
+div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
+@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
+div.prompt:empty{padding-top:0;padding-bottom:0}
+div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
+div.inner_cell{width:90%;}
+div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
+div.input_prompt{color:navy;border-top:1px solid transparent;}
+div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
+div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
+div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
+div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
+div.output_prompt{color:darkred;}
+
+a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
+h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
+/* end stuff for output/input prompts*/
+
+
+.highlight-ipynb .hll { background-color: #ffffcc }
+.highlight-ipynb  { background: #f8f8f8; }
+.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
+.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
+.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight-ipynb .o { color: #666666 } /* Operator */
+.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
+.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
+.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
+.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
+.highlight-ipynb .go { color: #888888 } /* Generic.Output */
+.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
+.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
+.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
+.highlight-ipynb .m { color: #666666 } /* Literal.Number */
+.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
+.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
+.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
+.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight-ipynb .no { color: #880000 } /* Name.Constant */
+.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
+.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
+.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
+.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
+.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
+.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
+.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
+.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
+.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style type="text/css">
+/* Overrides of notebook CSS for static HTML export */
+div.entry-content {
+  overflow: visible;
+  padding: 8px;
+}
+.input_area {
+  padding: 0.2em;
+}
+
+a.heading-anchor {
+ white-space: normal;
+}
+
+.rendered_html
+code {
+ font-size: .8em;
+}
+
+pre.ipynb {
+  color: black;
+  background: #f7f7f7;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0px;
+  font-size: 13px;
+}
+
+/* remove the prompt div from text cells */
+div.text_cell .prompt {
+    display: none;
+}
+
+/* remove horizontal padding from text cells, */
+/* so it aligns with outer body text */
+div.text_cell_render {
+    padding: 0.5em 0em;
+}
+
+img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
+</style>
+
+<link rel="canonical" href="https://florianwilhelm.info/drafts/bayesian_hierarchical_modeling_at_scale.html">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="data science,mathematics,production" />
+        <meta name="description" content="Introduction Since the advent of deep learning, everything is or has to be about Artificial Intelligence, so it seems. Even software which is applying traditional techniques from e.g. instrumentation and control engineering, is nowadays considered AI. For instance, the famous robots of Boston Dynamics are not based on deep …" />
+
+        <meta property="og:site_name" content="Florian Wilhelm" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Finally! Bayesian Hierarchical Modeling at Scale"/>
+        <meta property="og:url" content="https://florianwilhelm.info/drafts/bayesian_hierarchical_modeling_at_scale.html"/>
+        <meta property="og:description" content="Introduction Since the advent of deep learning, everything is or has to be about Artificial Intelligence, so it seems. Even software which is applying traditional techniques from e.g. instrumentation and control engineering, is nowadays considered AI. For instance, the famous robots of Boston Dynamics are not based on deep …"/>
+        <meta property="article:published_time" content="2018-07-25" />
+            <meta property="article:section" content="post" />
+            <meta property="article:tag" content="data science" />
+            <meta property="article:tag" content="mathematics" />
+            <meta property="article:tag" content="production" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="https://florianwilhelm.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="https://florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+
+
+        <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/drafts/bayesian_hierarchical_modeling_at_scale.html"
+                       rel="bookmark"
+                       title="Permalink to Finally! Bayesian Hierarchical Modeling at Scale">
+                        Finally! Bayesian Hierarchical Modeling at&nbsp;Scale
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2018-07-25T18:00:00+02:00"> Jul. 25, 2018</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+        /
+	<a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+        /
+	<a href="https://florianwilhelm.info/tag/production/">production</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>Introduction</h2>
+<p>Since the advent of deep learning, everything is or has to be about <em>Artificial Intelligence</em>, so it seems. Even software which is applying traditional
+techniques from e.g. instrumentation and control engineering, is nowadays considered <em><span class="caps">AI</span></em>. For instance, the famous robots
+of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
+methods. This hype around <span class="caps">AI</span>, which is very often equated with deep learning, seems to draw that much attention such that
+great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
+attention to <em>bayesian hierarchical modeling</em> and how modern techniques and frameworks allow you to finally apply this
+cool method on really large data&nbsp;sets.</p>
+<p>So for starters, what is <em>bayesian hierarchical modeling</em> and why should I care? I assume you already have a basic knowledge about
+Bayesian inference, otherwise <a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers">Probabilitic Programming and Bayesian Methods for Hackers</a>
+is a really starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
+a model with the help probability distributions and also incorporate your prior knowledge about the parameters of your model.
+This leads to a <em>directed acyclic graphical model</em> (aka Bayesian network) which is explainable, visual and easy to reason about.
+But that&#8217;s not even everything, you also get <a href="https://en.wikipedia.org/wiki/Uncertainty_quantification">Uncertainty Quantification</a> for free, 
+meaning that the model&#8217;s parameters are not mere point estimates but whole distributions telling you how certain you are
+about their&nbsp;values. </p>
+<p>A classical statistical method that most data scientists have learned about early on is <em>linear regression</em>. It can also
+be easily interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, maybe
+that they have to be close to zero or that they are non-negative. Then again, many of these priors you might come up with could also 
+be seen as regularizers in a non-Bayesian way, and treated like that, many efficient techniques exist to solve a such formulations.
+So where the Bayesian framework now shines is if you consider the following problem setting I stole from the wonderful 
+presentation <a href="https://www.youtube.com/watch?v=WbNmcvxRwow">A Bayesian Workflow with PyMC and ArviZ</a> by Corrie&nbsp;Bartelheimer.</p>
+<p>Imagine you want to estimate the price of an apartment in Berlin given the living area in square meters. Making a linear
+regression with all data points you have, i.e. a <em>pooled model</em>, will lead to a robust estimation of your parameter, i.e. coefficient,
+but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
+located in. Now grouping your data with respect to the respective districts results and making a linear regression for each,
+i.e. an <em>unpooled model</em>, will lead to a much more narrow residual distribution but also a high variance in your parameters since
+some district might only have three data points. To combine the advantages of a pooled and unpooled model, one
+would intuitively demand that for each district the prior knowledge of the parameter from the pooled model should be used
+and updated according to the data we have about a certain district. If we have only a few data points we would only 
+deviate a bit from our prior knowledge about the parameter but in case we have lots of data points the parameter for the
+respective district could have a huge difference compared to the parameter of the pooled model. Thus the pooled model
+acts as an informed prior for the parameters within the unpooled model leading altogether to an <em>hierarchical model</em>,
+which is sometimes also referred to as <em>partially pooled model</em>. </p>
+<p>&nbsp;
+<figure>
+<img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
+<figcaption align="center">Hierarchical model as a combination of a pooled and an unpooled model. 
+Image taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
+</figcaption>
+</figure>
+&nbsp;</p>
+<h2>Recent&nbsp;Advances</h2>
+<p>So far I mostly used <a href="https://docs.pymc.io/">PyMC3</a> for bayesian inference or <em>probabilistic programming</em> as the authors
+of PyMC3 like to call it. I love it for it&#8217;s elegant design and consequently its expressiveness. The documentation is great
+and thus you can pretty much hack away with your model ideas. The only problem I always had with it is that for me it never
+scaled so well with somewhat larger data-sets, i.e. more than 100k data points. There is a technical and 
+methodical reason for it. Regarding the former, PyMC3 uses <a href="http://deeplearning.net/software/theano/">Theano</a> to speed
+up its computations by transpiling to C. Theano inspired many frameworks like <a href="https://www.tensorflow.org/">Tensorflow</a> 
+and <a href="https://pytorch.org/">PyTorch</a> but is considered deprecated today and cannot rival the speed of modern frameworks
+anymore. For the latter, I mostly used sampling methods, e.g. <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">Markov chain Monte Carlo</a> (<span class="caps">MCMC</span>), 
+with PyMC3, which are computationally demanding, while <a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods">variational inference (<span class="caps">VI</span>) methods</a>
+are much faster. But also using <span class="caps">VI</span>, which PyMC3 supports, never really allowed me to deal with larger data-sets rendering
+Bayesian Hierarchical Modeling (<span class="caps">BHM</span>) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs
+when dealing with larger&nbsp;data-sets.</p>
+<p>Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
+could make good use of <span class="caps">BHM</span>. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate was <a href="http://pyro.ai/">Pyro</a>
+which uses Stochastic Variational Inference (<span class="caps">SVI</span>) by default and calls itself a <em>deep universal probabilistic programming</em> framework.
+Instead of Theano it based on PyTorch and thus allows for <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation">just-in-time (<span class="caps">JIT</span>) compilation</a>,
+which sped up my test case already quite a bit. Pyro also emphasizes vectorization, thus allowing for fast parallel computation, e.g. <a href="https://en.wikipedia.org/wiki/SIMD"><span class="caps">SIMD</span></a> operations.
+In total the speed-up compared to PyMC3 was amazing in my test-case letting me almost forget the two downsides of Pyro compared
+to PyMC3. Firstly, the documentation of Pyro is not as polished and secondly, it&#8217;s just so much more complicated to use and understand 
+but your mileage may&nbsp;vary. </p>
+<p>Digging through the website of Pyro I then stumbled on <a href="https://github.com/pyro-ppl/numpyro">NumPyro</a> that has a similar
+interface as Pyro but uses <a href="https://github.com/google/jax"><span class="caps">JAX</span></a> instead of PyTorch as its backend. <span class="caps">JAX</span> is like <a href="https://numpy.org/">NumPy</a> on 
+steroids. It&#8217;s crazy fast as it uses <a href="https://www.tensorflow.org/xla"><span class="caps">XLA</span></a>, which is a domain-specific compiler for linear algebra
+operations. Additionally it allows for automatically differentiation like <a href="https://github.com/hips/autograd">Autograd</a>,
+whose maintainers moved over to develop <span class="caps">JAX</span>. Long story short, NumPyro blew the benchmark results of Pyro out of the water.
+For the first time (at least for what I know), NumPyro allows you do bayesian inference with lots of parameters like in
+<span class="caps">BHM</span> on large data! In the rest of this post, I want to show how NumPyro can be applied in a typical demand prediction
+use-case on some public data-set. The data-set in my actual use-case was much bigger but you have to just trust me on this one ;-)
+Hopefully some readers will find this post useful and maybe it mitigates a bit the pain coming from the lack of NumPyro&#8217;s documentation and&nbsp;examples.</p>
+<h2>Use-Case <span class="amp">&amp;</span>&nbsp;Modelling</h2>
+<p>Imagine you have many retail stores and want to make individual demand predictions for them. For stores that were opened
+a long time ago, this should be no problem but how do you deal with stores that first opened a week ago? Like in the example
+of apartment prices in different districts, <span class="caps">BHM</span> helps you to deal exactly with this problem. We take the 
+<a href="https://www.kaggle.com/c/rossmann-store-sales">Rossmann data-set from Kaggle</a> to simulate this problem by removing the data
+of some of the stores. The data consists of Here&#8217;s our experiment and study&nbsp;protocol:</p>
+<ol>
+<li>Join the data from Kaggle&#8217;s <code>train.csv</code> dataset, which specifies on a daily basis for each store our target variable (<code>Sales</code>) as well
+ as other features like if a promotion happened (<code>promo</code>), with the general store features from the <code>store.csv</code> dataset.</li>
+<li>Perform some really basic feature engineering and encoding of some categorical&nbsp;features</li>
+<li>Split the data into train and test where we treat the stores from train as being opened for a long time and the ones
+  from test as newly&nbsp;opened. </li>
+<li>Fit our hierarchical model on train dataset to infer the &#8220;global&#8221; parameters on the upper&nbsp;hierarchy</li>
+<li>Take only the first 7 days for each store in the test data, which we assume to know, and fit our model only inferring
+ the local, i.e. store-specific, parameters from the lower hierarchy while keeping the global ones&nbsp;fixed.</li>
+<li>Compare the inferred parameters of a test store to:<ol>
+<li>the inferred local parameters of a simple Poisson model. We expect to them to be completely off due to the lack
+   of data and thus&nbsp;overfitting.</li>
+<li>the inferred local parameters of our model if we had given it the whole time series from test, i.e. not only the first 7 days.
+   In this case, we assume that we are already pretty close since the priors given by the global parameters nudge them
+   in the right direction even with only little&nbsp;data.</li>
+</ol>
+</li>
+</ol>
+<p>All code of this little experiment can be found under my <a href="https://github.com/FlorianWilhelm/bhm-at-scale">bhm-at-scale repository</a>
+so that you can follow along easily.
+The steps 1-3 are performed in the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/01-preprocessing.ipynb">preprocessing notebook</a>
+and are actually not that interesting, thus we will skip it here. Fitting the model and some evaluation is done in the
+<a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb">model notebook</a> while some visualisation is done in the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb">evaluation notebook</a>.</p>
+<p>But before we start to get technical, let&#8217;s take a minute and frame again the forecasting problem from a more mathematical side.
+The data of each store is a time-series of feature vectors and target scalars. We want to find a mapping such that the
+feature vector of each time-step is mapped to a value close to the target scalar of the respective time-step. Since our target
+value, i.e. the number of sales, is a non-negative integer we could assume a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a> and consequently
+perform a <a href="https://en.wikipedia.org/wiki/Poisson_regression">Poisson regression</a> in a hierarchical way. This would be kind of okay
+if we were only interested in a point estimation and thus would not care about the variance of the predictive posterior distribution. 
+The Poisson distribution only has one parameter <span class="math">\(\lambda\)</span> that allows you to define the mean <span class="math">\(\mu\)</span> and the variance <span class="math">\(\sigma^2\)</span> then just equals the mean as there is no way to adjust the variance independently. <br>
+In many practical use-cases, there is <a href="https://en.wikipedia.org/wiki/Overdispersion">overdispersion</a>, meaning that the variance is larger than the mean
+and thus a so called <em>dispersion parameter</em> <span class="math">\(r\in(0,\infty)\)</span> is introduced for instance in the <a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">negative binomial distribution</a>,&nbsp;i.e.</p>
+<div class="math">$$\mathrm{NB}(y;\mu,r) = \frac{\Gamma(r+y)}{y!\cdot\Gamma(r)}\cdot\left(\frac{r}{r+\mu}\right)^r\cdot\left(\frac{\mu}{r+\mu}\right)^y,$$</div>
+<p>where <span class="math">\(\Gamma\)</span> is the <a href="https://en.wikipedia.org/wiki/Gamma_function">Gamma function</a>. Now we&nbsp;have</p>
+<div class="math">$$\sigma^2=\mu + \frac{1}{r}\mu^2$$</div>
+<p>and using <span class="math">\(r\)</span> we are thus able to adjust the variance from <span class="math">\(\mu\)</span> to <span class="math">\(\infty\)</span>. Another name for the negative binomial 
+distribution is Gamma-Poisson distribution and this is the name under which we find it in NumPyro. I also find this name 
+much more catchy since you can imagine a Poisson distribution with its only parameter drawn from a Gamma distribution that
+has two parameters <span class="math">\(\alpha\)</span> and <span class="math">\(\beta\)</span>. This also intuitively explains why the variance of <span class="caps">NB</span> is bounded below by its&nbsp;mean.</p>
+<p>Uncertainty Quantification is crucial for sales forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
+What retailers really care about is optimal replenishment, meaning that they want to have a system telling them how much
+to order so that there is an optimal amount of stocks available in their store. In order to provide optimal replenishment
+suggestions you need sales forecasts that provide probability distributions, not only point estimations. With the help
+of those distributions the replenishment system basically runs an optimization with respect to some cost function, e.g.
+cost of missed sale is weighted 3 times the cost of a written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
+For these reasons we will use the <span class="caps">NB</span> that allows us the quantify the uncertainties in our sales&nbsp;predictions.</p>
+<p>So now that we settled with <span class="caps">NB</span> as the distribution that we want to fit to the daily sales of our stores <span class="math">\(\mathbf{y}\)</span>, we can think
+about incorporating our features <span class="math">\(\mathbf{x}\)</span>. We want to use a linear model to map <span class="math">\(\mathbf{x}\)</span> to <span class="math">\(\mathbf{\mu}\)</span> such
+that we can use it later to calculate <span class="math">\(\alpha\)</span> and <span class="math">\(\beta\)</span> of <span class="caps">NB</span>. Using again the fact that we are dealing with non-negative
+numbers and also considering that we expect effects to be multiplicative, e.g. 10% more during a promotion, our ansatz&nbsp;is</p>
+<div class="math">$$\mu = \exp(\mathbf{\theta}^\top\mathbf{x}),$$</div>
+<p>where <span class="math">\(\mathbf{\theta}\)</span> is a vector of coefficients. For each store <span class="math">\(i\)</span> and each feature <span class="math">\(j\)</span> we will have a separate
+coefficient <span class="math">\(\theta_{ij}\)</span>. The <span class="math">\(\theta_{ij}\)</span> are regularized by parameters <span class="math">\(\theta^\mu_j\)</span> and <span class="math">\(\theta^{\sigma^2}_j\)</span> on 
+the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
+infer individual <span class="math">\(r_i\)</span> for each store <span class="math">\(i\)</span> as well as global parameters <span class="math">\(r^\mu\)</span> and <span class="math">\(r^{\sigma^2}\)</span> over all stores. 
+And that&#8217;s already most of it. The following plot depicts the graphical model outlined so&nbsp;far.</p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%">
+</p>
+<figcaption align="center">
+Graphical representation of a hierarchical model (centered version) as defined above.
+</figcaption>
+</figure>
+
+<p>&nbsp;</p>
+<p>Those boxes, which are called <a href="https://en.wikipedia.org/wiki/Plate_notation">plates</a>, tell you how many times a parameter is repeated.
+Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
+The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
+This also helps them to increase performance by taking optimizations into account that are not possible in the general case.
+Shaded circles are observed values, which is the number of sales on a given day <span class="math">\(k\)</span> and store <span class="math">\(i\)</span> in our&nbsp;case.</p>
+<h2>Implementation</h2>
+<p>Let&#8217;s take a quick look into our model code which is just a normal Python. It&#8217;s good to keep in mind, that we call this a <em>model</em> since we assume that given
+the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and&nbsp;days.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpyro</span>
+<span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">from</span> <span class="nn">jax.numpy</span> <span class="kn">import</span> <span class="n">DeviceArray</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">random</span>
+
+
+<span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeviceArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Gamma-Poisson hierarchical model for daily sales forecasting</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: input data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_stores</span><span class="p">,</span> <span class="n">n_days</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n_features</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># remove one dim for target</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-12</span>  <span class="c1"># epsilon</span>
+
+    <span class="n">plate_features</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">plate</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plate_stores</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">plate</span><span class="p">(</span><span class="s2">&quot;stores&quot;</span><span class="p">,</span> <span class="n">n_stores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plate_days</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">plate</span><span class="p">(</span><span class="s2">&quot;timesteps&quot;</span><span class="p">,</span> <span class="n">n_days</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">disp_param_mu</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="s2">&quot;disp_param_mu&quot;</span><span class="p">,</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">disp_param_sigma</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="s2">&quot;disp_param_sigma&quot;</span><span class="p">,</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">plate_stores</span><span class="p">:</span>
+        <span class="n">disp_param_offsets</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;disp_param_offsets&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+                <span class="n">loc</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+                <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">disp_params</span> <span class="o">=</span> <span class="n">disp_param_mu</span> <span class="o">+</span> <span class="n">disp_param_offsets</span><span class="o">*</span><span class="n">disp_param_sigma</span>
+        <span class="n">disp_params</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;disp_params&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Delta</span><span class="p">(</span><span class="n">disp_params</span><span class="p">),</span>
+            <span class="n">obs</span><span class="o">=</span><span class="n">disp_params</span>
+        <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">plate_features</span><span class="p">:</span>
+        <span class="n">coef_mus</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;coef_mus&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">coef_sigmas</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;coef_sigmas&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">2.</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">))</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">plate_stores</span><span class="p">:</span>
+            <span class="n">coef_offsets</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                <span class="s2">&quot;coef_offsets&quot;</span><span class="p">,</span>
+                <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)),</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">coefs</span> <span class="o">=</span> <span class="n">coef_mus</span> <span class="o">+</span> <span class="n">coef_offsets</span> <span class="o">*</span> <span class="n">coef_sigmas</span>
+            <span class="n">coefs</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                <span class="s2">&quot;coefs&quot;</span><span class="p">,</span>
+                <span class="n">dist</span><span class="o">.</span><span class="n">Delta</span><span class="p">(</span><span class="n">coefs</span><span class="p">),</span>
+                <span class="n">obs</span><span class="o">=</span><span class="n">coefs</span>
+            <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">plate_days</span><span class="p">,</span> <span class="n">plate_stores</span><span class="p">:</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># padded features to 0</span>
+        <span class="n">is_observed</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">targets</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">targets</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span>
+        <span class="n">not_observed</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">is_observed</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_observed</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">coefs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">features</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+                 <span class="o">+</span> <span class="n">not_observed</span><span class="o">*</span><span class="n">eps</span><span class="p">)</span>
+
+        <span class="n">betas</span> <span class="o">=</span> <span class="n">is_observed</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">disp_params</span><span class="p">)</span> <span class="o">+</span> <span class="n">not_observed</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">means</span> <span class="o">*</span> <span class="n">betas</span>
+        <span class="k">return</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">GammaPoisson</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">betas</span><span class="p">),</span> <span class="n">obs</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Note that <code>disp_param</code> is <span class="math">\(r\)</span> and <code>coef</code> is <span class="math">\(\theta\)</span> in the source code above for better readability. You will
+recognize a lot of what we have talked about and I don&#8217;t want to go into the syntactical details of NumPyro. My suggestion
+would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
+NumPyro&nbsp;reference. </p>
+<p>Reading the source code more thoroughly, you might wonder about the definition of the coefficients as <code>coefs = coef_mus + coef_offsets * coef_sigmas</code>.
+The explanations of the model I have given and also the plot, actually shows the <em>centered version</em> of a
+hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
+the direct dependency of the local parameters on the global ones make it hard for a sampler like <span class="caps">MCMC</span> but also <span class="caps">SVI</span> to explore
+certain regions of the local parameter space. This effect is called <em>funnel</em> and can be imagined as walking with the the same step length
+on a bridge that gets narrower and narrower. From the point on where the bridge is about as wide as your step length, you might
+become a bit hesitant to explore more of it. As very often the case, a reparameterization overcomes this problem resulting
+in the <em>non-centered</em> version of a hierarchical model. This is the version used in the implementation. If you want to know more about this, a really great 
+<a href="https://twiecki.io/blog/2017/02/08/bayesian-hierchical-non-centered/">blog post by Thomas Wiecki</a> gives you all the details about&nbsp;it.</p>
+<p>Another thing that wasn&#8217;t mentioned yet are the <code>is_observed</code> and <code>not_observed</code> variables which are just a nice gimmick.
+Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
+the target variable <span class="math">\(y\)</span> to <em>not observed</em> instead of 0. During training, these target values are just ignored and later
+allows the model to answer a store manager&#8217;s question: &#8220;How many sales would I have had if I had opened my store on that&nbsp;day&#8221;.</p>
+<p>Until know we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
+Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
+parameters have to be defined since its <span class="caps">SVI</span>. This is done in a separate function called <em>guide</em>. </p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Guide with parameters of the posterior</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: input data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_stores</span><span class="p">,</span> <span class="n">n_days</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n_features</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># remove one dim for target</span>
+
+    <span class="n">plate_features</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">plate</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plate_stores</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">plate</span><span class="p">(</span><span class="s2">&quot;stores&quot;</span><span class="p">,</span> <span class="n">n_stores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="s2">&quot;disp_param_mu&quot;</span><span class="p">,</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;loc_disp_param_mu&quot;</span><span class="p">,</span> <span class="mf">4.</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;scale_disp_param_mu&quot;</span><span class="p">,</span> <span class="mf">1.</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                                        <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="s2">&quot;disp_param_sigma&quot;</span><span class="p">,</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">TransformedDistribution</span><span class="p">(</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;loc_disp_param_logsigma&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;scale_disp_param_logsigma&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                                            <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">)),</span>
+            <span class="n">transforms</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ExpTransform</span><span class="p">())</span>
+    <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">plate_stores</span><span class="p">:</span>
+        <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;disp_param_offsets&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;loc_disp_param_offsets&quot;</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;scale_disp_param_offsets&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+                                            <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">plate_features</span><span class="p">:</span>
+        <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;coef_mus&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;loc_coef_mus&quot;</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">)),</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;scale_coef_mus&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span>
+                                            <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="s2">&quot;coef_sigmas&quot;</span><span class="p">,</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">TransformedDistribution</span><span class="p">(</span>
+                <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;loc_coef_logsigmas&quot;</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span><span class="p">)),</span>
+                            <span class="n">scale</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;scale_coef_logsigmas&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span>
+                                                <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">)),</span>
+                <span class="n">transforms</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ExpTransform</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">plate_stores</span><span class="p">:</span>
+            <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                <span class="s2">&quot;coef_offsets&quot;</span><span class="p">,</span>
+                <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;loc_coef_offsets&quot;</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))),</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="n">numpyro</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;scale_coef_offsets&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)),</span>
+                                        <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+</pre></div>
+
+
+<p>The structure of the guide reflects the structure of the model. The link between them are the names of the <em>sample sites</em>
+like &#8220;coef_offsets&#8221;. This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
+behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
+You can see in the actual implementation, i.e. <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py">model.py</a>, that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables&nbsp;like:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
+    <span class="n">disp_param_mu</span> <span class="o">=</span> <span class="s2">&quot;disp_param_mu&quot;</span>
+    <span class="n">disp_param_sigma</span> <span class="o">=</span> <span class="s2">&quot;disp_param_sigma&quot;</span>
+    <span class="n">disp_param_offsets</span> <span class="o">=</span> <span class="s2">&quot;disp_param_offsets&quot;</span>
+    <span class="n">disp_params</span> <span class="o">=</span> <span class="s2">&quot;disp_params&quot;</span>
+    <span class="n">coef_mus</span> <span class="o">=</span> <span class="s2">&quot;coef_mus&quot;</span>
+    <span class="n">coef_sigmas</span> <span class="o">=</span> <span class="s2">&quot;coef_sigmas&quot;</span>
+    <span class="n">coef_offsets</span> <span class="o">=</span> <span class="s2">&quot;coef_offsets&quot;</span>
+    <span class="n">coefs</span> <span class="o">=</span> <span class="s2">&quot;coefs&quot;</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="s2">&quot;days&quot;</span>
+</pre></div>
+
+
+<p>Then using variables like <code>Site.coef_offsets</code> instead of strings like <code>"coef_offsets"</code> as identifiers of sample sites, allows your <span class="caps">IDE</span> to inform you about any typos as you go. Problem&nbsp;solved.</p>
+<p>Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
+that we have already fitted the global parameters but want to only determine the local parameters of new stores with little data.
+The predictive model assumes global and local parameters to be already inferred so that we can use it to predict the number
+of sales on days beyond our training interval. As these functions are only slide variations, I spare you the details and refer you to the implementation in <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py">model.py</a>.</p>
+<p>Most parts of the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb">model notebook</a> actually deal with training the model on stores from the training data with a long sales history,
+then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
+This works really well although the number of features, which is 23, is much higher than 7! Let&#8217;s take a look at the coefficients 
+of a store from the test set as detailed in the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb">model notebook</a>:</p>
+<div class="highlight"><pre><span></span>[2.7901888  2.6591218  2.6881874  2.6126788  2.656775   2.554397
+ 2.4938385  0.33227605 3.115691   2.9264386  2.692092   2.9548435
+ 0.05613964 0.06542112 2.8379264  2.9023972  3.5701406  3.2074358
+ 4.0569873  2.9304545  2.7463424  2.823191   2.959007  ]
+</pre></div>
+
+
+<p>The notebook also shows traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
+Comparing the coefficients from above to the ones of the Poisson regression for the same store,&nbsp;i.e.</p>
+<div class="highlight"><pre><span></span>[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+ -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
+ -0.09434899  0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.        ]
+</pre></div>
+
+
+<p>we see that they are highly different and zero for features that weren&#8217;t encountered in the data of just 7 days.
+Now comparing the coefficients of our <span class="caps">BHM</span> model trained on just the 7 days with the coefficients of a cheating model trained on the whole test set,&nbsp;i.e.</p>
+<div class="highlight"><pre><span></span>[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+  2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
+ -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
+  4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
+</pre></div>
+
+
+<p>we see that they are quite similar. That&#8217;s the magic of a hierarchical model! We start with plausible defaults from a 
+global perspective and adapt locally depending on the amount of&nbsp;data.</p>
+<p>Running the code from the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb">model notebook</a> on your laptop will be matter of a few minutes for the training on 1000 stores
+haven 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
+and <span class="math">\(23\cdot 1000+1000+2\cdot 23+2=24048\)</span> parameters in our graphical model. Since each parameter is fitted with the help of a 
+parameterized distribution, as we are doing <span class="caps">SVI</span> (check out the <em>guide</em> function), the number of actual variables is twice as much leading to roughly 50,000
+variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not Big Data, 
+it&#8217;s still impressive that using NumPyro you can fit a model like that within a few minutes on your
+laptop and the implementation is not even using batching that would speed it up even further. In one of my customer
+projects we used a way larger model and much more data. Some workstation was still able to handle it and you have to
+take my word for it that NumPyro really scales well beyond this little&nbsp;demonstration. </p>
+<h2>Visualization</h2>
+<p>There is now tons of things one could do with the results of our hierarchical model. One could check out the
+actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
+I will leave most of that to the interested reader and give only a few tidbits here from the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb">evaluation notebook</a>.
+First of all let&#8217;s look at the sales prediction for one of the stores from the test&nbsp;set:</p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast">
+</p>
+<figcaption align="center">
+Sales forecast of one store from the test set.
+</figcaption>
+</figure>
+
+<p>&nbsp;</p>
+<p>Only judging by the eye, we see that predicted mean (bue dashed line) follows the number sales (blue bars) quite good.
+The background is shaded according to some important features like promotions and holidays which explain some of the variations
+in our predictions. Just for information, also the number of customers are displayed but not used in the prediction of course.
+Also, we see the 50% and 90% <a href="https://en.wikipedia.org/wiki/Credible_interval">credible intervals</a> as shaded blue areas
+around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
+was closed, we predict not 0 but what would have likely happened if it wasn&#8217;t closed, which was part of our&nbsp;model.</p>
+<p>We could also start looking into the effects of certain features like the weekdays. The following plot shows for each
+weekday starting with Monday a density over the means of all&nbsp;stores. </p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_weekday_effect.png" alt="plot weekday effect">
+</p>
+<figcaption align="center">
+Density plot of the means of the weekday coefficients over all stores. 
+</figcaption>
+</figure>
+
+<p>&nbsp;</p>
+<p>We can see that on average there seem to be more sales on Mondays and also a high variance for the means on Saturdays and
+Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
+we could also start looking into the distribution of the promotion effect over all&nbsp;stores.  </p>
+<figure>
+<p align="center">
+<img class="noZoom" src="/images/bhm_promo_effect.png" alt="plot of promotion effect">
+</p>
+<figcaption align="center">
+Density plot of the promotion effect over all stores with the red line showing the median.
+</figcaption>
+</figure>
+
+<p>&nbsp;
+These are just some things one could start to look into to derive useful insights for the store management. 
+The rest is up to your imagination and also depending on your use-case. Imagine we had a data-set that features not 
+only the aggregated sales but also the ones of individual products. We could build hierarchies over the product hierarchies
+and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
+We could also use <span class="caps">BHM</span> to address <a href="https://en.wikipedia.org/wiki/Censoring_(statistics)">censored data</a>, which is also an important task when doing sales forecasts. Canonically,
+one assumes that the demand for a product equals its sales but this only holds if there was no out-of-stock situation
+in which we only know that demand ≥ sales. You see, there are so many possible extensions to this&nbsp;model.</p>
+<h2>Final&nbsp;Remarks</h2>
+<p>We have seen that <span class="caps">BHM</span> allows us to combine the advantages of a pooled and unpooled model. Using some retailer&#8217;s data,
+we implemented some simple <span class="caps">BHM</span> thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and
+explainability. From a practical perspective, we have seen that <span class="caps">BHM</span> even scales really well with the help of NumPyro.
+On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
+Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
+practical data-set sizes with the help of NumPyro! Cheers to that and let&#8217;s follow a famous saying in the French mathematics world <em>Poisson sans boisson est poison!</em>. </p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/">Honey, I shrunk the target&nbsp;variable</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/bridging_the_gap_from_ds_to_prod/">Bridging the Gap: from Data Science to&nbsp;Production</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
+        <li><a href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
+        <li><a href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/">Are you sure about that?! Uncertainty Quantification in <span class="caps">AI</span></a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'bayesian_hierarchical_modeling_at_scale';
+                var disqus_url = 'https://florianwilhelm.info/drafts/bayesian_hierarchical_modeling_at_scale.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asynchronous/">
+                            asynchronous
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/asyncio/">
+                            asyncio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bayesian/">
+                            bayesian
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/big-data/">
+                            big data
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/bokeh/">
+                            bokeh
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/causal-inference/">
+                            causal inference
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://florianwilhelm.info/tag/data-science/">
+                            data science
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/deep-learning/">
+                            deep learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/event-driven/">
+                            event-driven
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gans/">
+                            GANs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
+                            google hangouts
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/gps/">
+                            gps
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hadoop/">
+                            hadoop
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/hive/">
+                            hive
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/jupyter/">
+                            jupyter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
+                            kalman filter
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/machine-learning/">
+                            machine-learning
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/mathematics/">
+                            mathematics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/nlp/">
+                            nlp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
+                            predictive analytics
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/production/">
+                            production
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/programming/">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://florianwilhelm.info/tag/python/">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
+                            recommender systems
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
+                            scikit-learn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/scipy/">
+                            scipy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
+                            semi-supervised
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://florianwilhelm.info/tag/spark/">
+                            spark
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/template/">
+                            template
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
+                            uncertainty quantification
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+    </ul>
+</section>            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2020 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-71694209-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
+</body>
+</html>

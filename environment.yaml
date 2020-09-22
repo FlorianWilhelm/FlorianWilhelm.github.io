@@ -9,8 +9,8 @@ dependencies:
   - jinja2
   - pip
   - pip:
-     - pelican==3.7.1
-     - Markdown
+     - pelican==3.7
+     - Markdown<3
      - bs4
      - pillow
      - jsonschema

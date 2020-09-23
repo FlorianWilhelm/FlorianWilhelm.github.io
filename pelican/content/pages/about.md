@@ -16,7 +16,6 @@ After my studies, I worked on
 and graduated from university (KIT) with a PhD degree. Main focus of my work was the
 mathematical modelling of the governing equations of fluid dynamics in order to optimally
 solve them with the help of high-performance computing (HPC) on a large-scale cluster.
-
 As *Head of the Research Lab for Application and Innovation* at the Institute of Applied and
 Numerical Mathematics, I worked in several industry-funded projects
 and supervised bachelor and master students.
@@ -27,7 +26,7 @@ After my postdoctoral position I started as a Data Scientist at [Blue Yonder](ht
 the leading provider of AI solutions for retail.
 Right now I enjoy working on innovative Data Science projects with experts every day at [inovex](https://www.inovex.de/en/)
 where I am *Head of Data Science*.
-With more than five years of project experience in the field of Predictive & Prescriptive Analytics and
+With more than eight years of project experience in the field of Predictive & Prescriptive Analytics and
 Big Data, I have acquired profound knowledge in the domains of mathematical modelling, data science, statistics,
 machine learning, high-performance computing and data mining.
 

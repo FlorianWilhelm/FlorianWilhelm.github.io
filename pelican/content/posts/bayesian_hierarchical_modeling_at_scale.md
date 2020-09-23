@@ -15,35 +15,35 @@ techniques from e.g. instrumentation and control engineering, is nowadays consid
 of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
 methods. This hype around AI, which is very often equated with deep learning, seems to draw that much attention such that
 great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
-attention to *bayesian hierarchical modeling* and how modern techniques and frameworks allow you to finally apply this
-cool method on really large data sets.
+attention to dusty *bayesian hierarchical modeling*. Modern techniques and frameworks allow you to finally apply this
+cool method on data sets with sizes much bigger than what was possible before and thus letting it really shine.
 
-So for starters, what is *bayesian hierarchical modeling* and why should I care? I assume you already have a basic knowledge about
+So for starters, what is *Bayesian Hierarchical Modeling* and why should I care? I assume you already have a basic knowledge about
 Bayesian inference, otherwise [Probabilitic Programming and Bayesian Methods for Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)
-is a really starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
-a model with the help probability distributions and also incorporate your prior knowledge about the parameters of your model.
+is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
+a model with the help of probability distributions and also incorporate your prior knowledge about the parameters of your model.
 This leads to a *directed acyclic graphical model* (aka Bayesian network) which is explainable, visual and easy to reason about.
 But that's not even everything, you also get [Uncertainty Quantification](https://en.wikipedia.org/wiki/Uncertainty_quantification) for free, 
 meaning that the model's parameters are not mere point estimates but whole distributions telling you how certain you are
 about their values. 
 
-A classical statistical method that most data scientists have learned about early on is *linear regression*. It can also
-be easily interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, maybe
-that they have to be close to zero or that they are non-negative. Then again, many of these priors you might come up with could also 
-be seen as regularizers in a non-Bayesian way, and treated like that, many efficient techniques exist to solve a such formulations.
-So where the Bayesian framework now shines is if you consider the following problem setting I stole from the wonderful 
+A classical statistical method that most data scientists learn about early on is *linear regression*. It can also
+be interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, e.g.
+that they have to be close to zero or that they are non-negative. Then again, many of the priors you might come up with could also 
+be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
+So where the Bayesian framework now shines is, if you consider the following problem setting I stole from the wonderful 
 presentation [A Bayesian Workflow with PyMC and ArviZ](https://www.youtube.com/watch?v=WbNmcvxRwow) by Corrie Bartelheimer.
 
 Imagine you want to estimate the price of an apartment in Berlin given the living area in square meters. Making a linear
 regression with all data points you have, i.e. a *pooled model*, will lead to a robust estimation of your parameter, i.e. coefficient,
 but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
-located in. Now grouping your data with respect to the respective districts results and making a linear regression for each,
+located in. Now grouping your data with respect to the respective districts and making a linear regression for each,
 i.e. an *unpooled model*, will lead to a much more narrow residual distribution but also a high variance in your parameters since
 some district might only have three data points. To combine the advantages of a pooled and unpooled model, one
 would intuitively demand that for each district the prior knowledge of the parameter from the pooled model should be used
 and updated according to the data we have about a certain district. If we have only a few data points we would only 
-deviate a bit from our prior knowledge about the parameter but in case we have lots of data points the parameter for the
-respective district could have a huge difference compared to the parameter of the pooled model. Thus the pooled model
+deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
+respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an *hierarchical model*,
 which is sometimes also referred to as *partially pooled model*. 
 
@@ -58,36 +58,35 @@ Image taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchic
 
 ## Recent Advances
 
-So far I mostly used [PyMC3](https://docs.pymc.io/) for bayesian inference or *probabilistic programming* as the authors
+So far I mostly used [PyMC3](https://docs.pymc.io/) for Bayesian inference or *probabilistic programming* as the authors
 of PyMC3 like to call it. I love it for it's elegant design and consequently its expressiveness. The documentation is great
 and thus you can pretty much hack away with your model ideas. The only problem I always had with it is that for me it never
-scaled so well with somewhat larger data-sets, i.e. more than 100k data points. There is a technical and 
+scaled so well with somewhat larger datasets, i.e. more than 100k data points. There is a technical and 
 methodical reason for it. Regarding the former, PyMC3 uses [Theano](http://deeplearning.net/software/theano/) to speed
-up its computations by transpiling to C. Theano inspired many frameworks like [Tensorflow](https://www.tensorflow.org/) 
+up its computations by transpiling your Python code to C. Theano inspired many frameworks like [Tensorflow](https://www.tensorflow.org/) 
 and [PyTorch](https://pytorch.org/) but is considered deprecated today and cannot rival the speed of modern frameworks
-anymore. For the latter, I mostly used sampling methods, e.g. [Markov chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) (MCMC), 
-with PyMC3, which are computationally demanding, while [variational inference (VI) methods](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
-are much faster. But also using VI, which PyMC3 supports, never really allowed me to deal with larger data-sets rendering
-Bayesian Hierarchical Modeling (BHM) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs
-when dealing with larger data-sets.
+anymore. For the latter, I used PyMC3 mostly with [Markov chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) (MCMC) based methods, 
+which is a sampling method and computationally quite demanding, while [variational inference (VI)](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
+methods are much faster. But also when using VI, which PyMC3 also supports, never really allowed me to deal with larger datasets rendering
+Bayesian Hierarchical Modeling (BHM) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs.
 
 Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
-could make good use of BHM. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate was [Pyro](http://pyro.ai/)
-which uses Stochastic Variational Inference (SVI) by default and calls itself a *deep universal probabilistic programming* framework.
+could make good use of BHM. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate to evaluate was [Pyro](http://pyro.ai/),
+which uses Stochastic Variational Inference (SVI) by default, and calls itself a *deep universal probabilistic programming* framework.
 Instead of Theano it based on PyTorch and thus allows for [just-in-time (JIT) compilation](https://en.wikipedia.org/wiki/Just-in-time_compilation),
 which sped up my test case already quite a bit. Pyro also emphasizes vectorization, thus allowing for fast parallel computation, e.g. [SIMD](https://en.wikipedia.org/wiki/SIMD) operations.
 In total the speed-up compared to PyMC3 was amazing in my test-case letting me almost forget the two downsides of Pyro compared
 to PyMC3. Firstly, the documentation of Pyro is not as polished and secondly, it's just so much more complicated to use and understand 
-but your mileage may vary. 
+but your mileage may vary on that one. 
 
-Digging through the website of Pyro I then stumbled on [NumPyro](https://github.com/pyro-ppl/numpyro) that has a similar
-interface as Pyro but uses [JAX](https://github.com/google/jax) instead of PyTorch as its backend. JAX is like [NumPy](https://numpy.org/) on 
+Digging through the website of Pyro I then stumbled over [NumPyro](https://github.com/pyro-ppl/numpyro) that has a similar
+interface to Pyro but uses [JAX](https://github.com/google/jax) instead of PyTorch as its backend. JAX is like [NumPy](https://numpy.org/) on 
 steroids. It's crazy fast as it uses [XLA](https://www.tensorflow.org/xla), which is a domain-specific compiler for linear algebra
-operations. Additionally it allows for automatically differentiation like [Autograd](https://github.com/hips/autograd),
-whose maintainers moved over to develop JAX. Long story short, NumPyro blew the benchmark results of Pyro out of the water.
-For the first time (at least for what I know), NumPyro allows you do bayesian inference with lots of parameters like in
-BHM on large data! In the rest of this post, I want to show how NumPyro can be applied in a typical demand prediction
-use-case on some public data-set. The data-set in my actual use-case was much bigger but you have to just trust me on this one ;-)
+operations. Additionally, it allows for automatically differentiation like [Autograd](https://github.com/hips/autograd),
+whose maintainers moved over to develop JAX further. Long story short, NumPyro blew the benchmark results of Pyro out of the water.
+For the first time (at least for what I know), NumPyro allows you do Bayesian inference with lots of parameters like in
+BHM on large data! In the rest of this post, I want to show you how NumPyro can be applied in a typical demand prediction
+use-case on some public dataset. The dataset in my actual use-case was much bigger but you have to just trust me on this one ;-)
 Hopefully some readers will find this post useful and maybe it mitigates a bit the pain coming from the lack of NumPyro's documentation and examples.
 
 ## Use-Case & Modelling
@@ -95,20 +94,21 @@ Hopefully some readers will find this post useful and maybe it mitigates a bit t
 Imagine you have many retail stores and want to make individual demand predictions for them. For stores that were opened
 a long time ago, this should be no problem but how do you deal with stores that first opened a week ago? Like in the example
 of apartment prices in different districts, BHM helps you to deal exactly with this problem. We take the 
-[Rossmann data-set from Kaggle](https://www.kaggle.com/c/rossmann-store-sales) to simulate this problem by removing the data
-of some of the stores. The data consists of Here's our experiment and study protocol:
+[Rossmann dataset from Kaggle](https://www.kaggle.com/c/rossmann-store-sales) to simulate this problem by removing the data
+of some of the stores. The data consists of a *train* dataset with information about the sales and daily features of the stores,
+e.g. if a promotion happened (`promo`), as well as a *store* dataset with time-independent store features.
+Here's what we wanna do, our little experiment and study protocol:
 
-1. Join the data from Kaggle's `train.csv` dataset, which specifies on a daily basis for each store our target variable (`Sales`) as well
- as other features like if a promotion happened (`promo`), with the general store features from the `store.csv` dataset.
-2. Perform some really basic feature engineering and encoding of some categorical features
-3. Split the data into train and test where we treat the stores from train as being opened for a long time and the ones
-  from test as newly opened. 
-4. Fit our hierarchical model on train dataset to infer the "global" parameters on the upper hierarchy
-5. Take only the first 7 days for each store in the test data, which we assume to know, and fit our model only inferring
- the local, i.e. store-specific, parameters from the lower hierarchy while keeping the global ones fixed.
-6. Compare the inferred parameters of a test store to:
-    1. the inferred local parameters of a simple Poisson model. We expect to them to be completely off due to the lack
-       of data and thus overfitting.
+1. join the data from Kaggle's `train.csv` dataset with the general store features from the `store.csv` dataset,
+2. perform some really basic feature engineering and encoding of the categorical features,
+3. split the data into train and test where we treat the stores from train as being opened for a long time and the ones
+  from test as newly opened,
+4. fit our hierarchical model on the train dataset to infer the "global" parameters of the upper hierarchy,
+5. take only the first 7 days for each store in the test data, which we assume to know, and fit our model only inferring
+ the local, i.e. store-specific, parameters of the lower hierarchy while keeping the global ones fixed,
+6. compare the inferred parameters of a test store to:
+    1. the inferred local parameters of a simple Poisson model. We expect them to be completely different due to the lack
+       of data and thus overfitting of the Poisson model,
     2. the inferred local parameters of our model if we had given it the whole time series from test, i.e. not only the first 7 days.
        In this case, we assume that we are already pretty close since the priors given by the global parameters nudge them
        in the right direction even with only little data.
@@ -116,8 +116,8 @@ of some of the stores. The data consists of Here's our experiment and study prot
 All code of this little experiment can be found under my [bhm-at-scale repository](https://github.com/FlorianWilhelm/bhm-at-scale)
 so that you can follow along easily.
 The steps 1-3 are performed in the [preprocessing notebook](https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/01-preprocessing.ipynb)
-and are actually not that interesting, thus we will skip it here. Fitting the model and some evaluation is done in the
-[model notebook] while some visualisation is done in the [evaluation notebook].
+and are actually not that interesting, thus we will skip it here. Steps 4-6 are performed in the
+[model notebook] while some visualisation are presented in the [evaluation notebook].
 
 But before we start to get technical, let's take a minute and frame again the forecasting problem from a more mathematical side.
 The data of each store is a time-series of feature vectors and target scalars. We want to find a mapping such that the
@@ -125,9 +125,9 @@ feature vector of each time-step is mapped to a value close to the target scalar
 value, i.e. the number of sales, is a non-negative integer we could assume a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution) and consequently
 perform a [Poisson regression](https://en.wikipedia.org/wiki/Poisson_regression) in a hierarchical way. This would be kind of okay
 if we were only interested in a point estimation and thus would not care about the variance of the predictive posterior distribution. 
-The Poisson distribution only has one parameter $\lambda$ that allows you to define the mean $\mu$ and the variance $\sigma^2$ then just equals the mean as there is no way to adjust the variance independently.   
-In many practical use-cases, there is [overdispersion](https://en.wikipedia.org/wiki/Overdispersion), meaning that the variance is larger than the mean
-and thus a so called *dispersion parameter* $r\in(0,\infty)$ is introduced for instance in the [negative binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution), i.e.
+The Poisson distribution only has one parameter $\lambda$ that allows you to define the mean $\mu$ while the variance $\sigma^2$ then just equals the mean as there is no way to adjust the variance independently.   
+In many practical use-cases, there is [overdispersion](https://en.wikipedia.org/wiki/Overdispersion) though, meaning that the variance is larger than the mean and we have to make up for it.
+We can define a so called *dispersion parameter* $r\in(0,\infty)$ by reparametrization in the [negative binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution), i.e.
 
 $$\mathrm{NB}(y;\mu,r) = \frac{\Gamma(r+y)}{y!\cdot\Gamma(r)}\cdot\left(\frac{r}{r+\mu}\right)^r\cdot\left(\frac{\mu}{r+\mu}\right)^y,$$
 
@@ -136,17 +136,17 @@ where $\Gamma$ is the [Gamma function](https://en.wikipedia.org/wiki/Gamma_funct
 $$\sigma^2=\mu + \frac{1}{r}\mu^2$$
 
 and using $r$ we are thus able to adjust the variance from $\mu$ to $\infty$. Another name for the negative binomial 
-distribution is Gamma-Poisson distribution and this is the name under which we find it in NumPyro. I also find this name 
+distribution is Gamma-Poisson distribution and this is the name under which we find it also in NumPyro. I find this name 
 much more catchy since you can imagine a Poisson distribution with its only parameter drawn from a Gamma distribution that
 has two parameters $\alpha$ and $\beta$. This also intuitively explains why the variance of NB is bounded below by its mean.
 
-Uncertainty Quantification is crucial for sales forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
+Uncertainty Quantification is a crucial requirement for sales forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
 What retailers really care about is optimal replenishment, meaning that they want to have a system telling them how much
 to order so that there is an optimal amount of stocks available in their store. In order to provide optimal replenishment
 suggestions you need sales forecasts that provide probability distributions, not only point estimations. With the help
 of those distributions the replenishment system basically runs an optimization with respect to some cost function, e.g.
 cost of missed sale is weighted 3 times the cost of a written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
-For these reasons we will use the NB that allows us the quantify the uncertainties in our sales predictions.
+For these reasons we will use the NB distribution that allows us the quantify the uncertainties in our sales predictions.
 
 So now that we settled with NB as the distribution that we want to fit to the daily sales of our stores $\mathbf{y}$, we can think
 about incorporating our features $\mathbf{x}$. We want to use a linear model to map $\mathbf{x}$ to $\mathbf{\mu}$ such
@@ -174,12 +174,12 @@ Graphical representation of a hierarchical model (centered version) as defined a
 Those boxes, which are called [plates](https://en.wikipedia.org/wiki/Plate_notation), tell you how many times a parameter is repeated.
 Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
 The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
-This also helps them to increase performance by taking optimizations into account that are not possible in the general case.
-Shaded circles are observed values, which is the number of sales on a given day $k$ and store $i$ in our case.
+This also helps them to increase performance by taking optimizations into account that are just not possible in the general case.
+Shaded circles are observed values, which in our case are the number of sales on a given day $k$ and store $i$.
 
 ## Implementation
 
-Let's take a quick look into our model code which is just a normal Python. It's good to keep in mind, that we call this a *model* since we assume that given
+Let's take a quick look into our model code which is just a normal Python function. It's good to keep in mind, that we call this a *model* since we assume that given
 the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
 
 ```python
@@ -276,7 +276,7 @@ NumPyro reference.
 Reading the source code more thoroughly, you might wonder about the definition of the coefficients as `coefs = coef_mus + coef_offsets * coef_sigmas`.
 The explanations of the model I have given and also the plot, actually shows the *centered version* of a
 hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
-the direct dependency of the local parameters on the global ones make it hard for a sampler like MCMC but also SVI to explore
+the direct dependency of the local parameters on the global ones make it hard for a sampler like MCMC but also SVI methods to explore
 certain regions of the local parameter space. This effect is called *funnel* and can be imagined as walking with the the same step length
 on a bridge that gets narrower and narrower. From the point on where the bridge is about as wide as your step length, you might
 become a bit hesitant to explore more of it. As very often the case, a reparameterization overcomes this problem resulting
@@ -286,7 +286,7 @@ in the *non-centered* version of a hierarchical model. This is the version used 
 Another thing that wasn't mentioned yet are the `is_observed` and `not_observed` variables which are just a nice gimmick.
 Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
 the target variable $y$ to *not observed* instead of 0. During training, these target values are just ignored and later
-allows the model to answer a store manager's question: "How many sales would I have had if I had opened my store on that day".
+allows the model to answer a store manager's potential question: "How many sales would I have had if I had opened my store on that day".
 
 Until know we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
@@ -355,7 +355,8 @@ def guide(X: DeviceArray):
                 )
 ```
 
-The structure of the guide reflects the structure of the model. The link between them are the names of the *sample sites*
+As you can see, the structure of the guide reflects the structure of the model and there we are just defining for each model parameter
+a distribution that again has parameters that need to be determined. The link between model and guide is given by the names of the *sample sites*
 like "coef_offsets". This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
 behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
 You can see in the actual implementation, i.e. [model.py], that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables
@@ -391,7 +392,7 @@ of a store from the test set as detailed in the [model notebook]:
  0.05613964 0.06542112 2.8379264  2.9023972  3.5701406  3.2074358
  4.0569873  2.9304545  2.7463424  2.823191   2.959007  ]
 ```
-The notebook also shows traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
+The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
 Comparing the coefficients from above to the ones of the Poisson regression for the same store, i.e.
 
 ```commandline
@@ -401,8 +402,8 @@ Comparing the coefficients from above to the ones of the Poisson regression for 
   0.          0.          0.          0.          0.        ]
 ```
 
-we see that they are highly different and zero for features that weren't encountered in the data of just 7 days.
-Now comparing the coefficients of our BHM model trained on just the 7 days with the coefficients of a cheating model trained on the whole test set, i.e.
+we see that they are highly different and zero for features in the Poisson regression that weren't encountered in the data of just 7 days.
+Now comparing the coefficients of our BHM model trained on just 7 days with the coefficients of a cheating model trained on the whole test set, i.e.
 
 ```commandline
 [ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
@@ -411,25 +412,25 @@ Now comparing the coefficients of our BHM model trained on just the 7 days with 
   4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
 ```
 
-we see that they are quite similar. That's the magic of a hierarchical model! We start with plausible defaults from a 
-global perspective and adapt locally depending on the amount of data.
+we see that they are quite similar. That's the magic of a hierarchical model! We started with plausible defaults from a 
+global perspective and adapted locally depending on the amount of data.
 
 Running the code from the [model notebook] on your laptop will be matter of a few minutes for the training on 1000 stores
 haven 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
 and $23\cdot 1000+1000+2\cdot 23+2=24048$ parameters in our graphical model. Since each parameter is fitted with the help of a 
-parameterized distribution, as we are doing SVI (check out the *guide* function), the number of actual variables is twice as much leading to roughly 50,000
-variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not Big Data, 
+parameterized distribution in the guide, as we are doing SVI, the number of actual variables is twice as much leading to roughly 50,000
+variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not big data, 
 it's still impressive that using NumPyro you can fit a model like that within a few minutes on your
 laptop and the implementation is not even using batching that would speed it up even further. In one of my customer
-projects we used a way larger model and much more data. Some workstation was still able to handle it and you have to
-take my word for it that NumPyro really scales well beyond this little demonstration. 
+projects we used a way larger model on much more data and our workstation was still able to handle it smoothly. 
+NumPyro really scales well beyond this little demonstration. 
 
 ## Visualization
 
 There is now tons of things one could do with the results of our hierarchical model. One could check out the
 actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
-I will leave most of that to the interested reader and give only a few tidbits here from the [evaluation notebook].
-First of all let's look at the sales prediction for one of the stores from the test set:
+I will leave to the interested reader and give only a few tidbits here from the [evaluation notebook].
+We start with taking a look at the sales prediction for one of the stores from the test set:
 
 <figure>
 <p align="center">
@@ -441,14 +442,14 @@ Sales forecast of one store from the test set.
 </figure>
 &nbsp;
 
-Only judging by the eye, we see that predicted mean (bue dashed line) follows the number sales (blue bars) quite good.
+Only judging by the eye, we see that predicted mean (blue dashed line) follows the number sales (blueish bars) quite good.
 The background is shaded according to some important features like promotions and holidays which explain some of the variations
 in our predictions. Just for information, also the number of customers are displayed but not used in the prediction of course.
 Also, we see the 50% and 90% [credible intervals](https://en.wikipedia.org/wiki/Credible_interval) as shaded blue areas
 around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
 was closed, we predict not 0 but what would have likely happened if it wasn't closed, which was part of our model.
 
-We could also start looking into the effects of certain features like the weekdays. The following plot shows for each
+We could then also start looking into the effects of certain features like the weekdays. The following plot shows for each
 weekday starting with Monday a density over the means of all stores. 
 
 <figure>
@@ -463,7 +464,7 @@ Density plot of the means of the weekday coefficients over all stores.
 
 We can see that on average there seem to be more sales on Mondays and also a high variance for the means on Saturdays and
 Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
-we could also start looking into the distribution of the promotion effect over all stores.  
+we could be interested in analyzing the distribution of the promotion effect over all stores.  
 
 <figure>
 <p align="center">
@@ -475,23 +476,23 @@ Density plot of the promotion effect over all stores with the red line showing t
 </figure>
 &nbsp;
 
-These are just some things one could start to look into to derive useful insights for the store management. 
-The rest is up to your imagination and also depending on your use-case. Imagine we had a data-set that features not 
-only the aggregated sales but also the ones of individual products. We could build hierarchies over the product hierarchies
+These are just some analysis one could start to look into to derive useful insights for store management. 
+The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
+only the aggregated sales but also the ones of individual products. We could then build hierarchies over the product hierarchies
 and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
 We could also use BHM to address [censored data], which is also an important task when doing sales forecasts. Canonically,
-one assumes that the demand for a product equals its sales but this only holds if there was no out-of-stock situation
+one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
 in which we only know that demand ≥ sales. You see, there are so many possible extensions to this model.
  
 
 ## Final Remarks
 
 We have seen that BHM allows us to combine the advantages of a pooled and unpooled model. Using some retailer's data,
-we implemented some simple BHM thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and
+we implemented a simple BHM thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and
 explainability. From a practical perspective, we have seen that BHM even scales really well with the help of NumPyro.
 On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
 Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
-practical data-set sizes with the help of NumPyro! Cheers to that and let's follow a famous saying in the French mathematics world *Poisson sans boisson est poison*! 
+practical dataset sizes with the help of NumPyro! Cheers to that and let's follow a famous saying in the French mathematics world *Poisson sans boisson est poison*! 
 
 
 [model.py]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py

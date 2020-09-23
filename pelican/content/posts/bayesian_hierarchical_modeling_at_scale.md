@@ -19,7 +19,7 @@ attention to dusty *Bayesian Hierarchical Modelling*. Modern techniques and fram
 cool method on datasets with sizes much bigger than what was possible before and thus letting it really shine.
 
 So for starters, what is *Bayesian Hierarchical Modelling* and why should I care? I assume you already have a basic knowledge about
-Bayesian inference, otherwise [Probabilitic Programming and Bayesian Methods for Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)
+Bayesian inference, otherwise [Probabilistic Programming and Bayesian Methods for Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)
 is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
 a model with the help of probability distributions and also incorporate your prior knowledge about the parameters of your model.
 This leads to a *directed acyclic graphical model* (aka Bayesian network) which is explainable, visual and easy to reason about.

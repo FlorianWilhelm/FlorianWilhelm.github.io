@@ -1,5 +1,5 @@
 ---
-title: Finally! Bayesian Hierarchical Modeling at Scale
+title: Finally! Bayesian Hierarchical Modelling at Scale
 date: 2020-10-01 18:00
 modified: 2020-10-01 18:00
 category: post
@@ -15,10 +15,10 @@ techniques from e.g. instrumentation and control engineering, is nowadays consid
 of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
 methods. This hype around AI, which is very often equated with deep learning, seems to draw that much attention such that
 great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
-attention to dusty *bayesian hierarchical modeling*. Modern techniques and frameworks allow you to finally apply this
+attention to dusty *Bayesian Hierarchical Modelling*. Modern techniques and frameworks allow you to finally apply this
 cool method on datasets with sizes much bigger than what was possible before and thus letting it really shine.
 
-So for starters, what is *Bayesian Hierarchical Modeling* and why should I care? I assume you already have a basic knowledge about
+So for starters, what is *Bayesian Hierarchical Modelling* and why should I care? I assume you already have a basic knowledge about
 Bayesian inference, otherwise [Probabilitic Programming and Bayesian Methods for Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)
 is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
 a model with the help of probability distributions and also incorporate your prior knowledge about the parameters of your model.
@@ -68,7 +68,7 @@ and [PyTorch](https://pytorch.org/) but is considered deprecated today and canno
 anymore. For the latter, I used PyMC3 mostly with [Markov chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) (MCMC) based methods, 
 which is a sampling method and computationally quite demanding, while [variational inference (VI)](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
 methods are much faster. But also when using VI, which PyMC3 also supports, never really allowed me to deal with larger datasets rendering
-Bayesian Hierarchical Modeling (BHM) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs.
+Bayesian Hierarchical Modelling (BHM) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs.
 
 Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
 could make good use of BHM. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate to evaluate was [Pyro](http://pyro.ai/),

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Finally! Bayesian Hierarchical Modeling at Scale - Florian Wilhelm</title>
+    <title>Finally! Bayesian Hierarchical Modelling at Scale - Florian Wilhelm</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -152,7 +152,7 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
 
         <meta property="og:site_name" content="Florian Wilhelm" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Finally! Bayesian Hierarchical Modeling at Scale"/>
+        <meta property="og:title" content="Finally! Bayesian Hierarchical Modelling at Scale"/>
         <meta property="og:url" content="https://florianwilhelm.info/drafts/bayesian_hierarchical_modeling_at_scale.html"/>
         <meta property="og:description" content="Introduction Since the advent of deep learning, everything is or has to be about Artificial Intelligence, so it seems. Even software which is applying traditional techniques from e.g. instrumentation and control engineering, is nowadays considered AI. For instance, the famous robots of Boston Dynamics are not based on deep …"/>
         <meta property="article:published_time" content="2020-10-01" />
@@ -219,8 +219,8 @@ Florian Wilhelm            </a>
                 <h1>
                     <a href="https://florianwilhelm.info/drafts/bayesian_hierarchical_modeling_at_scale.html"
                        rel="bookmark"
-                       title="Permalink to Finally! Bayesian Hierarchical Modeling at Scale">
-                        Finally! Bayesian Hierarchical Modeling at&nbsp;Scale
+                       title="Permalink to Finally! Bayesian Hierarchical Modelling at Scale">
+                        Finally! Bayesian Hierarchical Modelling at&nbsp;Scale
                     </a>
                 </h1>
             </header>
@@ -252,9 +252,9 @@ techniques from e.g. instrumentation and control engineering, is nowadays consid
 of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
 methods. This hype around <span class="caps">AI</span>, which is very often equated with deep learning, seems to draw that much attention such that
 great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
-attention to dusty <em>bayesian hierarchical modeling</em>. Modern techniques and frameworks allow you to finally apply this
+attention to dusty <em>Bayesian Hierarchical Modelling</em>. Modern techniques and frameworks allow you to finally apply this
 cool method on datasets with sizes much bigger than what was possible before and thus letting it really&nbsp;shine.</p>
-<p>So for starters, what is <em>Bayesian Hierarchical Modeling</em> and why should I care? I assume you already have a basic knowledge about
+<p>So for starters, what is <em>Bayesian Hierarchical Modelling</em> and why should I care? I assume you already have a basic knowledge about
 Bayesian inference, otherwise <a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers">Probabilitic Programming and Bayesian Methods for Hackers</a>
 is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
 a model with the help of probability distributions and also incorporate your prior knowledge about the parameters of your model.
@@ -299,7 +299,7 @@ and <a href="https://pytorch.org/">PyTorch</a> but is considered deprecated toda
 anymore. For the latter, I used PyMC3 mostly with <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">Markov chain Monte Carlo</a> (<span class="caps">MCMC</span>) based methods, 
 which is a sampling method and computationally quite demanding, while <a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods">variational inference (<span class="caps">VI</span>)</a>
 methods are much faster. But also when using <span class="caps">VI</span>, which PyMC3 also supports, never really allowed me to deal with larger datasets rendering
-Bayesian Hierarchical Modeling (<span class="caps">BHM</span>) a wonderful tool that sadly could not be applied in many suitable projects due to its computational&nbsp;costs.</p>
+Bayesian Hierarchical Modelling (<span class="caps">BHM</span>) a wonderful tool that sadly could not be applied in many suitable projects due to its computational&nbsp;costs.</p>
 <p>Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
 could make good use of <span class="caps">BHM</span>. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate to evaluate was <a href="http://pyro.ai/">Pyro</a>,
 which uses Stochastic Variational Inference (<span class="caps">SVI</span>) by default, and calls itself a <em>deep universal probabilistic programming</em> framework.

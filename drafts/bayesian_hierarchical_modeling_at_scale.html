@@ -253,7 +253,7 @@ of Boston Dynamics are not based on deep reinforcement learning as many people t
 methods. This hype around <span class="caps">AI</span>, which is very often equated with deep learning, seems to draw that much attention such that
 great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
 attention to dusty <em>bayesian hierarchical modeling</em>. Modern techniques and frameworks allow you to finally apply this
-cool method on data sets with sizes much bigger than what was possible before and thus letting it really&nbsp;shine.</p>
+cool method on datasets with sizes much bigger than what was possible before and thus letting it really&nbsp;shine.</p>
 <p>So for starters, what is <em>Bayesian Hierarchical Modeling</em> and why should I care? I assume you already have a basic knowledge about
 Bayesian inference, otherwise <a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers">Probabilitic Programming and Bayesian Methods for Hackers</a>
 is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
@@ -262,7 +262,7 @@ This leads to a <em>directed acyclic graphical model</em> (aka Bayesian network)
 But that&#8217;s not even everything, you also get <a href="https://en.wikipedia.org/wiki/Uncertainty_quantification">Uncertainty Quantification</a> for free, 
 meaning that the model&#8217;s parameters are not mere point estimates but whole distributions telling you how certain you are
 about their&nbsp;values. </p>
-<p>A classical statistical method that most data scientists learn about early on is <em>linear regression</em>. It can also
+<p>A classical statistical method that most data scientists learn about early on is <em>linear regression</em>. This can also
 be interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, e.g.
 that they have to be close to zero or that they are non-negative. Then again, many of the priors you might come up with could also 
 be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
@@ -397,7 +397,8 @@ This also helps them to increase performance by taking optimizations into accoun
 Shaded circles are observed values, which in our case are the number of sales on a given day <span class="math">\(k\)</span> and store <span class="math">\(i\)</span>.</p>
 <h2>Implementation</h2>
 <p>Let&#8217;s take a quick look into our model code which is just a normal Python function. It&#8217;s good to keep in mind, that we call this a <em>model</em> since we assume that given
-the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and&nbsp;days.</p>
+the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
+The model function only defines the model parameters, how they interact and their&nbsp;priors.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpyro</span>
 <span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
 <span class="kn">from</span> <span class="nn">jax.numpy</span> <span class="kn">import</span> <span class="n">DeviceArray</span>
@@ -689,7 +690,7 @@ we implemented a simple <span class="caps">BHM</span> thereby also outlining the
 explainability. From a practical perspective, we have seen that <span class="caps">BHM</span> even scales really well with the help of NumPyro.
 On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
 Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
-practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s follow a famous saying in the French mathematics world <em>Poisson sans boisson est poison</em>! </p>
+practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s follow a famous saying in the French world of mathematics <em>Poisson sans boisson est poison</em>! </p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

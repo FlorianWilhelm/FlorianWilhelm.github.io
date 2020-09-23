@@ -16,7 +16,7 @@ of Boston Dynamics are not based on deep reinforcement learning as many people t
 methods. This hype around AI, which is very often equated with deep learning, seems to draw that much attention such that
 great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
 attention to dusty *bayesian hierarchical modeling*. Modern techniques and frameworks allow you to finally apply this
-cool method on data sets with sizes much bigger than what was possible before and thus letting it really shine.
+cool method on datasets with sizes much bigger than what was possible before and thus letting it really shine.
 
 So for starters, what is *Bayesian Hierarchical Modeling* and why should I care? I assume you already have a basic knowledge about
 Bayesian inference, otherwise [Probabilitic Programming and Bayesian Methods for Hackers](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)
@@ -27,7 +27,7 @@ But that's not even everything, you also get [Uncertainty Quantification](https:
 meaning that the model's parameters are not mere point estimates but whole distributions telling you how certain you are
 about their values. 
 
-A classical statistical method that most data scientists learn about early on is *linear regression*. It can also
+A classical statistical method that most data scientists learn about early on is *linear regression*. This can also
 be interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, e.g.
 that they have to be close to zero or that they are non-negative. Then again, many of the priors you might come up with could also 
 be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
@@ -181,6 +181,7 @@ Shaded circles are observed values, which in our case are the number of sales on
 
 Let's take a quick look into our model code which is just a normal Python function. It's good to keep in mind, that we call this a *model* since we assume that given
 the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
+The model function only defines the model parameters, how they interact and their priors.
 
 ```python
 import numpyro
@@ -492,7 +493,7 @@ we implemented a simple BHM thereby also outlining the advantages of a Bayesian 
 explainability. From a practical perspective, we have seen that BHM even scales really well with the help of NumPyro.
 On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
 Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
-practical dataset sizes with the help of NumPyro! Cheers to that and let's follow a famous saying in the French mathematics world *Poisson sans boisson est poison*! 
+practical dataset sizes with the help of NumPyro! Cheers to that and let's follow a famous saying in the French world of mathematics *Poisson sans boisson est poison*! 
 
 
 [model.py]: https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py

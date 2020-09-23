@@ -417,7 +417,7 @@ we see that they are quite similar. That's the magic of a hierarchical model! We
 global perspective and adapted locally depending on the amount of data.
 
 Running the code from the [model notebook] on your laptop will be matter of a few minutes for the training on 1000 stores
-haven 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
+each having 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
 and $23\cdot 1000+1000+2\cdot 23+2=24048$ parameters in our graphical model. Since each parameter is fitted with the help of a 
 parameterized distribution in the guide, as we are doing SVI, the number of actual variables is twice as much leading to roughly 50,000
 variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not big data, 

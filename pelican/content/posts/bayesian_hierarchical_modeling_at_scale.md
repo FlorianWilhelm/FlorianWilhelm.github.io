@@ -388,10 +388,10 @@ This works really well although the number of features, which is 23, is much hig
 of a store from the test set as detailed in the [model notebook]:
 
 ```commandline
-[2.7901888  2.6591218  2.6881874  2.6126788  2.656775   2.554397
- 2.4938385  0.33227605 3.115691   2.9264386  2.692092   2.9548435
- 0.05613964 0.06542112 2.8379264  2.9023972  3.5701406  3.2074358
- 4.0569873  2.9304545  2.7463424  2.823191   2.959007  ]
+[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
+  2.4938385   0.33227605  3.115691    2.9264386   2.692092    2.9548435
+  0.05613964  0.06542112  2.8379264   2.9023972   3.5701406   3.2074358
+  4.0569873   2.9304545   2.7463424   2.823191    2.959007  ]
 ```
 The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
 Comparing the coefficients from above to the ones of the Poisson regression for the same store, i.e.

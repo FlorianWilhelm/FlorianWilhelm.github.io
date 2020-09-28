@@ -50,8 +50,8 @@ which is sometimes also referred to as *partially pooled model*.
 &nbsp;
 <figure>
 <img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
-<figcaption align="center">Hierarchical model as a combination of a pooled and an unpooled model. 
-<strong>Figure 1:</strong> Image taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
+<figcaption align="center"><strong>Figure 1:</strong> Hierarchical model as a combination of a pooled and an unpooled model. 
+Image taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
 </figcaption>
 </figure>
 &nbsp;
@@ -439,7 +439,7 @@ We start with taking a look at the sales prediction for one of the stores from t
 <img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast">
 </p>
 <figcaption align="center">
-<strong>Figure 3:</strong> Sales forecast of one store from the test set.
+<strong>Figure 3:</strong> Sales forecast of one store from the test set. The blue dashed line is the the mean predicted mean.
 </figcaption>
 </figure>
 &nbsp;

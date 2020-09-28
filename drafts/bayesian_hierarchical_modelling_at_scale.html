@@ -279,7 +279,7 @@ and updated according to the data we have about a certain district. If we have o
 deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an <em>hierarchical model</em>,
-which is sometimes also referred to as <em>partially pooled model</em>. </p>
+which is sometimes also referred to as <em>partially pooled model</em>. Figure 1 illustrates our thoughts so&nbsp;far.</p>
 <p>&nbsp;
 <figure>
 <img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
@@ -380,7 +380,7 @@ numbers and also considering that we expect effects to be multiplicative, e.g. 1
 coefficient <span class="math">\(\theta_{ij}\)</span>. The <span class="math">\(\theta_{ij}\)</span> are regularized by parameters <span class="math">\(\theta^\mu_j\)</span> and <span class="math">\(\theta^{\sigma^2}_j\)</span> on 
 the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
 infer individual <span class="math">\(r_i\)</span> for each store <span class="math">\(i\)</span> as well as global parameters <span class="math">\(r^\mu\)</span> and <span class="math">\(r^{\sigma^2}\)</span> over all stores. 
-And that&#8217;s already most of it. The following plot depicts the graphical model outlined so&nbsp;far.</p>
+And that&#8217;s already most of it. The plot in Figure 2 depicts the graphical model outlined so&nbsp;far.</p>
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%">
@@ -391,7 +391,7 @@ And that&#8217;s already most of it. The following plot depicts the graphical mo
 </figure>
 
 <p>&nbsp;</p>
-<p>Those boxes, which are called <a href="https://en.wikipedia.org/wiki/Plate_notation">plates</a>, tell you how many times a parameter is repeated.
+<p>Those boxes in Figure 2, which are called <a href="https://en.wikipedia.org/wiki/Plate_notation">plates</a>, tell you how many times a parameter is repeated.
 Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
 The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
 This also helps them to increase performance by taking optimizations into account that are just not possible in the general case.
@@ -636,7 +636,7 @@ NumPyro really scales well even beyond this little&nbsp;demonstration. </p>
 <p>There is now tons of things one could do with the results of our hierarchical model. One could check out the
 actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
 I will leave to the interested reader and give only a few tidbits here from the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb">evaluation notebook</a>.
-We start with taking a look at the sales prediction for one of the stores from the test&nbsp;set:</p>
+We start with taking a look at the sales prediction for one of the stores from the test set as depicted in Figure&nbsp;3.</p>
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast">
@@ -653,7 +653,7 @@ in our predictions. Just for information, also the number of customers are displ
 Also, we see the 50% and 90% <a href="https://en.wikipedia.org/wiki/Credible_interval">credible intervals</a> as shaded blue areas
 around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
 was closed, we predict not 0 but what would have likely happened if it wasn&#8217;t closed, which was part of our&nbsp;model.</p>
-<p>We could then also start looking into the effects of certain features like the weekdays. The following plot shows for each
+<p>We could then also start looking into the effects of certain features like the weekdays. Figure 4 shows for each
 weekday starting with Monday a density over the means of all&nbsp;stores. </p>
 <figure>
 <p align="center">
@@ -667,7 +667,7 @@ weekday starting with Monday a density over the means of all&nbsp;stores. </p>
 <p>&nbsp;</p>
 <p>We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
 Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
-we could be interested in analyzing the distribution of the promotion effect over all&nbsp;stores.  </p>
+we could be interested in analyzing the distribution of the promotion effect over all stores as shown in Figure&nbsp;5.  </p>
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_promo_effect.png" alt="plot of promotion effect">

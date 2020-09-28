@@ -45,7 +45,7 @@ and updated according to the data we have about a certain district. If we have o
 deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an *hierarchical model*,
-which is sometimes also referred to as *partially pooled model*. 
+which is sometimes also referred to as *partially pooled model*. Figure 1 illustrates our thoughts so far.
 
 &nbsp;
 <figure>
@@ -160,7 +160,7 @@ where $\mathbf{\theta}$ is a vector of coefficients. For each store $i$ and each
 coefficient $\theta_{ij}$. The $\theta_{ij}$ are regularized by parameters $\theta^\mu_j$ and $\theta^{\sigma^2}_j$ on 
 the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
 infer individual $r_i$ for each store $i$ as well as global parameters $r^\mu$ and $r^{\sigma^2}$ over all stores. 
-And that's already most of it. The following plot depicts the graphical model outlined so far.
+And that's already most of it. The plot in Figure 2 depicts the graphical model outlined so far.
 
 <figure>
 <p align="center">
@@ -172,7 +172,7 @@ And that's already most of it. The following plot depicts the graphical model ou
 </figure>
 &nbsp;
 
-Those boxes, which are called [plates](https://en.wikipedia.org/wiki/Plate_notation), tell you how many times a parameter is repeated.
+Those boxes in Figure 2, which are called [plates](https://en.wikipedia.org/wiki/Plate_notation), tell you how many times a parameter is repeated.
 Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
 The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
 This also helps them to increase performance by taking optimizations into account that are just not possible in the general case.
@@ -432,7 +432,7 @@ NumPyro really scales well even beyond this little demonstration.
 There is now tons of things one could do with the results of our hierarchical model. One could check out the
 actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
 I will leave to the interested reader and give only a few tidbits here from the [evaluation notebook].
-We start with taking a look at the sales prediction for one of the stores from the test set:
+We start with taking a look at the sales prediction for one of the stores from the test set as depicted in Figure 3.
 
 <figure>
 <p align="center">
@@ -451,7 +451,7 @@ Also, we see the 50% and 90% [credible intervals](https://en.wikipedia.org/wiki/
 around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
 was closed, we predict not 0 but what would have likely happened if it wasn't closed, which was part of our model.
 
-We could then also start looking into the effects of certain features like the weekdays. The following plot shows for each
+We could then also start looking into the effects of certain features like the weekdays. Figure 4 shows for each
 weekday starting with Monday a density over the means of all stores. 
 
 <figure>
@@ -466,7 +466,7 @@ weekday starting with Monday a density over the means of all stores.
 
 We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
 Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
-we could be interested in analyzing the distribution of the promotion effect over all stores.  
+we could be interested in analyzing the distribution of the promotion effect over all stores as shown in Figure 5.  
 
 <figure>
 <p align="center">

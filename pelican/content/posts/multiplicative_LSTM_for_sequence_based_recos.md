@@ -67,10 +67,10 @@ $t\in\{1,\ldots,T\}$ a user has interacted with an item $i_t$. The basic idea is
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/mLSTM.png" alt="mLSTM">
-<figcaption><strong>Figure 1:</strong> At timestep $t$ the item $i_t$ is embedded and fed into an LSTM together with
- cell state $C_{t-1}$ and $h_{t-1}$ of the last timestep which yields a new presentation $h_t$. The inner product of 
- $h_t$ with the embedding of the potential next item $e_{i_{t+1}}$ yields a scalar value corresponding to how likely the user
- would interact with $i_{t+1}$.</figcaption>
+<figcaption><strong>Figure 1:</strong> At timestep \(t\) the item \(i_t\) is embedded and fed into an LSTM together with
+ cell state \(C_{t-1}\) and \(h_{t-1}\) of the last timestep which yields a new presentation \(h_t\). The inner product of 
+ \(h_t\) with the embedding of the potential next item \(e_{i_{t+1}}\) yields a scalar value corresponding to how likely the user
+ would interact with \(i_{t+1}\).</figcaption>
 </p>
 </figure>
         

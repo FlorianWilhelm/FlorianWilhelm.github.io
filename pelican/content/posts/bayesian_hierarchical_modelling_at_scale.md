@@ -92,8 +92,8 @@ Hopefully some readers will find this post useful and maybe it mitigates a bit t
 ## Use-Case & Modelling
 
 Imagine you have many retail stores and want to make individual demand predictions for them. For stores that were opened
-a long time ago, this should be no problem but how do you deal with stores that first opened a week ago? Like in the example
-of apartment prices in different districts, BHM helps you to deal exactly with this problem. We take the 
+a long time ago, this should be no problem but how do you deal with stores that first opened a week ago or even will open soon? Like in the example
+of apartment prices in different districts, BHM helps you to deal exactly with this [cold start problem](https://en.wikipedia.org/wiki/Cold_start_(recommender_systems)). We take the 
 [Rossmann dataset from Kaggle](https://www.kaggle.com/c/rossmann-store-sales) to simulate this problem by removing the data
 of some of the stores. The data consists of a *train* dataset with information about the sales and daily features of the stores,
 e.g. if a promotion happened (`promo`), as well as a *store* dataset with time-independent store features.

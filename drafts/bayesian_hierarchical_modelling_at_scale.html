@@ -319,8 +319,8 @@ use-case on some public dataset. The dataset in my actual use-case was much bigg
 Hopefully some readers will find this post useful and maybe it mitigates a bit the pain coming from the lack of NumPyro&#8217;s documentation and&nbsp;examples.</p>
 <h2>Use-Case <span class="amp">&amp;</span>&nbsp;Modelling</h2>
 <p>Imagine you have many retail stores and want to make individual demand predictions for them. For stores that were opened
-a long time ago, this should be no problem but how do you deal with stores that first opened a week ago? Like in the example
-of apartment prices in different districts, <span class="caps">BHM</span> helps you to deal exactly with this problem. We take the 
+a long time ago, this should be no problem but how do you deal with stores that first opened a week ago or even will open soon? Like in the example
+of apartment prices in different districts, <span class="caps">BHM</span> helps you to deal exactly with this <a href="https://en.wikipedia.org/wiki/Cold_start_(recommender_systems)">cold start problem</a>. We take the 
 <a href="https://www.kaggle.com/c/rossmann-store-sales">Rossmann dataset from Kaggle</a> to simulate this problem by removing the data
 of some of the stores. The data consists of a <em>train</em> dataset with information about the sales and daily features of the stores,
 e.g. if a promotion happened (<code>promo</code>), as well as a <em>store</em> dataset with time-independent store features.

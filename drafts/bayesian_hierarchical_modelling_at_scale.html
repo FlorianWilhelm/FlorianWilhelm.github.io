@@ -503,7 +503,7 @@ in the <em>non-centered</em> version of a hierarchical model. This is the versio
 Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
 the target variable <span class="math">\(y\)</span> to <em>not observed</em> instead of 0. During training, these target values are just ignored and later
 allows the model to answer a store manager&#8217;s potential question: &#8220;How many sales would I have had if I had opened my store on that&nbsp;day&#8221;.</p>
-<p>Until know we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
+<p>Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its <span class="caps">SVI</span>. This is done in a separate function called <em>guide</em>. </p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">):</span>
@@ -684,7 +684,10 @@ only the aggregated sales but also the ones of individual products. We could the
 and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
 We could also use <span class="caps">BHM</span> to address <a href="https://en.wikipedia.org/wiki/Censoring_(statistics)">censored data</a>, which is also an important task when doing sales forecasts. Canonically,
 one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
-in which we only know that demand ≥ sales. You see, there are so many possible extensions to this&nbsp;model.</p>
+in which we only know that demand ≥ sales. Right-censored data like that provides us with information about the <a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">cumulative
+distribution function</a> in contrast to the <a href="https://en.wikipedia.org/wiki/Probability_mass_function">probability mass function</a>
+in case of no out-of-stock situation. There are ways to include both types of information into an <span class="caps">BHM</span>.</p>
+<p>Those are just some of many possible improvements and extensions to this model. I am looking forward to your ideas and&nbsp;use-cases!</p>
 <h2>Final&nbsp;Remarks</h2>
 <p>We have seen that <span class="caps">BHM</span> allows us to combine the advantages of a pooled and unpooled model. Using some retailer&#8217;s data,
 we implemented a simple <span class="caps">BHM</span> thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and

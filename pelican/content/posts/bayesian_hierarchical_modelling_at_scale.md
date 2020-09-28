@@ -290,7 +290,7 @@ Instead of using up degrees of freedom to learn that the number of sales is 0 on
 the target variable $y$ to *not observed* instead of 0. During training, these target values are just ignored and later
 allows the model to answer a store manager's potential question: "How many sales would I have had if I had opened my store on that day".
 
-Until know we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
+Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its SVI. This is done in a separate function called *guide*. 
 
@@ -484,7 +484,11 @@ only the aggregated sales but also the ones of individual products. We could the
 and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
 We could also use BHM to address [censored data], which is also an important task when doing sales forecasts. Canonically,
 one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
-in which we only know that demand ≥ sales. You see, there are so many possible extensions to this model.
+in which we only know that demand ≥ sales. Right-censored data like that provides us with information about the [cumulative
+distribution function](https://en.wikipedia.org/wiki/Cumulative_distribution_function) in contrast to the [probability mass function](https://en.wikipedia.org/wiki/Probability_mass_function)
+in case of no out-of-stock situation. There are ways to include both types of information into an BHM.
+
+Those are just some of many possible improvements and extensions to this model. I am looking forward to your ideas and use-cases!
  
 
 ## Final Remarks

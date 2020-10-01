@@ -142,10 +142,10 @@ much more catchy since you can imagine a Poisson distribution with its only para
 has two parameters $\alpha$ and $\beta$. This also intuitively explains why the variance of NB is bounded below by its mean.
 Just think of NB as a generalization of the Poisson distribution with one more parameter that allows adjusting the variance.
 
-Uncertainty Quantification is a crucial requirement for sales forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
+Uncertainty Quantification is a crucial requirement for demand forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
 What retailers really care about is optimal replenishment, meaning that they want to have a system telling them how much
 to order so that there is an optimal amount of stocks available in their store. In order to provide optimal replenishment
-suggestions you need sales forecasts that provide probability distributions, not only point estimations. With the help
+suggestions you need demand forecasts that provide probability distributions, not only point estimations. With the help
 of those distributions the replenishment system basically runs an optimization with respect to some cost function, e.g.
 cost of a missed sale is weighted 3 times the cost of a written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
 For these reasons we will use the NB distribution that allows us the quantify the uncertainties in our sales predictions adequately.

@@ -1,5 +1,511 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2020-05-04T12:00:00+02:00</updated><entry><title>Honey, I shrunk the target variable</title><link href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/" rel="alternate"></link><published>2020-05-04T12:00:00+02:00</published><updated>2020-05-04T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-05-04:/2020/05/honey_i_shrunk_the_target_variable/</id><summary type="html">&lt;p&gt;Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn&amp;#8217;t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your&amp;nbsp;advantage.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2020-10-01T08:00:00+02:00</updated><entry><title>Finally! Bayesian Hierarchical Modelling at Scale</title><link href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/" rel="alternate"></link><published>2020-10-01T08:00:00+02:00</published><updated>2020-10-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-10-01:/2020/10/bayesian_hierarchical_modelling_at_scale/</id><summary type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional
+techniques from e.g. instrumentation and control engineering, is nowadays considered &lt;em&gt;&lt;span class="caps"&gt;AI&lt;/span&gt;&lt;/em&gt;. For instance, the famous robots
+of Boston Dynamics are not based on deep …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional
+techniques from e.g. instrumentation and control engineering, is nowadays considered &lt;em&gt;&lt;span class="caps"&gt;AI&lt;/span&gt;&lt;/em&gt;. For instance, the famous robots
+of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
+methods. This hype around &lt;span class="caps"&gt;AI&lt;/span&gt;, which is very often equated with deep learning, seems to draw that much attention such that
+great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
+attention to the somewhat dusty &lt;em&gt;Bayesian Hierarchical Modelling&lt;/em&gt;. Modern techniques and frameworks allow you to finally apply this
+cool method on datasets with sizes much bigger than what was possible before and thus letting it really&amp;nbsp;shine.&lt;/p&gt;
+&lt;p&gt;So for starters, what is &lt;em&gt;Bayesian Hierarchical Modelling&lt;/em&gt; and why should I care? I assume you already have a basic knowledge about
+Bayesian inference, otherwise &lt;a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers"&gt;Probabilistic Programming and Bayesian Methods for Hackers&lt;/a&gt;
+is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
+a model with the help of probability distributions and also incorporate your prior knowledge about the parameters of your model.
+This leads to a &lt;em&gt;directed acyclic graphical model&lt;/em&gt; (aka Bayesian network) which is explainable, visual and easy to reason about.
+But that&amp;#8217;s not even everything, you also get &lt;a href="https://en.wikipedia.org/wiki/Uncertainty_quantification"&gt;Uncertainty Quantification&lt;/a&gt; for free, 
+meaning that the model&amp;#8217;s parameters are not mere point estimates but whole distributions telling you how certain you are
+about their&amp;nbsp;values. &lt;/p&gt;
+&lt;p&gt;A classical statistical method that most data scientists learn about early on is &lt;em&gt;linear regression&lt;/em&gt;. It can also
+be interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, e.g.
+that they have to be close to zero or that they are non-negative. Then again, many of the priors you might come up with could also 
+be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
+So where the Bayesian framework now really shines is, if you consider the following problem setting I stole from the wonderful 
+presentation &lt;a href="https://www.youtube.com/watch?v=WbNmcvxRwow"&gt;A Bayesian Workflow with PyMC and ArviZ&lt;/a&gt; by Corrie&amp;nbsp;Bartelheimer.&lt;/p&gt;
+&lt;p&gt;Imagine you want to estimate the price of an apartment in Berlin given the living area in square meters and its district. Making a linear
+regression with all data points you have neglecting the districts, i.e. a &lt;em&gt;pooled model&lt;/em&gt;, will lead to a robust estimation of the slope and intercept
+but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
+located in. Now grouping your data with respect to the respective districts and making a linear regression for each,
+i.e. an &lt;em&gt;unpooled model&lt;/em&gt;, will lead to a much more narrow residual distribution but also a high uncertainty in your parameters since
+some district might only have three data points. To combine the advantages of a pooled and unpooled model, one
+would intuitively demand that for each district the prior knowledge of the parameter from the pooled model should be used
+and updated according to the data we have about a certain district. If we have only a few data points we would only 
+deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
+respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
+acts as an informed prior for the parameters within the unpooled model leading altogether to an &lt;em&gt;hierarchical model&lt;/em&gt;,
+which is sometimes also referred to as &lt;em&gt;partially pooled model&lt;/em&gt;. Figure 1 illustrates our thoughts so&amp;nbsp;far.&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;
+&lt;figure&gt;
+&lt;img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model"&gt;
+&lt;figcaption align="center"&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; Hierarchical model as a combination of a pooled and an unpooled model 
+from &lt;a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html"&gt;Bayesian Multilevel Modelling using PyStan&lt;/a&gt;.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&amp;nbsp;&lt;/p&gt;
+&lt;h2&gt;Recent&amp;nbsp;Advances&lt;/h2&gt;
+&lt;p&gt;So far I mostly used &lt;a href="https://docs.pymc.io/"&gt;PyMC3&lt;/a&gt; for Bayesian inference or &lt;em&gt;probabilistic programming&lt;/em&gt; as the authors
+of PyMC3 like to call it. I love it for it&amp;#8217;s elegant design and consequently its expressiveness. The documentation is great
+and thus you can pretty much hack away with your model ideas. The only problem I always had with it is that for me it never
+scaled so well with somewhat larger datasets, i.e. more than 100k data points, and a larger number of parameters. There is a technical and 
+methodical reason for it. Regarding the former, PyMC3 uses &lt;a href="http://deeplearning.net/software/theano/"&gt;Theano&lt;/a&gt; to speed
+up its computations by transpiling your Python code to C. Theano inspired many frameworks like &lt;a href="https://www.tensorflow.org/"&gt;Tensorflow&lt;/a&gt; 
+and &lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt; but is considered deprecated today and cannot rival the speed of modern frameworks
+anymore. For the latter, I used PyMC3 mostly with &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;Markov chain Monte Carlo&lt;/a&gt; (&lt;span class="caps"&gt;MCMC&lt;/span&gt;) based methods, 
+which is a sampling method and computationally quite demanding, while &lt;a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods"&gt;variational inference (&lt;span class="caps"&gt;VI&lt;/span&gt;)&lt;/a&gt;
+methods are much faster. But also when using &lt;span class="caps"&gt;VI&lt;/span&gt;, which PyMC3 also supports, it never really allowed me to deal with larger datasets rendering
+Bayesian Hierarchical Modelling (&lt;span class="caps"&gt;BHM&lt;/span&gt;) a wonderful tool that sadly could not be applied in many suitable projects due to its computational&amp;nbsp;costs.&lt;/p&gt;
+&lt;p&gt;Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
+could make good use of &lt;span class="caps"&gt;BHM&lt;/span&gt;. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate to evaluate was &lt;a href="http://pyro.ai/"&gt;Pyro&lt;/a&gt;,
+which uses Stochastic Variational Inference (&lt;span class="caps"&gt;SVI&lt;/span&gt;) by default, and calls itself a &lt;em&gt;deep universal probabilistic programming&lt;/em&gt; framework.
+Instead of Theano it is based on PyTorch and thus allows for &lt;a href="https://en.wikipedia.org/wiki/Just-in-time_compilation"&gt;just-in-time (&lt;span class="caps"&gt;JIT&lt;/span&gt;) compilation&lt;/a&gt;,
+which sped up my test case already quite a bit. Pyro also emphasizes vectorization, thus allowing for fast parallel computation, e.g. &lt;a href="https://en.wikipedia.org/wiki/SIMD"&gt;&lt;span class="caps"&gt;SIMD&lt;/span&gt;&lt;/a&gt; operations.
+In total the speed-up compared to PyMC3 was amazing in my test-case letting me almost forget the two downsides of Pyro compared
+to PyMC3. Firstly, the documentation of Pyro is not as polished and secondly, it&amp;#8217;s just so much more complicated to use and understand 
+but your mileage may vary on that&amp;nbsp;one. &lt;/p&gt;
+&lt;p&gt;Digging through the website of Pyro I then stumbled over &lt;a href="https://github.com/pyro-ppl/numpyro"&gt;NumPyro&lt;/a&gt; that has a similar
+interface to Pyro but uses &lt;a href="https://github.com/google/jax"&gt;&lt;span class="caps"&gt;JAX&lt;/span&gt;&lt;/a&gt; instead of PyTorch as its backend. &lt;span class="caps"&gt;JAX&lt;/span&gt; is like &lt;a href="https://numpy.org/"&gt;NumPy&lt;/a&gt; on 
+steroids. It&amp;#8217;s crazy fast as it uses &lt;a href="https://www.tensorflow.org/xla"&gt;&lt;span class="caps"&gt;XLA&lt;/span&gt;&lt;/a&gt;, which is a domain-specific compiler for linear algebra
+operations. Additionally, it allows for automatic differentiation like &lt;a href="https://github.com/hips/autograd"&gt;Autograd&lt;/a&gt;,
+whose maintainers moved over to develop &lt;span class="caps"&gt;JAX&lt;/span&gt; further. Long story short, NumPyro even blew the benchmark results of Pyro out of the water.
+For the first time (at least for what I know), NumPyro allows you do Bayesian inference with lots of parameters like in
+&lt;span class="caps"&gt;BHM&lt;/span&gt; on large data! In the rest of this post, I want to show you how NumPyro can be applied in a typical demand prediction
+use-case on some public dataset. The dataset in my actual use-case was much bigger, my model had more parameters and NumPyro could still handle it but you just have to trust me on this one ;-)
+Hopefully some readers will find this post useful and maybe it mitigates a bit the pain coming from the lack of NumPyro&amp;#8217;s documentation and&amp;nbsp;examples.&lt;/p&gt;
+&lt;h2&gt;Use-Case &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt;&amp;nbsp;Modelling&lt;/h2&gt;
+&lt;p&gt;Imagine you have many retail stores and want to make individual demand predictions for them. For stores that were opened
+a long time ago, this should be no problem but how do you deal with stores that first opened a week ago or even will open soon? Like in the example
+of apartment prices in different districts, &lt;span class="caps"&gt;BHM&lt;/span&gt; helps you to deal exactly with this &lt;a href="https://en.wikipedia.org/wiki/Cold_start_(recommender_systems)"&gt;cold start problem&lt;/a&gt;. We take the 
+&lt;a href="https://www.kaggle.com/c/rossmann-store-sales"&gt;Rossmann dataset from Kaggle&lt;/a&gt; to simulate this problem by removing the data
+of some of the stores. The data consists of a &lt;em&gt;train&lt;/em&gt; dataset with information about the sales and daily features of the stores,
+e.g. if a promotion happened (&lt;code&gt;promo&lt;/code&gt;), as well as a &lt;em&gt;store&lt;/em&gt; dataset with time-independent store features.
+Here&amp;#8217;s what we wanna do in our little experiment and study&amp;nbsp;protocol:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;join the data from Kaggle&amp;#8217;s &lt;code&gt;train.csv&lt;/code&gt; dataset with the general store features from the &lt;code&gt;store.csv&lt;/code&gt; dataset,&lt;/li&gt;
+&lt;li&gt;perform some really basic feature engineering and encoding of the categorical&amp;nbsp;features,&lt;/li&gt;
+&lt;li&gt;split the data into train and test where we treat the stores from train as being opened for a long time and the ones
+  from test as newly&amp;nbsp;opened,&lt;/li&gt;
+&lt;li&gt;fit our hierarchical model on the train dataset to infer the &amp;#8220;global&amp;#8221; parameters of the upper model&amp;nbsp;hierarchy,&lt;/li&gt;
+&lt;li&gt;take only the first 7 days for each store in the test data, which we assume to know, and fit our model only inferring
+ the local, i.e. store-specific, parameters of the lower hierarchy while keeping the global ones&amp;nbsp;fixed,&lt;/li&gt;
+&lt;li&gt;compare the inferred parameters of a test store to:&lt;ol&gt;
+&lt;li&gt;the inferred local parameters of a simple Poisson model. We expect them to be completely different due to the lack
+   of data and thus overfitting of the Poisson&amp;nbsp;model,&lt;/li&gt;
+&lt;li&gt;the inferred local parameters of our model if we had given it the whole time series from test, i.e. not only the first 7 days.
+   In this case, we assume that we are already pretty close since the priors given by the global parameters nudge them
+   in the right direction even with only little&amp;nbsp;data.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;All code of this little experiment can be found under my &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale"&gt;bhm-at-scale repository&lt;/a&gt;
+so that you can follow along easily.
+The steps 1-3 are performed in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/01-preprocessing.ipynb"&gt;preprocessing notebook&lt;/a&gt;
+and are actually not that interesting, thus we will skip it here. Steps 4-6 are performed in the
+&lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt; while some visualisations are presented in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb"&gt;evaluation notebook&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;But before we start to get technical, let&amp;#8217;s take a minute and frame again the forecasting problem from a more mathematical side.
+The data of each store is a time-series of feature vectors and target scalars. We want to find a mapping such that the
+feature vector of each time-step is mapped to a value close to the target scalar of the respective time-step. Since our target
+value, i.e. the number of sales, is a non-negative integer we could assume a &lt;a href="https://en.wikipedia.org/wiki/Poisson_distribution"&gt;Poisson distribution&lt;/a&gt; and consequently
+perform a &lt;a href="https://en.wikipedia.org/wiki/Poisson_regression"&gt;Poisson regression&lt;/a&gt; in a hierarchical way. This would be kind of okay
+if we were only interested in a point estimation and thus would not care about the variance of the predictive posterior distribution. 
+The Poisson distribution only has one parameter &lt;span class="math"&gt;\(\lambda\)&lt;/span&gt; that allows you to define the mean &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; while the variance &lt;span class="math"&gt;\(\sigma^2\)&lt;/span&gt; then just equals the mean as there is no way to adjust the variance independently. &lt;br&gt;
+In many practical use-cases, there is &lt;a href="https://en.wikipedia.org/wiki/Overdispersion"&gt;overdispersion&lt;/a&gt; though, meaning that the variance is larger than the mean and we have to make up for it.
+We can define a so called &lt;em&gt;dispersion parameter&lt;/em&gt; &lt;span class="math"&gt;\(r\in(0,\infty)\)&lt;/span&gt; by reparametrization in the &lt;a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution"&gt;negative binomial distribution&lt;/a&gt;,&amp;nbsp;i.e.&lt;/p&gt;
+&lt;div class="math"&gt;$$\mathrm{NB}(y;\mu,r) = \frac{\Gamma(r+y)}{y!\cdot\Gamma(r)}\cdot\left(\frac{r}{r+\mu}\right)^r\cdot\left(\frac{\mu}{r+\mu}\right)^y,$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\Gamma\)&lt;/span&gt; is the &lt;a href="https://en.wikipedia.org/wiki/Gamma_function"&gt;Gamma function&lt;/a&gt;. Now we&amp;nbsp;have&lt;/p&gt;
+&lt;div class="math"&gt;$$\sigma^2=\mu + \frac{1}{r}\mu^2$$&lt;/div&gt;
+&lt;p&gt;and using &lt;span class="math"&gt;\(r\)&lt;/span&gt; we are thus able to adjust the variance from &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; to &lt;span class="math"&gt;\(\infty\)&lt;/span&gt;. 
+Another name for the negative binomial distribution is Gamma-Poisson distribution and this is the name under which we find it also in NumPyro. I find this name 
+much more catchy since you can imagine a Poisson distribution with its only parameter drawn from a Gamma distribution that
+has two parameters &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; and &lt;span class="math"&gt;\(\beta\)&lt;/span&gt;. This also intuitively explains why the variance of &lt;span class="caps"&gt;NB&lt;/span&gt; is bounded below by its mean.
+Just think of &lt;span class="caps"&gt;NB&lt;/span&gt; as a generalization of the Poisson distribution with one more parameter that allows adjusting the&amp;nbsp;variance.&lt;/p&gt;
+&lt;p&gt;Uncertainty Quantification is a crucial requirement for sales forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
+What retailers really care about is optimal replenishment, meaning that they want to have a system telling them how much
+to order so that there is an optimal amount of stocks available in their store. In order to provide optimal replenishment
+suggestions you need sales forecasts that provide probability distributions, not only point estimations. With the help
+of those distributions the replenishment system basically runs an optimization with respect to some cost function, e.g.
+cost of a missed sale is weighted 3 times the cost of a written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
+For these reasons we will use the &lt;span class="caps"&gt;NB&lt;/span&gt; distribution that allows us the quantify the uncertainties in our sales predictions&amp;nbsp;adequately.&lt;/p&gt;
+&lt;p&gt;So now that we settled with &lt;span class="caps"&gt;NB&lt;/span&gt; as the distribution that we want to fit to the daily sales of our stores &lt;span class="math"&gt;\(\mathbf{y}\)&lt;/span&gt;, we can think
+about incorporating our features &lt;span class="math"&gt;\(\mathbf{x}\)&lt;/span&gt;. We want to use a linear model to map &lt;span class="math"&gt;\(\mathbf{x}\)&lt;/span&gt; to &lt;span class="math"&gt;\(\mathbf{\mu}\)&lt;/span&gt; such
+that we can use it later to calculate &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; and &lt;span class="math"&gt;\(\beta\)&lt;/span&gt; of &lt;span class="caps"&gt;NB&lt;/span&gt;. Using again the fact that we are dealing with non-negative
+numbers and also considering that we expect effects to be multiplicative, e.g. 10% more during a promotion, our ansatz&amp;nbsp;is&lt;/p&gt;
+&lt;div class="math"&gt;$$\mu = \exp(\mathbf{\theta}^\top\mathbf{x}),$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\mathbf{\theta}\)&lt;/span&gt; is a vector of coefficients. For each store &lt;span class="math"&gt;\(i\)&lt;/span&gt; and each feature &lt;span class="math"&gt;\(j\)&lt;/span&gt; we will have a separate
+coefficient &lt;span class="math"&gt;\(\theta_{ij}\)&lt;/span&gt;. The &lt;span class="math"&gt;\(\theta_{ij}\)&lt;/span&gt; are regularized by parameters &lt;span class="math"&gt;\(\theta^\mu_j\)&lt;/span&gt; and &lt;span class="math"&gt;\(\theta^{\sigma^2}_j\)&lt;/span&gt; on 
+the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
+infer individual &lt;span class="math"&gt;\(r_i\)&lt;/span&gt; for each store &lt;span class="math"&gt;\(i\)&lt;/span&gt; as well as global parameters &lt;span class="math"&gt;\(r^\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(r^{\sigma^2}\)&lt;/span&gt; over all stores. 
+And that&amp;#8217;s already most of it. The plot in Figure 2 depicts the graphical model outlined so&amp;nbsp;far.&lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 2:&lt;/strong&gt; Graphical representation of a hierarchical model (centered version) as defined above.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;Those boxes in Figure 2, which are called &lt;a href="https://en.wikipedia.org/wiki/Plate_notation"&gt;plates&lt;/a&gt;, tell you how many times a parameter is repeated.
+Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
+The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
+This also helps them to increase performance by taking optimizations into account that are just not possible in the general case.
+Shaded circles are observed values, which in our case are the number of sales on a given day &lt;span class="math"&gt;\(k\)&lt;/span&gt; and store &lt;span class="math"&gt;\(i\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;Let&amp;#8217;s take a quick look into our model code which is just a normal Python function. It&amp;#8217;s good to keep in mind, that we call this a &lt;em&gt;model&lt;/em&gt; since we assume that given
+the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
+The model function only defines the model parameters, how they interact and their&amp;nbsp;priors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro.distributions&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;dist&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jax.numpy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;jax.numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;jnp&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jax&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;random&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Gamma-Poisson hierarchical model for daily sales forecasting&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        X: input data&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;        output data&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;
+    &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  &lt;span class="c1"&gt;# remove one dim for target&lt;/span&gt;
+    &lt;span class="n"&gt;eps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1e-12&lt;/span&gt;  &lt;span class="c1"&gt;# epsilon&lt;/span&gt;
+
+    &lt;span class="n"&gt;plate_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;features&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;plate_stores&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;stores&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;plate_days&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;timesteps&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;4.&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HalfNormal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;disp_params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;disp_param_sigma&lt;/span&gt;
+        &lt;span class="n"&gt;disp_params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;disp_params&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Delta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_features&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;coef_mus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;coef_sigmas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_sigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HalfNormal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                    &lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                    &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;coef_mus&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;coef_sigmas&lt;/span&gt;
+            &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;coefs&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Delta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;coefs&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;coefs&lt;/span&gt;
+            &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;targets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nan_to_num&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;  &lt;span class="c1"&gt;# padded features to 0&lt;/span&gt;
+        &lt;span class="n"&gt;is_observed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isnan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros_like&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones_like&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="n"&gt;not_observed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;is_observed&lt;/span&gt;
+        &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_observed&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;expand_dims&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;coefs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;features&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+                 &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;not_observed&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;eps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="n"&gt;betas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;is_observed&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;not_observed&lt;/span&gt;
+        &lt;span class="n"&gt;alphas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;betas&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;days&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GammaPoisson&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alphas&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;betas&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nan_to_num&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that &lt;code&gt;disp_param&lt;/code&gt; is &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;code&gt;coef&lt;/code&gt; is &lt;span class="math"&gt;\(\theta\)&lt;/span&gt; in the source code above for better readability. You will
+recognize a lot of what we have talked about and I don&amp;#8217;t want to go into the syntactical details of NumPyro. My suggestion
+would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
+NumPyro&amp;nbsp;reference. &lt;/p&gt;
+&lt;p&gt;Reading the source code more thoroughly, you might wonder about the definition of the coefficients as &lt;code&gt;coefs = coef_mus + coef_offsets * coef_sigmas&lt;/code&gt;.
+The explanations of the model I have given and also the plot, actually shows the &lt;em&gt;centered version&lt;/em&gt; of a
+hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
+the direct dependency of the local parameters on the global ones make it hard for many &lt;span class="caps"&gt;MCMC&lt;/span&gt; sampling methods but also &lt;span class="caps"&gt;SVI&lt;/span&gt; methods to explore
+certain regions of the local parameter space. This effect is called &lt;em&gt;funnel&lt;/em&gt; and can be imagined as walking with the the same step length
+on a bridge that gets narrower and narrower. From the point on where the bridge is about as wide as your step length, you might
+become a bit hesitant to explore more of it. As very often the case, a reparameterization overcomes this problem resulting
+in the &lt;em&gt;non-centered&lt;/em&gt; version of a hierarchical model. This is the version used in the implementation. If you want to know more about this, a really great 
+&lt;a href="https://twiecki.io/blog/2017/02/08/bayesian-hierchical-non-centered/"&gt;blog post by Thomas Wiecki&lt;/a&gt; gives you all the details about&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;Another thing that wasn&amp;#8217;t mentioned yet are the &lt;code&gt;is_observed&lt;/code&gt; and &lt;code&gt;not_observed&lt;/code&gt; variables which are just a nice gimmick.
+Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
+the target variable &lt;span class="math"&gt;\(y\)&lt;/span&gt; to &lt;em&gt;not observed&lt;/em&gt; instead of 0. During training, these target values are just ignored and later
+allows the model to answer a store manager&amp;#8217;s potential question: &amp;#8220;How many sales would I have had if I had opened my store on that&amp;nbsp;day&amp;#8221;.&lt;/p&gt;
+&lt;p&gt;Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
+Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
+parameters have to be defined since its &lt;span class="caps"&gt;SVI&lt;/span&gt;. This is done in a separate function called &lt;em&gt;guide&lt;/em&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;guide&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Guide with parameters of the posterior&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        X: input data&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;
+    &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  &lt;span class="c1"&gt;# remove one dim for target&lt;/span&gt;
+
+    &lt;span class="n"&gt;plate_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;features&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;plate_stores&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;stores&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;4.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                    &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                        &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TransformedDistribution&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_disp_param_logsigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_disp_param_logsigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                            &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+            &lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ExpTransform&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                                            &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_features&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                            &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_sigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TransformedDistribution&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_coef_logsigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                            &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_coef_logsigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                                &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                &lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ExpTransform&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                    &lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;))),&lt;/span&gt;
+                    &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                                        &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As you can see, the structure of the guide reflects the structure of the model and there we are just defining for each model parameter
+a distribution that again has parameters that need to be determined. The link between model and guide is given by the names of the &lt;em&gt;sample sites&lt;/em&gt;
+like &amp;#8220;coef_offsets&amp;#8221;. This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
+behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
+You can see in the actual implementation, i.e. &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py"&gt;model.py&lt;/a&gt;, that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Site&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;disp_params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_params&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coef_mus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_mus&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coef_sigmas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_sigmas&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coefs&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;days&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;days&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then using variables like &lt;code&gt;Site.coef_offsets&lt;/code&gt; instead of strings like &lt;code&gt;"coef_offsets"&lt;/code&gt; as identifiers of sample sites, allows your &lt;span class="caps"&gt;IDE&lt;/span&gt; to inform you about any typos as you go. Problem&amp;nbsp;solved.&lt;/p&gt;
+&lt;p&gt;Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
+that we have already fitted the global parameters but want to only determine the local parameters of new stores with little data.
+The predictive model assumes global and local parameters to be already inferred so that we can use it to predict the number
+of sales on days beyond our training interval. As these functions are only slide variations, I spare you the details and refer you to the implementation in &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py"&gt;model.py&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Most parts of the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt; actually deal with training the model on stores from the training data with a long sales history,
+then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
+This works really well although the number of features, which is 23, is much higher than 7! Let&amp;#8217;s take a look at the coefficients 
+of a store from the test set as detailed in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
+  2.4938385   0.33227605  3.115691    2.9264386   2.692092    2.9548435
+  0.05613964  0.06542112  2.8379264   2.9023972   3.5701406   3.2074358
+  4.0569873   2.9304545   2.7463424   2.823191    2.959007  ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
+Comparing the coefficients from above to the ones of the Poisson regression for the same store,&amp;nbsp;i.e.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+ -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
+ -0.09434899  0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.        ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;we see that they are highly different and zero for features in the Poisson regression that weren&amp;#8217;t encountered in the data of just 7 days.
+Now comparing the coefficients of our &lt;span class="caps"&gt;BHM&lt;/span&gt; model trained on just 7 days with the coefficients of a cheating model trained on the whole test set,&amp;nbsp;i.e.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+  2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
+ -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
+  4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;we see that they are quite similar. That&amp;#8217;s the magic of a hierarchical model! We started with plausible defaults from a 
+global perspective and adapted locally depending on the amount of available&amp;nbsp;data.&lt;/p&gt;
+&lt;p&gt;Running the code from the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt; on your laptop will be matter of a few minutes for the training on 1000 stores
+each having 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
+and &lt;span class="math"&gt;\(23\cdot 1000+1000+2\cdot 23+2=24048\)&lt;/span&gt; parameters in our graphical model. Since each parameter is fitted with the help of a 
+parameterized distribution in the guide, as we are doing &lt;span class="caps"&gt;SVI&lt;/span&gt;, the number of actual variables is twice as much leading to roughly 50,000
+variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not big data, 
+it&amp;#8217;s still impressive that using NumPyro you can fit a model like that within a few minutes on your
+laptop and the implementation is not even using batching that would speed it up even further. In one of my customer
+projects we used a way larger model on much more data and our workstation was still able to handle it smoothly. 
+NumPyro really scales well even beyond this little&amp;nbsp;demonstration. &lt;/p&gt;
+&lt;h2&gt;Visualization&lt;/h2&gt;
+&lt;p&gt;There is now tons of things one could do with the results of our hierarchical model. One could check out the
+actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
+I will leave to the interested reader and give only a few tidbits here from the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb"&gt;evaluation notebook&lt;/a&gt;.
+We start with taking a look at the sales prediction for one of the stores from the test set as depicted in Figure&amp;nbsp;3.&lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 3:&lt;/strong&gt; Sales forecast of one store from the test set. The blue dashed line is the the mean predicted mean.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;Only judging by the eye, we see that predicted mean (blue dashed line) follows the number sales (bluish bars) quite good.
+The background is shaded according to some important features like promotions and holidays which explain some of the variations
+in our predictions. Just for information, also the number of customers are displayed but not used in the prediction of course.
+Also, we see the 50% and 90% &lt;a href="https://en.wikipedia.org/wiki/Credible_interval"&gt;credible intervals&lt;/a&gt; as shaded blue areas
+around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
+was closed, we predict not 0 but what would have likely happened if it wasn&amp;#8217;t closed, which was part of our&amp;nbsp;model.&lt;/p&gt;
+&lt;p&gt;We could then also start looking into the effects of certain features like the weekdays. Figure 4 shows for each
+weekday starting with Monday a density over the means of all&amp;nbsp;stores. &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_weekday_effect.png" alt="plot weekday effect"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 4:&lt;/strong&gt; Density plot of the means of the weekday coefficients over all stores. 
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
+Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
+we could be interested in analyzing the distribution of the promotion effect over all stores as shown in Figure&amp;nbsp;5.  &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_promo_effect.png" alt="plot of promotion effect"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 5:&lt;/strong&gt; Density plot of the promotion effect over all stores with the red line showing the median.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;These are just some analysis one could start to look into to derive useful insights for store management. 
+The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
+only the aggregated sales but also the ones of individual products. We could then build hierarchies over the product hierarchies
+and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
+We could also use &lt;span class="caps"&gt;BHM&lt;/span&gt; to address &lt;a href="https://en.wikipedia.org/wiki/Censoring_(statistics)"&gt;censored data&lt;/a&gt;, which is also an important task when doing sales forecasts. Canonically,
+one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
+in which we only know that demand ≥ sales. Right-censored data like that provides us with information about the &lt;a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function"&gt;cumulative
+distribution function&lt;/a&gt; in contrast to the &lt;a href="https://en.wikipedia.org/wiki/Probability_mass_function"&gt;probability mass function&lt;/a&gt;
+in case of no out-of-stock situation. There are ways to include both types of information into an &lt;span class="caps"&gt;BHM&lt;/span&gt;.
+Those are just some of many possible improvements and extensions to this model. I am looking forward to your ideas and&amp;nbsp;use-cases!&lt;/p&gt;
+&lt;h2&gt;Final&amp;nbsp;Remarks&lt;/h2&gt;
+&lt;p&gt;We have seen that &lt;span class="caps"&gt;BHM&lt;/span&gt; allows us to combine the advantages of a pooled and unpooled model. Using some retailer&amp;#8217;s data,
+we implemented a simple &lt;span class="caps"&gt;BHM&lt;/span&gt; thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and
+explainability. From a practical perspective, we have seen that &lt;span class="caps"&gt;BHM&lt;/span&gt; even scales really well with the help of NumPyro.
+On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
+Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
+practical dataset sizes with the help of NumPyro! Cheers to that and let&amp;#8217;s follow a famous saying in the French world of mathematics &lt;em&gt;Poisson sans boisson est poison&lt;/em&gt;! &lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="data science"></category><category term="mathematics"></category><category term="production"></category></entry><entry><title>Honey, I shrunk the target variable</title><link href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/" rel="alternate"></link><published>2020-05-04T12:00:00+02:00</published><updated>2020-05-04T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-05-04:/2020/05/honey_i_shrunk_the_target_variable/</id><summary type="html">&lt;p&gt;Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn&amp;#8217;t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your&amp;nbsp;advantage.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;For me it is often an irritating sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem&amp;#8230; but it also makes me contemplate about my past when I started doing data science. 
 So full of vigour and enthusiasm, I was often completely absorbed by the idea of minimizing whatever error measure I was given or maybe some random one 
@@ -1667,136 +2173,4 @@ know if you liked this post and comment&amp;nbsp;below.&lt;/p&gt;
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="python"></category><category term="data science"></category><category term="deep learning"></category><category term="recommender systems"></category></entry><entry><title>Managing isolated Environments with PySpark</title><link href="https://florianwilhelm.info/2018/03/isolated_environments_with_pyspark/" rel="alternate"></link><published>2018-03-08T15:10:00+01:00</published><updated>2018-03-08T15:10:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-03-08:/2018/03/isolated_environments_with_pyspark/</id><summary type="html">&lt;p&gt;The Spark data processing platform becomes more and more important for data scientists using Python. PySpark - the official Python &lt;span class="caps"&gt;API&lt;/span&gt; for Spark - makes it easy to get started but managing applications and their dependencies in isolated environments is no easy&amp;nbsp;task.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;With the sustained success of the Spark data processing platform even data scientists with a strong focus on the Python ecosystem can no longer ignore it.
-Fortunately, it is easy to get started with &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html"&gt;PySpark&lt;/a&gt; - the official Python &lt;span class="caps"&gt;API&lt;/span&gt; for Spark - due to millions of word count tutorials on the web. In contrast to that, resources on how to deploy and use Python packages like Numpy, Pandas, Scikit-Learn in an isolated environment with PySpark are scarce. A nice exception to that is a &lt;a href="https://developerzen.com/best-practices-writing-production-grade-pyspark-jobs-cb688ac4d20f"&gt;blog post by Eran Kampf&lt;/a&gt;. Being able to install your own Python libraries is especially important if you want to write User-Defined-Functions (UDFs) as explained in the blog post &lt;a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;For most Spark/Hadoop distributions, which is Cloudera in my case, there are basically two options for managing isolated&amp;nbsp;environments:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;You give all your data scientists &lt;span class="caps"&gt;SSH&lt;/span&gt; access to all your cluster&amp;#8217;s nodes and let them do whatever they want like installing virtual environments with &lt;a href="https://virtualenv.pypa.io/en/stable/"&gt;virtualenv&lt;/a&gt; or &lt;a href="https://conda.io/docs/intro.html"&gt;conda&lt;/a&gt; as detailed in the &lt;a href="https://www.cloudera.com/documentation/enterprise/5-6-x/topics/spark_python.html#spark_python__section_kr2_4zs_b5"&gt;Cloudera documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Your sysadmins install Anaconda Parcels using the Cloudera Manager Admin Console to provide the most popular Python packages in a one size fits all fashion for all your data scientists as described in a &lt;a href="http://blog.cloudera.com/blog/2016/02/making-python-on-apache-hadoop-easier-with-anaconda-and-cdh/"&gt;Cloudera blog post&lt;/a&gt;. &lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Both options have drawbacks which are as severe as obvious. Do you really want to let a bunch of data scientists run processes on your cluster and fill up the local hard-drives? The second option is not even a real isolated environment at all since all your applications would use the same libraries and maybe break after an update of a&amp;nbsp;library.   &lt;/p&gt;
-&lt;p&gt;Therefore, we need to empower our data scientists developing a predictive application to manage isolated environments with their dependencies themselves. This was also recognized as a problem and several issues (&lt;a href="https://issues.apache.org/jira/browse/SPARK-13587"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-13587&lt;/a&gt; &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; &lt;a href="https://issues.apache.org/jira/browse/SPARK-16367"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-16367&lt;/a&gt;) suggest solutions, but none of them have been integrated yet. The most mature solution is actually &lt;a href="https://github.com/nteract/coffee_boat"&gt;coffee boat&lt;/a&gt;, which is still in beta and not meant for production. Therefore, we want to present here a simple but viable solution for this problem that we have been using in production for more than a&amp;nbsp;year.&lt;/p&gt;
-&lt;p&gt;So how can we distribute Python modules and whole packages on our executors? Luckily, PySpark provides the functions &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile"&gt;sc.addFile&lt;/a&gt; and &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addPyFile"&gt;sc.addPyFile&lt;/a&gt; which allow us to upload files to every node in our cluster, even Python modules and egg files in case of the latter. Unfortunately, there is no way to upload wheel files which are needed for binary Python packages like Numpy, Pandas and so on. As a data scientist you cannot live without&amp;nbsp;those. &lt;/p&gt;
-&lt;p&gt;At first sight this looks pretty bad but thanks to the simplicity of the wheel format it&amp;#8217;s not so bad at all. So here is what we do in a nutshell: For a given PySpark application, we will create an isolated environment on &lt;span class="caps"&gt;HDFS&lt;/span&gt; with the help of wheel files. When submitting our PySpark application, we copy the content of our environment to the driver and executors using &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.addFile"&gt;sc.addFile&lt;/a&gt;. Simple but&amp;nbsp;effective.&lt;/p&gt;
-&lt;h2&gt;Generating the&amp;nbsp;environment&lt;/h2&gt;
-&lt;p&gt;In order to create our aforementioned environment we start by creating a directory that will contain our isolated environment, e.g. &lt;code&gt;venv&lt;/code&gt;, on our local Linux machine. Then we will populate this directory with the wheel files of all libraries that our PySpark application uses. Since wheel files contain compiled code they are dependent on the exact Python version and platform. 
-For us this means we have to make sure that we use the same platform and Python version locally as we gonna use on the Spark cluster. In my case the cluster runs Ubuntu Trusty Linux with Python 3.4. To replicate this locally it&amp;#8217;s best to use a conda&amp;nbsp;environment:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda create -n py34 &lt;span class="nv"&gt;python&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.4
-&lt;span class="nb"&gt;source&lt;/span&gt; activate py34
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Having activated the conda environment, we just use &lt;code&gt;pip download&lt;/code&gt; to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, &lt;code&gt;pip&lt;/code&gt; will download a source-based &lt;code&gt;tar.gz&lt;/code&gt; file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt;. A wheel file should now reside in the &lt;code&gt;dist&lt;/code&gt; subdirectory. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. &lt;code&gt;python3-dev&lt;/code&gt; and &lt;code&gt;unixodbc-dev&lt;/code&gt;.   &lt;/p&gt;
-&lt;p&gt;Now we copy the wheel files of all our PySpark application&amp;#8217;s dependencies into the &lt;code&gt;venv&lt;/code&gt; directory. After that, we unpack them with &lt;code&gt;unzip&lt;/code&gt; since they are just normal zip files with a strange suffix. Finally, we push everything to &lt;span class="caps"&gt;HDFS&lt;/span&gt;, e.g. &lt;code&gt;/my_venvs/venv&lt;/code&gt;, using &lt;code&gt;hdfs dfs -put ./venv /my_venvs/venv&lt;/code&gt; and make sure that the files are readable by&amp;nbsp;anyone.&lt;/p&gt;
-&lt;h2&gt;Bootstrapping the&amp;nbsp;environment&lt;/h2&gt;
-&lt;p&gt;When our PySpark application runs the first thing we do is calling &lt;code&gt;sc.addFile&lt;/code&gt; on every file in &lt;code&gt;/my_venvs/venv&lt;/code&gt;. Since this will also set the &lt;code&gt;PYTHONPATH&lt;/code&gt; correctly, importing any library which resides in &lt;code&gt;venv&lt;/code&gt; will just work. If our Python application itself is also nicely structured as a Python package (maybe using &lt;a href="http://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt;) we can also push it to &lt;code&gt;/my_venvs/venv&lt;/code&gt;. This allows us to roll a full-blown PySpark application and nicely separate the boilerplate code that bootstraps our isolated environment from&amp;nbsp;it.&lt;/p&gt;
-&lt;p&gt;Let&amp;#8217;s assume our PySpark application is a Python package called &lt;code&gt;my_pyspark_app&lt;/code&gt;. The boilerplate code to bootstrap &lt;code&gt;my_pyspark_app&lt;/code&gt;, i.e. to activate the isolated environment on Spark, will be in the module &lt;code&gt;activate_env.py&lt;/code&gt;. When we submit our Spark job we will specify this module and specify the environment as an argument,&amp;nbsp;e.g.:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;PYSPARK_PYTHON&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster &lt;span class="se"&gt;\&lt;/span&gt;
---num-executors &lt;span class="m"&gt;4&lt;/span&gt; --driver-memory 12g --executor-memory 4g --executor-cores &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
---files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-activate_env.py /my_venvs/venv
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Easy and quite flexible! We are even able to change from one environment to another by just passing another &lt;span class="caps"&gt;HDFS&lt;/span&gt; directory. Here is how &lt;code&gt;activate_env.py&lt;/code&gt; which does the actual heavy lifting with &lt;code&gt;sc.addFile&lt;/code&gt; looks&amp;nbsp;like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="sd"&gt;Bootstrapping an isolated environment for `my_pyspark_app` on Spark&lt;/span&gt;
-&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
-
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.context&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkContext&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
-
-&lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;list_path_names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;List files and directories in an HDFS path&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        path (str): HDFS path to directory&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        [str]: list of file/directory names&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkContext&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="c1"&gt;# low-level access to hdfs driver&lt;/span&gt;
-    &lt;span class="n"&gt;hadoop&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_gateway&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jvm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hadoop&lt;/span&gt;
-    &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hadoop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hadoop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Configuration&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hadoop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileSystem&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listStatus&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path_status&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getPath&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getName&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;path_status&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;distribute_hdfs_files&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hdfs_path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Distributes recursively a given directory in HDFS to Spark&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        hdfs_path (str): path to directory&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkContext&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;path_name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;list_path_names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hdfs_path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hdfs_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path_name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;_logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distributing &lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt;...&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addFile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;recursive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Main entry point allowing external calls&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;      args ([str]): command line parameter list&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="c1"&gt;# setup logging for driver&lt;/span&gt;
-    &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DEBUG&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stream&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="n"&gt;_logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;_logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Starting up...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# Create the singleton instance&lt;/span&gt;
-    &lt;span class="n"&gt;spark&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SparkSession&lt;/span&gt;
-             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;
-             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;appName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;My PySpark App in its own environment&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;enableHiveSupport&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-             &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# For simplicity we assume that the first argument is the environment on HDFS&lt;/span&gt;
-    &lt;span class="n"&gt;VENV_DIR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="c1"&gt;# make sure we have the latest version available on HDFS&lt;/span&gt;
-    &lt;span class="n"&gt;distribute_hdfs_files&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hdfs://&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;VENV_DIR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;my_pyspark_app&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;
-    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:])&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;run&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Entry point for console_scripts&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:])&lt;/span&gt;
-
-
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;It is actually easier than it looks. In the &lt;code&gt;main&lt;/code&gt; function we initialize the &lt;code&gt;SparkSession&lt;/code&gt; the first time so that later calls to the session builder will use this instance. Thereafter, the passed path argument when doing the &lt;code&gt;spark-submit&lt;/code&gt; is extracted. Subsequently, this is passed to &lt;code&gt;distribute_hdfs_files&lt;/code&gt; which calls &lt;code&gt;sc.addFile&lt;/code&gt; recursively on every file to set up the isolated environment on the driver and executors. After this we are able to import our &lt;code&gt;my_pyspark_app&lt;/code&gt; package and call for instance its &lt;code&gt;main&lt;/code&gt; method. The following graphic illustrates the whole&amp;nbsp;concept: &lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/pyspark_venv.png" alt="Isolated environment with PySpark"&gt;
-&lt;figcaption&gt;&lt;strong&gt;Figure:&lt;/strong&gt; Executing &lt;em&gt;spark-submit&lt;/em&gt; uploads our &lt;em&gt;activate_env.py&lt;/em&gt; module and starts a Spark driver process. Thereafter, &lt;em&gt;activate_env.py&lt;/em&gt; is executed within the driver and bootstraps our &lt;em&gt;venv&lt;/em&gt; environment on the Spark driver as well as on the executors. Finally, &lt;em&gt;activate_env.py&lt;/em&gt; relinquishes control to &lt;em&gt;my_pyspark_app&lt;/em&gt;.&lt;/figcaption&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Setting up an isolated environment like this is a bit cumbersome and surely also somewhat hacky. Still, in our use-case it served us quite well and allowed the data scientists to set up their specific environments without access to the cluster&amp;#8217;s nodes. Since the explained method also works with &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt; this is not only useful for production but also for proof-of-concepts. That being said, we still hope that soon there will be an official solution by the Spark project itself. As a final note, I want to mention the tool &lt;a href="https://border-patrol.readthedocs.io/"&gt;Border-Patrol&lt;/a&gt; that helps us quite a lot in debugging Spark environments and is really easy to use. It tells you about all imported packages by your application, their versions and if these packages were taken from the environment or from the system installation of the cluster&amp;nbsp;nodes. &lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="production"></category></entry></feed>
+&lt;/script&gt;</content><category term="python"></category><category term="data science"></category><category term="deep learning"></category><category term="recommender systems"></category></entry></feed>

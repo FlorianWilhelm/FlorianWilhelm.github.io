@@ -1,5 +1,511 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2020-05-04T12:00:00+02:00</updated><entry><title>Honey, I shrunk the target variable</title><link href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/" rel="alternate"></link><published>2020-05-04T12:00:00+02:00</published><updated>2020-05-04T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-05-04:/2020/05/honey_i_shrunk_the_target_variable/</id><summary type="html">&lt;p&gt;Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn&amp;#8217;t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your&amp;nbsp;advantage.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2020-10-01T08:00:00+02:00</updated><entry><title>Finally! Bayesian Hierarchical Modelling at Scale</title><link href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/" rel="alternate"></link><published>2020-10-01T08:00:00+02:00</published><updated>2020-10-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-10-01:/2020/10/bayesian_hierarchical_modelling_at_scale/</id><summary type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional
+techniques from e.g. instrumentation and control engineering, is nowadays considered &lt;em&gt;&lt;span class="caps"&gt;AI&lt;/span&gt;&lt;/em&gt;. For instance, the famous robots
+of Boston Dynamics are not based on deep …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional
+techniques from e.g. instrumentation and control engineering, is nowadays considered &lt;em&gt;&lt;span class="caps"&gt;AI&lt;/span&gt;&lt;/em&gt;. For instance, the famous robots
+of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
+methods. This hype around &lt;span class="caps"&gt;AI&lt;/span&gt;, which is very often equated with deep learning, seems to draw that much attention such that
+great advances of more traditional methods seem to go almost completely unnoticed. In this blog post, I want to draw your 
+attention to the somewhat dusty &lt;em&gt;Bayesian Hierarchical Modelling&lt;/em&gt;. Modern techniques and frameworks allow you to finally apply this
+cool method on datasets with sizes much bigger than what was possible before and thus letting it really&amp;nbsp;shine.&lt;/p&gt;
+&lt;p&gt;So for starters, what is &lt;em&gt;Bayesian Hierarchical Modelling&lt;/em&gt; and why should I care? I assume you already have a basic knowledge about
+Bayesian inference, otherwise &lt;a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers"&gt;Probabilistic Programming and Bayesian Methods for Hackers&lt;/a&gt;
+is a really good starting point to explore the Bayesian rabbit hole. In simple words, Bayesian inference allows you to define
+a model with the help of probability distributions and also incorporate your prior knowledge about the parameters of your model.
+This leads to a &lt;em&gt;directed acyclic graphical model&lt;/em&gt; (aka Bayesian network) which is explainable, visual and easy to reason about.
+But that&amp;#8217;s not even everything, you also get &lt;a href="https://en.wikipedia.org/wiki/Uncertainty_quantification"&gt;Uncertainty Quantification&lt;/a&gt; for free, 
+meaning that the model&amp;#8217;s parameters are not mere point estimates but whole distributions telling you how certain you are
+about their&amp;nbsp;values. &lt;/p&gt;
+&lt;p&gt;A classical statistical method that most data scientists learn about early on is &lt;em&gt;linear regression&lt;/em&gt;. It can also
+be interpreted in a Bayesian way giving you the possibility to define prior knowledge about the parameters, e.g.
+that they have to be close to zero or that they are non-negative. Then again, many of the priors you might come up with could also 
+be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
+So where the Bayesian framework now really shines is, if you consider the following problem setting I stole from the wonderful 
+presentation &lt;a href="https://www.youtube.com/watch?v=WbNmcvxRwow"&gt;A Bayesian Workflow with PyMC and ArviZ&lt;/a&gt; by Corrie&amp;nbsp;Bartelheimer.&lt;/p&gt;
+&lt;p&gt;Imagine you want to estimate the price of an apartment in Berlin given the living area in square meters and its district. Making a linear
+regression with all data points you have neglecting the districts, i.e. a &lt;em&gt;pooled model&lt;/em&gt;, will lead to a robust estimation of the slope and intercept
+but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
+located in. Now grouping your data with respect to the respective districts and making a linear regression for each,
+i.e. an &lt;em&gt;unpooled model&lt;/em&gt;, will lead to a much more narrow residual distribution but also a high uncertainty in your parameters since
+some district might only have three data points. To combine the advantages of a pooled and unpooled model, one
+would intuitively demand that for each district the prior knowledge of the parameter from the pooled model should be used
+and updated according to the data we have about a certain district. If we have only a few data points we would only 
+deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
+respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
+acts as an informed prior for the parameters within the unpooled model leading altogether to an &lt;em&gt;hierarchical model&lt;/em&gt;,
+which is sometimes also referred to as &lt;em&gt;partially pooled model&lt;/em&gt;. Figure 1 illustrates our thoughts so&amp;nbsp;far.&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;
+&lt;figure&gt;
+&lt;img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model"&gt;
+&lt;figcaption align="center"&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; Hierarchical model as a combination of a pooled and an unpooled model 
+from &lt;a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html"&gt;Bayesian Multilevel Modelling using PyStan&lt;/a&gt;.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&amp;nbsp;&lt;/p&gt;
+&lt;h2&gt;Recent&amp;nbsp;Advances&lt;/h2&gt;
+&lt;p&gt;So far I mostly used &lt;a href="https://docs.pymc.io/"&gt;PyMC3&lt;/a&gt; for Bayesian inference or &lt;em&gt;probabilistic programming&lt;/em&gt; as the authors
+of PyMC3 like to call it. I love it for it&amp;#8217;s elegant design and consequently its expressiveness. The documentation is great
+and thus you can pretty much hack away with your model ideas. The only problem I always had with it is that for me it never
+scaled so well with somewhat larger datasets, i.e. more than 100k data points, and a larger number of parameters. There is a technical and 
+methodical reason for it. Regarding the former, PyMC3 uses &lt;a href="http://deeplearning.net/software/theano/"&gt;Theano&lt;/a&gt; to speed
+up its computations by transpiling your Python code to C. Theano inspired many frameworks like &lt;a href="https://www.tensorflow.org/"&gt;Tensorflow&lt;/a&gt; 
+and &lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt; but is considered deprecated today and cannot rival the speed of modern frameworks
+anymore. For the latter, I used PyMC3 mostly with &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;Markov chain Monte Carlo&lt;/a&gt; (&lt;span class="caps"&gt;MCMC&lt;/span&gt;) based methods, 
+which is a sampling method and computationally quite demanding, while &lt;a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods"&gt;variational inference (&lt;span class="caps"&gt;VI&lt;/span&gt;)&lt;/a&gt;
+methods are much faster. But also when using &lt;span class="caps"&gt;VI&lt;/span&gt;, which PyMC3 also supports, it never really allowed me to deal with larger datasets rendering
+Bayesian Hierarchical Modelling (&lt;span class="caps"&gt;BHM&lt;/span&gt;) a wonderful tool that sadly could not be applied in many suitable projects due to its computational&amp;nbsp;costs.&lt;/p&gt;
+&lt;p&gt;Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that
+could make good use of &lt;span class="caps"&gt;BHM&lt;/span&gt;. Thus, I gave it another shot and also looked beyond PyMC3. My first candidate to evaluate was &lt;a href="http://pyro.ai/"&gt;Pyro&lt;/a&gt;,
+which uses Stochastic Variational Inference (&lt;span class="caps"&gt;SVI&lt;/span&gt;) by default, and calls itself a &lt;em&gt;deep universal probabilistic programming&lt;/em&gt; framework.
+Instead of Theano it is based on PyTorch and thus allows for &lt;a href="https://en.wikipedia.org/wiki/Just-in-time_compilation"&gt;just-in-time (&lt;span class="caps"&gt;JIT&lt;/span&gt;) compilation&lt;/a&gt;,
+which sped up my test case already quite a bit. Pyro also emphasizes vectorization, thus allowing for fast parallel computation, e.g. &lt;a href="https://en.wikipedia.org/wiki/SIMD"&gt;&lt;span class="caps"&gt;SIMD&lt;/span&gt;&lt;/a&gt; operations.
+In total the speed-up compared to PyMC3 was amazing in my test-case letting me almost forget the two downsides of Pyro compared
+to PyMC3. Firstly, the documentation of Pyro is not as polished and secondly, it&amp;#8217;s just so much more complicated to use and understand 
+but your mileage may vary on that&amp;nbsp;one. &lt;/p&gt;
+&lt;p&gt;Digging through the website of Pyro I then stumbled over &lt;a href="https://github.com/pyro-ppl/numpyro"&gt;NumPyro&lt;/a&gt; that has a similar
+interface to Pyro but uses &lt;a href="https://github.com/google/jax"&gt;&lt;span class="caps"&gt;JAX&lt;/span&gt;&lt;/a&gt; instead of PyTorch as its backend. &lt;span class="caps"&gt;JAX&lt;/span&gt; is like &lt;a href="https://numpy.org/"&gt;NumPy&lt;/a&gt; on 
+steroids. It&amp;#8217;s crazy fast as it uses &lt;a href="https://www.tensorflow.org/xla"&gt;&lt;span class="caps"&gt;XLA&lt;/span&gt;&lt;/a&gt;, which is a domain-specific compiler for linear algebra
+operations. Additionally, it allows for automatic differentiation like &lt;a href="https://github.com/hips/autograd"&gt;Autograd&lt;/a&gt;,
+whose maintainers moved over to develop &lt;span class="caps"&gt;JAX&lt;/span&gt; further. Long story short, NumPyro even blew the benchmark results of Pyro out of the water.
+For the first time (at least for what I know), NumPyro allows you do Bayesian inference with lots of parameters like in
+&lt;span class="caps"&gt;BHM&lt;/span&gt; on large data! In the rest of this post, I want to show you how NumPyro can be applied in a typical demand prediction
+use-case on some public dataset. The dataset in my actual use-case was much bigger, my model had more parameters and NumPyro could still handle it but you just have to trust me on this one ;-)
+Hopefully some readers will find this post useful and maybe it mitigates a bit the pain coming from the lack of NumPyro&amp;#8217;s documentation and&amp;nbsp;examples.&lt;/p&gt;
+&lt;h2&gt;Use-Case &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt;&amp;nbsp;Modelling&lt;/h2&gt;
+&lt;p&gt;Imagine you have many retail stores and want to make individual demand predictions for them. For stores that were opened
+a long time ago, this should be no problem but how do you deal with stores that first opened a week ago or even will open soon? Like in the example
+of apartment prices in different districts, &lt;span class="caps"&gt;BHM&lt;/span&gt; helps you to deal exactly with this &lt;a href="https://en.wikipedia.org/wiki/Cold_start_(recommender_systems)"&gt;cold start problem&lt;/a&gt;. We take the 
+&lt;a href="https://www.kaggle.com/c/rossmann-store-sales"&gt;Rossmann dataset from Kaggle&lt;/a&gt; to simulate this problem by removing the data
+of some of the stores. The data consists of a &lt;em&gt;train&lt;/em&gt; dataset with information about the sales and daily features of the stores,
+e.g. if a promotion happened (&lt;code&gt;promo&lt;/code&gt;), as well as a &lt;em&gt;store&lt;/em&gt; dataset with time-independent store features.
+Here&amp;#8217;s what we wanna do in our little experiment and study&amp;nbsp;protocol:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;join the data from Kaggle&amp;#8217;s &lt;code&gt;train.csv&lt;/code&gt; dataset with the general store features from the &lt;code&gt;store.csv&lt;/code&gt; dataset,&lt;/li&gt;
+&lt;li&gt;perform some really basic feature engineering and encoding of the categorical&amp;nbsp;features,&lt;/li&gt;
+&lt;li&gt;split the data into train and test where we treat the stores from train as being opened for a long time and the ones
+  from test as newly&amp;nbsp;opened,&lt;/li&gt;
+&lt;li&gt;fit our hierarchical model on the train dataset to infer the &amp;#8220;global&amp;#8221; parameters of the upper model&amp;nbsp;hierarchy,&lt;/li&gt;
+&lt;li&gt;take only the first 7 days for each store in the test data, which we assume to know, and fit our model only inferring
+ the local, i.e. store-specific, parameters of the lower hierarchy while keeping the global ones&amp;nbsp;fixed,&lt;/li&gt;
+&lt;li&gt;compare the inferred parameters of a test store to:&lt;ol&gt;
+&lt;li&gt;the inferred local parameters of a simple Poisson model. We expect them to be completely different due to the lack
+   of data and thus overfitting of the Poisson&amp;nbsp;model,&lt;/li&gt;
+&lt;li&gt;the inferred local parameters of our model if we had given it the whole time series from test, i.e. not only the first 7 days.
+   In this case, we assume that we are already pretty close since the priors given by the global parameters nudge them
+   in the right direction even with only little&amp;nbsp;data.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;All code of this little experiment can be found under my &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale"&gt;bhm-at-scale repository&lt;/a&gt;
+so that you can follow along easily.
+The steps 1-3 are performed in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/01-preprocessing.ipynb"&gt;preprocessing notebook&lt;/a&gt;
+and are actually not that interesting, thus we will skip it here. Steps 4-6 are performed in the
+&lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt; while some visualisations are presented in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb"&gt;evaluation notebook&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;But before we start to get technical, let&amp;#8217;s take a minute and frame again the forecasting problem from a more mathematical side.
+The data of each store is a time-series of feature vectors and target scalars. We want to find a mapping such that the
+feature vector of each time-step is mapped to a value close to the target scalar of the respective time-step. Since our target
+value, i.e. the number of sales, is a non-negative integer we could assume a &lt;a href="https://en.wikipedia.org/wiki/Poisson_distribution"&gt;Poisson distribution&lt;/a&gt; and consequently
+perform a &lt;a href="https://en.wikipedia.org/wiki/Poisson_regression"&gt;Poisson regression&lt;/a&gt; in a hierarchical way. This would be kind of okay
+if we were only interested in a point estimation and thus would not care about the variance of the predictive posterior distribution. 
+The Poisson distribution only has one parameter &lt;span class="math"&gt;\(\lambda\)&lt;/span&gt; that allows you to define the mean &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; while the variance &lt;span class="math"&gt;\(\sigma^2\)&lt;/span&gt; then just equals the mean as there is no way to adjust the variance independently. &lt;br&gt;
+In many practical use-cases, there is &lt;a href="https://en.wikipedia.org/wiki/Overdispersion"&gt;overdispersion&lt;/a&gt; though, meaning that the variance is larger than the mean and we have to make up for it.
+We can define a so called &lt;em&gt;dispersion parameter&lt;/em&gt; &lt;span class="math"&gt;\(r\in(0,\infty)\)&lt;/span&gt; by reparametrization in the &lt;a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution"&gt;negative binomial distribution&lt;/a&gt;,&amp;nbsp;i.e.&lt;/p&gt;
+&lt;div class="math"&gt;$$\mathrm{NB}(y;\mu,r) = \frac{\Gamma(r+y)}{y!\cdot\Gamma(r)}\cdot\left(\frac{r}{r+\mu}\right)^r\cdot\left(\frac{\mu}{r+\mu}\right)^y,$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\Gamma\)&lt;/span&gt; is the &lt;a href="https://en.wikipedia.org/wiki/Gamma_function"&gt;Gamma function&lt;/a&gt;. Now we&amp;nbsp;have&lt;/p&gt;
+&lt;div class="math"&gt;$$\sigma^2=\mu + \frac{1}{r}\mu^2$$&lt;/div&gt;
+&lt;p&gt;and using &lt;span class="math"&gt;\(r\)&lt;/span&gt; we are thus able to adjust the variance from &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; to &lt;span class="math"&gt;\(\infty\)&lt;/span&gt;. 
+Another name for the negative binomial distribution is Gamma-Poisson distribution and this is the name under which we find it also in NumPyro. I find this name 
+much more catchy since you can imagine a Poisson distribution with its only parameter drawn from a Gamma distribution that
+has two parameters &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; and &lt;span class="math"&gt;\(\beta\)&lt;/span&gt;. This also intuitively explains why the variance of &lt;span class="caps"&gt;NB&lt;/span&gt; is bounded below by its mean.
+Just think of &lt;span class="caps"&gt;NB&lt;/span&gt; as a generalization of the Poisson distribution with one more parameter that allows adjusting the&amp;nbsp;variance.&lt;/p&gt;
+&lt;p&gt;Uncertainty Quantification is a crucial requirement for sales forecasts in retail although peculiarly, no one really cares about forecasts in retail anyway.
+What retailers really care about is optimal replenishment, meaning that they want to have a system telling them how much
+to order so that there is an optimal amount of stocks available in their store. In order to provide optimal replenishment
+suggestions you need sales forecasts that provide probability distributions, not only point estimations. With the help
+of those distributions the replenishment system basically runs an optimization with respect to some cost function, e.g.
+cost of a missed sale is weighted 3 times the cost of a written-off product, and further constraints, e.g. if products can only be ordered in bundles of 10. 
+For these reasons we will use the &lt;span class="caps"&gt;NB&lt;/span&gt; distribution that allows us the quantify the uncertainties in our sales predictions&amp;nbsp;adequately.&lt;/p&gt;
+&lt;p&gt;So now that we settled with &lt;span class="caps"&gt;NB&lt;/span&gt; as the distribution that we want to fit to the daily sales of our stores &lt;span class="math"&gt;\(\mathbf{y}\)&lt;/span&gt;, we can think
+about incorporating our features &lt;span class="math"&gt;\(\mathbf{x}\)&lt;/span&gt;. We want to use a linear model to map &lt;span class="math"&gt;\(\mathbf{x}\)&lt;/span&gt; to &lt;span class="math"&gt;\(\mathbf{\mu}\)&lt;/span&gt; such
+that we can use it later to calculate &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; and &lt;span class="math"&gt;\(\beta\)&lt;/span&gt; of &lt;span class="caps"&gt;NB&lt;/span&gt;. Using again the fact that we are dealing with non-negative
+numbers and also considering that we expect effects to be multiplicative, e.g. 10% more during a promotion, our ansatz&amp;nbsp;is&lt;/p&gt;
+&lt;div class="math"&gt;$$\mu = \exp(\mathbf{\theta}^\top\mathbf{x}),$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\mathbf{\theta}\)&lt;/span&gt; is a vector of coefficients. For each store &lt;span class="math"&gt;\(i\)&lt;/span&gt; and each feature &lt;span class="math"&gt;\(j\)&lt;/span&gt; we will have a separate
+coefficient &lt;span class="math"&gt;\(\theta_{ij}\)&lt;/span&gt;. The &lt;span class="math"&gt;\(\theta_{ij}\)&lt;/span&gt; are regularized by parameters &lt;span class="math"&gt;\(\theta^\mu_j\)&lt;/span&gt; and &lt;span class="math"&gt;\(\theta^{\sigma^2}_j\)&lt;/span&gt; on 
+the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
+infer individual &lt;span class="math"&gt;\(r_i\)&lt;/span&gt; for each store &lt;span class="math"&gt;\(i\)&lt;/span&gt; as well as global parameters &lt;span class="math"&gt;\(r^\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(r^{\sigma^2}\)&lt;/span&gt; over all stores. 
+And that&amp;#8217;s already most of it. The plot in Figure 2 depicts the graphical model outlined so&amp;nbsp;far.&lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 2:&lt;/strong&gt; Graphical representation of a hierarchical model (centered version) as defined above.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;Those boxes in Figure 2, which are called &lt;a href="https://en.wikipedia.org/wiki/Plate_notation"&gt;plates&lt;/a&gt;, tell you how many times a parameter is repeated.
+Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
+The concept of plates was also taken up by the authors of NumPyro to express that certain dimensions are conditionally independent.
+This also helps them to increase performance by taking optimizations into account that are just not possible in the general case.
+Shaded circles are observed values, which in our case are the number of sales on a given day &lt;span class="math"&gt;\(k\)&lt;/span&gt; and store &lt;span class="math"&gt;\(i\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;Let&amp;#8217;s take a quick look into our model code which is just a normal Python function. It&amp;#8217;s good to keep in mind, that we call this a &lt;em&gt;model&lt;/em&gt; since we assume that given
+the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
+The model function only defines the model parameters, how they interact and their&amp;nbsp;priors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro.distributions&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;dist&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jax.numpy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;jax.numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;jnp&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jax&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;random&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Gamma-Poisson hierarchical model for daily sales forecasting&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        X: input data&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;        output data&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;
+    &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  &lt;span class="c1"&gt;# remove one dim for target&lt;/span&gt;
+    &lt;span class="n"&gt;eps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1e-12&lt;/span&gt;  &lt;span class="c1"&gt;# epsilon&lt;/span&gt;
+
+    &lt;span class="n"&gt;plate_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;features&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;plate_stores&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;stores&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;plate_days&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;timesteps&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;4.&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HalfNormal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;disp_params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;disp_param_sigma&lt;/span&gt;
+        &lt;span class="n"&gt;disp_params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;disp_params&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Delta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_features&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;coef_mus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;coef_sigmas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_sigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HalfNormal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                    &lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                    &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;coef_mus&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;coef_sigmas&lt;/span&gt;
+            &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;coefs&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Delta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;coefs&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;coefs&lt;/span&gt;
+            &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;targets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nan_to_num&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;  &lt;span class="c1"&gt;# padded features to 0&lt;/span&gt;
+        &lt;span class="n"&gt;is_observed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isnan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros_like&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones_like&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="n"&gt;not_observed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;is_observed&lt;/span&gt;
+        &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_observed&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;expand_dims&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;coefs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;features&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+                 &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;not_observed&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;eps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="n"&gt;betas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;is_observed&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;not_observed&lt;/span&gt;
+        &lt;span class="n"&gt;alphas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;betas&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;days&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GammaPoisson&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alphas&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;betas&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nan_to_num&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that &lt;code&gt;disp_param&lt;/code&gt; is &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;code&gt;coef&lt;/code&gt; is &lt;span class="math"&gt;\(\theta\)&lt;/span&gt; in the source code above for better readability. You will
+recognize a lot of what we have talked about and I don&amp;#8217;t want to go into the syntactical details of NumPyro. My suggestion
+would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
+NumPyro&amp;nbsp;reference. &lt;/p&gt;
+&lt;p&gt;Reading the source code more thoroughly, you might wonder about the definition of the coefficients as &lt;code&gt;coefs = coef_mus + coef_offsets * coef_sigmas&lt;/code&gt;.
+The explanations of the model I have given and also the plot, actually shows the &lt;em&gt;centered version&lt;/em&gt; of a
+hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
+the direct dependency of the local parameters on the global ones make it hard for many &lt;span class="caps"&gt;MCMC&lt;/span&gt; sampling methods but also &lt;span class="caps"&gt;SVI&lt;/span&gt; methods to explore
+certain regions of the local parameter space. This effect is called &lt;em&gt;funnel&lt;/em&gt; and can be imagined as walking with the the same step length
+on a bridge that gets narrower and narrower. From the point on where the bridge is about as wide as your step length, you might
+become a bit hesitant to explore more of it. As very often the case, a reparameterization overcomes this problem resulting
+in the &lt;em&gt;non-centered&lt;/em&gt; version of a hierarchical model. This is the version used in the implementation. If you want to know more about this, a really great 
+&lt;a href="https://twiecki.io/blog/2017/02/08/bayesian-hierchical-non-centered/"&gt;blog post by Thomas Wiecki&lt;/a&gt; gives you all the details about&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;Another thing that wasn&amp;#8217;t mentioned yet are the &lt;code&gt;is_observed&lt;/code&gt; and &lt;code&gt;not_observed&lt;/code&gt; variables which are just a nice gimmick.
+Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
+the target variable &lt;span class="math"&gt;\(y\)&lt;/span&gt; to &lt;em&gt;not observed&lt;/em&gt; instead of 0. During training, these target values are just ignored and later
+allows the model to answer a store manager&amp;#8217;s potential question: &amp;#8220;How many sales would I have had if I had opened my store on that&amp;nbsp;day&amp;#8221;.&lt;/p&gt;
+&lt;p&gt;Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
+Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
+parameters have to be defined since its &lt;span class="caps"&gt;SVI&lt;/span&gt;. This is done in a separate function called &lt;em&gt;guide&lt;/em&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;guide&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Guide with parameters of the posterior&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        X: input data&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_days&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;
+    &lt;span class="n"&gt;n_features&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  &lt;span class="c1"&gt;# remove one dim for target&lt;/span&gt;
+
+    &lt;span class="n"&gt;plate_features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;features&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;plate_stores&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;stores&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;4.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                    &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_disp_param_mu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                        &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TransformedDistribution&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_disp_param_logsigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_disp_param_logsigma&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                            &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+            &lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ExpTransform&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_disp_param_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                                            &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_features&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                        &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_coef_mus&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                            &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;coef_sigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TransformedDistribution&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_coef_logsigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                            &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_coef_logsigmas&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                                                &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                &lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transforms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ExpTransform&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;plate_stores&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                    &lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;loc_coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;))),&lt;/span&gt;
+                    &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;scale_coef_offsets&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n_stores&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_features&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+                                        &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As you can see, the structure of the guide reflects the structure of the model and there we are just defining for each model parameter
+a distribution that again has parameters that need to be determined. The link between model and guide is given by the names of the &lt;em&gt;sample sites&lt;/em&gt;
+like &amp;#8220;coef_offsets&amp;#8221;. This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
+behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
+You can see in the actual implementation, i.e. &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py"&gt;model.py&lt;/a&gt;, that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Site&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;disp_params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_params&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coef_mus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_mus&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coef_sigmas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_sigmas&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coefs&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;days&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;days&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then using variables like &lt;code&gt;Site.coef_offsets&lt;/code&gt; instead of strings like &lt;code&gt;"coef_offsets"&lt;/code&gt; as identifiers of sample sites, allows your &lt;span class="caps"&gt;IDE&lt;/span&gt; to inform you about any typos as you go. Problem&amp;nbsp;solved.&lt;/p&gt;
+&lt;p&gt;Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
+that we have already fitted the global parameters but want to only determine the local parameters of new stores with little data.
+The predictive model assumes global and local parameters to be already inferred so that we can use it to predict the number
+of sales on days beyond our training interval. As these functions are only slide variations, I spare you the details and refer you to the implementation in &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py"&gt;model.py&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Most parts of the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt; actually deal with training the model on stores from the training data with a long sales history,
+then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
+This works really well although the number of features, which is 23, is much higher than 7! Let&amp;#8217;s take a look at the coefficients 
+of a store from the test set as detailed in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
+  2.4938385   0.33227605  3.115691    2.9264386   2.692092    2.9548435
+  0.05613964  0.06542112  2.8379264   2.9023972   3.5701406   3.2074358
+  4.0569873   2.9304545   2.7463424   2.823191    2.959007  ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
+Comparing the coefficients from above to the ones of the Poisson regression for the same store,&amp;nbsp;i.e.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+ -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
+ -0.09434899  0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.        ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;we see that they are highly different and zero for features in the Poisson regression that weren&amp;#8217;t encountered in the data of just 7 days.
+Now comparing the coefficients of our &lt;span class="caps"&gt;BHM&lt;/span&gt; model trained on just 7 days with the coefficients of a cheating model trained on the whole test set,&amp;nbsp;i.e.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+  2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
+ -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
+  4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;we see that they are quite similar. That&amp;#8217;s the magic of a hierarchical model! We started with plausible defaults from a 
+global perspective and adapted locally depending on the amount of available&amp;nbsp;data.&lt;/p&gt;
+&lt;p&gt;Running the code from the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt; on your laptop will be matter of a few minutes for the training on 1000 stores
+each having 942 days of sales and 23 features for each store and day. In total this leads to roughly one million data points
+and &lt;span class="math"&gt;\(23\cdot 1000+1000+2\cdot 23+2=24048\)&lt;/span&gt; parameters in our graphical model. Since each parameter is fitted with the help of a 
+parameterized distribution in the guide, as we are doing &lt;span class="caps"&gt;SVI&lt;/span&gt;, the number of actual variables is twice as much leading to roughly 50,000
+variables that need to be fitted. While 50k parameters and about 1 Million data points surely is not big data, 
+it&amp;#8217;s still impressive that using NumPyro you can fit a model like that within a few minutes on your
+laptop and the implementation is not even using batching that would speed it up even further. In one of my customer
+projects we used a way larger model on much more data and our workstation was still able to handle it smoothly. 
+NumPyro really scales well even beyond this little&amp;nbsp;demonstration. &lt;/p&gt;
+&lt;h2&gt;Visualization&lt;/h2&gt;
+&lt;p&gt;There is now tons of things one could do with the results of our hierarchical model. One could check out the
+actual prediction results, look at how certain we are about the parameters like the coefficients and so on. Most of that
+I will leave to the interested reader and give only a few tidbits here from the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/03-evaluation.ipynb"&gt;evaluation notebook&lt;/a&gt;.
+We start with taking a look at the sales prediction for one of the stores from the test set as depicted in Figure&amp;nbsp;3.&lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_sales_forecast.png" alt="plot of sales forecast"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 3:&lt;/strong&gt; Sales forecast of one store from the test set. The blue dashed line is the the mean predicted mean.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;Only judging by the eye, we see that predicted mean (blue dashed line) follows the number sales (bluish bars) quite good.
+The background is shaded according to some important features like promotions and holidays which explain some of the variations
+in our predictions. Just for information, also the number of customers are displayed but not used in the prediction of course.
+Also, we see the 50% and 90% &lt;a href="https://en.wikipedia.org/wiki/Credible_interval"&gt;credible intervals&lt;/a&gt; as shaded blue areas
+around our mean, which tell us how certain we are about our predictions. We can also see that on Sundays, when the store
+was closed, we predict not 0 but what would have likely happened if it wasn&amp;#8217;t closed, which was part of our&amp;nbsp;model.&lt;/p&gt;
+&lt;p&gt;We could then also start looking into the effects of certain features like the weekdays. Figure 4 shows for each
+weekday starting with Monday a density over the means of all&amp;nbsp;stores. &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_weekday_effect.png" alt="plot weekday effect"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 4:&lt;/strong&gt; Density plot of the means of the weekday coefficients over all stores. 
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
+Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
+we could be interested in analyzing the distribution of the promotion effect over all stores as shown in Figure&amp;nbsp;5.  &lt;/p&gt;
+&lt;figure&gt;
+&lt;p align="center"&gt;
+&lt;img class="noZoom" src="/images/bhm_promo_effect.png" alt="plot of promotion effect"&gt;
+&lt;/p&gt;
+&lt;figcaption align="center"&gt;
+&lt;strong&gt;Figure 5:&lt;/strong&gt; Density plot of the promotion effect over all stores with the red line showing the median.
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;These are just some analysis one could start to look into to derive useful insights for store management. 
+The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
+only the aggregated sales but also the ones of individual products. We could then build hierarchies over the product hierarchies
+and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
+We could also use &lt;span class="caps"&gt;BHM&lt;/span&gt; to address &lt;a href="https://en.wikipedia.org/wiki/Censoring_(statistics)"&gt;censored data&lt;/a&gt;, which is also an important task when doing sales forecasts. Canonically,
+one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
+in which we only know that demand ≥ sales. Right-censored data like that provides us with information about the &lt;a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function"&gt;cumulative
+distribution function&lt;/a&gt; in contrast to the &lt;a href="https://en.wikipedia.org/wiki/Probability_mass_function"&gt;probability mass function&lt;/a&gt;
+in case of no out-of-stock situation. There are ways to include both types of information into an &lt;span class="caps"&gt;BHM&lt;/span&gt;.
+Those are just some of many possible improvements and extensions to this model. I am looking forward to your ideas and&amp;nbsp;use-cases!&lt;/p&gt;
+&lt;h2&gt;Final&amp;nbsp;Remarks&lt;/h2&gt;
+&lt;p&gt;We have seen that &lt;span class="caps"&gt;BHM&lt;/span&gt; allows us to combine the advantages of a pooled and unpooled model. Using some retailer&amp;#8217;s data,
+we implemented a simple &lt;span class="caps"&gt;BHM&lt;/span&gt; thereby also outlining the advantages of a Bayesian approach like uncertainty quantification and
+explainability. From a practical perspective, we have seen that &lt;span class="caps"&gt;BHM&lt;/span&gt; even scales really well with the help of NumPyro.
+On the theoretical side, we have talked about the Poisson distribution and why we preferred the Gamma-Poisson distribution.
+Finally, I hope to have conveyed the most important point of this post well, being that these models can now be applied to
+practical dataset sizes with the help of NumPyro! Cheers to that and let&amp;#8217;s follow a famous saying in the French world of mathematics &lt;em&gt;Poisson sans boisson est poison&lt;/em&gt;! &lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="data science"></category><category term="mathematics"></category><category term="production"></category></entry><entry><title>Honey, I shrunk the target variable</title><link href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/" rel="alternate"></link><published>2020-05-04T12:00:00+02:00</published><updated>2020-05-04T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-05-04:/2020/05/honey_i_shrunk_the_target_variable/</id><summary type="html">&lt;p&gt;Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn&amp;#8217;t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your&amp;nbsp;advantage.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;For me it is often an irritating sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem&amp;#8230; but it also makes me contemplate about my past when I started doing data science. 
 So full of vigour and enthusiasm, I was often completely absorbed by the idea of minimizing whatever error measure I was given or maybe some random one 
@@ -1021,317 +1527,4 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it&amp;#8217;s far from perfect and hopefully the issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt; will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on&amp;nbsp;it.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="big data"></category></entry><entry><title>Querying NoSQL with Deep Learning to Answer Natural Language Questions</title><link href="https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/" rel="alternate"></link><published>2019-01-29T11:30:00+01:00</published><updated>2019-01-29T11:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-01-29:/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/</id><summary type="html">&lt;p&gt;Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (&lt;span class="caps"&gt;QA&lt;/span&gt;) system that allows a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (&lt;span class="caps"&gt;QA&lt;/span&gt;) system that allows a user to query an external NoSQL database by using natural language. A major challenge of such a system is the non-differentiability of database operations which we overcome by applying policy-based reinforcement learning. We evaluate our approach on Facebook’s bAbI Movie Dialog dataset and achieve a competitive score of 84.2% compared to several benchmark models. We conclude that our approach excels with regard to real-world scenarios where knowledge resides in external databases and intermediate labels are too costly to gather for non-end-to-end trainable &lt;span class="caps"&gt;QA&lt;/span&gt;&amp;nbsp;systems.&lt;/p&gt;
-&lt;p&gt;Our paper &lt;em&gt;Querying NoSQL with Deep Learning to Answer Natural Language Questions&lt;/em&gt; was presented at &lt;a href="https://aaai.org/Conferences/AAAI-19/"&gt;&lt;span class="caps"&gt;IAAI&lt;/span&gt;-19&lt;/a&gt; and can be downloaded on &lt;a href="https://aaai.org/Papers/AAAI/2019/IAAI-BlankS.88.pdf"&gt;aaai.org&lt;/a&gt;. There is also a simplified blog post about the same topic on the &lt;a href="https://www.inovex.de/blog/seqpolicynet-nlp-elasticsearch/"&gt;inovex blog&lt;/a&gt; by my colleague Sebastian&amp;nbsp;Blank.&lt;/p&gt;</content><category term="data science"></category><category term="nlp"></category></entry><entry><title>Working efficiently with JupyterLab Notebooks</title><link href="https://florianwilhelm.info/2018/11/working_efficiently_with_jupyter_lab/" rel="alternate"></link><published>2018-11-08T14:00:00+01:00</published><updated>2018-11-08T14:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-11-08:/2018/11/working_efficiently_with_jupyter_lab/</id><summary type="html">&lt;p&gt;Being in the data science domain for quite some years, I have seen good Jupyter notebooks but also a lot of ugly. Notebooks can have the perfect balance between text, code and visualisations but how often do your notebooks rather get messy and incomprehensible after a while? Follow some simple best practices to work more efficiently with your&amp;nbsp;notebooks.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;If you have ever done something analytical or anything closely related to data science in Python, there is just no way you have not heard of Jupyter or IPython notebooks. In a nutshell, a notebook is an interactive document displayed in your browser which contains source code, e.g. Python and R, as well as rich text elements like paragraphs, equations, figures, links, etc. This combination makes it extremely useful for explorative tasks where the source code, documentation and even visualisations of your analysis are strongly intertwined. Due to this unique characteristic, Jupyter notebooks have achieved a strong adoption particularly in the data science community. But as Pythagoras already noted &amp;#8220;If there be light, then there is darkness.&amp;#8221; and with Jupyter notebooks it&amp;#8217;s no difference of&amp;nbsp;course.&lt;/p&gt;
-&lt;p&gt;Being in the data science domain for quite some years, I have seen good but also a lot of ugly. Notebooks that are beautifully designed and perfectly convey ideas and concepts by having the perfect balance between text, code and visualisations like in my all time favourite &lt;a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers"&gt;Probabilistic Programming and Bayesian Methods for Hackers&lt;/a&gt;. In strong contrast to this, and actually more often to find in practise, are notebooks with cells containing pages of incomprehensible source code, distracting you from the actual analysis. Also sharing these notebooks is quite often an unnecessary pain. Notebooks that need you to tamper with the &lt;code&gt;PYTHONPATH&lt;/code&gt; or to start Jupyter from a certain directory for modules to import correctly. In this blog post I will introduce several best practices and techniques that will help you to create notebooks which are focused, easy to comprehend and to work&amp;nbsp;with. &lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/jupyter_worker.png" alt="Worker carrying JupyterLab"&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;h2&gt;History&lt;/h2&gt;
-&lt;p&gt;Before we get into the actual subject let&amp;#8217;s take some time to understand how &lt;a href="http://jupyter.org/"&gt;Project Jupyter&lt;/a&gt; evolved and where it came from. This will also clarify the confusion people sometimes have over IPython, Jupyter and JupyterLab notebooks. In 2001 Fernando Pérez was quite dissatisfied with the capabilities of Python&amp;#8217;s interactive prompt compared to the commercial notebook environments of Maple and Mathematica which he really liked. In order to improve upon this situation he laid the foundation for a notebook environment by building &lt;a href="https://ipython.org/"&gt;IPython&lt;/a&gt; (Interactive Python), a command shell for interactive computing. IPython quickly became a success as the &lt;a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop"&gt;&lt;span class="caps"&gt;REPL&lt;/span&gt;&lt;/a&gt; of choice for many users but it was only a small step towards a graphical interactive notebook environment. Several years and many failed attempts later, it took until late 2010 for Grain Granger and several others to develop a first graphical console, named &lt;a href="https://qtconsole.readthedocs.io/"&gt;QTConsole&lt;/a&gt; which was based on &lt;a href="https://www.qt.io/"&gt;&lt;span class="caps"&gt;QT&lt;/span&gt;&lt;/a&gt;. As the speed of development picked up, IPython 0.12 was released only one year later in December 2011 and included for the first time a browser-based IPython notebook environment. People were psyched about the possibilities &lt;em&gt;IPython notebook&lt;/em&gt; provided them and the adoption rose&amp;nbsp;quickly. &lt;/p&gt;
-&lt;p&gt;In 2014, &lt;a href="http://jupyter.org/"&gt;Project Jupyter&lt;/a&gt; started as a spin-off project from IPython for several reasons. At that time IPython encompassed an interactive shell, the notebook server, the &lt;span class="caps"&gt;QT&lt;/span&gt; console and other parts in a single repository with the obvious organisational downsides. After the spin-off, IPython concentrated on providing solely an interactive shell for Python while Project Jupyter itself started as an umbrella organisation for several components like &lt;a href="https://jupyter-notebook.readthedocs.io/"&gt;Jupyter notebook&lt;/a&gt; and &lt;a href="https://qtconsole.readthedocs.io/"&gt;QTConsole&lt;/a&gt;, which were moved over from IPython, as well as many others. Another reason for the split was the fact that Jupyter wanted to support other languages besides Python like &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt;, &lt;a href="https://julialang.org/"&gt;Julia&lt;/a&gt; and more. The name Jupyter itself was chosen to reflect the fact that the three most popular languages in data science are supported among others, thus Jupyter is actually an acronym for &lt;strong&gt;Ju&lt;/strong&gt;lia, &lt;strong&gt;Pyt&lt;/strong&gt;hon, &lt;strong&gt;R&lt;/strong&gt;. &lt;/p&gt;
-&lt;p&gt;But evolution never stops and the source code of Jupyter notebook built on the web technologies of 2011 started to show its age. As the code grew bigger, people also started to realise that it actually is more than just a notebook. Some parts of it rather dealt with managing files, running notebooks and parallel workers. This eventually led again to the idea of splitting these functionalities and laid the foundation for &lt;a href="https://jupyterlab.readthedocs.io/"&gt;JupyterLab&lt;/a&gt;. JupyterLab is an interactive development environment for working with notebooks, code and data. It has full support for Jupyter notebooks and enables you to use text editors, terminals, data file viewers, and other custom components side by side with notebooks in a tabbed work area. Since February 2018 it&amp;#8217;s officially considered to be &lt;a href="https://blog.jupyter.org/jupyterlab-is-ready-for-users-5a6f039b8906"&gt;ready for users&lt;/a&gt; and the 1.0 release is expected to happen end of&amp;nbsp;2018. &lt;/p&gt;
-&lt;p&gt;According to my experience in the last months, JupyterLab is absolutely ready and I recommend everyone to migrate to it. In this post, I will thus focus on JupyterLab and the term notebook or sometimes even Jupyter notebook actually refers to a notebook that was opened with JupyterLab. Practically this means that you run &lt;code&gt;jupyter lab&lt;/code&gt; instead of &lt;code&gt;jupyter notebook&lt;/code&gt;. If you are interested in more historical details read the blog posts of &lt;a href="http://blog.fperez.org/2012/01/ipython-notebook-historical.html"&gt;Fernando Pérez&lt;/a&gt; and &lt;a href="https://www.datacamp.com/community/blog/ipython-jupyter"&gt;Karlijn Willems&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Preparation &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt;&amp;nbsp;Installation&lt;/h2&gt;
-&lt;p&gt;The first good practice can actually be learnt before even starting JupyterLab. Since we want our analysis to be reproducible and shareable with colleagues it&amp;#8217;s a good practice to create a clean, isolated environment for every task. For Python you got basically two options &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt; (also descendants like &lt;a href="https://pipenv.readthedocs.io/"&gt;pipenv&lt;/a&gt;) or &lt;a href="https://conda.io/"&gt;conda&lt;/a&gt; to achieve this. My favorite is conda for several reasons. First of all conda is a package manager of the &lt;a href="https://www.anaconda.com/distribution/"&gt;Anaconda&lt;/a&gt; distribution and allows you to install more than just Python packages. Anaconda is more like a whole operation system coming with packages for Python, R and C/C++ system libraries like libc. From this point of view it&amp;#8217;s much more than what virtualenv provides, since conda will also install system libraries like glibc if need be. Also the Python interpreter itself is installed separately into an isolated environment and thus independent of the one provided by your system. This makes it possible to easily pin down even the Python version of your environment. The tool &lt;a href="https://github.com/pyenv/pyenv"&gt;pyenv&lt;/a&gt; allows you to do the same within the virtualenv ecosystem but conda feels just more integrated and gives a unified approach. In total, conda allows for much more fined-grained control of what is going on in your virtual environment than virtualenv with less side effects induced by your&amp;nbsp;system. &lt;/p&gt;
-&lt;p&gt;For these reasons conda is much more common than virtualenv in the field of data science, thus we will use it in this tutorial. Still, everything shown here can analogously be conducted with the help of &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;/&lt;a href="https://pipenv.readthedocs.io/"&gt;pipenv&lt;/a&gt; and all the concepts still apply as is also illustrated in a &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt;. For this tutorial, I assume you have &lt;a href="https://conda.io/miniconda.html"&gt;Miniconda&lt;/a&gt; installed on your system. Besides this, every programmer&amp;#8217;s machine should have &lt;a href="https://git-scm.com/"&gt;Git&lt;/a&gt; installed and set up. The result of the following demonstration can be found in the &lt;a href="https://github.com/FlorianWilhelm/boston_housing"&gt;boston_housing repository&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;0. Use an isolated&amp;nbsp;environment&lt;/h3&gt;
-&lt;p&gt;In the spirit of Phil Karlton who supposedly said &amp;#8220;There are only two hard things in Computer Science: cache invalidation and naming things.&amp;#8221;, we gonna select a specific task, namely an analysis based on the all familiar &lt;a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html"&gt;Boston housing dataset&lt;/a&gt;, to help us finding crisp names. Based on our task we create an environment &lt;code&gt;boston_housing&lt;/code&gt; including Python and some common data science libraries&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda create -n boston_housing python=3.6 jupyterlab pandas scikit-learn seaborn
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;After less than a minute the environment is ready to be used and we can activate it with &lt;code&gt;conda activate boston_housing&lt;/code&gt;.&lt;/p&gt;
-&lt;h2&gt;Efficient&amp;nbsp;Workflow&lt;/h2&gt;
-&lt;p&gt;The code in notebooks tends to grow and grow to the point of being incomprehensible. To overcome this problem, the only way is to extract parts of it into Python modules once in a while. Since it only makes sense to extract functions and classes into Python modules, I often start cleaning up a messy notebook by thinking about the actual task a group of cells is accomplishing. This helps me to refactor those cells into a proper function which I can then migrate into a Python&amp;nbsp;module. &lt;/p&gt;
-&lt;p&gt;At the point where you create custom modules, things get trickier. By default Python will only allow you to import modules that are installed in your environment or in your current working directory. Due to this behaviour many people start creating their custom modules in the directory holding their notebook. Since JupyterLab is nice enough to set the current working directory to the directory containing your notebook, everything is fine at the beginning. But as the number of notebooks that share common functionality imported from modules grows, the single directory containing notebooks and modules will get messier as you go. The obvious split of notebooks and modules into different folders or even organizing your notebooks into different folders will not work with this approach since then your imports will&amp;nbsp;fail. &lt;/p&gt;
-&lt;p&gt;This observation brings us to one of the most important best practices: &lt;strong&gt;develop your code as a Python package&lt;/strong&gt;. A Python package will allow you to structure your code nicely over several modules and even subpackages, you can easily create unit tests and the best part of it is that distributing and sharing it with your colleagues comes for free. &lt;em&gt;But creating a Python package is so much overhead; surely it&amp;#8217;s not worth this small little analysis I will complete in half a day anyway and then forget about it&lt;/em&gt;, I hear you say. Well, how often is this actually true? Things always start out small but then get bigger and messier if you don&amp;#8217;t adhere to a certain structure right from the start. About half a year later then, your boss will ask you about that specific analysis you did back then and if you could repeat it with the new data and some additional KPIs. But more importantly coming back to the first part of your comment, if you know how, it&amp;#8217;s no overhead at&amp;nbsp;all!&lt;/p&gt;
-&lt;h3&gt;1. Develop your code in a Python&amp;nbsp;Package&lt;/h3&gt;
-&lt;p&gt;With the help of &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; it is possible to create a proper and standard-compliant Python package within a second. Just install it while having the conda environment activated&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install -c conda-forge pyscaffold
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This package adds the &lt;code&gt;putup&lt;/code&gt; command into our environment which we use to create a Python package&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;putup boston_housing
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Now we can change into the new &lt;code&gt;boston_housing&lt;/code&gt; directory and install the package inside our environment in development&amp;nbsp;mode:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;python setup.py develop
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The development mode installs the package in the conda environment by linking to the source code which resides in &lt;code&gt;boston_housing/src/boston_housing&lt;/code&gt;. By doing so all your changes to the code will be directly available without any need to reinstall the package&amp;nbsp;again.&lt;/p&gt;
-&lt;p&gt;Let&amp;#8217;s start JupyterLab with &lt;code&gt;jupyter lab&lt;/code&gt; from the root of your new project where &lt;code&gt;setup.py&lt;/code&gt; resides. To keep everything tight and clean, we start by creating a new folder &lt;code&gt;notebooks&lt;/code&gt; using the file browser in the left sidebar. Within this empty folder we create a new notebook using the launcher and rename it to &lt;code&gt;housing_model&lt;/code&gt;. Within the notebook we can now directly test our package by&amp;nbsp;typing:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;boston_housing.skeleton&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;fib&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The &lt;code&gt;skeleton&lt;/code&gt; module is just a test module that &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; provides (omit it with &lt;code&gt;putup --no-skeleton ...&lt;/code&gt;) and we import the Fibonacci function &lt;code&gt;fib&lt;/code&gt; from it. You can now just test this function by calling &lt;code&gt;fib(42)&lt;/code&gt; for&amp;nbsp;instance. &lt;/p&gt;
-&lt;p&gt;At that point after having only adhered to a single good practice, we already benefit from many advantages. Since we have nicely separated our notebook from the actual implementation, we can package and distribute our code by just calling &lt;code&gt;python setup.py bdist_wheel&lt;/code&gt; and use &lt;a href="https://twine.readthedocs.io/"&gt;twine&lt;/a&gt; to upload it to some artefact store like &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; or &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt; for internal-only use. Another big plus is that having a package allows us to collaboratively work on the source code in your package using Git. On the other hand using Git with notebooks is a big pain since it its format is not really designed to be human-readable and thus merge conflicts are a horror. 
-Still we haven&amp;#8217;t yet added any functionality, so let&amp;#8217;s see how we do about&amp;nbsp;that.&lt;/p&gt;
-&lt;h3&gt;2. Extract functionality from the&amp;nbsp;notebook&lt;/h3&gt;
-&lt;p&gt;We start with loading the &lt;a href="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html"&gt;Boston housing dataset&lt;/a&gt; into a dataframe with columns of the lower-cased feature names and the target variable &lt;em&gt;price&lt;/em&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.datasets&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;
-
-&lt;span class="n"&gt;boston&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lower&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;feature_names&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Now imagine we would go on like this, do some preprocessing etc., and after a while we would have a pretty extensive notebook of statements and expressions without any structure leading to name collisions and confusion. Since notebooks allow the executing of cells in different order this can be extremely harmful. For these reasons, we create a function&amp;nbsp;instead:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_boston_df&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="n"&gt;boston&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;load_boston&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lower&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;feature_names&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-    &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boston&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We test it inside the notebook but then directly extract and move it into a module &lt;code&gt;model.py&lt;/code&gt; that we create within our package under &lt;code&gt;src/boston_boston&lt;/code&gt;. Now, inside our notebook, we can just import and use&amp;nbsp;it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;boston_housing.model&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_boston_df&lt;/span&gt;
-
-&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_boston_df&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Now that looks much cleaner and allows also for other notebooks to just use this bit of functionality without using copy &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; paste! This leads us to another best practice: Use JupyterLab only for integrating code from your package and keep complex functionality inside the package. Thus, extract larger bits of code from a notebook and move it into a package or directly develop code in a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;.&lt;/p&gt;
-&lt;h3&gt;3. Use a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;At that point the natural question comes up how to edit the code within your package. Of course JupyterLab will do the job but let&amp;#8217;s face it, it just sucks compared to a real Integrated Development Environment (&lt;span class="caps"&gt;IDE&lt;/span&gt;) for such tasks. On the other hand our package structure is just perfect for a proper &lt;span class="caps"&gt;IDE&lt;/span&gt; like &lt;a href="https://www.jetbrains.com/pycharm/"&gt;PyCharm&lt;/a&gt;, &lt;a href="https://code.visualstudio.com/"&gt;Visual Studio Code&lt;/a&gt; or &lt;a href="https://atom.io/"&gt;Atom&lt;/a&gt; among others. PyCharm which is my favourite &lt;span class="caps"&gt;IDE&lt;/span&gt; has for instance many code inspection and refactoring features that support you in writing high-quality, clean code. Figure 1 illustrates the current state of our little&amp;nbsp;project.   &lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/pycharm_boston_housing.png" alt="Boston-Housing project view in PyCharm"&gt;
-&lt;figcaption&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; Project structure of the &lt;em&gt;boston-housing&lt;/em&gt; package as created with PyScaffold. The &lt;code&gt;notebooks&lt;/code&gt; folder holds the notebooks for JupyterLab while the &lt;code&gt;src/boston_housing&lt;/code&gt; folder contains the actual code (&lt;code&gt;model.py&lt;/code&gt;) and defines an actual Python package.&lt;/figcaption&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;If we use an &lt;span class="caps"&gt;IDE&lt;/span&gt; for development we will run into an obvious problem. How can we modify a function in our package and have these modifications reflected in our notebook without restarting the kernel every time? At this point I want to introduce you to your new best friend, the &lt;a href="https://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html"&gt;autoreload extension&lt;/a&gt;. Just add in the first cell of your&amp;nbsp;notebook &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;and execute. This extension reloads modules before executing user code and thus allows you to use your &lt;span class="caps"&gt;IDE&lt;/span&gt; for development while executing it inside of&amp;nbsp;JupyterLab.&lt;/p&gt;
-&lt;h3&gt;4. Know your&amp;nbsp;tool&lt;/h3&gt;
-&lt;p&gt;JupyterLab is a powerful tool and knowing how to handle it brings you many advantages. Covering everything would exceed the scope of this blog post and thus I will mention here only practices that I apply&amp;nbsp;commonly.&lt;/p&gt;
-&lt;h4&gt;Use Shortcuts to speed up your&amp;nbsp;work.&lt;/h4&gt;
-&lt;p&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; means &lt;kbd&gt;Cmd&lt;/kbd&gt; on Mac and &lt;kbd&gt;Ctrl&lt;/kbd&gt; on&amp;nbsp;Windows/Linux.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Command&lt;/th&gt;
-&lt;th&gt;Shortcut&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Enter Command Mode&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Esc&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Run Cell&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;Enter&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Run Cell &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Select Next&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;Enter&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Add Cell Above/Below&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;A&lt;/kbd&gt; / &lt;kbd&gt;B&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Copy/Cut/Paste Cell&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;C&lt;/kbd&gt; / &lt;kbd&gt;X&lt;/kbd&gt; / &lt;kbd&gt;V&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Look Around Up/Down&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Alt&lt;/kbd&gt; &lt;kbd&gt;⇧&lt;/kbd&gt; / &lt;kbd&gt;⇩&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Markdown Cell&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;M&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Code Cell&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Y&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Delete Cell Output&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;M&lt;/kbd&gt;, &lt;kbd&gt;Y&lt;/kbd&gt; (workaround)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Delete Cell&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;D&lt;/kbd&gt; &lt;kbd&gt;D&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Toggle Line Numbers&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;L&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Comment Line&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;/&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Command Palette&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;C&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;File Explorer&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;F&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Toggle Bar&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;B&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Fullscreen Mode&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;D&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Close Tab&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;Q&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Launcher&lt;/td&gt;
-&lt;td&gt;&lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;L&lt;/kbd&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4&gt;Quickly access&amp;nbsp;documentation&lt;/h4&gt;
-&lt;p&gt;If you have ever used a notebook or IPython you surely know that executing a command prefixed with &lt;code&gt;?&lt;/code&gt; gets you the docstring (and with &lt;code&gt;??&lt;/code&gt; the source code). Even easier than that is actually moving the cursor over the command and pressing &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;Tab&lt;/kbd&gt;. This will open a small drop-down menu displaying the help that closes automatically after the next key&amp;nbsp;stroke.  &lt;/p&gt;
-&lt;h4&gt;Avoid unintended&amp;nbsp;outputs&lt;/h4&gt;
-&lt;p&gt;Using &lt;code&gt;;&lt;/code&gt; in Python is actually frowned upon but in Jupyterlab you can put it to good use. You surely have noticed outputs like &lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x7fce2e03a208&amp;gt;&lt;/code&gt; when you use a library like Matplotlib for plotting. This is due to the fact that Jupyter renders in the output cell the return value of the function as well as the graphical output. You can easily suppress and only show the plot by appending &lt;code&gt;;&lt;/code&gt; to a command like &lt;code&gt;plt.plot(...);&lt;/code&gt;.&lt;/p&gt;
-&lt;h4&gt;Arrange cells and windows according to your&amp;nbsp;needs&lt;/h4&gt;
-&lt;p&gt;You can easily arrange two notebooks side by side or in many other ways by clicking and holding on a notebook&amp;#8217;s tab then moving it around. The same applies to cells. Just click on the cell&amp;#8217;s number, hold and move it up or&amp;nbsp;down.&lt;/p&gt;
-&lt;h4&gt;Access a cell&amp;#8217;s&amp;nbsp;result&lt;/h4&gt;
-&lt;p&gt;Surely you have experienced this facepalm moment when your cell with &lt;code&gt;long_running_transformation(df)&lt;/code&gt; is finally finished but you forgot to store the result in another variable. Don&amp;#8217;t despair! You can just use &lt;code&gt;result = _NUMBER&lt;/code&gt;, e.g. &lt;code&gt;result = _42&lt;/code&gt;, where &lt;code&gt;NUMBER&lt;/code&gt; is the execution number of your cell, e.g. &lt;code&gt;In [42]&lt;/code&gt;, to access and save your result. An alternative to &lt;code&gt;_NUMBER&lt;/code&gt; is &lt;code&gt;Out[NUMBER]&lt;/code&gt;.&lt;/p&gt;
-&lt;h4&gt;Use the multicursor&amp;nbsp;support&lt;/h4&gt;
-&lt;p&gt;Why should you be satisfied with only one cursor if you can have multiple? Just press &lt;kbd&gt;Alt&lt;/kbd&gt; while holding down your left mouse button to select several rows. Then type as you would normally do to insert or&amp;nbsp;delete. &lt;/p&gt;
-&lt;h4&gt;Activate line&amp;nbsp;numbers&lt;/h4&gt;
-&lt;p&gt;Let&amp;#8217;s assume you have to debug a cell with lots of code, I know you wouldn&amp;#8217;t have cells with tons of code so let&amp;#8217;s say your colleague caused that mess. To find the line corresponding to the error output more easily, you can just hit &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;L&lt;/kbd&gt; to show the line numbers for a&amp;nbsp;moment.&lt;/p&gt;
-&lt;h4&gt;Search all available&amp;nbsp;actions&lt;/h4&gt;
-&lt;p&gt;The Command Palette is surely one of the most powerful features of JupyterLab. Just hit the shortcut &lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Shift&lt;/kbd&gt; &lt;kbd&gt;C&lt;/kbd&gt; and use the incremental search to find whatever action you are looking for. No more browsing menu drop downs for&amp;nbsp;minutes!&lt;/p&gt;
-&lt;h3&gt;5. Create your personal notebook&amp;nbsp;template&lt;/h3&gt;
-&lt;p&gt;After I have been using notebooks for a while I realized that in many cases the content of the first cell looks quite similar over many of the notebooks I created. Still, whenever I started something new I typed down the same imports and searched StackOverflow for some Pandas, Seaborn etc. settings. Consequently, a good advise is to have a &lt;code&gt;template.ipynb&lt;/code&gt; notebook somewhere that includes imports of popular packages and often used settings. Instead of creating a new notebook with JupyterLab you then just right-click the &lt;code&gt;template.ipynb&lt;/code&gt; notebook and click &lt;em&gt;Duplicate&lt;/em&gt;. &lt;/p&gt;
-&lt;p&gt;The content of my &lt;code&gt;template.ipynb&lt;/code&gt; is&amp;nbsp;basically:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
-
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sp&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sklearn&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.api&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sm&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.formula.api&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ols&lt;/span&gt;
-
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;mpl&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="n"&gt;InlineBackend&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure_format&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;retina&amp;#39;&lt;/span&gt;
-
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;poster&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;9.&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;whitegrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_option&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;display.max_rows&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_option&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;display.max_columns&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stream&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;6. Document your&amp;nbsp;analysis&lt;/h3&gt;
-&lt;p&gt;A really old programmer&amp;#8217;s joke goes like &amp;#8220;When I wrote this code, only God and I understood what it did. Now&amp;#8230; only God knows.&amp;#8221; The same goes for an analysis or creating a predictive model. Therefore your future self will be very thankful for documentation of your code and even some general information about goals and context. Notebooks allow you to use &lt;a href="https://daringfireball.net/projects/markdown/syntax"&gt;Markdown syntax&lt;/a&gt; to annotate your analysis and you should make plenty use of it. Even mathematical expressions can be embedded using the &lt;code&gt;$...$&lt;/code&gt; notation. More general information about the whole project can be put into &lt;code&gt;README.rst&lt;/code&gt; which was also created by PyScaffold. This file will also be used as long description when the package is built and thus be displayed by an artefact store like &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; or &lt;a href="https://devpi.net/"&gt;devpi&lt;/a&gt;. Also GitHub and GitLab will display &lt;code&gt;README.rst&lt;/code&gt; and thus provide a good entry point into your project. If you are more into the &lt;a href="https://daringfireball.net/projects/markdown/syntax"&gt;Markdown syntax&lt;/a&gt; and thus rather want a &lt;code&gt;README.md&lt;/code&gt;, you can install the &lt;a href="https://github.com/pyscaffold/pyscaffoldext-markdown"&gt;pyscaffoldext-markdown&lt;/a&gt; extension for PyScaffold which adds a &lt;code&gt;--markdown&lt;/code&gt; flag to PyScaffold&amp;#8217;s &lt;code&gt;putup&lt;/code&gt; command.&lt;/p&gt;
-&lt;p&gt;The actual source code in your package should be documented using docstrings which brings us to a famous joke of Andrew Tanenbaum &amp;#8220;The nice thing about standards is that you have so many to choose from&amp;#8221;. The three most common docstring standards for Python are the default &lt;a href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#the-python-domain"&gt;Sphinx RestructuredText&lt;/a&gt;, &lt;a href="http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html"&gt;Numpy and Google style&lt;/a&gt; which are all supported by PyCharm. Personally I like the Google style the most but tastes are different and more important is to be consistent after you have picked one. In case you have lots of documentation which would blow the scope of a single readme file, maybe you came up with a new &lt;span class="caps"&gt;ML&lt;/span&gt; algorithms and want to document the concept behind it, you should take a look at &lt;a href="https://www.sphinx-doc.org/"&gt;Sphinx&lt;/a&gt;. Our project setup already includes a &lt;code&gt;docs&lt;/code&gt; folder with an &lt;code&gt;index.rst&lt;/code&gt; as a starting point and new pages can be easily added. After you have installed Sphinx you can build your documentation as &lt;span class="caps"&gt;HTML&lt;/span&gt;&amp;nbsp;pages:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install spinx
-python setup.py docs
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;It&amp;#8217;s also possible to create a nice &lt;span class="caps"&gt;PDF&lt;/span&gt; and even serve your documentation as a web page using &lt;a href="https://readthedocs.org/"&gt;ReadTheDocs&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;7. State your dependencies for&amp;nbsp;reproducibility&lt;/h3&gt;
-&lt;p&gt;Python and its ecosystem evolve steady and quick, thus things that worked today might break tomorrow after a version of one of your dependencies changed. If you consider yourself a data &lt;em&gt;scientist&lt;/em&gt;, you should always guarantee &lt;strong&gt;reproducibility&lt;/strong&gt; of whatever you do since it&amp;#8217;s the most fundamental pillar of any real science. Reproducibility means that given the same data and code your future you and of course others should be able to run your analysis or model receiving the same results. To achieve this technically we need to record all dependencies and their versions. Using &lt;code&gt;conda&lt;/code&gt; we can do this with our &lt;code&gt;boston_housing&lt;/code&gt; project&amp;nbsp;as:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env export -n boston_housing -f environment.lock.yaml
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This creates a file &lt;code&gt;environment.lock.yaml&lt;/code&gt; that recursively states all dependencies and their version as well as the Python version that was used to allow anyone to deterministically reproduce this environment in the future. This is as easy&amp;nbsp;as &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env create -f environment.lock.yaml --force
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Besides a &lt;em&gt;concrete&lt;/em&gt; environment file that exhaustively lists all dependencies, it&amp;#8217;s also common practice to define an &lt;code&gt;environment.yaml&lt;/code&gt; where you state your &lt;em&gt;abstract&lt;/em&gt; dependencies. These abstract dependencies comprise only libraries which are directly imported with no specific version. In our case this file looks&amp;nbsp;like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;boston_housing&lt;/span&gt;
-&lt;span class="nt"&gt;channels&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;defaults&lt;/span&gt;
-&lt;span class="nt"&gt;dependencies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;jupyterlab&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;pandas&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;scikit-learn&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;seaborn&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This file keeps track of all libraries you are directly using. If you added a new library you can use this file to update your current environment&amp;nbsp;with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda env update --file environment.yaml
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Remember to regularly update and commit changes to these files in Git. Whenever you are satisfied with an iteration of your work also make use of Git tags in order to have reference points for later. These tags will also be used automatically as version numbers for your Python package which is another benefit of having used PyScaffold for your project&amp;nbsp;setup.&lt;/p&gt;
-&lt;p&gt;Reproducible environments are only one aspect of reproducibility. Since many machine learning algorithms (most prominently Deep Learning) use random numbers it&amp;#8217;s important to keep them deterministic by fixing the random seed. This sounds easier at it is since depending on the used framework, there are different ways to accomplish this. A good overview for many common frameworks is provided in the talk &lt;a href="https://www.youtube.com/watch?v=MOBs6MNepDk&amp;amp;feature=youtu.be"&gt;Reproducibility, and Selection Bias in Machine Learning&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;8. Develop locally, execute&amp;nbsp;remotely&lt;/h3&gt;
-&lt;p&gt;Quite often when you want to do some heavy lifting, your laptop won&amp;#8217;t be enough and thus you might use some powerful workstation by remote access. Running JupyterLab on the workstation and accessing it, maybe through some &lt;a href="https://www.ssh.com/ssh/tunneling/example"&gt;&lt;span class="caps"&gt;SSH&lt;/span&gt; tunnel&lt;/a&gt;, is no problem at all but how can we now work on the modules in our package? One way would be to run your &lt;span class="caps"&gt;IDE&lt;/span&gt; on the workstation but this comes potentially with many downsides depending on your connection. A flaky connection might lead to increased latencies when typing or reduced resolution. For this reason it&amp;#8217;s best to do the actual coding locally in your &lt;span class="caps"&gt;IDE&lt;/span&gt; and sync every change automatically to the workstation where JupyterLab runs. The general setup for the workstation is analogue to the local setup. We &lt;code&gt;git clone&lt;/code&gt; our repository and use the &lt;code&gt;environment.lock.yaml&lt;/code&gt; to create the exact same environment which we run locally, followed by a &lt;code&gt;python setup.py develop&lt;/code&gt;. If we now start JupyterLab within this environment we will be able to import our&amp;nbsp;package. &lt;/p&gt;
-&lt;p&gt;Now comes the interesting part: every change in one of our local modules needs to be reflected also on the remote workstation. You can use a classical command line tool like &lt;a href="https://rsync.samba.org/"&gt;rsync&lt;/a&gt; for that or just rely on the features of your &lt;span class="caps"&gt;IDE&lt;/span&gt;. Over the last years I have grown quite fond of PyCharm&amp;#8217;s Deployment feature as illustrated in Figure 2, which is unfortunately only available in the Professional version. It allows you to configure remote servers and if &lt;em&gt;Automatic Upload&lt;/em&gt; is checked it syncs each file when saving. This convenient feature allows for blazing fast iterations. You make some changes to your model, maybe implement a new transformation function, hit &lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;S&lt;/kbd&gt; to save, hit &lt;kbd&gt;Accel&lt;/kbd&gt; &lt;kbd&gt;Tab&lt;/kbd&gt; to switch to your browser with the JupyterLab tab and then rerun the modified model on the&amp;nbsp;workstation.  &lt;/p&gt;
-&lt;p&gt;From time to time, we also need to commit our changes using Git. Since we developed mostly on our local machine we only need to download the content of the &lt;code&gt;notebooks&lt;/code&gt; folder from the remote workstation. For this we can again use rsync or the &lt;em&gt;Download from &amp;#8230;&lt;/em&gt; deployment feature of PyCharm Professional. Thus also all our git operations are executed locally avoiding merge conflicts between the local and remote repository. Git should not be used for syncing tasks&amp;nbsp;anyway.&lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/pycharm_deployment.png" alt="Deployment tool of PyCharm"&gt;
-&lt;figcaption&gt;&lt;strong&gt;Figure 2:&lt;/strong&gt; PyCharm Professional allows you to easily develop locally your Python modules and run them remotely in JupyterLab. It will keep track of local changes and upload them automatically what triggers JupterLab&amp;#8217;s autoreload extension.&lt;/figcaption&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Another reason for running JupyterLab on a remote machine might be due to some firewall restrictions. Quite often in order to access sensitive data sources or a &lt;a href="https://spark.apache.org/"&gt;Spark&lt;/a&gt; cluster, you need to run JupyterLab on a gateway server. To invoke JupyterLab with Spark capabilities there are two ways. An ad hoc method is to just state on the command line that JupyterLab should use pyspark as kernel. For instance starting JupyterLab with Python 3.6 (needs to be consistent with your Spark distribution), 20 executors each having 5 cores might look like&amp;nbsp;this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;PYSPARK_PYTHON=python3.6 PYSPARK_DRIVER_PYTHON=&amp;quot;jupyter&amp;quot; PYSPARK_DRIVER_PYTHON_OPTS=&amp;quot;notebook --no-browser --port=8899&amp;quot; /usr/bin/pyspark2 --master yarn --deploy-mode client --num-executors 20  --executor-memory 10g --executor-cores 5 --conf spark.dynamicAllocation.enabled=false
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In order to be able to create notebooks with a specific PySpark kernel directly from JupyterLab, just create a file &lt;code&gt;~/.local/share/jupyter/kernels/pyspark/kernel.json&lt;/code&gt; holding:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
- &lt;span class="nt"&gt;&amp;quot;display_name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;PySpark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
- &lt;span class="nt"&gt;&amp;quot;language&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;python&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
- &lt;span class="nt"&gt;&amp;quot;argv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-  &lt;span class="s2"&gt;&amp;quot;/usr/local/anaconda-py3/bin/python&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="s2"&gt;&amp;quot;-m&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="s2"&gt;&amp;quot;ipykernel&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="s2"&gt;&amp;quot;-f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="s2"&gt;&amp;quot;{connection_file}&amp;quot;&lt;/span&gt;
- &lt;span class="p"&gt;],&lt;/span&gt;
- &lt;span class="nt"&gt;&amp;quot;env&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;HADOOP_CONF_DIR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/etc/hadoop/conf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;HADOOP_USER_NAME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;username&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;HADOOP_CONF_LIB_NATIVE_DIR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/var/lib/cloudera/parcels/CDH/lib/hadoop/lib/native&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;YARN_CONF_DIR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/etc/hadoop/conf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;SPARK_YARN_QUEUE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;dev&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;PYTHONPATH&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/usr/local/anaconda-py3/bin/python:/usr/local/anaconda-py3/lib/python3.6/site-packages:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python:/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/lib/py4j-0.10.4-src.zip&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/var/lib/cloudera/parcels/SPARK2/lib/spark2/&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;PYTHONSTARTUP&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/var/lib/cloudera/parcels/SPARK2/lib/spark2/python/pyspark/shell.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;quot;PYSPARK_SUBMIT_ARGS&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;--queue dev --conf spark.dynamicAllocation.enabled=false --conf spark.scheduler.minRegisteredResourcesRatio=1 --conf spark.sql.autoBroadcastJoinThreshold=-1 --master yarn --num-executors 5 --driver-memory 2g --executor-memory 20g --executor-cores 3 pyspark-shell&amp;quot;&lt;/span&gt;
- &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;. JupyterLab is a mighty and flexible tool and thus all the more it&amp;#8217;s important to adhere to some best practices and processes to guarantee quality in your software and analysis. The &lt;a href="https://github.com/FlorianWilhelm/boston_housing"&gt;boston_housing repository&lt;/a&gt; demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points&amp;nbsp;above.&lt;/p&gt;
-&lt;p&gt;JupyterLab also offers many powerful &lt;a href="https://jupyterlab.readthedocs.io/en/stable/user/extensions.html"&gt;extensions&lt;/a&gt;, e.g. &lt;a href="https://github.com/jupyterlab/jupyterlab-git"&gt;jupyterlab-git&lt;/a&gt;, &lt;a href="https://github.com/jupyterlab/jupyterlab-toc"&gt;jupyterlab-toc&lt;/a&gt;, etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. Since general concepts are transferable but the specific workflow may be different, also read the &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt; about the same topic but using partly a different&amp;nbsp;tooling.&lt;/p&gt;</content><category term="python"></category><category term="jupyter"></category></entry></feed>
+&lt;p&gt;Our paper &lt;em&gt;Querying NoSQL with Deep Learning to Answer Natural Language Questions&lt;/em&gt; was presented at &lt;a href="https://aaai.org/Conferences/AAAI-19/"&gt;&lt;span class="caps"&gt;IAAI&lt;/span&gt;-19&lt;/a&gt; and can be downloaded on &lt;a href="https://aaai.org/Papers/AAAI/2019/IAAI-BlankS.88.pdf"&gt;aaai.org&lt;/a&gt;. There is also a simplified blog post about the same topic on the &lt;a href="https://www.inovex.de/blog/seqpolicynet-nlp-elasticsearch/"&gt;inovex blog&lt;/a&gt; by my colleague Sebastian&amp;nbsp;Blank.&lt;/p&gt;</content><category term="data science"></category><category term="nlp"></category></entry></feed>

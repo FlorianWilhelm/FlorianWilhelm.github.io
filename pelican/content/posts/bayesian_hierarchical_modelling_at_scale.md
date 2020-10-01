@@ -5,7 +5,7 @@ modified: 2020-10-01 8:00
 category: post
 tags: data science, mathematics, production
 authors: Florian Wilhelm
-status: draft
+status: published
 ---
 
 ## Introduction
@@ -50,8 +50,8 @@ which is sometimes also referred to as *partially pooled model*. Figure 1 illust
 &nbsp;
 <figure>
 <img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
-<figcaption align="center"><strong>Figure 1:</strong> Hierarchical model as a combination of a pooled and an unpooled model. 
-Plot taken from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
+<figcaption align="center"><strong>Figure 1:</strong> Hierarchical model as a combination of a pooled and an unpooled model 
+from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
 </figcaption>
 </figure>
 &nbsp;

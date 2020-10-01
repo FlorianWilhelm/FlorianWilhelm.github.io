@@ -6,7 +6,7 @@ category: post
 tags: data science, mathematics, production
 authors: Florian Wilhelm
 status: published
-summary: For a long time, Bayesian Hierarchical Modelling has been a very powerful tool that sadly could not be applied often due to its high computations in Python, Bayesian Hierarchical Modelling is now ready for prime time.  
+summary: For a long time, Bayesian Hierarchical Modelling has been a very powerful tool that sadly could not be applied often due to its high computations costs. With NumPyro and the latest advances in high-performance computations in Python, Bayesian Hierarchical Modelling is now ready for prime time.  
 ---
 
 ## Introduction

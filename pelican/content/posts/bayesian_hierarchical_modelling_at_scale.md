@@ -488,7 +488,7 @@ used the words sales forecast and demand forecast interchangeably but bear in mi
 Canonically, one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
 in which we only know that demand ≥ sales. Right-censored data like that provides us with information about the [cumulative
 distribution function](https://en.wikipedia.org/wiki/Cumulative_distribution_function) in contrast to the [probability mass function](https://en.wikipedia.org/wiki/Probability_mass_function)
-in case of no out-of-stock situation. There are ways to include both types of information into an BHM.
+in case of no out-of-stock situation. There are ways to include both types of information into a BHM.
 Those are just some of many possible improvements and extensions to this model. I am looking forward to your ideas and use-cases!
  
 

@@ -483,8 +483,9 @@ These are just some analysis one could start to look into to derive useful insig
 The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
 only the aggregated sales but also the ones of individual products. We could then build hierarchies over the product hierarchies
 and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
-We could also use BHM to address [censored data], which is also an important task when doing sales forecasts. Canonically,
-one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
+We could also use BHM to address [censored data], which is also an important task when doing demand forecasts. So far we have
+used the words sales forecast and demand forecast interchangeably but bear in mind that we are actually interested in the demand.
+Canonically, one assumes that the demand for a product equals its sales but this only holds true if there was no out-of-stock situation
 in which we only know that demand ≥ sales. Right-censored data like that provides us with information about the [cumulative
 distribution function](https://en.wikipedia.org/wiki/Cumulative_distribution_function) in contrast to the [probability mass function](https://en.wikipedia.org/wiki/Probability_mass_function)
 in case of no out-of-stock situation. There are ways to include both types of information into an BHM.

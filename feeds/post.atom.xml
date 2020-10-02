@@ -21,7 +21,7 @@ that they have to be close to zero or that they are non-negative. Then again, ma
 be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
 So where the Bayesian framework now really shines is, if you consider the following problem setting I stole from the wonderful 
 presentation &lt;a href="https://www.youtube.com/watch?v=WbNmcvxRwow"&gt;A Bayesian Workflow with PyMC and ArviZ&lt;/a&gt; by Corrie&amp;nbsp;Bartelheimer.&lt;/p&gt;
-&lt;p&gt;Imagine you want to estimate the price of an apartment in Berlin given the living area in square meters and its district. Making a linear
+&lt;p&gt;Imagine you want to estimate the price of an apartment in Berlin given its living area in square meters and its district. Making a linear
 regression with all data points you have neglecting the districts, i.e. a &lt;em&gt;pooled model&lt;/em&gt;, will lead to a robust estimation of the slope and intercept
 but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
 located in. Now grouping your data with respect to the respective districts and making a linear regression for each,

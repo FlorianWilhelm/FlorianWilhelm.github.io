@@ -35,7 +35,7 @@ be seen as mere regularizers in a non-Bayesian way, and treated like that, often
 So where the Bayesian framework now really shines is, if you consider the following problem setting I stole from the wonderful 
 presentation [A Bayesian Workflow with PyMC and ArviZ](https://www.youtube.com/watch?v=WbNmcvxRwow) by Corrie Bartelheimer.
 
-Imagine you want to estimate the price of an apartment in Berlin given the living area in square meters and its district. Making a linear
+Imagine you want to estimate the price of an apartment in Berlin given its living area in square meters and its district. Making a linear
 regression with all data points you have neglecting the districts, i.e. a *pooled model*, will lead to a robust estimation of the slope and intercept
 but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
 located in. Now grouping your data with respect to the respective districts and making a linear regression for each,

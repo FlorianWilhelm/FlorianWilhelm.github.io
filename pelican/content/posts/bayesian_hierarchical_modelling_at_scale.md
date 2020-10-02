@@ -377,7 +377,7 @@ class Site:
     coefs = "coefs"
     days = "days"
 ```
-Then using variables like `Site.coef_offsets` instead of strings like `"coef_offsets"` as identifiers of sample sites, allows your IDE to inform you about any typos as you go. Problem solved.
+Then using variables like `Site.coef_offsets` instead of strings like `"coef_offsets"` as identifiers of sample sites, allows your IDE to inform you about any typo as you go. Problem solved.
 
 Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
 that we have already fitted the global parameters but want to only determine the local parameters of new stores with little data.
@@ -481,7 +481,7 @@ we could be interested in analyzing the distribution of the promotion effect ove
 
 These are just some analysis one could start to look into to derive useful insights for store management. 
 The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
-only the aggregated sales but also the ones of individual products. We could then build hierarchies over the product hierarchies
+only the aggregated sales but also the ones of individual products, i.e. [SKU-level](https://en.wikipedia.org/wiki/Stock_keeping_unit). We could then build hierarchies over the product hierarchies
 and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
 We could also use BHM to address [censored data], which is also an important task when doing demand forecasts. So far we have
 used the words sales forecast and demand forecast interchangeably but bear in mind that we are actually interested in the demand.

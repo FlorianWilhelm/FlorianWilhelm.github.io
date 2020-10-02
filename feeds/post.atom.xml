@@ -340,7 +340,7 @@ You can see in the actual implementation, i.e. &lt;a href="https://github.com/Fl
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Then using variables like &lt;code&gt;Site.coef_offsets&lt;/code&gt; instead of strings like &lt;code&gt;"coef_offsets"&lt;/code&gt; as identifiers of sample sites, allows your &lt;span class="caps"&gt;IDE&lt;/span&gt; to inform you about any typos as you go. Problem&amp;nbsp;solved.&lt;/p&gt;
+&lt;p&gt;Then using variables like &lt;code&gt;Site.coef_offsets&lt;/code&gt; instead of strings like &lt;code&gt;"coef_offsets"&lt;/code&gt; as identifiers of sample sites, allows your &lt;span class="caps"&gt;IDE&lt;/span&gt; to inform you about any typo as you go. Problem&amp;nbsp;solved.&lt;/p&gt;
 &lt;p&gt;Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
 that we have already fitted the global parameters but want to only determine the local parameters of new stores with little data.
 The predictive model assumes global and local parameters to be already inferred so that we can use it to predict the number
@@ -433,7 +433,7 @@ we could be interested in analyzing the distribution of the promotion effect ove
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;These are just some analysis one could start to look into to derive useful insights for store management. 
 The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
-only the aggregated sales but also the ones of individual products. We could then build hierarchies over the product hierarchies
+only the aggregated sales but also the ones of individual products, i.e. &lt;a href="https://en.wikipedia.org/wiki/Stock_keeping_unit"&gt;&lt;span class="caps"&gt;SKU&lt;/span&gt;-level&lt;/a&gt;. We could then build hierarchies over the product hierarchies
 and thus addressing cannibalization effects, e.g. when we introduce a new type of wine within our current offering.
 We could also use &lt;span class="caps"&gt;BHM&lt;/span&gt; to address &lt;a href="https://en.wikipedia.org/wiki/Censoring_(statistics)"&gt;censored data&lt;/a&gt;, which is also an important task when doing demand forecasts. So far we have
 used the words sales forecast and demand forecast interchangeably but bear in mind that we are actually interested in the demand.

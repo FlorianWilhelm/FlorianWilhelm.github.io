@@ -21,15 +21,15 @@ that they have to be close to zero or that they are non-negative. Then again, ma
 be seen as mere regularizers in a non-Bayesian way, and treated like that, often efficient techniques exist to solve such formulations.
 So where the Bayesian framework now really shines is, if you consider the following problem setting I stole from the wonderful 
 presentation &lt;a href="https://www.youtube.com/watch?v=WbNmcvxRwow"&gt;A Bayesian Workflow with PyMC and ArviZ&lt;/a&gt; by Corrie&amp;nbsp;Bartelheimer.&lt;/p&gt;
-&lt;p&gt;Imagine you want to estimate the price of an apartment in Berlin given its living area in square meters and its district. Making a linear
+&lt;p&gt;Imagine you want to estimate the price of an apartment in Berlin given its living area in square meters and district. Making a linear
 regression with all data points you have neglecting the districts, i.e. a &lt;em&gt;pooled model&lt;/em&gt;, will lead to a robust estimation of the slope and intercept
 but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
 located in. Now grouping your data with respect to the respective districts and making a linear regression for each,
 i.e. an &lt;em&gt;unpooled model&lt;/em&gt;, will lead to a much more narrow residual distribution but also a high uncertainty in your parameters since
 some district might only have three data points. To combine the advantages of a pooled and unpooled model, one
 would intuitively demand that for each district the prior knowledge of the parameter from the pooled model should be used
-and updated according to the data we have about a certain district. If we have only a few data points we would only 
-deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
+and updated according to the data we have about a certain district. If we have only a few data points we would only allow to
+deviate a bit from our prior knowledge about the parameter. In case we have lots of data points, the parameter for the
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an &lt;em&gt;hierarchical model&lt;/em&gt;,
 which is sometimes also referred to as &lt;em&gt;partially pooled model&lt;/em&gt;. Figure 1 illustrates our thoughts so&amp;nbsp;far.&lt;/p&gt;

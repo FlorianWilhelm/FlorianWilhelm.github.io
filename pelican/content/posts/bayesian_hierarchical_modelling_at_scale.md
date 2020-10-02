@@ -35,15 +35,15 @@ be seen as mere regularizers in a non-Bayesian way, and treated like that, often
 So where the Bayesian framework now really shines is, if you consider the following problem setting I stole from the wonderful 
 presentation [A Bayesian Workflow with PyMC and ArviZ](https://www.youtube.com/watch?v=WbNmcvxRwow) by Corrie Bartelheimer.
 
-Imagine you want to estimate the price of an apartment in Berlin given its living area in square meters and its district. Making a linear
+Imagine you want to estimate the price of an apartment in Berlin given its living area in square meters and district. Making a linear
 regression with all data points you have neglecting the districts, i.e. a *pooled model*, will lead to a robust estimation of the slope and intercept
 but a wide residual distribution. This is due to the fact that the price of an apartment also heavily depends on the district it is
 located in. Now grouping your data with respect to the respective districts and making a linear regression for each,
 i.e. an *unpooled model*, will lead to a much more narrow residual distribution but also a high uncertainty in your parameters since
 some district might only have three data points. To combine the advantages of a pooled and unpooled model, one
 would intuitively demand that for each district the prior knowledge of the parameter from the pooled model should be used
-and updated according to the data we have about a certain district. If we have only a few data points we would only 
-deviate a bit from our prior knowledge about the parameter. In case we have lots of data points the parameter for the
+and updated according to the data we have about a certain district. If we have only a few data points we would only allow to
+deviate a bit from our prior knowledge about the parameter. In case we have lots of data points, the parameter for the
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an *hierarchical model*,
 which is sometimes also referred to as *partially pooled model*. Figure 1 illustrates our thoughts so far.

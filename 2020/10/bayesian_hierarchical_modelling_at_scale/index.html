@@ -380,7 +380,7 @@ numbers and also considering that we expect effects to be multiplicative, e.g. 1
 coefficient <span class="math">\(\theta_{ij}\)</span>. The <span class="math">\(\theta_{ij}\)</span> are regularized by parameters <span class="math">\(\theta^\mu_j\)</span> and <span class="math">\(\theta^{\sigma^2}_j\)</span> on 
 the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
 infer individual <span class="math">\(r_i\)</span> for each store <span class="math">\(i\)</span> as well as global parameters <span class="math">\(r^\mu\)</span> and <span class="math">\(r^{\sigma^2}\)</span> over all stores. 
-And that&#8217;s already most of it. The plot in Figure 2 depicts the graphical model outlined so&nbsp;far.</p>
+And that&#8217;s already most of it. Figure 2 depicts the graphical model outlined so&nbsp;far.</p>
 <figure>
 <p align="center">
 <img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%">
@@ -502,7 +502,7 @@ in the <em>non-centered</em> version of a hierarchical model. This is the versio
 <p>Another thing that wasn&#8217;t mentioned yet are the <code>is_observed</code> and <code>not_observed</code> variables which are just a nice gimmick.
 Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
 the target variable <span class="math">\(y\)</span> to <em>not observed</em> instead of 0. During training, these target values are just ignored and later
-allows the model to answer a store manager&#8217;s potential question: &#8220;How many sales would I have had if I had opened my store on that&nbsp;day&#8221;.</p>
+allows the model to answer a store manager&#8217;s potential question: &#8220;How many sales would I have had if I had opened my store on that&nbsp;day?&#8221;</p>
 <p>Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its <span class="caps">SVI</span>. This is done in a separate function called <em>guide</em>. </p>

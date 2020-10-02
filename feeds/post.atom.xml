@@ -133,7 +133,7 @@ numbers and also considering that we expect effects to be multiplicative, e.g. 1
 coefficient &lt;span class="math"&gt;\(\theta_{ij}\)&lt;/span&gt;. The &lt;span class="math"&gt;\(\theta_{ij}\)&lt;/span&gt; are regularized by parameters &lt;span class="math"&gt;\(\theta^\mu_j\)&lt;/span&gt; and &lt;span class="math"&gt;\(\theta^{\sigma^2}_j\)&lt;/span&gt; on 
 the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
 infer individual &lt;span class="math"&gt;\(r_i\)&lt;/span&gt; for each store &lt;span class="math"&gt;\(i\)&lt;/span&gt; as well as global parameters &lt;span class="math"&gt;\(r^\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(r^{\sigma^2}\)&lt;/span&gt; over all stores. 
-And that&amp;#8217;s already most of it. The plot in Figure 2 depicts the graphical model outlined so&amp;nbsp;far.&lt;/p&gt;
+And that&amp;#8217;s already most of it. Figure 2 depicts the graphical model outlined so&amp;nbsp;far.&lt;/p&gt;
 &lt;figure&gt;
 &lt;p align="center"&gt;
 &lt;img class="noZoom" src="/images/bhm_model.png" alt="centered hierarchical model" width="60%"&gt;
@@ -255,7 +255,7 @@ in the &lt;em&gt;non-centered&lt;/em&gt; version of a hierarchical model. This i
 &lt;p&gt;Another thing that wasn&amp;#8217;t mentioned yet are the &lt;code&gt;is_observed&lt;/code&gt; and &lt;code&gt;not_observed&lt;/code&gt; variables which are just a nice gimmick.
 Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
 the target variable &lt;span class="math"&gt;\(y\)&lt;/span&gt; to &lt;em&gt;not observed&lt;/em&gt; instead of 0. During training, these target values are just ignored and later
-allows the model to answer a store manager&amp;#8217;s potential question: &amp;#8220;How many sales would I have had if I had opened my store on that&amp;nbsp;day&amp;#8221;.&lt;/p&gt;
+allows the model to answer a store manager&amp;#8217;s potential question: &amp;#8220;How many sales would I have had if I had opened my store on that&amp;nbsp;day?&amp;#8221;&lt;/p&gt;
 &lt;p&gt;Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its &lt;span class="caps"&gt;SVI&lt;/span&gt;. This is done in a separate function called &lt;em&gt;guide&lt;/em&gt;. &lt;/p&gt;

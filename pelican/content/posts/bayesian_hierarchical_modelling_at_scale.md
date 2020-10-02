@@ -161,7 +161,7 @@ where $\mathbf{\theta}$ is a vector of coefficients. For each store $i$ and each
 coefficient $\theta_{ij}$. The $\theta_{ij}$ are regularized by parameters $\theta^\mu_j$ and $\theta^{\sigma^2}_j$ on 
 the global level, which helps us in case a store has only little historical data. For the dispersion parameters we
 infer individual $r_i$ for each store $i$ as well as global parameters $r^\mu$ and $r^{\sigma^2}$ over all stores. 
-And that's already most of it. The plot in Figure 2 depicts the graphical model outlined so far.
+And that's already most of it. Figure 2 depicts the graphical model outlined so far.
 
 <figure>
 <p align="center">
@@ -289,7 +289,7 @@ in the *non-centered* version of a hierarchical model. This is the version used 
 Another thing that wasn't mentioned yet are the `is_observed` and `not_observed` variables which are just a nice gimmick.
 Instead of using up degrees of freedom to learn that the number of sales is 0 on days where the store is closed, I set
 the target variable $y$ to *not observed* instead of 0. During training, these target values are just ignored and later
-allows the model to answer a store manager's potential question: "How many sales would I have had if I had opened my store on that day".
+allows the model to answer a store manager's potential question: "How many sales would I have had if I had opened my store on that day?"
 
 Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 

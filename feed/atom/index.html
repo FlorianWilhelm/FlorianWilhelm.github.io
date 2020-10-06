@@ -50,7 +50,7 @@ methodical reason for it. Regarding the former, PyMC3 uses &lt;a href="http://de
 up its computations by transpiling your Python code to C. Theano inspired many frameworks like &lt;a href="https://www.tensorflow.org/"&gt;Tensorflow&lt;/a&gt; 
 and &lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt; but is considered deprecated today and cannot rival the speed of modern frameworks
 anymore. For the latter, I used PyMC3 mostly with &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;Markov chain Monte Carlo&lt;/a&gt; (&lt;span class="caps"&gt;MCMC&lt;/span&gt;) based methods, 
-which is a sampling method and computationally quite demanding, while &lt;a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods"&gt;variational inference (&lt;span class="caps"&gt;VI&lt;/span&gt;)&lt;/a&gt;
+which are sampling algorithms and thus computationally quite demanding, while &lt;a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods"&gt;variational inference (&lt;span class="caps"&gt;VI&lt;/span&gt;)&lt;/a&gt;
 methods are much faster. But also when using &lt;span class="caps"&gt;VI&lt;/span&gt;, which PyMC3 also supports, it never really allowed me to deal with larger datasets rendering
 Bayesian Hierarchical Modelling (&lt;span class="caps"&gt;BHM&lt;/span&gt;) a wonderful tool that sadly could not be applied in many suitable projects due to its computational&amp;nbsp;costs.&lt;/p&gt;
 &lt;p&gt;Luckily, the world of data science moves on with an incredible speed, and some time ago I had a nice project at my hand that

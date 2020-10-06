@@ -67,7 +67,7 @@ methodical reason for it. Regarding the former, PyMC3 uses [Theano](http://deepl
 up its computations by transpiling your Python code to C. Theano inspired many frameworks like [Tensorflow](https://www.tensorflow.org/) 
 and [PyTorch](https://pytorch.org/) but is considered deprecated today and cannot rival the speed of modern frameworks
 anymore. For the latter, I used PyMC3 mostly with [Markov chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) (MCMC) based methods, 
-which is a sampling method and computationally quite demanding, while [variational inference (VI)](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
+which are sampling algorithms and thus computationally quite demanding, while [variational inference (VI)](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
 methods are much faster. But also when using VI, which PyMC3 also supports, it never really allowed me to deal with larger datasets rendering
 Bayesian Hierarchical Modelling (BHM) a wonderful tool that sadly could not be applied in many suitable projects due to its computational costs.
 

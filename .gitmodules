@@ -1,11 +1,11 @@
 [submodule "pelican/plugins-core"]
 	path = pelican/plugins-core
 	url = https://github.com/getpelican/pelican-plugins
-    branch = master
+        branch = master
 [submodule "pelican/plugins/plugins/ipynb"]
 	path = pelican/plugins/ipynb
 	url = https://github.com/danielfrg/pelican-ipynb.git
-    branch = master
+        branch = master
 [submodule "pelican/themes"]
 	path = pelican/themes
 	url = https://github.com/getpelican/pelican-themes.git

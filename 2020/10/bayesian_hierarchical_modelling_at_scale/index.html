@@ -9,141 +9,6 @@
 
 
 
-
-<style type="text/css">
-
-/*some stuff for output/input prompts*/
-div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
-div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
-div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
-div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
-@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
-div.prompt:empty{padding-top:0;padding-bottom:0}
-div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
-div.inner_cell{width:90%;}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
-div.input_prompt{color:navy;border-top:1px solid transparent;}
-div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
-div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
-div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
-div.output_prompt{color:darkred;}
-
-a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
-h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
-/* end stuff for output/input prompts*/
-
-
-.highlight-ipynb .hll { background-color: #ffffcc }
-.highlight-ipynb  { background: #f8f8f8; }
-.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
-.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
-.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight-ipynb .o { color: #666666 } /* Operator */
-.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
-.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
-.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
-.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
-.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
-.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
-.highlight-ipynb .go { color: #888888 } /* Generic.Output */
-.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
-.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
-.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
-.highlight-ipynb .m { color: #666666 } /* Literal.Number */
-.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
-.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
-.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
-.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight-ipynb .no { color: #880000 } /* Name.Constant */
-.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
-.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
-.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
-.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
-.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
-.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
-.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
-.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
-.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
-.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
-</style>
-
-<style type="text/css">
-/* Overrides of notebook CSS for static HTML export */
-div.entry-content {
-  overflow: visible;
-  padding: 8px;
-}
-.input_area {
-  padding: 0.2em;
-}
-
-a.heading-anchor {
- white-space: normal;
-}
-
-.rendered_html
-code {
- font-size: .8em;
-}
-
-pre.ipynb {
-  color: black;
-  background: #f7f7f7;
-  border: none;
-  box-shadow: none;
-  margin-bottom: 0;
-  padding: 0;
-  margin: 0px;
-  font-size: 13px;
-}
-
-/* remove the prompt div from text cells */
-div.text_cell .prompt {
-    display: none;
-}
-
-/* remove horizontal padding from text cells, */
-/* so it aligns with outer body text */
-div.text_cell_render {
-    padding: 0.5em 0em;
-}
-
-img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
-</style>
-
 <link rel="canonical" href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/">
 
         <meta name="author" content="Florian Wilhelm" />
@@ -162,10 +27,12 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
             <meta property="article:tag" content="production" />
             <meta property="article:author" content="Florian Wilhelm" />
 
+    <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
     <meta name="twitter:domain" content="https://florianwilhelm.info">
+
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
@@ -176,16 +43,13 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
     <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-
-
         <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post ATOM Feed"/>
-
 </head>
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -208,8 +72,11 @@ Florian Wilhelm            </a>
         <!-- /.navbar-collapse -->
     </div>
 </div> <!-- /.navbar -->
+
 <!-- Banner -->
 <!-- End Banner -->
+
+<!-- Content Container -->
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
@@ -280,14 +147,14 @@ deviate a bit from our prior knowledge about the parameter. In case we have lots
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an <em>hierarchical model</em>,
 which is sometimes also referred to as <em>partially pooled model</em>. Figure 1 illustrates our thoughts so&nbsp;far.</p>
-<p>&nbsp;
+<p>&nbsp;</p>
 <figure>
 <img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
 <figcaption align="center"><strong>Figure 1:</strong> Hierarchical model as a combination of a pooled and an unpooled model 
 from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
 </figcaption>
 </figure>
-&nbsp;</p>
+<p>&nbsp;</p>
 <h2>Recent&nbsp;Advances</h2>
 <p>So far I mostly used <a href="https://docs.pymc.io/">PyMC3</a> for Bayesian inference or <em>probabilistic programming</em> as the authors
 of PyMC3 like to call it. I love it for it&#8217;s elegant design and consequently its expressiveness. The documentation is great
@@ -389,7 +256,6 @@ And that&#8217;s already most of it. Figure 2 depicts the graphical model outlin
 <strong>Figure 2:</strong> Graphical representation of a hierarchical model (centered version) as defined above.
 </figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>Those boxes in Figure 2, which are called <a href="https://en.wikipedia.org/wiki/Plate_notation">plates</a>, tell you how many times a parameter is repeated.
 Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
@@ -400,7 +266,7 @@ Shaded circles are observed values, which in our case are the number of sales on
 <p>Let&#8217;s take a quick look into our model code which is just a normal Python function. It&#8217;s good to keep in mind, that we call this a <em>model</em> since we assume that given
 the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
 The model function only defines the model parameters, how they interact and their&nbsp;priors.</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpyro</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpyro</span>
 <span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
 <span class="kn">from</span> <span class="nn">jax.numpy</span> <span class="kn">import</span> <span class="n">DeviceArray</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
@@ -483,8 +349,7 @@ The model function only defines the model parameters, how they interact and thei
         <span class="n">betas</span> <span class="o">=</span> <span class="n">is_observed</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">disp_params</span><span class="p">)</span> <span class="o">+</span> <span class="n">not_observed</span>
         <span class="n">alphas</span> <span class="o">=</span> <span class="n">means</span> <span class="o">*</span> <span class="n">betas</span>
         <span class="k">return</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">GammaPoisson</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">betas</span><span class="p">),</span> <span class="n">obs</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Note that <code>disp_param</code> is <span class="math">\(r\)</span> and <code>coef</code> is <span class="math">\(\theta\)</span> in the source code above for better readability. You will
 recognize a lot of what we have talked about and I don&#8217;t want to go into the syntactical details of NumPyro. My suggestion
@@ -506,7 +371,7 @@ allows the model to answer a store manager&#8217;s potential question: &#8220;Ho
 <p>Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its <span class="caps">SVI</span>. This is done in a separate function called <em>guide</em>. </p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Guide with parameters of the posterior</span>
 
 <span class="sd">    Args:</span>
@@ -566,15 +431,14 @@ parameters have to be defined since its <span class="caps">SVI</span>. This is d
                                         <span class="n">constraint</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">positive</span><span class="p">)</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As you can see, the structure of the guide reflects the structure of the model and there we are just defining for each model parameter
 a distribution that again has parameters that need to be determined. The link between model and guide is given by the names of the <em>sample sites</em>
 like &#8220;coef_offsets&#8221;. This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
 behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
 You can see in the actual implementation, i.e. <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py">model.py</a>, that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables&nbsp;like:</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
     <span class="n">disp_param_mu</span> <span class="o">=</span> <span class="s2">&quot;disp_param_mu&quot;</span>
     <span class="n">disp_param_sigma</span> <span class="o">=</span> <span class="s2">&quot;disp_param_sigma&quot;</span>
     <span class="n">disp_param_offsets</span> <span class="o">=</span> <span class="s2">&quot;disp_param_offsets&quot;</span>
@@ -584,8 +448,7 @@ You can see in the actual implementation, i.e. <a href="https://github.com/Flori
     <span class="n">coef_offsets</span> <span class="o">=</span> <span class="s2">&quot;coef_offsets&quot;</span>
     <span class="n">coefs</span> <span class="o">=</span> <span class="s2">&quot;coefs&quot;</span>
     <span class="n">days</span> <span class="o">=</span> <span class="s2">&quot;days&quot;</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Then using variables like <code>Site.coef_offsets</code> instead of strings like <code>"coef_offsets"</code> as identifiers of sample sites, allows your <span class="caps">IDE</span> to inform you about any typo as you go. Problem&nbsp;solved.</p>
 <p>Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
@@ -596,30 +459,27 @@ of sales on days beyond our training interval. As these functions are only slide
 then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
 This works really well although the number of features, which is 23, is much higher than 7! Let&#8217;s take a look at the coefficients 
 of a store from the test set as detailed in the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb">model notebook</a>:</p>
-<div class="highlight"><pre><span></span>[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
+<div class="highlight"><pre><span></span><code>[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
   2.4938385   0.33227605  3.115691    2.9264386   2.692092    2.9548435
   0.05613964  0.06542112  2.8379264   2.9023972   3.5701406   3.2074358
   4.0569873   2.9304545   2.7463424   2.823191    2.959007  ]
-</pre></div>
-
+</code></pre></div>
 
 <p>The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
 Comparing the coefficients from above to the ones of the Poisson regression for the same store,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span>[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+<div class="highlight"><pre><span></span><code>[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
  -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
  -0.09434899  0.          0.          0.          0.          0.
   0.          0.          0.          0.          0.        ]
-</pre></div>
-
+</code></pre></div>
 
 <p>we see that they are highly different and zero for features in the Poisson regression that weren&#8217;t encountered in the data of just 7 days.
 Now comparing the coefficients of our <span class="caps">BHM</span> model trained on just 7 days with the coefficients of a cheating model trained on the whole test set,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span>[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+<div class="highlight"><pre><span></span><code>[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
   2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
  -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
   4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
-</pre></div>
-
+</code></pre></div>
 
 <p>we see that they are quite similar. That&#8217;s the magic of a hierarchical model! We started with plausible defaults from a 
 global perspective and adapted locally depending on the amount of available&nbsp;data.</p>
@@ -645,7 +505,6 @@ We start with taking a look at the sales prediction for one of the stores from t
 <strong>Figure 3:</strong> Sales forecast of one store from the test set. The blue dashed line is the the mean predicted mean.
 </figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>Only judging by the eye, we see that predicted mean (blue dashed line) follows the number sales (bluish bars) quite good.
 The background is shaded according to some important features like promotions and holidays which explain some of the variations
@@ -663,7 +522,6 @@ weekday starting with Monday a density over the means of all&nbsp;stores. </p>
 <strong>Figure 4:</strong> Density plot of the means of the weekday coefficients over all stores. 
 </figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
 Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
@@ -676,7 +534,6 @@ we could be interested in analyzing the distribution of the promotion effect ove
 <strong>Figure 5:</strong> Density plot of the promotion effect over all stores with the red line showing the median.
 </figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>These are just some analysis one could start to look into to derive useful insights for store management. 
 The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
@@ -710,11 +567,14 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -728,6 +588,8 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -748,6 +610,8 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -772,11 +636,11 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
-                    var disqus_identifier = 'bayesian_hierarchical_modelling_at_scale';
-                var disqus_url = 'https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/';
-
             var disqus_config = function () {
                 this.language = "en";
+
+                        this.page.identifier = '2020-10-01-bayesian_hierarchical_modelling_at_scale';
+                        this.page.url = 'https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/';
             };
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
@@ -799,180 +663,126 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<!-- Sidebar -->
 <section class="well well-sm">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
-                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
-                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
-              </ul>
-            </li>
+  <ul class="list-group list-group-flush">
 
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
 
-
-            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group list-inline tagcloud" id="tags">
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asynchronous/">
-                            asynchronous
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asyncio/">
-                            asyncio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bayesian/">
-                            bayesian
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/big-data/">
-                            big data
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bokeh/">
-                            bokeh
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/causal-inference/">
-                            causal inference
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/data-science/">
-                            data science
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/deep-learning/">
-                            deep learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/event-driven/">
-                            event-driven
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gans/">
-                            GANs
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
-                            google hangouts
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gps/">
-                            gps
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hadoop/">
-                            hadoop
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hive/">
-                            hive
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/jupyter/">
-                            jupyter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
-                            kalman filter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/machine-learning/">
-                            machine-learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/mathematics/">
-                            mathematics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/nlp/">
-                            nlp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
-                            predictive analytics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/production/">
-                            production
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/programming/">
-                            programming
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/python/">
-                            python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
-                            recommender systems
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
-                            scikit-learn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/scipy/">
-                            scipy
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
-                            semi-supervised
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/spark/">
-                            spark
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/template/">
-                            template
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
-                            uncertainty quantification
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-    </ul>
-</section>            </aside>
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gans/">GANs</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/nlp/">nlp</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/production/">production</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/programming/">programming</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/spark/">spark</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/template/">template</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">uncertainty quantification</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
         </div>
     </div>
 </div>
+<!-- End Content Container -->
+
 <footer>
    <div class="container">
       <hr>
@@ -992,6 +802,7 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
 
     <!-- Disqus -->
     <script type="text/javascript">
@@ -1025,6 +836,7 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
         })();
     </script>
     <!-- End Google Analytics Code -->
+
 
 <script>
    $(document).ready(function () {

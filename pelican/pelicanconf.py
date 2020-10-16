@@ -11,7 +11,7 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 AUTHOR = u'Florian Wilhelm'
 SITENAME = 'Florian Wilhelm'
 SITEURL = 'https://florianwilhelm.info'
-# SITEURL = ''
+#SITEURL = ''
 
 PATH = 'content'
 MARKUP = ('md',)
@@ -25,7 +25,7 @@ MARKDOWN = {
     },
     'output_format': 'html5',
 }
-TIMEZONE = 'Europe/Paris'
+TIMEZONE = 'Europe/Berlin'
 DEFAULT_LANG = u'en'
 OUTPUT_PATH = os.path.join(__location__, '../')
 TYPOGRIFY = True
@@ -178,12 +178,14 @@ PLUGINS = [
 #   'tipue_search',
      'neighbors',
      'sitemap',
+     'liquid_tags',
      'liquid_tags.img',
      'liquid_tags.video',
      'liquid_tags.youtube',
      'liquid_tags.vimeo',
      'liquid_tags.include_code',
-     'liquid_tags.notebook',  # be careful, this inserts mathjax due to the theme
+     # No longer needed!
+     #'liquid_tags.notebook',  # be careful, this inserts mathjax due to the theme
 ]
 
 # check https://github.com/barrysteyn/pelican_plugin-render_math for options

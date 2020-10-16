@@ -9,141 +9,6 @@
 
 
 
-
-<style type="text/css">
-
-/*some stuff for output/input prompts*/
-div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
-div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
-div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
-div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
-@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
-div.prompt:empty{padding-top:0;padding-bottom:0}
-div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
-div.inner_cell{width:90%;}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
-div.input_prompt{color:navy;border-top:1px solid transparent;}
-div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
-div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
-div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
-div.output_prompt{color:darkred;}
-
-a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
-h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
-/* end stuff for output/input prompts*/
-
-
-.highlight-ipynb .hll { background-color: #ffffcc }
-.highlight-ipynb  { background: #f8f8f8; }
-.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
-.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
-.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight-ipynb .o { color: #666666 } /* Operator */
-.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
-.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
-.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
-.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
-.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
-.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
-.highlight-ipynb .go { color: #888888 } /* Generic.Output */
-.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
-.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
-.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
-.highlight-ipynb .m { color: #666666 } /* Literal.Number */
-.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
-.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
-.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
-.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight-ipynb .no { color: #880000 } /* Name.Constant */
-.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
-.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
-.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
-.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
-.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
-.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
-.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
-.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
-.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
-.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
-</style>
-
-<style type="text/css">
-/* Overrides of notebook CSS for static HTML export */
-div.entry-content {
-  overflow: visible;
-  padding: 8px;
-}
-.input_area {
-  padding: 0.2em;
-}
-
-a.heading-anchor {
- white-space: normal;
-}
-
-.rendered_html
-code {
- font-size: .8em;
-}
-
-pre.ipynb {
-  color: black;
-  background: #f7f7f7;
-  border: none;
-  box-shadow: none;
-  margin-bottom: 0;
-  padding: 0;
-  margin: 0px;
-  font-size: 13px;
-}
-
-/* remove the prompt div from text cells */
-div.text_cell .prompt {
-    display: none;
-}
-
-/* remove horizontal padding from text cells, */
-/* so it aligns with outer body text */
-div.text_cell_render {
-    padding: 0.5em 0em;
-}
-
-img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
-</style>
-
 <link rel="canonical" href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/">
 
         <meta name="author" content="Florian Wilhelm" />
@@ -162,10 +27,12 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
             <meta property="article:tag" content="mathematics" />
             <meta property="article:author" content="Florian Wilhelm" />
 
+    <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
     <meta name="twitter:domain" content="https://florianwilhelm.info">
+
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
@@ -176,16 +43,13 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
     <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-
-
         <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post ATOM Feed"/>
-
 </head>
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -208,8 +72,11 @@ Florian Wilhelm            </a>
         <!-- /.navbar-collapse -->
     </div>
 </div> <!-- /.navbar -->
+
 <!-- Banner -->
 <!-- End Banner -->
+
+<!-- Content Container -->
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
@@ -325,7 +192,6 @@ This is what the distribution of the price looks&nbsp;like.</p>
 <img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
 <figcaption align="center">Distribution plot of the price variable using 1,000.- € bins.</figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>It surely does look like a <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">log-normal distribution</a> and just to have visual check, fitting a log-normal distribution
 with the help of the wonderful <a href="https://www.scipy.org/">SciPy</a> gets us&nbsp;this.</p>
@@ -333,7 +199,6 @@ with the help of the wonderful <a href="https://www.scipy.org/">SciPy</a> gets u
 <img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit">
 <figcaption align="center">Log-normal distribution fitted to the distribution of prices.</figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
 more <em>normal</em>. And isn&#8217;t this some basic assumption of a linear model&nbsp;anyway? </p>
@@ -359,7 +224,7 @@ on the predictor <span class="math">\(\mathbf{x}\)</span> is normally distribute
 <p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in some strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -369,8 +234,7 @@ Under these assumptions we simple generate some data using the linear model from
 
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Obviously, this results in a bimodal distribution also known as the notorious <a href="https://en.wikipedia.org/wiki/Cologne_Cathedral">Cologne Cathedral distribution</a> as some may call it.
 Thus, although using a linear model, we generated a non-normally distributed target variable with residuals that are normally&nbsp;distributed.</p>
@@ -378,7 +242,6 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 <img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
 <figcaption align="center">Bimodal distribution generated with a linear model, which is obviously resembling the cathedral of Cologne.</figcaption>
 </figure>
-
 <p>&nbsp;</p>
 <p>Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
 you will never forget that the residuals of a linear model are normally distributed and <em>not</em> the target variable in general. 
@@ -453,7 +316,7 @@ log-normally than normally distributed. If we now use the simplest model we can 
 (yeah, here comes the linear model with just an intercept again), the target distribution directly determines the residual
 distribution. Now, we find the minimum point using <span class="caps">RMSE</span> and <span class="caps">MAE</span> to compare the results to the mean and median of 
 the price vector <code>y</code>,&nbsp;respectively.  </p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
 <span class="o">&gt;&gt;&gt;</span>     <span class="c1"># not taking the root, i.e. MSE, would not change the actual result</span>
 <span class="o">&gt;&gt;&gt;</span>     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
 
@@ -490,14 +353,13 @@ the price vector <code>y</code>,&nbsp;respectively.  </p>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="mf">4100.0</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As expected, by looking at the <code>x</code> in the output of <code>minimize</code>, we approximated the mean by minimizing the <span class="caps">RMSE</span> and the median by minimizing the <span class="caps">MAE</span>.</p>
 <h2>Shrinking the target&nbsp;variable</h2>
 <p>There is still some elephant in the room that we haven&#8217;t talked about yet. What happens now if we shrink our target
 variable by applying a log transformation and then minimize the <span class="caps">MSE</span>?</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">y_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">y_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y_log</span><span class="p">,),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
       <span class="n">fun</span><span class="p">:</span> <span class="mf">1.0632889349620418</span>
  <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">1.06895454</span><span class="p">]])</span>
@@ -509,8 +371,7 @@ variable by applying a log transformation and then minimize the <span class="cap
    <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
   <span class="n">success</span><span class="p">:</span> <span class="kc">True</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">8.31228458</span><span class="p">])</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>So if we now transform the result <code>x</code> which is roughly <code>8.31</code> back using <code>np.exp(8.31)</code> we get a rounded result of <code>4064</code>.
 <em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6704</code> because that&#8217;s the
@@ -667,7 +528,7 @@ so that <span class="math">\(\exp(\hat \mu + \tilde c)=\hat y\)</span>, which is
 we used to call this the <em>Gronbach factor</em> after our colleague Moritz Gronbach, who would successfully apply this fitted correction
 to all kinds of regression problems with non-negative values. The implementation is actually quite easy
 given the true value, our predicted value in log-space and some error&nbsp;measure:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_corr</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred_log</span><span class="p">,</span> <span class="n">error_func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_corr</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred_log</span><span class="p">,</span> <span class="n">error_func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Determine correction delta for exp transformation&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">cost_func</span><span class="p">(</span><span class="n">delta</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">error_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">y_pred_log</span><span class="p">),</span> <span class="n">y_true</span><span class="p">)</span>
@@ -677,23 +538,21 @@ given the true value, our predicted value in log-space and some error&nbsp;measu
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finding correction term failed!</span><span class="se">\n</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Let&#8217;s now get our hands dirty and evaluate how <span class="caps">RMSE</span>, <span class="caps">MAE</span>, <span class="caps">MAPE</span> and <span class="caps">RMSPE</span> behave in our use-case with the raw as well 
 as the log-transformed target using no, the theoretical and the fitted correction. To do so we gonna do some feature engineering and apply some <span class="caps">ML</span> method. 
 Regarding the former, we just do some extremely basic things like calculating the age of a car and average mileage per year,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dateOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">ds</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;yearOfRegistration&#39;</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ageInYears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">ds</span><span class="p">:</span> <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;dateCreated&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;dateOfRegistration&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mi">365</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mileageOverAge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kilometer&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ageInYears&#39;</span><span class="p">]</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>In total, combined with the original features, we take as our feature set including the&nbsp;target:</p>
-<div class="highlight"><pre><span></span><span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vehicleType&quot;</span><span class="p">,</span> 
+<div class="highlight"><pre><span></span><code><span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vehicleType&quot;</span><span class="p">,</span> 
             <span class="s2">&quot;ageInYears&quot;</span><span class="p">,</span>
             <span class="s2">&quot;mileageOverAge&quot;</span><span class="p">,</span>
             <span class="s2">&quot;gearbox&quot;</span><span class="p">,</span> 
@@ -704,21 +563,18 @@ Regarding the former, we just do some extremely basic things like calculating th
             <span class="s2">&quot;brand&quot;</span><span class="p">,</span>
             <span class="s2">&quot;price&quot;</span><span class="p">]</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">]</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>and transform all categorical features to integers,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">):</span>
         <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>to get our final feature matrix <code>X</code> and target vector <code>y</code> with</p>
-<div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;price&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As <span class="caps">ML</span> method, let&#8217;s just choose a <a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest</a> as for me it&#8217;s like the <a href="https://en.wikipedia.org/wiki/Volkswagen_Passat">Volkswagen Passat Variant</a> among all <span class="caps">ML</span> algorithms. 
 Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
@@ -953,11 +809,14 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -971,6 +830,8 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -991,6 +852,8 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -1015,11 +878,11 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
-                    var disqus_identifier = 'honey_i_shrunk_the_target_variable';
-                var disqus_url = 'https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/';
-
             var disqus_config = function () {
                 this.language = "en";
+
+                        this.page.identifier = '2020-05-04-honey_i_shrunk_the_target_variable';
+                        this.page.url = 'https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/';
             };
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
@@ -1042,180 +905,126 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<!-- Sidebar -->
 <section class="well well-sm">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
-                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
-                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
-              </ul>
-            </li>
+  <ul class="list-group list-group-flush">
 
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
 
-
-            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group list-inline tagcloud" id="tags">
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asynchronous/">
-                            asynchronous
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asyncio/">
-                            asyncio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bayesian/">
-                            bayesian
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/big-data/">
-                            big data
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bokeh/">
-                            bokeh
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/causal-inference/">
-                            causal inference
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/data-science/">
-                            data science
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/deep-learning/">
-                            deep learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/event-driven/">
-                            event-driven
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gans/">
-                            GANs
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
-                            google hangouts
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gps/">
-                            gps
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hadoop/">
-                            hadoop
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hive/">
-                            hive
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/jupyter/">
-                            jupyter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
-                            kalman filter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/machine-learning/">
-                            machine-learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/mathematics/">
-                            mathematics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/nlp/">
-                            nlp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
-                            predictive analytics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/production/">
-                            production
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/programming/">
-                            programming
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/python/">
-                            python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
-                            recommender systems
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
-                            scikit-learn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/scipy/">
-                            scipy
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
-                            semi-supervised
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/spark/">
-                            spark
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/template/">
-                            template
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
-                            uncertainty quantification
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-    </ul>
-</section>            </aside>
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gans/">GANs</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/nlp/">nlp</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/production/">production</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/programming/">programming</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/spark/">spark</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/template/">template</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">uncertainty quantification</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
         </div>
     </div>
 </div>
+<!-- End Content Container -->
+
 <footer>
    <div class="container">
       <hr>
@@ -1235,6 +1044,7 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
 
     <!-- Disqus -->
     <script type="text/javascript">
@@ -1268,6 +1078,7 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
         })();
     </script>
     <!-- End Google Analytics Code -->
+
 
 <script>
    $(document).ready(function () {

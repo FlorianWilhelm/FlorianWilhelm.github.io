@@ -389,5 +389,5 @@ This article was coauthored by my inovex colleague *Bernhard Schäfer* and was a
 [Pandas transform]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html
 [Pandas aggregate]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html
 [Pandas apply]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html
-[pyspark_udaf.py]: {filename}/src/pyspark_udaf.py
+[pyspark_udaf.py]: {static}/src/pyspark_udaf.py
 [inovex blog]: https://www.inovex.de/blog/

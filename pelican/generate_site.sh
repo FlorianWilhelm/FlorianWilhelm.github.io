@@ -23,6 +23,5 @@ pelican $DIR/content -o $OUTPUT
 # Copy Error 404 page to root for github.io
 cp $OUTPUT/404-not-found/index.html $OUTPUT/404.html
 # Run webserver
-cd $OUTPUT
 echo "Open http://localhost:8000"
-python -m pelican.server
+pelican --listen

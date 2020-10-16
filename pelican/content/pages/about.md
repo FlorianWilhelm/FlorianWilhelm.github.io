@@ -39,6 +39,6 @@ in [Databricks Spark](https://databricks.com/de/spark/about), bringing data scie
 the development of data products. 
 
 If you want to know more, please read all about my professional details in my
-[résumé]({filename}/documents/Resume.pdf) or on
+[résumé]({static}/documents/Resume.pdf) or on
 [LinkedIn](https://de.linkedin.com/in/florian-wilhelm-621ba834).
 A selection of my talks can be found on [YouTube](https://www.youtube.com/playlist?list=PLbwNllFeVTzoXFzwWP7oTNOxrwuP_rEip).

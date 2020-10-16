@@ -288,6 +288,6 @@ We have shown a practical workaround to deal with UDFs and complex data types fo
 [Pandas transform]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html
 [Pandas aggregate]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html
 [Pandas apply]: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html
-[pyspark23_udaf.py]: {filename}/src/pyspark23_udaf.py
+[pyspark23_udaf.py]: {static}/src/pyspark23_udaf.py
 [official Spark documentation]: https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf
 [Apache Arrow]: https://arrow.apache.org/

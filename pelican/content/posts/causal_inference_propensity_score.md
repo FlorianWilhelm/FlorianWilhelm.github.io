@@ -53,9 +53,722 @@ IPTW is based on a simple intuition. For a randomized trial with $p(Z=1)=k$ the 
  
 We can set up a synthetic experiment to demonstrate and evaluate this method with the help of Python and Scikit-Learn. A synthetic experiment is appropriate to address the fundamental problem of causal inference described above. With real data, we  don't know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we derive a model that describes the relationship of $X$ to $Y$ as well as the effect of $Z$ on $Y$. We use this model to generate observational data where for each sample $x_i$ we either have $Z=1$ or $Z=0$ and thus incomplete information in our data. Our task is now to estimate the effect of $Z$ with the help of the generated data.
    
-The following portion of this article is available for [download]({filename}/notebooks/causal_inference_propensity_score.ipynb) as a Jupyter notebook.
+The following portion of this article is available for [download]({static}/notebooks/causal_inference_propensity_score.ipynb) as a Jupyter notebook.
 
-{% notebook causal_inference_propensity_score.ipynb %}
+```python
+from math import exp, log
+
+import numpy as np
+import pandas as pd
+import scipy as sp
+from scipy import stats
+from scipy.special import expit
+
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.calibration import CalibratedClassifierCV
+
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+
+%matplotlib inline 
+
+import seaborn as sns
+sns.set_style("whitegrid")
+sns.set_context("notebook", font_scale=1.5, rc={"lines.linewidth": 2.5})
+plt.rcParams['figure.figsize'] = 10, 8
+
+np.seterr(divide='ignore', invalid='ignore')
+np.random.seed(42)
+```
+
+### Model
+
+Assume we have patients characterized by sex and age suffering from some disease with different severities. The recovery time of a patient depends only on the sex, age, severity and if the patient is on medication. Let the expected recovery time in days $t_{recovery}$ be defined as
+$$\mathbf{E}(t_{recovery}) = \exp(2+0.5\cdot{}I_{male}+0.03\cdot{}age+2\cdot{}severity-1\cdot{}I_{medication}),$$
+where $I$ is an indicator function.
+Furthermore, we will assume a Poisson distribution in order to generate some synthetic data of our patient's recovery time. Due to our definition, treating the disease with medication reduces the recovery time to $\exp(-1)\approx 0.37$ of the recovery time having no treatment. Although the recovery time is specific to each patients, i.e. his/her features, the effect of a reduction to 37% of the recovery time without medication is the same for all patients. 
+
+```python
+def exp_recovery_time(sex, age, severity, medication):
+    return exp(2+0.5*sex+0.03*age+2*severity-1*medication)
+
+def rvs_recovery_time(sex, age, severity, medication, *args):
+    return stats.poisson.rvs(exp_recovery_time(sex, age, severity, medication))
+```
+
+For the features of the patients we will use a Beta distribution to show how badly the disease struck the patients, a Gamma distribution for the age of our patients and a Bernoulli distribution for the gender of the patients.
+
+```python
+N = 10000  # number of observations, i.e. patients
+sexes = np.random.randint(0, 2, size=N)  # sex == 1 if male otherwise female
+ages_dist = stats.gamma(8, scale=4)
+ages = ages_dist.rvs(size=N)
+sev_dist = stats.beta(3, 1.5)
+severties = sev_dist.rvs(size=N)
+```
+It's always a good idea to take a look at the nontrivial distributions:
+
+```python
+f, (ax1, ax2) = plt.subplots(2)
+ax1.set_title('age')
+ax1.set_xlabel('years')
+ax1.set_ylabel('density')
+ax1.set_xlim(0, np.max(ages))
+ax2.set_title('severity')
+ax2.set_xlabel('0 = lowest severity, 1 = highest severity')
+ax2.set_ylabel('density')
+ax2.set_xlim(0, 1)
+sns.distplot(ages, ax=ax1)
+sns.distplot(severties, ax=ax2)
+plt.tight_layout();
+```
+<p align="center">
+<img class="noZoom" src="/images/cips_age_severity_density.png">
+</p>
+
+### Randomized trial
+
+In a controlled randomized trial we randomly select patients and assign them with a chance of 50% to either treatment or control. Therefore, the assignment of treatement is completely random and independent. 
+
+```python
+meds = np.random.randint(0, 2, size=N)
+```
+
+We assemble everything in a dataframe also including a constant column.
+
+```python
+const = np.ones(N)
+df_rnd = pd.DataFrame(dict(sex=sexes, age=ages, severity=severties, medication=meds, const=const))
+features = ['sex', 'age', 'severity', 'medication', 'const']
+df_rnd = df_rnd[features] # to enforce column order
+df_rnd['recovery'] = df_rnd.apply(lambda x: rvs_recovery_time(*x) , axis=1)
+df_rnd.head()
+```
+
+|    |   sex |     age |   severity |   medication |   const |   recovery |
+|---:|------:|--------:|-----------:|-------------:|--------:|-----------:|
+|  0 |     0 | 24.5187 |   0.85895  |            1 |       1 |         34 |
+|  1 |     1 | 11.0802 |   0.905123 |            0 |       1 |         97 |
+|  2 |     0 | 37.0149 |   0.601475 |            0 |       1 |         77 |
+|  3 |     0 | 35.6577 |   0.74984  |            1 |       1 |         39 |
+|  4 |     0 | 36.7352 |   0.38546  |            1 |       1 |         18 |
+
+```python
+df_rnd.describe()
+```
+
+|       |          sex |        age |      severity |   medication |   const |   recovery |
+|:------|-------------:|-----------:|--------------:|-------------:|--------:|-----------:|
+| count | 10000        | 10000      | 10000         | 10000        |   10000 | 10000      |
+| mean  |     0.498700         |    32.160968  |     0.666299  |     0.497400  |       1 |    76.085700 |
+| std   |     0.500023         |    11.243333|     0.20101   |     0.500018 |       0 |    63.304659 |
+| min   |     	0.000000        |     	4.508904 |     0.0298182 |     0.000000       |       1 |     0.000000     |
+| 25%   |     0.000000        |   24.044093 |     0.525905  |     0.000000        |       1 |    33.000000 |
+| 50%   |     0.000000        |    30.760101 |     0.693532  |    0.000000       |       1 |   57.000000     |
+| 75%   |     1.000000        |    38.922208 |    0.829290 |     1.000000       |       1 |   99.000000     |
+| max   |     1.000000        |    98.330906 |     0.999327  |     1.000000       |       1 |  805.000000     |
+
+By construction, there is no correlation between medication and any other covariate.
+
+```python
+sns.heatmap(df_rnd.corr(), vmin=-1, vmax=1);
+```
+<p align="center">
+<img class="noZoom" src="/images/cips_heatmap_nocorr.png">
+</p>
+To get started we use a Poisson regression to estimate the coefficients of our formula for $\mathbf{E}(t_{recovery})$ from the generated data. Of course we expect to see approximately the same coefficients since Poisson regression assumes the exact same model that generated our data.
+
+```python
+glm = sm.GLM(df_rnd['recovery'], df_rnd[features], family=sm.families.Poisson())
+res = glm.fit()
+res.summary()
+```
+
+<table>
+<caption>Generalized Linear Model Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>      <td>recovery</td>     <th>  No. Observations:  </th>  <td> 10000</td> 
+</tr>
+<tr>
+  <th>Model:</th>                 <td><span class="caps">GLM</span></td>       <th>  Df Residuals:      </th>  <td>  9995</td> 
+</tr>
+<tr>
+  <th>Model Family:</th>        <td>Poisson</td>     <th>  Df Model:          </th>  <td>     4</td> 
+</tr>
+<tr>
+  <th>Link Function:</th>         <td>log</td>       <th>  Scale:             </th>    <td>1.0</td>  
+</tr>
+<tr>
+  <th>Method:</th>               <td><span class="caps">IRLS</span></td>       <th>  Log-Likelihood:    </th> <td> -34429.</td>
+</tr>
+<tr>
+  <th>Date:</th>           <td>Sat, 15 Apr 2017</td> <th>  Deviance:          </th> <td>  10080.</td>
+</tr>
+<tr>
+  <th>Time:</th>               <td>20:13:45</td>     <th>  Pearson chi2:      </th> <td>1.00e+04</td>
+</tr>
+<tr>
+  <th>No. Iterations:</th>         <td>5</td>        <th>                     </th>     <td> </td>   
+</tr>
+</tbody></table>
+
+<table>
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>sex</th>        <td>    0.4994</td> <td>    0.002</td> <td>  211.934</td> <td> 0.000</td> <td>    0.495</td> <td>    0.504</td>
+</tr>
+<tr>
+  <th>age</th>        <td>    0.0301</td> <td> 8.95e-05</td> <td>  335.807</td> <td> 0.000</td> <td>    0.030</td> <td>    0.030</td>
+</tr>
+<tr>
+  <th>severity</th>   <td>    2.0000</td> <td>    0.006</td> <td>  309.610</td> <td> 0.000</td> <td>    1.987</td> <td>    2.013</td>
+</tr>
+<tr>
+  <th>medication</th> <td>   -1.0024</td> <td>    0.003</td> <td> -387.721</td> <td> 0.000</td> <td>   -1.007</td> <td>   -0.997</td>
+</tr>
+<tr>
+  <th>const</th>      <td>    1.9990</td> <td>    0.006</td> <td>  326.234</td> <td> 0.000</td> <td>    1.987</td> <td>    2.011</td>
+</tr>
+</tbody></table>
+
+Now we use a randome forest which is a pretty standard machine learning method to estimate the individual effects of the treatment on the patients. We fit the model and predict for each patient the recovery time assuming medication, i.e. medication column is 1, as well as assuming no medication, i.e. medication column is 0. Subsequently we divide the prediction assuming medication by the prediction assuming no medication to get an estimation of the treatment's effect.
+
+```python
+reg = RandomForestRegressor()
+X = df_rnd[features].as_matrix()
+y = df_rnd['recovery'].values
+reg.fit(X, y)
+```
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
+           max_features='auto', max_leaf_nodes=None, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+           verbose=0, warm_start=False)</pre>
+</div>
+</div>
+</div>
+</div>
+
+```python
+X_neg = np.copy(X)
+# set the medication column to 0
+X_neg[:, df_rnd.columns.get_loc('medication')] = 0
+X_pos = np.copy(X)
+# set the medication column to 1
+X_pos[:, df_rnd.columns.get_loc('medication')] = 1
+
+preds_rnd = reg.predict(X_pos) / reg.predict(X_neg)
+```
+
+Let's take a look at the distribution of individual effects. Even though we are assuming no model by using a random forest, our estimations of the treatment effect look decent.
+
+```python
+ax = sns.distplot(preds_rnd)
+ax.set_xlabel('treatment effect')
+ax.set_ylabel('density')
+plt.axvline(np.mean(preds_rnd), label='mean')
+plt.axvline(np.exp(-1), color='r', label='truth')
+plt.legend();
+```
+<p align="center">
+<img class="noZoom" src="/images/cips_treatment_effect_random.png">
+</p>
+
+
+### Nonrandomized trial
+
+To make things a bit more interesting, we put now patients on a treatment depending on their sex and severity of the illness. Since men often suffer more than women from the same illness, e.g. [man flu](https://en.wikipedia.org/wiki/Man_flu), they tend to complain more and thus are more likely to convince the doctor of prescibing a medication. Thereafter we generate the recovery time again and follow the same procedure as before in the randomized trial.
+
+```python
+def get_medication(sex, age, severity, medication, *args):
+    return int(1/3*sex + 2/3*severity + 0.15*np.random.randn() > 0.8)
+
+df_obs = df_rnd.copy().drop('recovery', axis=1)
+df_obs['medication'] = df_obs.apply(lambda x: get_medication(*x), axis=1)
+df_obs['recovery'] = df_obs.apply(lambda x: rvs_recovery_time(*x), axis=1)
+df_obs.describe()
+```
+
+<table border="1" class="table table-condensed table-bordered">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>severity</th>
+      <th>medication</th>
+      <th>const</th>
+      <th>recovery</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>10000.000000</td>
+      <td>10000.000000</td>
+      <td>10000.000000</td>
+      <td>10000.000000</td>
+      <td>10000.0</td>
+      <td>10000.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.498700</td>
+      <td>32.160968</td>
+      <td>0.666299</td>
+      <td>0.251900</td>
+      <td>1.0</td>
+      <td>85.029100</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.500023</td>
+      <td>11.243333</td>
+      <td>0.201010</td>
+      <td>0.434126</td>
+      <td>0.0</td>
+      <td>51.400825</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000</td>
+      <td>4.508904</td>
+      <td>0.029818</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>8.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.000000</td>
+      <td>24.044093</td>
+      <td>0.525905</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>50.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.000000</td>
+      <td>30.760101</td>
+      <td>0.693532</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>73.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.000000</td>
+      <td>38.922208</td>
+      <td>0.829290</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>106.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.000000</td>
+      <td>98.330906</td>
+      <td>0.999327</td>
+      <td>1.000000</td>
+      <td>1.0</td>
+      <td>624.000000</td>
+    </tr>
+  </tbody>
+</table>
+
+```python
+sns.heatmap(df_obs.corr(), vmin=-1, vmax=1);
+```
+<p align="center">
+<img class="noZoom" src="/images/cips_heatmap_corr.png">
+</p>
+
+```python
+glm = sm.GLM(df_obs['recovery'], df_obs[features], family=sm.families.Poisson())
+res = glm.fit()
+res.summary()
+```
+<table class="table table-condensed table-bordered">
+<caption>Generalized Linear Model Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>      <td>recovery</td>     <th>  No. Observations:  </th>  <td> 10000</td> 
+</tr>
+<tr>
+  <th>Model:</th>                 <td><span class="caps">GLM</span></td>       <th>  Df Residuals:      </th>  <td>  9995</td> 
+</tr>
+<tr>
+  <th>Model Family:</th>        <td>Poisson</td>     <th>  Df Model:          </th>  <td>     4</td> 
+</tr>
+<tr>
+  <th>Link Function:</th>         <td>log</td>       <th>  Scale:             </th>    <td>1.0</td>  
+</tr>
+<tr>
+  <th>Method:</th>               <td><span class="caps">IRLS</span></td>       <th>  Log-Likelihood:    </th> <td> -35645.</td>
+</tr>
+<tr>
+  <th>Date:</th>           <td>Sat, 15 Apr 2017</td> <th>  Deviance:          </th> <td>  10018.</td>
+</tr>
+<tr>
+  <th>Time:</th>               <td>20:13:47</td>     <th>  Pearson chi2:      </th> <td>9.98e+03</td>
+</tr>
+<tr>
+  <th>No. Iterations:</th>         <td>5</td>        <th>                     </th>     <td> </td>   
+</tr>
+</tbody></table>
+
+<table class="table table-condensed table-bordered">
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>sex</th>        <td>    0.5043</td> <td>    0.002</td> <td>  203.256</td> <td> 0.000</td> <td>    0.499</td> <td>    0.509</td>
+</tr>
+<tr>
+  <th>age</th>        <td>    0.0299</td> <td> 8.58e-05</td> <td>  349.024</td> <td> 0.000</td> <td>    0.030</td> <td>    0.030</td>
+</tr>
+<tr>
+  <th>severity</th>   <td>    1.9996</td> <td>    0.006</td> <td>  313.055</td> <td> 0.000</td> <td>    1.987</td> <td>    2.012</td>
+</tr>
+<tr>
+  <th>medication</th> <td>   -1.0063</td> <td>    0.003</td> <td> -302.201</td> <td> 0.000</td> <td>   -1.013</td> <td>   -1.000</td>
+</tr>
+<tr>
+  <th>const</th>      <td>    2.0013</td> <td>    0.006</td> <td>  340.305</td> <td> 0.000</td> <td>    1.990</td> <td>    2.013</td>
+</tr>
+</tbody></table>
+
+
+The first stunning result is that the Poisson regression is still able to correctly estimate the coefficients of our model. This is due to the [model dependence](http://www.preventionresearch.org/wp-content/uploads/2011/07/SPR-Propensity-pc-workshop-slides.pdf) and in realistic cases actually a bad thing. In a nutshell, model dependence means that the inference of the causal effect depends on the chosen model. In our case, the assumptions about the relation of the covariates in the Poisson regression extrapolates our data and thus makes our results heavily depend on the Poisson model. Since we also used a Poisson model to generate the data we are lucky but this is in reality rarely the case. Let's check how the random forest performs.
+
+```python
+reg = RandomForestRegressor()
+X = df_obs[features].as_matrix()
+y = df_obs['recovery'].values
+reg.fit(X, y)
+```
+
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
+           max_features='auto', max_leaf_nodes=None, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+           verbose=0, warm_start=False)</pre>
+</div>
+</div>
+</div>
+</div>
+
+```python
+X_neg = np.copy(X)
+X_neg[:, df_obs.columns.get_loc('medication')] = 0
+X_pos = np.copy(X)
+X_pos[:, df_obs.columns.get_loc('medication')] = 1
+
+preds_no_rnd = reg.predict(X_pos) / reg.predict(X_neg)
+
+ax = sns.distplot(preds_no_rnd)
+ax.set_xlabel('treatment effect')
+ax.set_ylabel('density')
+plt.axvline(np.mean(preds_no_rnd), label='mean')
+plt.axvline(np.exp(-1), color='r', label='truth')
+plt.legend();
+```
+<p align="center">
+<img class="noZoom" src="/images/cips_treatment_effect_no_random.png">
+</p>
+
+The distribution is now quite skewed and we can see that for a lot of our patients their individual treatment effect is heavily underestimated. This due to the fact that the random forest overrates the impact of a patient's sex which is highly correlated with the medication.
+
+
+### Inverse probability of treatment weighting
+
+To deminish the impact of other covariates onto the effect of medication we will no calculate the propensity score and use inverse probability of treatment weighting (IPTW). In order to do that we use a classification to predict the probability of a patient to be treated. This can be accomplished by Scikit-Learn's `predict_proba` method that is available for most classificators. Don't be fooled by the name though, in most cases (logistic regression is an exception) the probabilites are not calibrated and cannot be relied on. To fix this, we use the [CalibratedClassifierCV](http://scikit-learn.org/stable/modules/calibration.html) in order to get proper probabilities (and it doesn't hurt applying it for logistic regression too). After that we calculate the inverse probability of treatment weights and pass those as sample weights to the estimator during the fit.
+
+```python
+# classifier to estimate the propensity score
+cls = LogisticRegression(random_state=42)
+#cls = GaussianNB()  # another possible propensity score estimator
+
+# calibration of the classifier
+cls = CalibratedClassifierCV(cls)
+
+X = df_obs[features].drop(['medication'], axis=1).as_matrix()
+y = df_obs['medication'].values
+cls.fit(X, y)
+```
+
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>CalibratedClassifierCV(base_estimator=LogisticRegression(C=1.0, class_weight=None, 
+          dual=False, fit_intercept=True, intercept_scaling=1, max_iter=100, 
+          multi_class='ovr', n_jobs=1, penalty='l2', random_state=42, 
+          solver='liblinear', tol=0.0001, verbose=0, warm_start=False), 
+            cv=3, method='sigmoid')</pre>
+</div>
+</div>
+</div>
+</div>
+
+```python
+propensity = pd.DataFrame(cls.predict_proba(X))
+propensity.head()
+```
+
+|       |          0 |        1 |     
+|:------|-------------:|-----------:|
+| 0 | 	0.947430        | 0.052570      |
+| 1  |     	0.170632   |    0.829368 |
+| 2   |    0.992034    |    0.007966 |
+| 3   |     0.975970       |     0.024030 |
+| 4   |     0.998434        |    0.001566 |
+
+
+We can see that the propensity scores of our patients in the randomized trial vary a lot as expected.
+
+```python
+ax = sns.distplot(propensity[1].values)
+ax.set_xlim(0, 1)
+ax.set_title("Propensity scores of nonrandomized trial")
+ax.set_xlabel("propensity scores")
+ax.set_ylabel('density');
+```
+
+<p align="center">
+<img class="noZoom" src="/images/cips_propensity_scores_no_random.png">
+</p>
+
+Only for comparison we can also plot the propensity scores of the randomized trail and check if the propensity score is $\frac{1}{2}$ as expected.
+
+```python
+X = df_rnd[features].drop(['medication'], axis=1).as_matrix()
+y = df_rnd['medication'].values
+cls.fit(X, y)
+ax = sns.distplot(cls.predict_proba(X)[:,1]);
+ax.set_xlim(0, 1)
+ax.set_title("Propensity scores of randomized trial")
+ax.set_xlabel("propensity scores")
+ax.set_ylabel('density');
+```
+
+<p align="center">
+<img class="noZoom" src="/images/cips_propensity_scores_random.png">
+</p>
+
+We now calculate at this point the inverse probability of treatment weights (IPTWs) with the help of the propensity scores of the nonrandomized trial.
+
+```python
+# DataFrame's lookup method extracts the column index 
+# provided by df2['medication'] for each row
+df_obs['iptw'] = 1. / propensity.lookup(
+   np.arange(propensity.shape[0]), df_obs['medication'])
+
+df_obs.describe()
+```
+|       |          sex |        age |      severity |   medication |   const |   recovery |   iptw     |
+|:------|-------------:|-----------:|--------------:|-------------:|--------:|-----------:|-----------:|
+| count | 10000        | 10000      | 10000         | 10000        |   10000 | 10000      | 10000      |
+| mean  |     0.498700   |    32.160968  |     0.666299  |     0.251900 |       1.0 |    85.029100	 |    1.860499 |
+| std   |     0.500023 |    11.243333 |    0.201010	  |     0.434126 |       0.0 |    51.400825	 |    4.455724 |
+| min   |     0.000000        |     4.508904	 |     0.029818 |     0.000000        |       1.0 |     8.000000      |     1.000105 |
+| 25%   |     0.000000	        |    24.044093 |     0.525905  |     0.000000        |       1.0 |    50.000000      |    1.016131 |
+| 50%   |     0.000000	        |    30.760101	 |     0.693532  |    0.000000     |       1.0 |    73.000000      |   1.093217     |
+| 75%   |     1.000000        |  38.922208|   0.829290  |  1.000000      |   	1.0 |    106.000000   |    1.449351     |
+| max   |     1.000000	        |   98.330906|     	0.999327 |    1.000000      |   1.000000 |  624.000000    | 184.561863    |
+
+The poisson regression benefits from using the IPTWs as weights since the Z-scores of the coefficients increase.
+
+```python
+glm = sm.GLM(df_obs['recovery'], df_obs[features], 
+             family=sm.families.Poisson(),
+             freq_weights=df_obs['iptw'])
+res = glm.fit()
+res.summary()
+```
+<table class="table table-condensed table-bordered">
+<caption>Generalized Linear Model Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>      <td>recovery</td>     <th>  No. Observations:  </th>  <td> 10000</td> 
+</tr>
+<tr>
+  <th>Model:</th>                 <td><span class="caps">GLM</span></td>       <th>  Df Residuals:      </th>  <td> 18599</td> 
+</tr>
+<tr>
+  <th>Model Family:</th>        <td>Poisson</td>     <th>  Df Model:          </th>  <td>     4</td> 
+</tr>
+<tr>
+  <th>Link Function:</th>         <td>log</td>       <th>  Scale:             </th>    <td>1.0</td>  
+</tr>
+<tr>
+  <th>Method:</th>               <td><span class="caps">IRLS</span></td>       <th>  Log-Likelihood:    </th> <td> -64795.</td>
+</tr>
+<tr>
+  <th>Date:</th>           <td>Sat, 15 Apr 2017</td> <th>  Deviance:          </th> <td>  18482.</td>
+</tr>
+<tr>
+  <th>Time:</th>               <td>20:13:49</td>     <th>  Pearson chi2:      </th> <td>1.83e+04</td>
+</tr>
+<tr>
+  <th>No. Iterations:</th>         <td>5</td>        <th>                     </th>     <td> </td>   
+</tr>
+</tbody></table>
+
+<table class="table table-condensed table-bordered">
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>sex</th>        <td>    0.5018</td> <td>    0.002</td> <td>  294.822</td> <td> 0.000</td> <td>    0.498</td> <td>    0.505</td>
+</tr>
+<tr>
+  <th>age</th>        <td>    0.0298</td> <td> 6.56e-05</td> <td>  454.701</td> <td> 0.000</td> <td>    0.030</td> <td>    0.030</td>
+</tr>
+<tr>
+  <th>severity</th>   <td>    2.0016</td> <td>    0.005</td> <td>  429.319</td> <td> 0.000</td> <td>    1.992</td> <td>    2.011</td>
+</tr>
+<tr>
+  <th>medication</th> <td>   -1.0017</td> <td>    0.002</td> <td> -534.776</td> <td> 0.000</td> <td>   -1.005</td> <td>   -0.998</td>
+</tr>
+<tr>
+  <th>const</th>      <td>    2.0055</td> <td>    0.005</td> <td>  441.204</td> <td> 0.000</td> <td>    1.997</td> <td>    2.014</td>
+</tr>
+</tbody></table>
+
+Let's check how our random forest does with the help of IPTWs.
+
+```python
+reg = RandomForestRegressor(random_state=42)
+X = df_obs[features].as_matrix()
+y = df_obs['recovery'].values
+reg.fit(X, y, sample_weight=df_obs['iptw'].values)
+```
+
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
+           max_features='auto', max_leaf_nodes=None, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=42,
+           verbose=0, warm_start=False)</pre>
+</div>
+</div>
+</div>
+</div>
+
+```python
+X_neg = np.copy(X)
+X_neg[:, df_obs.columns.get_loc('medication')] = 0
+X_pos = np.copy(X)
+X_pos[:, df_obs.columns.get_loc('medication')] = 1
+
+preds_propensity = reg.predict(X_pos) / reg.predict(X_neg)
+
+ax = sns.distplot(preds_propensity)
+ax.set_xlabel('treatment effect')
+ax.set_ylabel('density')
+plt.axvline(np.mean(preds_propensity), label='mean')
+plt.axvline(np.exp(-1), color='r', label='truth')
+plt.legend();
+```
+
+<p align="center">
+<img class="noZoom" src="/images/cips_treatment_effect_no_random_iptw.png">
+</p>
+
+After taking a brief look at the distribution we see that using IPTW drastically improved the estimation of the treatment's causal effect. On second glance though, it can also be seen that for a few samples we have over-estimation beyond 1. Looking at those patients it can be seen that all of them are female. This indicates that the causal effect for these cases could not be captured maybe due to the bagging approach in random forests. For most of the patients the estimation of the causal effect is improved though.
+
+A direct comparison is given below, showing the estimations of treatment effects for the *randomized* trail, the *non-randomized* trail and the *non-randomized with IPTW* application.
+
+```python
+sns.distplot(preds_rnd, label='randomized')
+sns.distplot(preds_no_rnd, label='non-randomized')
+ax = sns.distplot(preds_propensity, label='non-randomized with IPTW')
+ax.set_xlabel('treatment effect')
+ax.set_ylabel('density')
+plt.legend();
+```
+
+<p align="center">
+<img class="noZoom" src="/images/cips_treatment_effect_no_random_cmp.png">
+</p>
+
+The actual trick of IPTW is that sample weights are chosen in such a way that the correlation of other covariates and the medication is decreased. With the help of a weighted correlation this can also be illustrated. Remarkably enough, neither Numpy, Scipy, Pandas nor StatsModels seem to directly provide a weigthed correlation function, only weighted covariance, which we use to define a weighted correlation.
+
+```python
+def weighted_corr(m, w=None):
+    if w is None:
+        w = np.ones(m.shape[0])
+    cov = np.cov(m, rowvar=False, aweights=w, ddof=0)
+    sigma = np.sqrt(np.diag(cov))
+    return cov / np.outer(sigma, sigma)
+```
+
+Here is the original correlation of the nonrandomized trial again by setting all weights to 1.
+
+```python
+sel_cols = [col for col in df_obs.columns if col != 'iptw']
+orig_corr = weighted_corr(df_obs[sel_cols].as_matrix(), w=np.ones(df_obs.shape[0]))
+orig_corr = pd.DataFrame(orig_corr, index=sel_cols, columns=sel_cols)
+orig_corr
+```
+
+|       |          sex |        age |      severity |   medication |   const |   recovery |
+|:------|-------------:|-----------:|--------------:|-------------:|--------:|-----------:|
+| sex | 	1.000000   | -0.013332  | -0.012855         | 0.509914        |   NaN | 0.046250      |
+| age  |     -0.013332   |    1.000000  |     0.005086  |     -0.002818|       NaN |  0.622472 |
+| severity   |     	-0.012855 |    0.005086 |     1.000000   |    0.348317 |       NaN |  0.378225 |
+| medication   |     0.509914        |     -0.002818	 |     0.348317 |     1.000000      |       NaN |     -0.276164| 
+|const   |     NaN       |    NaN |     NaN  |     NaN        |       NaN |    NaN      |
+| recovery   |     0.046250        |    0.622472	 |     0.378225	  |     -0.276164	        |       NaN |    1.000000|
+
+
+```python
+sns.heatmap(orig_corr, vmin=-1, vmax=1);
+```
+
+<p align="center">
+<img class="noZoom" src="/images/cips_heatmap_corr.png">
+</p>
+
+Using the IPTWs the correlation reduces quite a bit.
+
+```python
+iptw_corr = weighted_corr(df_obs[sel_cols].as_matrix(), w=df_obs['iptw'].values)
+iptw_corr = pd.DataFrame(iptw_corr, index=sel_cols, columns=sel_cols)
+iptw_corr
+```
+|       |          sex |        age |      severity |   medication |   const |   recovery |
+|:------|-------------:|-----------:|--------------:|-------------:|--------:|-----------:|
+| sex | 	1.000000   | -0.001601  | -0.154496	         | 0.087948        |   NaN | 0.222515      |
+| age  |     -0.001601	   |    1.000000  |     -0.028975	  |     0.014248	|       NaN |  0.461467 |
+| severity   |  -0.154496	 |  -0.028975	 |     1.000000   |    0.103541	 |       NaN |  0.369249 |
+| medication   | 0.087948	  |  0.014248	 |  0.103541	|     1.000000      |       NaN |    -0.531669| 
+|const   |     NaN       |    NaN |     NaN  |     NaN        |       NaN |    NaN      |
+| recovery   |     0.222515   |   0.461467 |    0.369249	  |   -0.531669	  |       NaN |    1.000000 |
+      
+```python
+sns.heatmap(iptw_corr, vmin=-1, vmax=1);
+```
+
+<p align="center">
+<img class="noZoom" src="/images/cips_heatmap_corr_iptw.png">
+</p>
 
 ## Final notes
 

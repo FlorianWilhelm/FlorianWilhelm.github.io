@@ -33,14 +33,14 @@ deviate a bit from our prior knowledge about the parameter. In case we have lots
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an &lt;em&gt;hierarchical model&lt;/em&gt;,
 which is sometimes also referred to as &lt;em&gt;partially pooled model&lt;/em&gt;. Figure 1 illustrates our thoughts so&amp;nbsp;far.&lt;/p&gt;
-&lt;p&gt;&amp;nbsp;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;figure&gt;
 &lt;img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model"&gt;
 &lt;figcaption align="center"&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; Hierarchical model as a combination of a pooled and an unpooled model 
 from &lt;a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html"&gt;Bayesian Multilevel Modelling using PyStan&lt;/a&gt;.
 &lt;/figcaption&gt;
 &lt;/figure&gt;
-&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;h2&gt;Recent&amp;nbsp;Advances&lt;/h2&gt;
 &lt;p&gt;So far I mostly used &lt;a href="https://docs.pymc.io/"&gt;PyMC3&lt;/a&gt; for Bayesian inference or &lt;em&gt;probabilistic programming&lt;/em&gt; as the authors
 of PyMC3 like to call it. I love it for it&amp;#8217;s elegant design and consequently its expressiveness. The documentation is great
@@ -142,7 +142,6 @@ And that&amp;#8217;s already most of it. Figure 2 depicts the graphical model ou
 &lt;strong&gt;Figure 2:&lt;/strong&gt; Graphical representation of a hierarchical model (centered version) as defined above.
 &lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;Those boxes in Figure 2, which are called &lt;a href="https://en.wikipedia.org/wiki/Plate_notation"&gt;plates&lt;/a&gt;, tell you how many times a parameter is repeated.
 Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
@@ -153,7 +152,7 @@ Shaded circles are observed values, which in our case are the number of sales on
 &lt;p&gt;Let&amp;#8217;s take a quick look into our model code which is just a normal Python function. It&amp;#8217;s good to keep in mind, that we call this a &lt;em&gt;model&lt;/em&gt; since we assume that given
 the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
 The model function only defines the model parameters, how they interact and their&amp;nbsp;priors.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpyro.distributions&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;dist&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jax.numpy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;jax.numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;jnp&lt;/span&gt;
@@ -236,8 +235,7 @@ The model function only defines the model parameters, how they interact and thei
         &lt;span class="n"&gt;betas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;is_observed&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;disp_params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;not_observed&lt;/span&gt;
         &lt;span class="n"&gt;alphas&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;betas&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;numpyro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;days&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GammaPoisson&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alphas&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;betas&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;obs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;jnp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nan_to_num&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targets&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Note that &lt;code&gt;disp_param&lt;/code&gt; is &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;code&gt;coef&lt;/code&gt; is &lt;span class="math"&gt;\(\theta\)&lt;/span&gt; in the source code above for better readability. You will
 recognize a lot of what we have talked about and I don&amp;#8217;t want to go into the syntactical details of NumPyro. My suggestion
@@ -259,7 +257,7 @@ allows the model to answer a store manager&amp;#8217;s potential question: &amp;
 &lt;p&gt;Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its &lt;span class="caps"&gt;SVI&lt;/span&gt;. This is done in a separate function called &lt;em&gt;guide&lt;/em&gt;. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;guide&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;guide&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DeviceArray&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Guide with parameters of the posterior&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Args:&lt;/span&gt;
@@ -319,15 +317,14 @@ parameters have to be defined since its &lt;span class="caps"&gt;SVI&lt;/span&gt
                                         &lt;span class="n"&gt;constraint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
                     &lt;span class="p"&gt;)&lt;/span&gt;
                 &lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;As you can see, the structure of the guide reflects the structure of the model and there we are just defining for each model parameter
 a distribution that again has parameters that need to be determined. The link between model and guide is given by the names of the &lt;em&gt;sample sites&lt;/em&gt;
 like &amp;#8220;coef_offsets&amp;#8221;. This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
 behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
 You can see in the actual implementation, i.e. &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py"&gt;model.py&lt;/a&gt;, that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables&amp;nbsp;like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Site&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Site&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;disp_param_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_mu&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;disp_param_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_sigma&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;disp_param_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;disp_param_offsets&amp;quot;&lt;/span&gt;
@@ -337,8 +334,7 @@ You can see in the actual implementation, i.e. &lt;a href="https://github.com/Fl
     &lt;span class="n"&gt;coef_offsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coef_offsets&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;coefs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;coefs&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;days&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;days&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Then using variables like &lt;code&gt;Site.coef_offsets&lt;/code&gt; instead of strings like &lt;code&gt;"coef_offsets"&lt;/code&gt; as identifiers of sample sites, allows your &lt;span class="caps"&gt;IDE&lt;/span&gt; to inform you about any typo as you go. Problem&amp;nbsp;solved.&lt;/p&gt;
 &lt;p&gt;Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
@@ -349,30 +345,27 @@ of sales on days beyond our training interval. As these functions are only slide
 then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
 This works really well although the number of features, which is 23, is much higher than 7! Let&amp;#8217;s take a look at the coefficients 
 of a store from the test set as detailed in the &lt;a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb"&gt;model notebook&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
   2.4938385   0.33227605  3.115691    2.9264386   2.692092    2.9548435
   0.05613964  0.06542112  2.8379264   2.9023972   3.5701406   3.2074358
   4.0569873   2.9304545   2.7463424   2.823191    2.959007  ]
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
 Comparing the coefficients from above to the ones of the Poisson regression for the same store,&amp;nbsp;i.e.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
  -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
  -0.09434899  0.          0.          0.          0.          0.
   0.          0.          0.          0.          0.        ]
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;we see that they are highly different and zero for features in the Poisson regression that weren&amp;#8217;t encountered in the data of just 7 days.
 Now comparing the coefficients of our &lt;span class="caps"&gt;BHM&lt;/span&gt; model trained on just 7 days with the coefficients of a cheating model trained on the whole test set,&amp;nbsp;i.e.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
   2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
  -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
   4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;we see that they are quite similar. That&amp;#8217;s the magic of a hierarchical model! We started with plausible defaults from a 
 global perspective and adapted locally depending on the amount of available&amp;nbsp;data.&lt;/p&gt;
@@ -398,7 +391,6 @@ We start with taking a look at the sales prediction for one of the stores from t
 &lt;strong&gt;Figure 3:&lt;/strong&gt; Sales forecast of one store from the test set. The blue dashed line is the the mean predicted mean.
 &lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;Only judging by the eye, we see that predicted mean (blue dashed line) follows the number sales (bluish bars) quite good.
 The background is shaded according to some important features like promotions and holidays which explain some of the variations
@@ -416,7 +408,6 @@ weekday starting with Monday a density over the means of all&amp;nbsp;stores. &l
 &lt;strong&gt;Figure 4:&lt;/strong&gt; Density plot of the means of the weekday coefficients over all stores. 
 &lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
 Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
@@ -429,7 +420,6 @@ we could be interested in analyzing the distribution of the promotion effect ove
 &lt;strong&gt;Figure 5:&lt;/strong&gt; Density plot of the promotion effect over all stores with the red line showing the median.
 &lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;These are just some analysis one could start to look into to derive useful insights for store management. 
 The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
@@ -463,11 +453,14 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&amp;#82
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -481,6 +474,8 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&amp;#82
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -501,9 +496,11 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&amp;#82
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="data science"></category><category term="mathematics"></category><category term="production"></category></entry><entry><title>Honey, I shrunk the target variable</title><link href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/" rel="alternate"></link><published>2020-05-04T12:00:00+02:00</published><updated>2020-05-04T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-05-04:/2020/05/honey_i_shrunk_the_target_variable/</id><summary type="html">&lt;p&gt;Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn&amp;#8217;t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your&amp;nbsp;advantage.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
+&lt;/script&gt;</content><category term="post"></category><category term="data science"></category><category term="mathematics"></category><category term="production"></category></entry><entry><title>Honey, I shrunk the target variable</title><link href="https://florianwilhelm.info/2020/05/honey_i_shrunk_the_target_variable/" rel="alternate"></link><published>2020-05-04T12:00:00+02:00</published><updated>2020-05-04T12:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-05-04:/2020/05/honey_i_shrunk_the_target_variable/</id><summary type="html">&lt;p&gt;Feature engineering takes up a huge part in the work-life of a data scientist. Sometimes this doesn&amp;#8217;t stop at features but also the target variable itself is transformed leading to all kinds of unexpected consequences. In this post, you will learn about common pitfalls, how a transformation can affect the error measure, the math behind it, and even how all this can be used to your&amp;nbsp;advantage.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;For me it is often an irritating sight to see how inexperienced, up and coming data scientists jump right into the feature engineering when
 facing some new supervised learning problem&amp;#8230; but it also makes me contemplate about my past when I started doing data science. 
 So full of vigour and enthusiasm, I was often completely absorbed by the idea of minimizing whatever error measure I was given or maybe some random one 
@@ -582,7 +579,6 @@ This is what the distribution of the price looks&amp;nbsp;like.&lt;/p&gt;
 &lt;img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price"&gt;
 &lt;figcaption align="center"&gt;Distribution plot of the price variable using 1,000.- € bins.&lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;It surely does look like a &lt;a href="https://en.wikipedia.org/wiki/Log-normal_distribution"&gt;log-normal distribution&lt;/a&gt; and just to have visual check, fitting a log-normal distribution
 with the help of the wonderful &lt;a href="https://www.scipy.org/"&gt;SciPy&lt;/a&gt; gets us&amp;nbsp;this.&lt;/p&gt;
@@ -590,7 +586,6 @@ with the help of the wonderful &lt;a href="https://www.scipy.org/"&gt;SciPy&lt;/
 &lt;img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit"&gt;
 &lt;figcaption align="center"&gt;Log-normal distribution fitted to the distribution of prices.&lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
 more &lt;em&gt;normal&lt;/em&gt;. And isn&amp;#8217;t this some basic assumption of a linear model&amp;nbsp;anyway? &lt;/p&gt;
@@ -616,7 +611,7 @@ on the predictor &lt;span class="math"&gt;\(\mathbf{x}\)&lt;/span&gt; is normall
 &lt;p&gt;To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in some strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&amp;nbsp;it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pylab&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
 
@@ -626,8 +621,7 @@ Under these assumptions we simple generate some data using the linear model from
 
 &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Obviously, this results in a bimodal distribution also known as the notorious &lt;a href="https://en.wikipedia.org/wiki/Cologne_Cathedral"&gt;Cologne Cathedral distribution&lt;/a&gt; as some may call it.
 Thus, although using a linear model, we generated a non-normally distributed target variable with residuals that are normally&amp;nbsp;distributed.&lt;/p&gt;
@@ -635,7 +629,6 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 &lt;img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit"&gt;
 &lt;figcaption align="center"&gt;Bimodal distribution generated with a linear model, which is obviously resembling the cathedral of Cologne.&lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p&gt;Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
 you will never forget that the residuals of a linear model are normally distributed and &lt;em&gt;not&lt;/em&gt; the target variable in general. 
@@ -710,7 +703,7 @@ log-normally than normally distributed. If we now use the simplest model we can 
 (yeah, here comes the linear model with just an intercept again), the target distribution directly determines the residual
 distribution. Now, we find the minimum point using &lt;span class="caps"&gt;RMSE&lt;/span&gt; and &lt;span class="caps"&gt;MAE&lt;/span&gt; to compare the results to the mean and median of 
 the price vector &lt;code&gt;y&lt;/code&gt;,&amp;nbsp;respectively.  &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;rmse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y_pred&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_true&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;rmse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y_pred&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_true&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;     &lt;span class="c1"&gt;# not taking the root, i.e. MSE, would not change the actual result&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;y_true&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;y_pred&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
@@ -747,14 +740,13 @@ the price vector &lt;code&gt;y&lt;/code&gt;,&amp;nbsp;respectively.  &lt;/p&gt;
 
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;median&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="mf"&gt;4100.0&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;As expected, by looking at the &lt;code&gt;x&lt;/code&gt; in the output of &lt;code&gt;minimize&lt;/code&gt;, we approximated the mean by minimizing the &lt;span class="caps"&gt;RMSE&lt;/span&gt; and the median by minimizing the &lt;span class="caps"&gt;MAE&lt;/span&gt;.&lt;/p&gt;
 &lt;h2&gt;Shrinking the target&amp;nbsp;variable&lt;/h2&gt;
 &lt;p&gt;There is still some elephant in the room that we haven&amp;#8217;t talked about yet. What happens now if we shrink our target
 variable by applying a log transformation and then minimize the &lt;span class="caps"&gt;MSE&lt;/span&gt;?&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;y_log&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;price&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_numpy&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;y_log&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;price&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_numpy&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;sp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;optimize&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;minimize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rmse&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y_log&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;tol&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1e-16&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
       &lt;span class="n"&gt;fun&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;1.0632889349620418&lt;/span&gt;
  &lt;span class="n"&gt;hess_inv&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([[&lt;/span&gt;&lt;span class="mf"&gt;1.06895454&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
@@ -766,8 +758,7 @@ variable by applying a log transformation and then minimize the &lt;span class="
    &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
   &lt;span class="n"&gt;success&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
         &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="mf"&gt;8.31228458&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;So if we now transform the result &lt;code&gt;x&lt;/code&gt; which is roughly &lt;code&gt;8.31&lt;/code&gt; back using &lt;code&gt;np.exp(8.31)&lt;/code&gt; we get a rounded result of &lt;code&gt;4064&lt;/code&gt;.
 &lt;em&gt;Wait a second! What just happened!?&lt;/em&gt; We would have expected the final result to be around &lt;code&gt;6704&lt;/code&gt; because that&amp;#8217;s the
@@ -924,7 +915,7 @@ so that &lt;span class="math"&gt;\(\exp(\hat \mu + \tilde c)=\hat y\)&lt;/span&g
 we used to call this the &lt;em&gt;Gronbach factor&lt;/em&gt; after our colleague Moritz Gronbach, who would successfully apply this fitted correction
 to all kinds of regression problems with non-negative values. The implementation is actually quite easy
 given the true value, our predicted value in log-space and some error&amp;nbsp;measure:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_corr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y_true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_pred_log&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;error_func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_corr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y_true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_pred_log&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;error_func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Determine correction delta for exp transformation&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;cost_func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;delta&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;error_func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;delta&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;y_pred_log&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;y_true&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -934,23 +925,21 @@ given the true value, our predicted value in log-space and some error&amp;nbsp;m
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;RuntimeError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Finding correction term failed!&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Let&amp;#8217;s now get our hands dirty and evaluate how &lt;span class="caps"&gt;RMSE&lt;/span&gt;, &lt;span class="caps"&gt;MAE&lt;/span&gt;, &lt;span class="caps"&gt;MAPE&lt;/span&gt; and &lt;span class="caps"&gt;RMSPE&lt;/span&gt; behave in our use-case with the raw as well 
 as the log-transformed target using no, the theoretical and the fitted correction. To do so we gonna do some feature engineering and apply some &lt;span class="caps"&gt;ML&lt;/span&gt; method. 
 Regarding the former, we just do some extremely basic things like calculating the age of a car and average mileage per year,&amp;nbsp;i.e.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;monthOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;monthOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;monthOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;monthOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dateOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;ds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ds&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;yearOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;ds&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;monthOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ageInYears&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;ds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ds&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dateCreated&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;ds&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dateOfRegistration&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;days&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;365&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mileageOverAge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;kilometer&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ageInYears&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;In total, combined with the original features, we take as our feature set including the&amp;nbsp;target:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;FEATURES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;vehicleType&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;FEATURES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;vehicleType&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
             &lt;span class="s2"&gt;&amp;quot;ageInYears&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
             &lt;span class="s2"&gt;&amp;quot;mileageOverAge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
             &lt;span class="s2"&gt;&amp;quot;gearbox&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
@@ -961,21 +950,18 @@ Regarding the former, we just do some extremely basic things like calculating th
             &lt;span class="s2"&gt;&amp;quot;brand&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
             &lt;span class="s2"&gt;&amp;quot;price&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FEATURES&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;and transform all categorical features to integers,&amp;nbsp;i.e.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dtypes&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dtypes&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;O&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;astype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;category&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cat&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;codes&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;to get our final feature matrix &lt;code&gt;X&lt;/code&gt; and target vector &lt;code&gt;y&lt;/code&gt; with&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_numpy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_numpy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;X&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;drop&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_numpy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;As &lt;span class="caps"&gt;ML&lt;/span&gt; method, let&amp;#8217;s just choose a &lt;a href="https://en.wikipedia.org/wiki/Random_forest"&gt;Random Forest&lt;/a&gt; as for me it&amp;#8217;s like the &lt;a href="https://en.wikipedia.org/wiki/Volkswagen_Passat"&gt;Volkswagen Passat Variant&lt;/a&gt; among all &lt;span class="caps"&gt;ML&lt;/span&gt; algorithms. 
 Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
@@ -1210,11 +1196,14 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -1228,6 +1217,8 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -1248,18 +1239,20 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="python"></category><category term="data science"></category><category term="mathematics"></category></entry><entry><title>Are you sure about that?! Uncertainty Quantification in AI</title><link href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/" rel="alternate"></link><published>2019-10-10T18:00:00+02:00</published><updated>2019-12-20T18:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-10-10:/2019/10/uncertainty_quantification_in_ai/</id><summary type="html">&lt;p&gt;With the advent of Deep Learning (&lt;span class="caps"&gt;DL&lt;/span&gt;), the field of &lt;span class="caps"&gt;AI&lt;/span&gt; made a giant leap forward and it is nowadays applied in many industrial use-cases. Especially critical systems like autonomous driving, require that &lt;span class="caps"&gt;DL&lt;/span&gt; methods not only produce a prediction but also state the certainty about the prediction in order …&lt;/p&gt;</summary><content type="html">&lt;p&gt;With the advent of Deep Learning (&lt;span class="caps"&gt;DL&lt;/span&gt;), the field of &lt;span class="caps"&gt;AI&lt;/span&gt; made a giant leap forward and it is nowadays applied in many industrial use-cases. Especially critical systems like autonomous driving, require that &lt;span class="caps"&gt;DL&lt;/span&gt; methods not only produce a prediction but also state the certainty about the prediction in order to assess risks and&amp;nbsp;failure.&lt;/p&gt;
+&lt;/script&gt;</content><category term="post"></category><category term="python"></category><category term="data science"></category><category term="mathematics"></category></entry><entry><title>Are you sure about that?! Uncertainty Quantification in AI</title><link href="https://florianwilhelm.info/2019/10/uncertainty_quantification_in_ai/" rel="alternate"></link><published>2019-10-10T18:00:00+02:00</published><updated>2019-12-20T18:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-10-10:/2019/10/uncertainty_quantification_in_ai/</id><summary type="html">&lt;p&gt;With the advent of Deep Learning (&lt;span class="caps"&gt;DL&lt;/span&gt;), the field of &lt;span class="caps"&gt;AI&lt;/span&gt; made a giant leap forward and it is nowadays applied in many industrial use-cases. Especially critical systems like autonomous driving, require that &lt;span class="caps"&gt;DL&lt;/span&gt; methods not only produce a prediction but also state the certainty about the prediction in order …&lt;/p&gt;</summary><content type="html">&lt;p&gt;With the advent of Deep Learning (&lt;span class="caps"&gt;DL&lt;/span&gt;), the field of &lt;span class="caps"&gt;AI&lt;/span&gt; made a giant leap forward and it is nowadays applied in many industrial use-cases. Especially critical systems like autonomous driving, require that &lt;span class="caps"&gt;DL&lt;/span&gt; methods not only produce a prediction but also state the certainty about the prediction in order to assess risks and&amp;nbsp;failure.&lt;/p&gt;
 &lt;p&gt;In my talk, I will give an introduction to different kinds of uncertainty, i.e. epistemic and aleatoric. To have a baseline for comparison, the classical method of Gaussian Processes for regression problems is presented. I then elaborate on different &lt;span class="caps"&gt;DL&lt;/span&gt; methods for uncertainty quantification like Quantile Regression, Monte-Carlo Dropout, and Deep Ensembles. The talk is concluded with a comparison of these techniques to Gaussian Processes and the current state of the&amp;nbsp;art.&lt;/p&gt;
 &lt;p&gt;This talk was presented at &lt;a href="https://de.pycon.org/"&gt;PyCon.&lt;span class="caps"&gt;DE&lt;/span&gt; &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; PyData Berlin 2019&lt;/a&gt; and &lt;a href="https://bigdataconference.lt/2019/"&gt;Big Data Conference Vilnius 2019&lt;/a&gt;. The slides are available on &lt;a href="https://www.slideshare.net/FlorianWilhelm2/uncertainty-quantification-in-ai"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;span class="videobox"&gt;
-                &lt;iframe width="800" height="500"
-                    src='https://www.youtube.com/embed/LCDIqL-8bHs'
-                    frameborder='0' webkitAllowFullScreen mozallowfullscreen
-                    allowFullScreen&gt;
-                &lt;/iframe&gt;
-            &lt;/span&gt;&lt;/p&gt;</content><category term="python"></category><category term="machine-learning"></category><category term="uncertainty quantification"></category><category term="data science"></category></entry><entry><title>More Efficient UD(A)Fs with PySpark</title><link href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/" rel="alternate"></link><published>2019-04-19T12:30:00+02:00</published><updated>2019-04-19T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-04-19:/2019/04/more_efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked&amp;nbsp;around.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Some time has passed since my blog post on &lt;a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt; which demonstrated how to define &lt;em&gt;User-Defined Aggregation Function&lt;/em&gt; (&lt;span class="caps"&gt;UDAF&lt;/span&gt;) with &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt; 2.1 that allow you to use &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt; decorator. This decorator gives you the same functionality as our custom &lt;code&gt;pandas_udaf&lt;/code&gt; in the former post but performs much faster if &lt;a href="https://arrow.apache.org/"&gt;Apache Arrow&lt;/a&gt; is activated. &lt;em&gt;Nice, so life is good now? No more workarounds!? Well,&amp;nbsp;almost&amp;#8230;&lt;/em&gt;&lt;/p&gt;
+                    &lt;iframe width="800" height="500"
+                        src='https://www.youtube.com/embed/LCDIqL-8bHs'
+                        frameborder='0' webkitAllowFullScreen
+                        mozallowfullscreen allowFullScreen&gt;
+                    &lt;/iframe&gt;
+                &lt;/span&gt;&lt;/p&gt;</content><category term="talk"></category><category term="python"></category><category term="machine-learning"></category><category term="uncertainty quantification"></category><category term="data science"></category></entry><entry><title>More Efficient UD(A)Fs with PySpark</title><link href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/" rel="alternate"></link><published>2019-04-19T12:30:00+02:00</published><updated>2019-04-19T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-04-19:/2019/04/more_efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked&amp;nbsp;around.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Some time has passed since my blog post on &lt;a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt; which demonstrated how to define &lt;em&gt;User-Defined Aggregation Function&lt;/em&gt; (&lt;span class="caps"&gt;UDAF&lt;/span&gt;) with &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt; 2.1 that allow you to use &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt; decorator. This decorator gives you the same functionality as our custom &lt;code&gt;pandas_udaf&lt;/code&gt; in the former post but performs much faster if &lt;a href="https://arrow.apache.org/"&gt;Apache Arrow&lt;/a&gt; is activated. &lt;em&gt;Nice, so life is good now? No more workarounds!? Well,&amp;nbsp;almost&amp;#8230;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;If you are just using simple data types in your Spark dataframes everything will work and even blazingly fast if you got Arrow activated but don&amp;#8217;t you dare dealing with complex data types like maps (dictionaries), arrays (lists) and structs. In that case, all you will get is a &lt;code&gt;TypeError: Unsupported type in conversion to Arrow&lt;/code&gt; which is already tracked under issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt;. Even a simple &lt;code&gt;toPandas()&lt;/code&gt; does not work which might get you to deactivate Arrow support altogether but this would also keep you from using &lt;code&gt;pandas_udf&lt;/code&gt; which is really&amp;nbsp;nice&amp;#8230; &lt;/p&gt;
 &lt;p&gt;To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let&amp;#8217;s first take a look into which features &lt;code&gt;pandas_udf&lt;/code&gt; provides and why we should make use of&amp;nbsp;it.&lt;/p&gt;
 &lt;h2&gt;Features of Spark 2.3&amp;#8217;s&amp;nbsp;pandas_udf&lt;/h2&gt;
@@ -1307,7 +1300,7 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
 &lt;h2&gt;Implementation&lt;/h2&gt;
 &lt;p&gt;We split our implementation into three different kinds of functionalities: 1. functions that convert a Spark dataframe to and from &lt;span class="caps"&gt;JSON&lt;/span&gt;, 2. functions that do the same for Pandas dataframes and 3. we combine all of them in one decorator. The final and extended implementation can be found in the file &lt;a href="https://florianwilhelm.info/src/pyspark23_udaf.py"&gt;pyspark23_udaf.py&lt;/a&gt; where also some logging mechanism for easier debugging of UDFs was&amp;nbsp;added. &lt;/p&gt;
 &lt;h3&gt;1. Conversion of Spark&amp;nbsp;Dataframe&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MapType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ArrayType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructField&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MapType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ArrayType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructField&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;to_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;from_json&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_complex_dtype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -1361,11 +1354,10 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
         &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
             &lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The function &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; converts a given Spark dataframe to a new dataframe with all columns that have complex types replaced by &lt;span class="caps"&gt;JSON&lt;/span&gt; strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by &lt;code&gt;complex_dtypes_from_json&lt;/code&gt; to convert exactly those columns back to their original type. You might find it strange that we define some &lt;code&gt;root&lt;/code&gt; node in the schema. This is necessary due to some restrictions of Spark&amp;#8217;s &lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json"&gt;from_json&lt;/a&gt; that we circumvent by this. After the conversion, we drop this &lt;code&gt;root&lt;/code&gt; struct again so that &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; and &lt;code&gt;complex_dtypes_from_json&lt;/code&gt; are inverses of each other. We can now also easily define a &lt;code&gt;toPandas&lt;/code&gt; which also works with complex Spark&amp;nbsp;dataframes.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toPandas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toPandas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Same as df.toPandas() but converts complex types to JSON first&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Args:&lt;/span&gt;
@@ -1375,12 +1367,11 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
 &lt;span class="sd"&gt;        Pandas dataframe&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toPandas&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;2. Conversion of Pandas&amp;nbsp;Dataframe&lt;/h3&gt;
 &lt;p&gt;Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual &lt;span class="caps"&gt;UDF&lt;/span&gt; since we want to avoid probing every column containing strings. In the conversion to &lt;span class="caps"&gt;JSON&lt;/span&gt;, we add the &lt;code&gt;root&lt;/code&gt; node as explained&amp;nbsp;above. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;cols_from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Converts Pandas dataframe colums from json&lt;/span&gt;
@@ -1422,12 +1413,11 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ct_val_to_json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;3.&amp;nbsp;Decorator&lt;/h3&gt;
 &lt;p&gt;At this point we got everything we need for our final decorators named &lt;code&gt;pandas_udf_ct&lt;/code&gt; combining all our ingredients. Like Spark&amp;#8217;s official &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt;, our decorator takes the arguments &lt;code&gt;returnType&lt;/code&gt; and &lt;code&gt;functionType&lt;/code&gt;. It&amp;#8217;s just a tad more complicated in the sense that you first have to pass &lt;code&gt;returnType&lt;/code&gt;, &lt;code&gt;functionType&lt;/code&gt; which leaves you with some special decorator. A function decorated with such a decorator takes the parameters &lt;code&gt;cols_in&lt;/code&gt; and &lt;code&gt;cols_out&lt;/code&gt; which specify which columns need to be converted to and from &lt;span class="caps"&gt;JSON&lt;/span&gt;. Only after passing those you end up with the actual &lt;span class="caps"&gt;UDF&lt;/span&gt; that you defined. No need to despair, an example below illustrates the usage but first we take a look at the&amp;nbsp;implementation.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;functools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;wraps&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;pandas_udf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
@@ -1481,13 +1471,12 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
             &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;udf_wrapper&lt;/span&gt;
 
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;converter&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;It&amp;#8217;s just a typical decorator-with-parameters implementation but with one more layer of wrapping for &lt;code&gt;cols_in&lt;/code&gt; and &lt;code&gt;cols_out&lt;/code&gt;.  &lt;/p&gt;
 &lt;h2&gt;Usage&lt;/h2&gt;
 &lt;p&gt;An example says more than one thousand words of explanation. Let&amp;#8217;s first create some dummy Spark dataframe with complex data&amp;nbsp;types:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Row&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Row&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;
 
 &lt;span class="n"&gt;spark&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -1499,11 +1488,10 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
                            &lt;span class="n"&gt;schema&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;vals&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;maps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;lists&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;structs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;drop&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;lists&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# only Spark 2.4 supports ArrayTypes in to_json!&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;For sake of simplicity, let&amp;#8217;s say we just want to add to the dictionaries in the &lt;code&gt;maps&lt;/code&gt; column a key &lt;code&gt;x&lt;/code&gt; with value &lt;code&gt;42&lt;/code&gt;. But first, we use &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; to get a converted Spark dataframe &lt;code&gt;df_json&lt;/code&gt; and the converted columns &lt;code&gt;ct_cols&lt;/code&gt;. We define then the &lt;span class="caps"&gt;UDF&lt;/span&gt; &lt;code&gt;normalize&lt;/code&gt; and decorate it with our &lt;code&gt;pandas_udf_ct&lt;/code&gt; specifying the return type using &lt;code&gt;dfj_json.schema&lt;/code&gt; (since we only want simple data types) and the function type &lt;code&gt;GROUPED_MAP&lt;/code&gt;. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ct_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ct_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;change_vals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dct&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;dct&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;42&lt;/span&gt;
@@ -1513,16 +1501,14 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;pdf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;maps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;change_vals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pdf&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Just for demonstration, we now group by the &lt;code&gt;vals&lt;/code&gt; column of &lt;code&gt;df_json&lt;/code&gt; and apply our &lt;code&gt;normalize&lt;/code&gt; &lt;span class="caps"&gt;UDF&lt;/span&gt; on each group. Instead of just passing &lt;code&gt;normalize&lt;/code&gt; we have to call it first with parameters &lt;code&gt;cols_in&lt;/code&gt; and &lt;code&gt;cols_out&lt;/code&gt; as explained before. As input columns, we pass the output &lt;code&gt;ct_cols&lt;/code&gt; from our &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; function and since we do not change the shape of our dataframe within the &lt;span class="caps"&gt;UDF&lt;/span&gt;, we use the same for the output &lt;code&gt;cols_out&lt;/code&gt;. In case your &lt;span class="caps"&gt;UDF&lt;/span&gt; removes columns or adds additional ones with complex data types, you would have to change &lt;code&gt;cols_out&lt;/code&gt; accordingly. As a final step we use &lt;code&gt;complex_dtypes_from_json&lt;/code&gt; to convert the &lt;span class="caps"&gt;JSON&lt;/span&gt; strings of our transformed Spark dataframe back to complex data&amp;nbsp;types.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_json&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;vals&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;df_json&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;vals&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="n"&gt;df_final&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;df_final&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it&amp;#8217;s far from perfect and hopefully the issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt; will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on&amp;nbsp;it.&lt;/p&gt;</content><category term="spark"></category><category term="python"></category><category term="big data"></category></entry><entry><title>Querying NoSQL with Deep Learning to Answer Natural Language Questions</title><link href="https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/" rel="alternate"></link><published>2019-01-29T11:30:00+01:00</published><updated>2019-01-29T11:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-01-29:/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/</id><summary type="html">&lt;p&gt;Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (&lt;span class="caps"&gt;QA&lt;/span&gt;) system that allows a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (&lt;span class="caps"&gt;QA&lt;/span&gt;) system that allows a user to query an external NoSQL database by using natural language. A major challenge of such a system is the non-differentiability of database operations which we overcome by applying policy-based reinforcement learning. We evaluate our approach on Facebook’s bAbI Movie Dialog dataset and achieve a competitive score of 84.2% compared to several benchmark models. We conclude that our approach excels with regard to real-world scenarios where knowledge resides in external databases and intermediate labels are too costly to gather for non-end-to-end trainable &lt;span class="caps"&gt;QA&lt;/span&gt;&amp;nbsp;systems.&lt;/p&gt;
-&lt;p&gt;Our paper &lt;em&gt;Querying NoSQL with Deep Learning to Answer Natural Language Questions&lt;/em&gt; was presented at &lt;a href="https://aaai.org/Conferences/AAAI-19/"&gt;&lt;span class="caps"&gt;IAAI&lt;/span&gt;-19&lt;/a&gt; and can be downloaded on &lt;a href="https://aaai.org/Papers/AAAI/2019/IAAI-BlankS.88.pdf"&gt;aaai.org&lt;/a&gt;. There is also a simplified blog post about the same topic on the &lt;a href="https://www.inovex.de/blog/seqpolicynet-nlp-elasticsearch/"&gt;inovex blog&lt;/a&gt; by my colleague Sebastian&amp;nbsp;Blank.&lt;/p&gt;</content><category term="data science"></category><category term="nlp"></category></entry></feed>
+&lt;p&gt;We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it&amp;#8217;s far from perfect and hopefully the issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt; will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on&amp;nbsp;it.&lt;/p&gt;</content><category term="post"></category><category term="spark"></category><category term="python"></category><category term="big data"></category></entry><entry><title>Querying NoSQL with Deep Learning to Answer Natural Language Questions</title><link href="https://florianwilhelm.info/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/" rel="alternate"></link><published>2019-01-29T11:30:00+01:00</published><updated>2019-01-29T11:30:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-01-29:/2019/01/querying_nosql_with_deep_learning_to_answer_natural_language_questions/</id><summary type="html">&lt;p&gt;Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (&lt;span class="caps"&gt;QA&lt;/span&gt;) system that allows a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Almost all of today’s knowledge is stored in databases and thus can only be accessed with the help of domain specific query languages, strongly limiting the number of people which can access the data. In our work, we demonstrate an end-to-end trainable question answering (&lt;span class="caps"&gt;QA&lt;/span&gt;) system that allows a user to query an external NoSQL database by using natural language. A major challenge of such a system is the non-differentiability of database operations which we overcome by applying policy-based reinforcement learning. We evaluate our approach on Facebook’s bAbI Movie Dialog dataset and achieve a competitive score of 84.2% compared to several benchmark models. We conclude that our approach excels with regard to real-world scenarios where knowledge resides in external databases and intermediate labels are too costly to gather for non-end-to-end trainable &lt;span class="caps"&gt;QA&lt;/span&gt;&amp;nbsp;systems.&lt;/p&gt;
+&lt;p&gt;Our paper &lt;em&gt;Querying NoSQL with Deep Learning to Answer Natural Language Questions&lt;/em&gt; was presented at &lt;a href="https://aaai.org/Conferences/AAAI-19/"&gt;&lt;span class="caps"&gt;IAAI&lt;/span&gt;-19&lt;/a&gt; and can be downloaded on &lt;a href="https://aaai.org/Papers/AAAI/2019/IAAI-BlankS.88.pdf"&gt;aaai.org&lt;/a&gt;. There is also a simplified blog post about the same topic on the &lt;a href="https://www.inovex.de/blog/seqpolicynet-nlp-elasticsearch/"&gt;inovex blog&lt;/a&gt; by my colleague Sebastian&amp;nbsp;Blank.&lt;/p&gt;</content><category term="talk"></category><category term="data science"></category><category term="nlp"></category></entry></feed>

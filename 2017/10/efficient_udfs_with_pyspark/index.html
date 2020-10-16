@@ -9,141 +9,6 @@
 
 
 
-
-<style type="text/css">
-
-/*some stuff for output/input prompts*/
-div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
-div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
-div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
-div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
-@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
-div.prompt:empty{padding-top:0;padding-bottom:0}
-div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
-div.inner_cell{width:90%;}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
-div.input_prompt{color:navy;border-top:1px solid transparent;}
-div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
-div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
-div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
-div.output_prompt{color:darkred;}
-
-a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
-h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
-/* end stuff for output/input prompts*/
-
-
-.highlight-ipynb .hll { background-color: #ffffcc }
-.highlight-ipynb  { background: #f8f8f8; }
-.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
-.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
-.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight-ipynb .o { color: #666666 } /* Operator */
-.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
-.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
-.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
-.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
-.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
-.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
-.highlight-ipynb .go { color: #888888 } /* Generic.Output */
-.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
-.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
-.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
-.highlight-ipynb .m { color: #666666 } /* Literal.Number */
-.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
-.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
-.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
-.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight-ipynb .no { color: #880000 } /* Name.Constant */
-.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
-.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
-.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
-.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
-.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
-.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
-.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
-.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
-.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
-.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
-</style>
-
-<style type="text/css">
-/* Overrides of notebook CSS for static HTML export */
-div.entry-content {
-  overflow: visible;
-  padding: 8px;
-}
-.input_area {
-  padding: 0.2em;
-}
-
-a.heading-anchor {
- white-space: normal;
-}
-
-.rendered_html
-code {
- font-size: .8em;
-}
-
-pre.ipynb {
-  color: black;
-  background: #f7f7f7;
-  border: none;
-  box-shadow: none;
-  margin-bottom: 0;
-  padding: 0;
-  margin: 0px;
-  font-size: 13px;
-}
-
-/* remove the prompt div from text cells */
-div.text_cell .prompt {
-    display: none;
-}
-
-/* remove horizontal padding from text cells, */
-/* so it aligns with outer body text */
-div.text_cell_render {
-    padding: 0.5em 0em;
-}
-
-img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
-</style>
-
 <link rel="canonical" href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">
 
         <meta name="author" content="Florian Wilhelm" />
@@ -162,10 +27,12 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
             <meta property="article:tag" content="big data" />
             <meta property="article:author" content="Florian Wilhelm" />
 
+    <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
     <meta name="twitter:domain" content="https://florianwilhelm.info">
+
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
@@ -176,16 +43,13 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
     <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-
-
         <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post ATOM Feed"/>
-
 </head>
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -208,8 +72,11 @@ Florian Wilhelm            </a>
         <!-- /.navbar-collapse -->
     </div>
 </div> <!-- /.navbar -->
+
 <!-- Banner -->
 <!-- End Banner -->
+
+<!-- Content Container -->
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
@@ -267,20 +134,18 @@ At the time of writing - with PySpark 2.2 as latest version - there is no &#8220
 Also, the tracking Jira issue <a href="https://issues.apache.org/jira/browse/SPARK-10915"><span class="caps">SPARK</span>-10915</a> does not indicate that this changes in near future.
 Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.
 However, as you might have guessed from the title of this article, there are workarounds to the rescue.
-<!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... -->
-This is where the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> <span class="caps">API</span> comes in.
+<!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... --></p>
+<p>This is where the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> <span class="caps">API</span> comes in.
 As a reminder, a <em>Resilient Distributed Dataset</em> (<span class="caps">RDD</span>) is the low-level data structure of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>.
 This <span class="caps">RDD</span> <span class="caps">API</span> allows us to specify arbitrary Python functions that get executed on the data.
 To give an example, let&#8217;s say we have a DataFrame <code>df</code> of one billion rows with a boolean <code>is_sold</code> column and we want to filter for rows with sold products. One could accomplish this with the&nbsp;code</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</code></pre></div>
 
 <p>Although not explicitly declared as such, this lambda function is essentially a user-defined function (<span class="caps">UDF</span>).
 For this exact use case, we could also use the more high-level DataFrame <code>filter()</code> method, producing the same&nbsp;result:</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
 
 <p>Before we now go into the details on how to implement UDAFs using the <span class="caps">RDD</span> <span class="caps">API</span>, there is something important to keep in mind which might sound counterintuitive to the title of this post: in PySpark you should <em>avoid</em> all kind of Python UDFs - like <span class="caps">RDD</span> functions or data frame UDFs - as much as possible!
 Whenever there is a built-in DataFrame method available, this will be much faster than its <span class="caps">RDD</span> counterpart. 
@@ -308,8 +173,8 @@ Okay, so why is the <span class="caps">RDD</span> <code>filter()</code> method t
 The reason is that the lambda function cannot be directly applied to the DataFrame residing in <span class="caps">JVM</span> memory. 
 <!--- 
 To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
--->
-What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
+--></p>
+<p>What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
 At execution time, the Spark workers send our lambda function to those Python workers.
 Next, the Spark workers start serializing their <span class="caps">RDD</span> partitions and pipe them to the Python workers via sockets, where our lambda function gets evaluated on each row.
 For the resulting rows, the whole serialization/deserialization procedure happens again in the opposite direction so that
@@ -322,24 +187,21 @@ If we cannot avoid UDFs, we should at least try to make them as efficient as pos
 <h1>PySpark UDAFs with&nbsp;Pandas</h1>
 <p>As mentioned before our detour into the internals of PySpark, for defining an arbitrary <span class="caps">UDAF</span> function we need an operation that allows us to operate on multiple rows and produce one or multiple resulting rows.
 This functionality is provided by the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> method <code>mapPartitions</code>, where we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> partition&nbsp;with:</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</code></pre></div>
 
 <p>If you want to further read up on RDDs and partitions, you can checkout the chapter <a href="https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-partitions.html">Partitions and Partitioning</a> of the excellent <em>Mastering Apache Spark 2</em> book by Jacek Laskowski.
 In most cases we would want to control the number of partitions, like 100, or even group by a column, let&#8217;s say <code>country</code>, in which case we would&nbsp;write:</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</code></pre></div>
 
 <p>or</p>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</code></pre></div>
 
 <p>Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level <span class="caps">RDD</span> interface, our function <code>my_func</code> will be passed an iterator of PySpark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Row">Row</a> objects and needs to return them as well. A <code>Row</code> object itself is only a container for the column values in one row, as you might have guessed. When we return such a <code>Row</code>, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our <span class="caps">UDF</span>/<span class="caps">UDAF</span> with the help of Pandas, keeping in mind that one partition should hold less than 10 million&nbsp;rows.</p>
 <p>So first we need to define a nice function that will convert a <code>Row</code> iterator into a Pandas&nbsp;DataFrame:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
@@ -366,11 +228,10 @@ In most cases we would want to control the number of partitions, like 100, or ev
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">first_row</span><span class="o">.</span><span class="n">__fields__</span><span class="p">)</span>
     <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Converted partition to DataFrame of shape </span><span class="si">{}</span><span class="s2"> with types:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">df</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This function actually does only one thing which is calling <code>df = pd.DataFrame.from_records(rows, columns=first_row.__fields__)</code> in order to generate a DataFrame. The rest of the code makes sure that the iterator is not empty and for debugging reasons we also peek into the first row and print the value as well as the datatype of each column. This has proven in practice to be extremely helpful in case something goes wrong and one needs to debug what&#8217;s going on in the <span class="caps">UDF</span>/<span class="caps">UDAF</span>. The functions <code>peek</code> and <code>rtype</code> are defined as&nbsp;follows:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 
 <span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
@@ -419,11 +280,10 @@ In most cases we would want to control the number of partitions, like 100, or ev
         <span class="k">return</span> <span class="s2">&quot;Tuple[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elem_types</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">etype</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The next part is to actually convert the result of our <span class="caps">UDF</span>/<span class="caps">UDAF</span> back to an iterator of Row objects. Since our result will most likely be a Pandas DataFrame or Series, we define the&nbsp;following:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">Row</span>
 
 
@@ -476,12 +336,11 @@ In most cases we would want to control the number of partitions, like 100, or ev
     <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;First record row: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first_row_info</span><span class="p">))</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">Row</span><span class="p">(</span><span class="o">*</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">row</span><span class="p">(</span><span class="o">*</span><span class="n">elems</span><span class="p">)</span> <span class="k">for</span> <span class="n">elems</span> <span class="ow">in</span> <span class="n">records</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This looks a bit more complicated but essentially we convert a Pandas Series to a DataFrame if necessary and handle the edge cases of an empty DataFrame or <code>None</code> as return value. We then convert the DataFrame to records, convert some NumPy data types to the Python equivalent and create an iterator over Row objects from the converted&nbsp;records. </p>
 <p>With these functions at hand we can define a <a href="https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator">Python decorator</a> that will allow us to automatically call the functions <code>rows_to_pandas</code> and <code>pandas_to_rows</code> at the right&nbsp;time:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 
 <span class="k">class</span> <span class="nc">pandas_udaf</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -503,11 +362,10 @@ In most cases we would want to control the number of partitions, like 100, or ev
             <span class="n">df</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pandas_to_rows</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">wrapper</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The code is pretty much self-explanatory if you have ever written a Python decorator; otherwise, you should read about it since it takes some time to wrap your head around it. Basically, we set up a default logger, create a Pandas DataFrame from the Row iterator, pass it to our <span class="caps">UDF</span>/<span class="caps">UDAF</span> and convert its return value back to a Row iterator. The only additional thing that might still raise questions is the usage of <code>args[-1]</code>. This is due to the fact that <code>func</code> might also be a method of an object. In this case, the first argument would be <code>self</code> but the last argument is in either cases the actual argument that <code>mapPartitions</code> will pass to us. The code of <code>setup_logger</code> depends on your Spark installation. In case you are using Spark on Apache <a href="https://hortonworks.com/apache/yarn/"><span class="caps">YARN</span></a>, it might look like&nbsp;this:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
@@ -534,11 +392,10 @@ In most cases we would want to control the number of partitions, like 100, or ev
                         <span class="n">filename</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span>
                         <span class="nb">format</span><span class="o">=</span><span class="n">logformat</span><span class="p">,</span>
                         <span class="n">datefmt</span><span class="o">=</span><span class="n">datefmt</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now having all parts in place let&#8217;s assume the code above resides in the python module <a href="https://florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <a href="https://florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 
@@ -548,11 +405,10 @@ In most cases we would want to control the number of partitions, like 100, or ev
         <span class="k">return</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>It is of course not really useful in practice to return some statistics with the help of a <span class="caps">UDAF</span> that could also be retrieved with basic PySpark functionality but this is just an example. We now generate a dummy data DataFrame and apply the function to each partition as above&nbsp;with:</p>
-<div class="highlight"><pre><span></span><span class="c1"># make pyspark_udaf.py available to the executors</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># make pyspark_udaf.py available to the executors</span>
 <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="s1">&#39;./pyspark_udaf.py&#39;</span><span class="p">)</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
@@ -562,8 +418,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 
 <span class="n">stats_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">stats_df</span><span class="o">.</span><span class="n">toPandas</span><span class="p">())</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The code above can be easily tested with the help of a Jupyter notebook with PySpark where the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SparkSession">SparkSession</a> <code>spark</code> is&nbsp;predefined.</p>
 <h2>Summary</h2>
@@ -594,11 +449,11 @@ In this respect we are really looking forward to closer integration of <a href="
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
-                    var disqus_identifier = 'efficient_udfs_with_pyspark';
-                var disqus_url = 'https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/';
-
             var disqus_config = function () {
                 this.language = "en";
+
+                        this.page.identifier = '2017-10-11-efficient_udfs_with_pyspark';
+                        this.page.url = 'https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/';
             };
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
@@ -621,180 +476,126 @@ In this respect we are really looking forward to closer integration of <a href="
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<!-- Sidebar -->
 <section class="well well-sm">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
-                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
-                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
-              </ul>
-            </li>
+  <ul class="list-group list-group-flush">
 
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
 
-
-            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group list-inline tagcloud" id="tags">
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asynchronous/">
-                            asynchronous
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asyncio/">
-                            asyncio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bayesian/">
-                            bayesian
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/big-data/">
-                            big data
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bokeh/">
-                            bokeh
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/causal-inference/">
-                            causal inference
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/data-science/">
-                            data science
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/deep-learning/">
-                            deep learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/event-driven/">
-                            event-driven
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gans/">
-                            GANs
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
-                            google hangouts
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gps/">
-                            gps
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hadoop/">
-                            hadoop
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hive/">
-                            hive
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/jupyter/">
-                            jupyter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
-                            kalman filter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/machine-learning/">
-                            machine-learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/mathematics/">
-                            mathematics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/nlp/">
-                            nlp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
-                            predictive analytics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/production/">
-                            production
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/programming/">
-                            programming
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/python/">
-                            python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
-                            recommender systems
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
-                            scikit-learn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/scipy/">
-                            scipy
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
-                            semi-supervised
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/spark/">
-                            spark
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/template/">
-                            template
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
-                            uncertainty quantification
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-    </ul>
-</section>            </aside>
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gans/">GANs</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/nlp/">nlp</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/production/">production</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/programming/">programming</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/spark/">spark</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/template/">template</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">uncertainty quantification</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
         </div>
     </div>
 </div>
+<!-- End Content Container -->
+
 <footer>
    <div class="container">
       <hr>
@@ -814,6 +615,7 @@ In this respect we are really looking forward to closer integration of <a href="
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
 
     <!-- Disqus -->
     <script type="text/javascript">
@@ -847,6 +649,7 @@ In this respect we are really looking forward to closer integration of <a href="
         })();
     </script>
     <!-- End Google Analytics Code -->
+
 
 <script>
    $(document).ready(function () {

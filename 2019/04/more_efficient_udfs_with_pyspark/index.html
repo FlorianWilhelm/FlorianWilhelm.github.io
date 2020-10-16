@@ -9,141 +9,6 @@
 
 
 
-
-<style type="text/css">
-
-/*some stuff for output/input prompts*/
-div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.cell.selected{border-radius:4px;border:thin #ababab solid}
-div.cell.edit_mode{border-radius:4px;border:thin #008000 solid}
-div.cell{width:100%;padding:5px 5px 5px 0;margin:0;outline:none}
-div.prompt{min-width:11ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}
-@media (max-width:480px){div.prompt{text-align:left}}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;line-height:1.21429em}
-div.prompt:empty{padding-top:0;padding-bottom:0}
-div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:horizontal;-moz-box-align:stretch;display:box;box-orient:horizontal;box-align:stretch;}
-div.inner_cell{width:90%;}
-div.input_area{border:1px solid #cfcfcf;border-radius:4px;background:#f7f7f7;}
-div.input_prompt{color:navy;border-top:1px solid transparent;}
-div.output_wrapper{margin-top:5px;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:4px;-webkit-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);-moz-box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.8);}
-div.output_collapsed{margin:0px;padding:0px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-align:stretch;display:-moz-box;-moz-box-orient:vertical;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;width:100%;}
-div.out_prompt_overlay{height:100%;padding:0px 0.4em;position:absolute;border-radius:4px;}
-div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000000;-moz-box-shadow:inset 0 0 1px #000000;box-shadow:inset 0 0 1px #000000;background:rgba(240, 240, 240, 0.5);}
-div.output_prompt{color:darkred;}
-
-a.anchor-link:link{text-decoration:none;padding:0px 20px;visibility:hidden;}
-h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible;}
-/* end stuff for output/input prompts*/
-
-
-.highlight-ipynb .hll { background-color: #ffffcc }
-.highlight-ipynb  { background: #f8f8f8; }
-.highlight-ipynb .c { color: #408080; font-style: italic } /* Comment */
-.highlight-ipynb .err { border: 1px solid #FF0000 } /* Error */
-.highlight-ipynb .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight-ipynb .o { color: #666666 } /* Operator */
-.highlight-ipynb .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.highlight-ipynb .cp { color: #BC7A00 } /* Comment.Preproc */
-.highlight-ipynb .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.highlight-ipynb .cs { color: #408080; font-style: italic } /* Comment.Special */
-.highlight-ipynb .gd { color: #A00000 } /* Generic.Deleted */
-.highlight-ipynb .ge { font-style: italic } /* Generic.Emph */
-.highlight-ipynb .gr { color: #FF0000 } /* Generic.Error */
-.highlight-ipynb .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight-ipynb .gi { color: #00A000 } /* Generic.Inserted */
-.highlight-ipynb .go { color: #888888 } /* Generic.Output */
-.highlight-ipynb .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight-ipynb .gs { font-weight: bold } /* Generic.Strong */
-.highlight-ipynb .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight-ipynb .gt { color: #0044DD } /* Generic.Traceback */
-.highlight-ipynb .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight-ipynb .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight-ipynb .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight-ipynb .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight-ipynb .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight-ipynb .kt { color: #B00040 } /* Keyword.Type */
-.highlight-ipynb .m { color: #666666 } /* Literal.Number */
-.highlight-ipynb .s { color: #BA2121 } /* Literal.String */
-.highlight-ipynb .na { color: #7D9029 } /* Name.Attribute */
-.highlight-ipynb .nb { color: #008000 } /* Name.Builtin */
-.highlight-ipynb .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight-ipynb .no { color: #880000 } /* Name.Constant */
-.highlight-ipynb .nd { color: #AA22FF } /* Name.Decorator */
-.highlight-ipynb .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.highlight-ipynb .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.highlight-ipynb .nf { color: #0000FF } /* Name.Function */
-.highlight-ipynb .nl { color: #A0A000 } /* Name.Label */
-.highlight-ipynb .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight-ipynb .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight-ipynb .nv { color: #19177C } /* Name.Variable */
-.highlight-ipynb .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight-ipynb .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight-ipynb .mf { color: #666666 } /* Literal.Number.Float */
-.highlight-ipynb .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight-ipynb .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight-ipynb .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight-ipynb .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight-ipynb .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight-ipynb .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight-ipynb .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight-ipynb .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.highlight-ipynb .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight-ipynb .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.highlight-ipynb .sx { color: #008000 } /* Literal.String.Other */
-.highlight-ipynb .sr { color: #BB6688 } /* Literal.String.Regex */
-.highlight-ipynb .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight-ipynb .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight-ipynb .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight-ipynb .vc { color: #19177C } /* Name.Variable.Class */
-.highlight-ipynb .vg { color: #19177C } /* Name.Variable.Global */
-.highlight-ipynb .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight-ipynb .il { color: #666666 } /* Literal.Number.Integer.Long */
-</style>
-
-<style type="text/css">
-/* Overrides of notebook CSS for static HTML export */
-div.entry-content {
-  overflow: visible;
-  padding: 8px;
-}
-.input_area {
-  padding: 0.2em;
-}
-
-a.heading-anchor {
- white-space: normal;
-}
-
-.rendered_html
-code {
- font-size: .8em;
-}
-
-pre.ipynb {
-  color: black;
-  background: #f7f7f7;
-  border: none;
-  box-shadow: none;
-  margin-bottom: 0;
-  padding: 0;
-  margin: 0px;
-  font-size: 13px;
-}
-
-/* remove the prompt div from text cells */
-div.text_cell .prompt {
-    display: none;
-}
-
-/* remove horizontal padding from text cells, */
-/* so it aligns with outer body text */
-div.text_cell_render {
-    padding: 0.5em 0em;
-}
-
-img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:none; -box-shadow:none}
-</style>
-
 <link rel="canonical" href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/">
 
         <meta name="author" content="Florian Wilhelm" />
@@ -162,10 +27,12 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
             <meta property="article:tag" content="big data" />
             <meta property="article:author" content="Florian Wilhelm" />
 
+    <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@FlorianWilhelm">
         <meta name="twitter:creator" content="@FlorianWilhelm">
     <meta name="twitter:domain" content="https://florianwilhelm.info">
+
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
@@ -176,16 +43,13 @@ img.anim_icon{padding:0; border:0; vertical-align:middle; -webkit-box-shadow:non
     <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-
-
         <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
               title="Florian Wilhelm post ATOM Feed"/>
-
 </head>
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -208,8 +72,11 @@ Florian Wilhelm            </a>
         <!-- /.navbar-collapse -->
     </div>
 </div> <!-- /.navbar -->
+
 <!-- Banner -->
 <!-- End Banner -->
+
+<!-- Content Container -->
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
@@ -294,7 +161,7 @@ Florian Wilhelm            </a>
 <h2>Implementation</h2>
 <p>We split our implementation into three different kinds of functionalities: 1. functions that convert a Spark dataframe to and from <span class="caps">JSON</span>, 2. functions that do the same for Pandas dataframes and 3. we combine all of them in one decorator. The final and extended implementation can be found in the file <a href="https://florianwilhelm.info/src/pyspark23_udaf.py">pyspark23_udaf.py</a> where also some logging mechanism for easier debugging of UDFs was&nbsp;added. </p>
 <h3>1. Conversion of Spark&nbsp;Dataframe</h3>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">MapType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">,</span> <span class="n">StructField</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">MapType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">,</span> <span class="n">StructField</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">to_json</span><span class="p">,</span> <span class="n">from_json</span>
 
 <span class="k">def</span> <span class="nf">is_complex_dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">):</span>
@@ -348,11 +215,10 @@ Florian Wilhelm            </a>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="n">selects</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The function <code>complex_dtypes_to_json</code> converts a given Spark dataframe to a new dataframe with all columns that have complex types replaced by <span class="caps">JSON</span> strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by <code>complex_dtypes_from_json</code> to convert exactly those columns back to their original type. You might find it strange that we define some <code>root</code> node in the schema. This is necessary due to some restrictions of Spark&#8217;s <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json">from_json</a> that we circumvent by this. After the conversion, we drop this <code>root</code> struct again so that <code>complex_dtypes_to_json</code> and <code>complex_dtypes_from_json</code> are inverses of each other. We can now also easily define a <code>toPandas</code> which also works with complex Spark&nbsp;dataframes.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">toPandas</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toPandas</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Same as df.toPandas() but converts complex types to JSON first</span>
 
 <span class="sd">    Args:</span>
@@ -362,12 +228,11 @@ Florian Wilhelm            </a>
 <span class="sd">        Pandas dataframe</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">complex_dtypes_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <h3>2. Conversion of Pandas&nbsp;Dataframe</h3>
 <p>Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual <span class="caps">UDF</span> since we want to avoid probing every column containing strings. In the conversion to <span class="caps">JSON</span>, we add the <code>root</code> node as explained&nbsp;above. </p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="k">def</span> <span class="nf">cols_from_json</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts Pandas dataframe colums from json</span>
@@ -409,12 +274,11 @@ Florian Wilhelm            </a>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
         <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ct_val_to_json</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span>
-</pre></div>
-
+</code></pre></div>
 
 <h3>3.&nbsp;Decorator</h3>
 <p>At this point we got everything we need for our final decorators named <code>pandas_udf_ct</code> combining all our ingredients. Like Spark&#8217;s official <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf">pandas_udf</a>, our decorator takes the arguments <code>returnType</code> and <code>functionType</code>. It&#8217;s just a tad more complicated in the sense that you first have to pass <code>returnType</code>, <code>functionType</code> which leaves you with some special decorator. A function decorated with such a decorator takes the parameters <code>cols_in</code> and <code>cols_out</code> which specify which columns need to be converted to and from <span class="caps">JSON</span>. Only after passing those you end up with the actual <span class="caps">UDF</span> that you defined. No need to despair, an example below illustrates the usage but first we take a look at the&nbsp;implementation.</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">pandas_udf</span><span class="p">,</span> <span class="n">PandasUDFType</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -468,13 +332,12 @@ Florian Wilhelm            </a>
             <span class="k">return</span> <span class="n">udf_wrapper</span>
 
         <span class="k">return</span> <span class="n">converter</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>It&#8217;s just a typical decorator-with-parameters implementation but with one more layer of wrapping for <code>cols_in</code> and <code>cols_out</code>.  </p>
 <h2>Usage</h2>
 <p>An example says more than one thousand words of explanation. Let&#8217;s first create some dummy Spark dataframe with complex data&nbsp;types:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">Row</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">Row</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 
 <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
@@ -486,11 +349,10 @@ Florian Wilhelm            </a>
                            <span class="n">schema</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vals&#39;</span><span class="p">,</span> <span class="s1">&#39;maps&#39;</span><span class="p">,</span> <span class="s1">&#39;lists&#39;</span><span class="p">,</span> <span class="s1">&#39;structs&#39;</span><span class="p">])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;lists&#39;</span><span class="p">)</span>  <span class="c1"># only Spark 2.4 supports ArrayTypes in to_json!</span>
 <span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>For sake of simplicity, let&#8217;s say we just want to add to the dictionaries in the <code>maps</code> column a key <code>x</code> with value <code>42</code>. But first, we use <code>complex_dtypes_to_json</code> to get a converted Spark dataframe <code>df_json</code> and the converted columns <code>ct_cols</code>. We define then the <span class="caps">UDF</span> <code>normalize</code> and decorate it with our <code>pandas_udf_ct</code> specifying the return type using <code>dfj_json.schema</code> (since we only want simple data types) and the function type <code>GROUPED_MAP</code>. </p>
-<div class="highlight"><pre><span></span><span class="n">df_json</span><span class="p">,</span> <span class="n">ct_cols</span> <span class="o">=</span> <span class="n">complex_dtypes_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">df_json</span><span class="p">,</span> <span class="n">ct_cols</span> <span class="o">=</span> <span class="n">complex_dtypes_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">change_vals</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
     <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
@@ -500,15 +362,13 @@ Florian Wilhelm            </a>
 <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">pdf</span><span class="p">):</span>
     <span class="n">pdf</span><span class="p">[</span><span class="s1">&#39;maps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">change_vals</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pdf</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Just for demonstration, we now group by the <code>vals</code> column of <code>df_json</code> and apply our <code>normalize</code> <span class="caps">UDF</span> on each group. Instead of just passing <code>normalize</code> we have to call it first with parameters <code>cols_in</code> and <code>cols_out</code> as explained before. As input columns, we pass the output <code>ct_cols</code> from our <code>complex_dtypes_to_json</code> function and since we do not change the shape of our dataframe within the <span class="caps">UDF</span>, we use the same for the output <code>cols_out</code>. In case your <span class="caps">UDF</span> removes columns or adds additional ones with complex data types, you would have to change <code>cols_out</code> accordingly. As a final step we use <code>complex_dtypes_from_json</code> to convert the <span class="caps">JSON</span> strings of our transformed Spark dataframe back to complex data&nbsp;types.</p>
-<div class="highlight"><pre><span></span><span class="n">df_json</span> <span class="o">=</span> <span class="n">df_json</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;vals&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">normalize</span><span class="p">(</span><span class="n">cols_in</span><span class="o">=</span><span class="n">ct_cols</span><span class="p">,</span> <span class="n">cols_out</span><span class="o">=</span><span class="n">ct_cols</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">df_json</span> <span class="o">=</span> <span class="n">df_json</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;vals&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">normalize</span><span class="p">(</span><span class="n">cols_in</span><span class="o">=</span><span class="n">ct_cols</span><span class="p">,</span> <span class="n">cols_out</span><span class="o">=</span><span class="n">ct_cols</span><span class="p">))</span>
 <span class="n">df_final</span> <span class="o">=</span> <span class="n">complex_dtypes_from_json</span><span class="p">(</span><span class="n">df_json</span><span class="p">,</span> <span class="n">ct_cols</span><span class="p">)</span>
 <span class="n">df_final</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <h2>Conclusion</h2>
 <p>We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it&#8217;s far from perfect and hopefully the issue <a href="https://jira.apache.org/jira/browse/SPARK-21187"><span class="caps">SPARK</span>-21187</a> will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on&nbsp;it.</p>
@@ -533,11 +393,11 @@ Florian Wilhelm            </a>
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
 
-                    var disqus_identifier = 'more_efficient_udfs_with_pyspark';
-                var disqus_url = 'https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/';
-
             var disqus_config = function () {
                 this.language = "en";
+
+                        this.page.identifier = '2019-04-19-more_efficient_udfs_with_pyspark';
+                        this.page.url = 'https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/';
             };
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
@@ -560,180 +420,126 @@ Florian Wilhelm            </a>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<!-- Sidebar -->
 <section class="well well-sm">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
-                <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
-                <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
-              </ul>
-            </li>
+  <ul class="list-group list-group-flush">
 
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://twitter.com/FlorianWilhelm"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
 
-
-            <li class="list-group-item"><a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group list-inline tagcloud" id="tags">
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asynchronous/">
-                            asynchronous
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/asyncio/">
-                            asyncio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bayesian/">
-                            bayesian
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/big-data/">
-                            big data
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/bokeh/">
-                            bokeh
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/causal-inference/">
-                            causal inference
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/data-science/">
-                            data science
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/deep-learning/">
-                            deep learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/event-driven/">
-                            event-driven
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gans/">
-                            GANs
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/google-hangouts/">
-                            google hangouts
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/gps/">
-                            gps
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hadoop/">
-                            hadoop
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/hive/">
-                            hive
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/jupyter/">
-                            jupyter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/kalman-filter/">
-                            kalman filter
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/machine-learning/">
-                            machine-learning
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/mathematics/">
-                            mathematics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/nlp/">
-                            nlp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/predictive-analytics/">
-                            predictive analytics
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/production/">
-                            production
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/programming/">
-                            programming
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="https://florianwilhelm.info/tag/python/">
-                            python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="https://florianwilhelm.info/tag/recommender-systems/">
-                            recommender systems
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/scikit-learn/">
-                            scikit-learn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/scipy/">
-                            scipy
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/semi-supervised/">
-                            semi-supervised
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="https://florianwilhelm.info/tag/spark/">
-                            spark
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/template/">
-                            template
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">
-                            uncertainty quantification
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-    </ul>
-</section>            </aside>
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gans/">GANs</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/nlp/">nlp</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/production/">production</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/programming/">programming</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/spark/">spark</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/template/">template</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">uncertainty quantification</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
         </div>
     </div>
 </div>
+<!-- End Content Container -->
+
 <footer>
    <div class="container">
       <hr>
@@ -753,6 +559,7 @@ Florian Wilhelm            </a>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
 
     <!-- Disqus -->
     <script type="text/javascript">
@@ -786,6 +593,7 @@ Florian Wilhelm            </a>
         })();
     </script>
     <!-- End Google Analytics Code -->
+
 
 <script>
    $(document).ready(function () {

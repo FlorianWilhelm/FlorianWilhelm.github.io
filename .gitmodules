@@ -8,4 +8,4 @@
         branch = master
 [submodule "pelican/themes"]
 	path = pelican/themes
-	url = https://github.com/getpelican/pelican-themes.git
+	url = https://github.com/FlorianWilhelm/pelican-themes.git

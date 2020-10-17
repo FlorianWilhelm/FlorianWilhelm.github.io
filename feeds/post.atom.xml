@@ -392,7 +392,7 @@ We start with taking a look at the sales prediction for one of the stores from t
 &lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;&amp;nbsp;&lt;/p&gt;
-&lt;p&gt;Only judging by the eye, we see that predicted mean (blue dashed line) follows the number sales (bluish bars) quite good.
+&lt;p&gt;Only judging by the eye, we see that predicted mean (blue dashed line) follows the number of sales (bluish bars) quite good.
 The background is shaded according to some important features like promotions and holidays which explain some of the variations
 in our predictions. Just for information, also the number of customers are displayed but not used in the prediction of course.
 Also, we see the 50% and 90% &lt;a href="https://en.wikipedia.org/wiki/Credible_interval"&gt;credible intervals&lt;/a&gt; as shaded blue areas

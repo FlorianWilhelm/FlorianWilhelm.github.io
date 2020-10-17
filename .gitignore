@@ -58,10 +58,6 @@ docs/_build/
 # PyBuilder
 target/
 
-# Notebook checkpoints and includes
-pelican/content/notebooks/input
-.ipynb_checkpoints/
-
 # Temporary files
 *.swp
 

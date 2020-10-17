@@ -176,7 +176,7 @@ In total the speed-up compared to PyMC3 was amazing in my test-case letting me a
 to PyMC3. Firstly, the documentation of Pyro is not as polished and secondly, it&#8217;s just so much more complicated to use and understand 
 but your mileage may vary on that&nbsp;one. </p>
 <p>Digging through the website of Pyro I then stumbled over <a href="https://github.com/pyro-ppl/numpyro">NumPyro</a> that has a similar
-interface to Pyro but uses <a href="https://github.com/google/jax"><span class="caps">JAX</span></a> instead of PyTorch as its backend. <span class="caps">JAX</span> is like <a href="https://numpy.org/">NumPy</a> on 
+interface compared to Pyro but uses <a href="https://github.com/google/jax"><span class="caps">JAX</span></a> instead of PyTorch as its backend. <span class="caps">JAX</span> is like <a href="https://numpy.org/">NumPy</a> on 
 steroids. It&#8217;s crazy fast as it uses <a href="https://www.tensorflow.org/xla"><span class="caps">XLA</span></a>, which is a domain-specific compiler for linear algebra
 operations. Additionally, it allows for automatic differentiation like <a href="https://github.com/hips/autograd">Autograd</a>,
 whose maintainers moved over to develop <span class="caps">JAX</span> further. Long story short, NumPyro even blew the benchmark results of Pyro out of the water.

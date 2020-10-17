@@ -795,7 +795,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;span class="n"&gt;df_obs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;table border="1" class="table table-condensed table-bordered"&gt;
+&lt;table&gt;
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;&lt;/th&gt;
@@ -895,7 +895,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;table class="table table-condensed table-bordered"&gt;
+&lt;table&gt;
 &lt;caption&gt;Generalized Linear Model Regression Results&lt;/caption&gt;
 &lt;tbody&gt;&lt;tr&gt;
   &lt;th&gt;Dep. Variable:&lt;/th&gt;      &lt;td&gt;recovery&lt;/td&gt;     &lt;th&gt;  No. Observations:  &lt;/th&gt;  &lt;td&gt; 10000&lt;/td&gt; 
@@ -923,7 +923,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;/tr&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 
-&lt;table class="table table-condensed table-bordered"&gt;
+&lt;table&gt;
 &lt;tbody&gt;&lt;tr&gt;
        &lt;td&gt;&lt;/td&gt;         &lt;th&gt;coef&lt;/th&gt;     &lt;th&gt;std err&lt;/th&gt;      &lt;th&gt;z&lt;/th&gt;      &lt;th&gt;P&amp;gt;|z|&lt;/th&gt;  &lt;th&gt;[0.025&lt;/th&gt;    &lt;th&gt;0.975]&lt;/th&gt;  
 &lt;/tr&gt;
@@ -1193,7 +1193,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;table class="table table-condensed table-bordered"&gt;
+&lt;table&gt;
 &lt;caption&gt;Generalized Linear Model Regression Results&lt;/caption&gt;
 &lt;tbody&gt;&lt;tr&gt;
   &lt;th&gt;Dep. Variable:&lt;/th&gt;      &lt;td&gt;recovery&lt;/td&gt;     &lt;th&gt;  No. Observations:  &lt;/th&gt;  &lt;td&gt; 10000&lt;/td&gt; 
@@ -1221,7 +1221,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 &lt;/tr&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 
-&lt;table class="table table-condensed table-bordered"&gt;
+&lt;table&gt;
 &lt;tbody&gt;&lt;tr&gt;
        &lt;td&gt;&lt;/td&gt;         &lt;th&gt;coef&lt;/th&gt;     &lt;th&gt;std err&lt;/th&gt;      &lt;th&gt;z&lt;/th&gt;      &lt;th&gt;P&amp;gt;|z|&lt;/th&gt;  &lt;th&gt;[0.025&lt;/th&gt;    &lt;th&gt;0.975]&lt;/th&gt;  
 &lt;/tr&gt;

@@ -1,7 +1,0 @@
-[submodule "pelican/plugins-core"]
-	path = pelican/plugins-core
-	url = https://github.com/getpelican/pelican-plugins.git
-        branch = master
-[submodule "pelican/themes"]
-	path = pelican/themes
-	url = https://github.com/getpelican/pelican-themes.git

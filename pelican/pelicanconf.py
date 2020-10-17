@@ -25,7 +25,7 @@ MARKDOWN = {
     },
     'output_format': 'html5',
 }
-TIMEZONE = 'Europe/Berlin'
+TIMEZONE = 'Europe/Paris'
 DEFAULT_LANG = u'en'
 OUTPUT_PATH = os.path.join(__location__, '../')
 TYPOGRIFY = True

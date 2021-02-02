@@ -528,7 +528,7 @@ Without spoiling too much I hope, for the too busy or plain lazy readers, the ma
 &lt;h2&gt;Let&amp;#8217;s get&amp;nbsp;started&lt;/h2&gt;
 &lt;p&gt;Before we start with the gory mathematical details, let&amp;#8217;s first pick and explore a typical use-case where most inexperienced
 data scientists might be tempted to transform the target variable without a second thought. In order to demonstrate this, I chose 
-the &lt;a href="https://www.kaggle.com/orgesleka/used-cars-database"&gt;used-cars database from Kaggle&lt;/a&gt; and if you want to follow along, you find the code in the notebooks folder of my Github 
+the &lt;a href="https://www.kaggle.com/vfsousas/autos"&gt;used-cars database from Kaggle&lt;/a&gt; and if you want to follow along, you find the code in the notebooks folder of my Github 
 &lt;a href="https://github.com/FlorianWilhelm/used-cars-log-trans/"&gt;used-cars-log-trans repository&lt;/a&gt;. As the name suggests, the data set contains used cars having car features like &lt;code&gt;vehicleType&lt;/code&gt;,
 &lt;code&gt;yearOfRegistration&lt;/code&gt; &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; &lt;code&gt;monthOfRegistration&lt;/code&gt;, &lt;code&gt;gearbox&lt;/code&gt;, &lt;code&gt;powerPS&lt;/code&gt;, &lt;code&gt;model&lt;/code&gt;, &lt;code&gt;kilometer&lt;/code&gt; (mileage), &lt;code&gt;fuelType&lt;/code&gt;, &lt;code&gt;brand&lt;/code&gt; and &lt;code&gt;price&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Let&amp;#8217;s say the business unit basically asks us to determine the proper market value of a car given the features above to determine
@@ -1103,7 +1103,7 @@ in the respective error measure, we would still need to improve the model a lot 
 but that was not the actual point of this&amp;nbsp;exercise. &lt;/p&gt;
 &lt;p&gt;Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
-disaster. It&amp;#8217;s a bit like wielding a double handed sword in a fight. Limbs will be cut off, we should just make sure they are not one of ours.
+disaster. It&amp;#8217;s a bit like wielding a double handed sword in a fight. Limbs will be cut off, we should just make sure they don&amp;#8217;t belong to us.
 The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for &lt;span class="caps"&gt;RMSPE&lt;/span&gt; 
 and &lt;span class="caps"&gt;MAPE&lt;/span&gt; come from. So let&amp;#8217;s wash it all down with some more&amp;nbsp;math.&lt;/p&gt;
 &lt;h2&gt;Aftermath&lt;/h2&gt;
@@ -1151,7 +1151,7 @@ $$&lt;/div&gt;
 Subsequently, the correction term for &lt;span class="caps"&gt;RMSPE&lt;/span&gt; is &lt;span class="math"&gt;\(-\frac{3}{2}\sigma^2\)&lt;/span&gt;. For &lt;span class="caps"&gt;MAPE&lt;/span&gt; we&amp;nbsp;have
 &lt;/p&gt;
 &lt;div class="math"&gt;$$
-\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde f(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde f(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y,
+\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde f(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y,
 $$&lt;/div&gt;
 &lt;p&gt;
 and after deriving by &lt;span class="math"&gt;\(\hat y\)&lt;/span&gt; as well as setting to 0, we need to find &lt;span class="math"&gt;\(\hat y\)&lt;/span&gt; such&amp;nbsp;that

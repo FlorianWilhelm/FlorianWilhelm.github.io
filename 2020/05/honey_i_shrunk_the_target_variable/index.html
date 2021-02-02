@@ -141,7 +141,7 @@ Without spoiling too much I hope, for the too busy or plain lazy readers, the ma
 <h2>Let&#8217;s get&nbsp;started</h2>
 <p>Before we start with the gory mathematical details, let&#8217;s first pick and explore a typical use-case where most inexperienced
 data scientists might be tempted to transform the target variable without a second thought. In order to demonstrate this, I chose 
-the <a href="https://www.kaggle.com/orgesleka/used-cars-database">used-cars database from Kaggle</a> and if you want to follow along, you find the code in the notebooks folder of my Github 
+the <a href="https://www.kaggle.com/vfsousas/autos">used-cars database from Kaggle</a> and if you want to follow along, you find the code in the notebooks folder of my Github 
 <a href="https://github.com/FlorianWilhelm/used-cars-log-trans/">used-cars-log-trans repository</a>. As the name suggests, the data set contains used cars having car features like <code>vehicleType</code>,
 <code>yearOfRegistration</code> <span class="amp">&amp;</span> <code>monthOfRegistration</code>, <code>gearbox</code>, <code>powerPS</code>, <code>model</code>, <code>kilometer</code> (mileage), <code>fuelType</code>, <code>brand</code> and <code>price</code>.</p>
 <p>Let&#8217;s say the business unit basically asks us to determine the proper market value of a car given the features above to determine
@@ -716,7 +716,7 @@ in the respective error measure, we would still need to improve the model a lot 
 but that was not the actual point of this&nbsp;exercise. </p>
 <p>Having proven mathematically and shown in our example use-case, we can conclude finally that transforming the target
 variable is a dangerous business. It can be the key to success and wealth in a Kaggle challenge but it can also lead to 
-disaster. It&#8217;s a bit like wielding a double handed sword in a fight. Limbs will be cut off, we should just make sure they are not one of ours.
+disaster. It&#8217;s a bit like wielding a double handed sword in a fight. Limbs will be cut off, we should just make sure they don&#8217;t belong to us.
 The rest of this post is only for the inquisitive reader who wants to know exactly where the correction terms for <span class="caps">RMSPE</span> 
 and <span class="caps">MAPE</span> come from. So let&#8217;s wash it all down with some more&nbsp;math.</p>
 <h2>Aftermath</h2>
@@ -764,7 +764,7 @@ $$</div>
 Subsequently, the correction term for <span class="caps">RMSPE</span> is <span class="math">\(-\frac{3}{2}\sigma^2\)</span>. For <span class="caps">MAPE</span> we&nbsp;have
 </p>
 <div class="math">$$
-\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde f(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y},\tilde f(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y,
+\mathrm{MAPE}(\hat y) = \int_0^{\infty}\frac{\vert y-\hat y\vert}{y}\,\tilde f(y)\, \mathrm{d}y = \int_{\hat y}^{\infty}1 - \frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y -\int_0^{\hat y}1-\frac{\hat y}{y}\,\tilde f(y)\, \mathrm{d}y,
 $$</div>
 <p>
 and after deriving by <span class="math">\(\hat y\)</span> as well as setting to 0, we need to find <span class="math">\(\hat y\)</span> such&nbsp;that

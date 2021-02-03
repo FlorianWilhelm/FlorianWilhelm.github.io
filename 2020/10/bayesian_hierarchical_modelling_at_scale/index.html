@@ -360,10 +360,7 @@ NumPyro&nbsp;reference. </p>
     <span class="n">coefs</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
         <span class="n">Site</span><span class="o">.</span><span class="n">coefs</span><span class="p">,</span>
         <span class="n">dist</span><span class="o">.</span><span class="n">TransformedDistribution</span><span class="p">(</span>
-            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
-                <span class="n">loc</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="n">Param</span><span class="o">.</span><span class="n">loc_coefs</span><span class="p">],</span>
-                <span class="n">scale</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="n">Param</span><span class="o">.</span><span class="n">scale_coefs</span><span class="p">],</span>
-            <span class="p">),</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_stores</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
             <span class="n">dist</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">AffineTransform</span><span class="p">(</span><span class="n">coef_mus</span><span class="p">,</span> <span class="n">coef_sigmas</span><span class="p">),</span>
         <span class="p">),</span>
     <span class="p">)</span>

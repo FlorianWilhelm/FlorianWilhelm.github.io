@@ -355,8 +355,21 @@ The model function only defines the model parameters, how they interact and thei
 recognize a lot of what we have talked about and I don&#8217;t want to go into the syntactical details of NumPyro. My suggestion
 would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
 NumPyro&nbsp;reference. </p>
-<p>Reading the source code more thoroughly, you might wonder about the definition of the coefficients as <code>coefs = coef_mus + coef_offsets * coef_sigmas</code>.
-The explanations of the model I have given and also the plot, actually shows the <em>centered version</em> of a
+<p>Reading the source code more thoroughly, you might wonder about the definition of the coefficients&nbsp;as:</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">reparam</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="n">Site</span><span class="o">.</span><span class="n">coefs</span><span class="p">:</span> <span class="n">TransformReparam</span><span class="p">()}):</span>
+    <span class="n">coefs</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">Site</span><span class="o">.</span><span class="n">coefs</span><span class="p">,</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">TransformedDistribution</span><span class="p">(</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span>
+                <span class="n">loc</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="n">Param</span><span class="o">.</span><span class="n">loc_coefs</span><span class="p">],</span>
+                <span class="n">scale</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="n">Param</span><span class="o">.</span><span class="n">scale_coefs</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">AffineTransform</span><span class="p">(</span><span class="n">coef_mus</span><span class="p">,</span> <span class="n">coef_sigmas</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+<p>The explanations of the model I have given and also the plot, actually shows the <em>centered version</em> of a
 hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
 the direct dependency of the local parameters on the global ones make it hard for many <span class="caps">MCMC</span> sampling methods but also <span class="caps">SVI</span> methods to explore
 certain regions of the local parameter space. This effect is called <em>funnel</em> and can be imagined as walking with the the same step length

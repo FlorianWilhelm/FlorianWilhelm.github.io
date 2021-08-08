@@ -165,12 +165,12 @@ queries, i.e. <span class="caps">SQL</span> and a Python-based syntax with PySpa
 programmatic approach in their programs avoiding the downsides of <span class="caps">SQL</span> string generation without even&nbsp;noticing. </p>
 <p>But what if we are dealing not with Spark but another database or warehouse like <a href="https://cloud.google.com/bigquery">BigQuery</a>? In this case we can
 use <a href="https://www.sqlalchemy.org/">SQLAlchemy</a>! SQLAlchemy comes with two abstraction layers, a <em>Core</em> layer and a high-level <em><span class="caps">ORM</span></em> layer. <span class="caps">ORM</span> stands for
-Object-Relational Mapping and is technique that a developer should have heard of but not quite useful for data scientists
-as typical use-cases are analytical and thus not focused on single instances/objects. The underrated Core layer of SQLAlchemy,
-on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to Spark.
+Object-Relational Mapping and is a technique every developer should have at least heard of. For most data science projects it&#8217;s not quite useful
+as typical use-cases are analytical and are thus not focused on single instances/objects. The underrated Core layer of SQLAlchemy,
+on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to PySpark.
 SQLAlchemy is independent of the actual <span class="caps">SQL</span> dialect and by installing a corresponding dialect it can deal with all popular
 databases and data warehouses, for instance MySQL, PostgreSQL, BigQuery, etc.
-So how does this work? Let&#8217;s go through this with a BigQuery example as this often used in data science&nbsp;projects.</p>
+So how does this work? Let&#8217;s go through this with a BigQuery example as it is often used in data science&nbsp;projects.</p>
 <h2>SQLAlchemy with&nbsp;BigQuery</h2>
 <p>Let&#8217;s say we want to find out how many monthly downloads some project on <a href="https://pypi.org/">PyPI</a> has. If you want to follow along and
 try it out yourself, a Jupyter notebook is available on my <a href="https://github.com/FlorianWilhelm/bigquery-programmatic-sql">Github repository</a>. </p>
@@ -198,7 +198,7 @@ try it out yourself, a Jupyter notebook is available on my <a href="https://gith
 <span class="p">)</span>
 </code></pre></div>
 
-<p>Quite easy but note that to keep this example focused, the query string is static, meaning that in order to dynamically
+<p>Quite easy, but note that to keep this example focused, the query string is static, meaning that in order to dynamically
 change the time slicing, the project name etc., we would have to introduce string substitutions at&nbsp;least.</p>
 <p>In contrast to that, after having installed <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> and the BigQuery dialect <a href="https://pypi.org/project/pybigquery/">pybigquery</a>, we can define a real
 <code>query</code> object instead of <code>query_string</code>:</p>
@@ -210,22 +210,24 @@ change the time slicing, the project name etc., we would have to introduce strin
 <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;bigquery://my_gcp_project&#39;</span><span class="p">)</span>
 
 <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s1">&#39;bigquery-public-data.pypi.file_downloads&#39;</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">),</span> <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="n">select</span><span class="p">([</span><span class="n">F</span><span class="o">.</span><span class="n">date_trunc</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">column</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)),</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">),</span>
-                 <span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;num_downloads&quot;</span><span class="p">)],</span>
-                <span class="n">from_obj</span><span class="o">=</span><span class="n">table</span><span class="p">)</span>
-         <span class="o">.</span><span class="n">where</span><span class="p">(</span>
-             <span class="n">and_</span><span class="p">(</span>
-                <span class="n">F</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">column</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="s2">&quot;2021-01-01&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">current_date</span><span class="p">()),</span>
-                <span class="n">column</span><span class="p">(</span><span class="s2">&quot;file.project&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pyscaffold&quot;</span><span class="p">,</span>
-                <span class="n">column</span><span class="p">(</span><span class="s2">&quot;details.installer.name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pip&quot;</span>
-             <span class="p">)</span>
-         <span class="p">)</span>
-         <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span>
-         <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">))</span>
+<span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">select</span><span class="p">([</span><span class="n">F</span><span class="o">.</span><span class="n">date_trunc</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">column</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)),</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">),</span>
+            <span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;num_downloads&quot;</span><span class="p">)],</span>
+           <span class="n">from_obj</span><span class="o">=</span><span class="n">table</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">and_</span><span class="p">(</span>
+            <span class="n">F</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">column</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="s2">&quot;2021-01-01&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">current_date</span><span class="p">()),</span>
+            <span class="n">column</span><span class="p">(</span><span class="s2">&quot;file.project&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pyscaffold&quot;</span><span class="p">,</span>
+            <span class="n">column</span><span class="p">(</span><span class="s2">&quot;details.installer.name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pip&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
 
 <p>At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the syntax of SQLAlchemy, even if 
-it doesn&#8217;t look as concise as PySpark I have to admit. More or less it&#8217;s just <span class="caps">SQL</span> but embedded as functions and objects in&nbsp;Python.</p>
+it doesn&#8217;t look as concise as PySpark, I have to admit. More or less, it&#8217;s just <span class="caps">SQL</span> but embedded nicely as functions and objects in&nbsp;Python.</p>
 <p>So far, we have only generated the query and SQLAlchemy would have directly informed us if this was invalid. To see how
 the prepared <span class="caps">SQL</span> statement looks like, maybe for debugging, we can just <code>print(query)</code> to&nbsp;get:</p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span> <span class="n">date_trunc</span><span class="p">(</span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">),</span> <span class="k">month</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">%</span><span class="p">(</span><span class="n">count_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="n">num_downloads</span><span class="o">`</span> 

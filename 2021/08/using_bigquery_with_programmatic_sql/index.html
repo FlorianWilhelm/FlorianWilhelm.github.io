@@ -114,7 +114,7 @@ Florian Wilhelm            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <h2>Introduction</h2>
-<p>Especially in data science projects, Python code is often peppered with <span class="caps">SQL</span> query string generation functions&nbsp;like:</p>
+<p>Especially in data science projects, Python code is often peppered with functions generating <span class="caps">SQL</span> queries as strings&nbsp;like:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_sku_ts</span><span class="p">(</span><span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sku</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compose query to retrieve timeseries for SKU or list of SKUs</span>
@@ -137,11 +137,11 @@ Florian Wilhelm            </a>
 
 <p>And this is even only a simple example. Using dynamic joins and sub-queries, things can get even more complicated.
 When the Python on-board resources are no longer sufficient, some developers start using templating engines like <a href="https://jinja.palletsprojects.com/">Jinja</a>
-to handle the complexity of <span class="caps">SQL</span> string&nbsp;generation. </p>
-<p>But is string generation really the right track to solve a problem like that? It&#8217;s definitely easy as most developers in
+to handle the complexity of generating a query string&nbsp;dynamically. </p>
+<p>But is string generation really the right way to solve a problem like that? It&#8217;s definitely easy as most developers in
 the field of data science know their <span class="caps">SQL</span> and dealing with strings, so it&#8217;s a start with low entry hurdle. Let&#8217;s shed some
 light on the downsides of this approach. The first thing to note is that we have a language break as we use <span class="caps">SQL</span> and Python
-side-by-side in the same program. This causes as some trouble as we never know if the queries we generate are even 
+side-by-side in the same program. This causes us some trouble as we never know if the queries we generate are even 
 syntactically valid. Only at execution time we will see if the <span class="caps">SQL</span> parsers swallows what we generated which makes unit testing
 such functions quite hard. Without an <span class="caps">SQL</span> parser, we can only test in the function above if different kinds of parameters lead
 to some string, which is trivial. Another impact of the language break is that structuring and decoupling the code becomes harder.
@@ -152,7 +152,7 @@ this is quite prone to <a href="https://en.wikipedia.org/wiki/SQL_injection"><sp
 from some e-commerce website, a malicious use might inject sub-queries in a smart way to steal your data. In many data science
 related projects this might be a rather academic vector of attack, but especially in learning-to-rank use-cases it might not
 be that&nbsp;unrealistic.</p>
-<p>To summarize these downsides&nbsp;up:</p>
+<p>To summarize these&nbsp;downsides:</p>
 <ol>
 <li>language gap between Python and <span class="caps">SQL</span>, i.e. no <span class="caps">IDE</span>-support to find errors before&nbsp;execution, </li>
 <li>hard to write clean, decoupled, well-structured code and meaningful unit&nbsp;tests,</li>
@@ -160,21 +160,21 @@ be that&nbsp;unrealistic.</p>
 </ol>
 <h2>Programmatic <span class="caps">SQL</span></h2>
 <p><span class="dquo">&#8220;</span>But <span class="caps">SQL</span> is the right tool for this task! So what&#8217;s the solution then?&#8221;, I hear you mutter. Welcome to programmatic <span class="caps">SQL</span>!
-And it might not even be new to you if you have ever used <a href="https://spark.apache.org/">Apache Spark</a>. In Spark you have many frontends to define your
-queries, i.e. <span class="caps">SQL</span> and a Python-based syntax with PySpark as well as Java, Scala, R, etc. Most data scientists naturally use a 
+And it might not even be new to you if you have ever used <a href="https://spark.apache.org/">Apache Spark</a>. In Spark you have many frontends besides the <span class="caps">SQL</span> <span class="caps">API</span>, 
+like PySpark for Python and others for Java, Scala, R, etc. Most data scientists naturally use a 
 programmatic approach in their programs avoiding the downsides of <span class="caps">SQL</span> string generation without even&nbsp;noticing. </p>
 <p>But what if we are dealing not with Spark but another database or warehouse like <a href="https://cloud.google.com/bigquery">BigQuery</a>? In this case we can
 use <a href="https://www.sqlalchemy.org/">SQLAlchemy</a>! SQLAlchemy comes with two abstraction layers, a <em>Core</em> layer and a high-level <em><span class="caps">ORM</span></em> layer. <span class="caps">ORM</span> stands for
-Object-Relational Mapping and is a technique every developer should have at least heard of. For most data science projects it&#8217;s not quite useful
-as typical use-cases are analytical and are thus not focused on single instances/objects. The underrated Core layer of SQLAlchemy,
-on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to PySpark.
+Object-Relational Mapping and is a common technique to define objects that are automatically mapped to a relational database. 
+For most data science projects it&#8217;s not so useful as typical use-cases are analytical and are thus not focused on single instances/objects. 
+The underrated Core layer of SQLAlchemy, on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to PySpark.
 SQLAlchemy is independent of the actual <span class="caps">SQL</span> dialect and by installing a corresponding dialect it can deal with all popular
 databases and data warehouses, for instance MySQL, PostgreSQL, BigQuery, etc.
 So how does this work? Let&#8217;s go through this with a BigQuery example as it is often used in data science&nbsp;projects.</p>
 <h2>SQLAlchemy with&nbsp;BigQuery</h2>
 <p>Let&#8217;s say we want to find out how many monthly downloads some project on <a href="https://pypi.org/">PyPI</a> has. If you want to follow along and
 try it out yourself, a Jupyter notebook is available on my <a href="https://github.com/FlorianWilhelm/bigquery-programmatic-sql">Github repository</a>. </p>
-<p>With plain <span class="caps">SQL</span> we would solve this task the following&nbsp;way:</p>
+<p>With plain <span class="caps">SQL</span>, we would solve this task the following&nbsp;way:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">google.cloud</span> <span class="kn">import</span> <span class="n">bigquery</span>
 
 <span class="n">bqclient</span> <span class="o">=</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
@@ -199,9 +199,10 @@ try it out yourself, a Jupyter notebook is available on my <a href="https://gith
 </code></pre></div>
 
 <p>Quite easy, but note that to keep this example focused, the query string is static, meaning that in order to dynamically
-change the time slicing, the project name etc., we would have to introduce string substitutions at&nbsp;least.</p>
-<p>In contrast to that, after having installed <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> and the BigQuery dialect <a href="https://pypi.org/project/pybigquery/">pybigquery</a>, we can define a real
-<code>query</code> object instead of <code>query_string</code>:</p>
+change the time slicing, the project name etc., we would have to introduce string substitutions at least. This would
+result in the aforementioned&nbsp;downsides.</p>
+<p>In contrast to that, after having installed <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> and the BigQuery dialect <a href="https://pypi.org/project/pybigquery/">pybigquery</a>, we can define a 
+dynamic <code>query</code> object instead of <code>query_string</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="kn">import</span> <span class="n">func</span> <span class="k">as</span> <span class="n">F</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.engine</span> <span class="kn">import</span> <span class="n">create_engine</span>
@@ -226,8 +227,8 @@ change the time slicing, the project name etc., we would have to introduce strin
 <span class="p">)</span>
 </code></pre></div>
 
-<p>At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the syntax of SQLAlchemy, even if 
-it doesn&#8217;t look as concise as PySpark, I have to admit. More or less, it&#8217;s just <span class="caps">SQL</span> but embedded nicely as functions and objects in&nbsp;Python.</p>
+<p>At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the SQLAlchemy <span class="caps">API</span>, even if 
+it doesn&#8217;t look as concise as the one of PySpark, I have to admit. More or less, it&#8217;s just <span class="caps">SQL</span> but embedded nicely as functions and objects in&nbsp;Python.</p>
 <p>So far, we have only generated the query and SQLAlchemy would have directly informed us if this was invalid. To see how
 the prepared <span class="caps">SQL</span> statement looks like, maybe for debugging, we can just <code>print(query)</code> to&nbsp;get:</p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span> <span class="n">date_trunc</span><span class="p">(</span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">),</span> <span class="k">month</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">%</span><span class="p">(</span><span class="n">count_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="n">num_downloads</span><span class="o">`</span> 
@@ -239,7 +240,7 @@ the prepared <span class="caps">SQL</span> statement looks like, maybe for debug
 <span class="k">ORDER</span> <span class="k">BY</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span>
 </code></pre></div>
 
-<p>To see the final query with all literals bound to their final values, we need to compile the query first before&nbsp;printing:</p>
+<p>To see the actual query with all literals bound to their final values, we need to compile the query first before&nbsp;printing:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">compile_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;literal_binds&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span>
 </code></pre></div>
 
@@ -262,12 +263,12 @@ its result set into a dataframe, all we have to do&nbsp;is:</p>
 <h2>Conclusion</h2>
 <p>We have seen how <span class="caps">SQL</span> string generation in Python programs can be replaced by a programmatic approach and that this
 approach has several advantages over the usage of strings. But it also comes with some small downsides. First of all, one
-has to learn SQLAlchemy, and it&#8217;s <span class="caps">API</span> as well as documentation is surely not as nice as PySpark. So when switching, you
+has to learn SQLAlchemy, and its <span class="caps">API</span> as well as documentation is surely not as nice as PySpark. So when switching, you
 will become slower for a while until you get the hang of SQLAlchemy. The second downside is that another level of abstraction,
-naturally comes with less control over the final <span class="caps">SQL</span> statement, but this is also true for PySpark and a trade-off a developer
+naturally comes with less control over the final <span class="caps">SQL</span> statement, but this is also true for PySpark and a trade-off every developer
 always needs to consider. Having mentioned Spark again, my 5 cents are that the PySpark <span class="caps">API</span> is much better than SQLAlchemy 
 and if you are using Spark anyway, you should rather use Google&#8217;s <a href="https://github.com/GoogleCloudDataproc/spark-bigquery-connector">Spark Bigquery Connector</a>. For rather small-data projects,
-where your Python program just uses BigQuery as data storage, using SQLAlchemy might up your Python code quite a&nbsp;bit.</p>
+where your Python program just uses BigQuery as data storage, using SQLAlchemy might up your Python code quite a bit&nbsp;though.</p>
 <p>Feedback is always welcome! Please let me know if this was helpful and also if you think otherwise in the comments&nbsp;below.</p>
             </div>
             <!-- /.entry-content -->

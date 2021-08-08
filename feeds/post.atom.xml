@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2021-08-08T08:00:00+02:00</updated><entry><title>Using Google BigQuery with Programmatic SQL</title><link href="https://florianwilhelm.info/2021/08/using_bigquery_with_programmatic_sql/" rel="alternate"></link><published>2021-08-08T08:00:00+02:00</published><updated>2021-08-08T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-08-08:/2021/08/using_bigquery_with_programmatic_sql/</id><summary type="html">&lt;p&gt;An often encountered Antipattern in Python code are complex queries composed with the help of string substitutions and concatenations. SQLAlchemy Core allows you to generate queries in a programmatic way for many &lt;span class="caps"&gt;SQL&lt;/span&gt; databases like&amp;nbsp;BigQuery.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Especially in data science projects, Python code is often peppered with &lt;span class="caps"&gt;SQL&lt;/span&gt; query string generation functions&amp;nbsp;like:&lt;/p&gt;
+&lt;p&gt;Especially in data science projects, Python code is often peppered with functions generating &lt;span class="caps"&gt;SQL&lt;/span&gt; queries as strings&amp;nbsp;like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_sku_ts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entity_id&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Union&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Compose query to retrieve timeseries for SKU or list of SKUs&lt;/span&gt;
@@ -23,11 +23,11 @@
 
 &lt;p&gt;And this is even only a simple example. Using dynamic joins and sub-queries, things can get even more complicated.
 When the Python on-board resources are no longer sufficient, some developers start using templating engines like &lt;a href="https://jinja.palletsprojects.com/"&gt;Jinja&lt;/a&gt;
-to handle the complexity of &lt;span class="caps"&gt;SQL&lt;/span&gt; string&amp;nbsp;generation. &lt;/p&gt;
-&lt;p&gt;But is string generation really the right track to solve a problem like that? It&amp;#8217;s definitely easy as most developers in
+to handle the complexity of generating a query string&amp;nbsp;dynamically. &lt;/p&gt;
+&lt;p&gt;But is string generation really the right way to solve a problem like that? It&amp;#8217;s definitely easy as most developers in
 the field of data science know their &lt;span class="caps"&gt;SQL&lt;/span&gt; and dealing with strings, so it&amp;#8217;s a start with low entry hurdle. Let&amp;#8217;s shed some
 light on the downsides of this approach. The first thing to note is that we have a language break as we use &lt;span class="caps"&gt;SQL&lt;/span&gt; and Python
-side-by-side in the same program. This causes as some trouble as we never know if the queries we generate are even 
+side-by-side in the same program. This causes us some trouble as we never know if the queries we generate are even 
 syntactically valid. Only at execution time we will see if the &lt;span class="caps"&gt;SQL&lt;/span&gt; parsers swallows what we generated which makes unit testing
 such functions quite hard. Without an &lt;span class="caps"&gt;SQL&lt;/span&gt; parser, we can only test in the function above if different kinds of parameters lead
 to some string, which is trivial. Another impact of the language break is that structuring and decoupling the code becomes harder.
@@ -38,7 +38,7 @@ this is quite prone to &lt;a href="https://en.wikipedia.org/wiki/SQL_injection"&
 from some e-commerce website, a malicious use might inject sub-queries in a smart way to steal your data. In many data science
 related projects this might be a rather academic vector of attack, but especially in learning-to-rank use-cases it might not
 be that&amp;nbsp;unrealistic.&lt;/p&gt;
-&lt;p&gt;To summarize these downsides&amp;nbsp;up:&lt;/p&gt;
+&lt;p&gt;To summarize these&amp;nbsp;downsides:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;language gap between Python and &lt;span class="caps"&gt;SQL&lt;/span&gt;, i.e. no &lt;span class="caps"&gt;IDE&lt;/span&gt;-support to find errors before&amp;nbsp;execution, &lt;/li&gt;
 &lt;li&gt;hard to write clean, decoupled, well-structured code and meaningful unit&amp;nbsp;tests,&lt;/li&gt;
@@ -46,21 +46,21 @@ be that&amp;nbsp;unrealistic.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;h2&gt;Programmatic &lt;span class="caps"&gt;SQL&lt;/span&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;span class="dquo"&gt;&amp;#8220;&lt;/span&gt;But &lt;span class="caps"&gt;SQL&lt;/span&gt; is the right tool for this task! So what&amp;#8217;s the solution then?&amp;#8221;, I hear you mutter. Welcome to programmatic &lt;span class="caps"&gt;SQL&lt;/span&gt;!
-And it might not even be new to you if you have ever used &lt;a href="https://spark.apache.org/"&gt;Apache Spark&lt;/a&gt;. In Spark you have many frontends to define your
-queries, i.e. &lt;span class="caps"&gt;SQL&lt;/span&gt; and a Python-based syntax with PySpark as well as Java, Scala, R, etc. Most data scientists naturally use a 
+And it might not even be new to you if you have ever used &lt;a href="https://spark.apache.org/"&gt;Apache Spark&lt;/a&gt;. In Spark you have many frontends besides the &lt;span class="caps"&gt;SQL&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt;, 
+like PySpark for Python and others for Java, Scala, R, etc. Most data scientists naturally use a 
 programmatic approach in their programs avoiding the downsides of &lt;span class="caps"&gt;SQL&lt;/span&gt; string generation without even&amp;nbsp;noticing. &lt;/p&gt;
 &lt;p&gt;But what if we are dealing not with Spark but another database or warehouse like &lt;a href="https://cloud.google.com/bigquery"&gt;BigQuery&lt;/a&gt;? In this case we can
 use &lt;a href="https://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt;! SQLAlchemy comes with two abstraction layers, a &lt;em&gt;Core&lt;/em&gt; layer and a high-level &lt;em&gt;&lt;span class="caps"&gt;ORM&lt;/span&gt;&lt;/em&gt; layer. &lt;span class="caps"&gt;ORM&lt;/span&gt; stands for
-Object-Relational Mapping and is a technique every developer should have at least heard of. For most data science projects it&amp;#8217;s not quite useful
-as typical use-cases are analytical and are thus not focused on single instances/objects. The underrated Core layer of SQLAlchemy,
-on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to PySpark.
+Object-Relational Mapping and is a common technique to define objects that are automatically mapped to a relational database. 
+For most data science projects it&amp;#8217;s not so useful as typical use-cases are analytical and are thus not focused on single instances/objects. 
+The underrated Core layer of SQLAlchemy, on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to PySpark.
 SQLAlchemy is independent of the actual &lt;span class="caps"&gt;SQL&lt;/span&gt; dialect and by installing a corresponding dialect it can deal with all popular
 databases and data warehouses, for instance MySQL, PostgreSQL, BigQuery, etc.
 So how does this work? Let&amp;#8217;s go through this with a BigQuery example as it is often used in data science&amp;nbsp;projects.&lt;/p&gt;
 &lt;h2&gt;SQLAlchemy with&amp;nbsp;BigQuery&lt;/h2&gt;
 &lt;p&gt;Let&amp;#8217;s say we want to find out how many monthly downloads some project on &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; has. If you want to follow along and
 try it out yourself, a Jupyter notebook is available on my &lt;a href="https://github.com/FlorianWilhelm/bigquery-programmatic-sql"&gt;Github repository&lt;/a&gt;. &lt;/p&gt;
-&lt;p&gt;With plain &lt;span class="caps"&gt;SQL&lt;/span&gt; we would solve this task the following&amp;nbsp;way:&lt;/p&gt;
+&lt;p&gt;With plain &lt;span class="caps"&gt;SQL&lt;/span&gt;, we would solve this task the following&amp;nbsp;way:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;google.cloud&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;bigquery&lt;/span&gt;
 
 &lt;span class="n"&gt;bqclient&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bigquery&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -85,9 +85,10 @@ try it out yourself, a Jupyter notebook is available on my &lt;a href="https://g
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Quite easy, but note that to keep this example focused, the query string is static, meaning that in order to dynamically
-change the time slicing, the project name etc., we would have to introduce string substitutions at&amp;nbsp;least.&lt;/p&gt;
-&lt;p&gt;In contrast to that, after having installed &lt;a href="https://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt; and the BigQuery dialect &lt;a href="https://pypi.org/project/pybigquery/"&gt;pybigquery&lt;/a&gt;, we can define a real
-&lt;code&gt;query&lt;/code&gt; object instead of &lt;code&gt;query_string&lt;/code&gt;:&lt;/p&gt;
+change the time slicing, the project name etc., we would have to introduce string substitutions at least. This would
+result in the aforementioned&amp;nbsp;downsides.&lt;/p&gt;
+&lt;p&gt;In contrast to that, after having installed &lt;a href="https://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt; and the BigQuery dialect &lt;a href="https://pypi.org/project/pybigquery/"&gt;pybigquery&lt;/a&gt;, we can define a 
+dynamic &lt;code&gt;query&lt;/code&gt; object instead of &lt;code&gt;query_string&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy.engine&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;create_engine&lt;/span&gt;
@@ -112,8 +113,8 @@ change the time slicing, the project name etc., we would have to introduce strin
 &lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the syntax of SQLAlchemy, even if 
-it doesn&amp;#8217;t look as concise as PySpark, I have to admit. More or less, it&amp;#8217;s just &lt;span class="caps"&gt;SQL&lt;/span&gt; but embedded nicely as functions and objects in&amp;nbsp;Python.&lt;/p&gt;
+&lt;p&gt;At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the SQLAlchemy &lt;span class="caps"&gt;API&lt;/span&gt;, even if 
+it doesn&amp;#8217;t look as concise as the one of PySpark, I have to admit. More or less, it&amp;#8217;s just &lt;span class="caps"&gt;SQL&lt;/span&gt; but embedded nicely as functions and objects in&amp;nbsp;Python.&lt;/p&gt;
 &lt;p&gt;So far, we have only generated the query and SQLAlchemy would have directly informed us if this was invalid. To see how
 the prepared &lt;span class="caps"&gt;SQL&lt;/span&gt; statement looks like, maybe for debugging, we can just &lt;code&gt;print(query)&lt;/code&gt; to&amp;nbsp;get:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;date_trunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;timestamp&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count_1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;num_downloads&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
@@ -125,7 +126,7 @@ the prepared &lt;span class="caps"&gt;SQL&lt;/span&gt; statement looks like, may
 &lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;To see the final query with all literals bound to their final values, we need to compile the query first before&amp;nbsp;printing:&lt;/p&gt;
+&lt;p&gt;To see the actual query with all literals bound to their final values, we need to compile the query first before&amp;nbsp;printing:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;engine&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;compile_kwargs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;literal_binds&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -148,12 +149,12 @@ its result set into a dataframe, all we have to do&amp;nbsp;is:&lt;/p&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have seen how &lt;span class="caps"&gt;SQL&lt;/span&gt; string generation in Python programs can be replaced by a programmatic approach and that this
 approach has several advantages over the usage of strings. But it also comes with some small downsides. First of all, one
-has to learn SQLAlchemy, and it&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt; as well as documentation is surely not as nice as PySpark. So when switching, you
+has to learn SQLAlchemy, and its &lt;span class="caps"&gt;API&lt;/span&gt; as well as documentation is surely not as nice as PySpark. So when switching, you
 will become slower for a while until you get the hang of SQLAlchemy. The second downside is that another level of abstraction,
-naturally comes with less control over the final &lt;span class="caps"&gt;SQL&lt;/span&gt; statement, but this is also true for PySpark and a trade-off a developer
+naturally comes with less control over the final &lt;span class="caps"&gt;SQL&lt;/span&gt; statement, but this is also true for PySpark and a trade-off every developer
 always needs to consider. Having mentioned Spark again, my 5 cents are that the PySpark &lt;span class="caps"&gt;API&lt;/span&gt; is much better than SQLAlchemy 
 and if you are using Spark anyway, you should rather use Google&amp;#8217;s &lt;a href="https://github.com/GoogleCloudDataproc/spark-bigquery-connector"&gt;Spark Bigquery Connector&lt;/a&gt;. For rather small-data projects,
-where your Python program just uses BigQuery as data storage, using SQLAlchemy might up your Python code quite a&amp;nbsp;bit.&lt;/p&gt;
+where your Python program just uses BigQuery as data storage, using SQLAlchemy might up your Python code quite a bit&amp;nbsp;though.&lt;/p&gt;
 &lt;p&gt;Feedback is always welcome! Please let me know if this was helpful and also if you think otherwise in the comments&amp;nbsp;below.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="production"></category><category term="data science"></category></entry><entry><title>Finally! Bayesian Hierarchical Modelling at Scale</title><link href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/" rel="alternate"></link><published>2020-10-01T08:00:00+02:00</published><updated>2020-10-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-10-01:/2020/10/bayesian_hierarchical_modelling_at_scale/</id><summary type="html">&lt;p&gt;For a long time, Bayesian Hierarchical Modelling has been a very powerful tool that sadly could not be applied often due to its high computations costs. With NumPyro and the latest advances in high-performance computations in Python, Bayesian Hierarchical Modelling is now ready for prime&amp;nbsp;time.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional
 techniques from e.g. instrumentation and control engineering, is nowadays considered &lt;em&gt;&lt;span class="caps"&gt;AI&lt;/span&gt;&lt;/em&gt;. For instance, the famous robots

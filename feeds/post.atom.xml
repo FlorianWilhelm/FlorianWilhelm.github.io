@@ -1,5 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2020-10-01T08:00:00+02:00</updated><entry><title>Finally! Bayesian Hierarchical Modelling at Scale</title><link href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/" rel="alternate"></link><published>2020-10-01T08:00:00+02:00</published><updated>2020-10-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-10-01:/2020/10/bayesian_hierarchical_modelling_at_scale/</id><summary type="html">&lt;p&gt;For a long time, Bayesian Hierarchical Modelling has been a very powerful tool that sadly could not be applied often due to its high computations costs. With NumPyro and the latest advances in high-performance computations in Python, Bayesian Hierarchical Modelling is now ready for prime&amp;nbsp;time.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2021-08-08T08:00:00+02:00</updated><entry><title>Using Google BigQuery with Programmatic SQL</title><link href="https://florianwilhelm.info/2021/08/using_bigquery_with_programmatic_sql/" rel="alternate"></link><published>2021-08-08T08:00:00+02:00</published><updated>2021-08-08T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-08-08:/2021/08/using_bigquery_with_programmatic_sql/</id><summary type="html">&lt;p&gt;An often encountered Antipattern in Python code are complex queries composed with the help of string substitutions and concatenations. SQLAlchemy Core allows you to generate queries in a programmatic way for many &lt;span class="caps"&gt;SQL&lt;/span&gt; databases like&amp;nbsp;BigQuery.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Especially in data science projects, Python code is often peppered with &lt;span class="caps"&gt;SQL&lt;/span&gt; query string generation functions&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_sku_ts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entity_id&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Union&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Compose query to retrieve timeseries for SKU or list of SKUs&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s2"&gt;    SELECT *&lt;/span&gt;
+&lt;span class="s2"&gt;    FROM `sku-table`&lt;/span&gt;
+&lt;span class="s2"&gt;    WHERE entity_id = &lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;entity_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot; AND sku = &lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt; &amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;list_str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;, &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot; AND sku IN (&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;list_str&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;) &amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s2"&gt;    ORDER BY date ASC&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;query&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And this is even only a simple example. Using dynamic joins and sub-queries, things can get even more complicated.
+When the Python on-board resources are no longer sufficient, some developers start using templating engines like &lt;a href="https://jinja.palletsprojects.com/"&gt;Jinja&lt;/a&gt;
+to handle the complexity of &lt;span class="caps"&gt;SQL&lt;/span&gt; string&amp;nbsp;generation. &lt;/p&gt;
+&lt;p&gt;But is string generation really the right track to solve a problem like that? It&amp;#8217;s definitely easy as most developers in
+the field of data science know their &lt;span class="caps"&gt;SQL&lt;/span&gt; and dealing with strings, so it&amp;#8217;s a start with low entry hurdle. Let&amp;#8217;s shed some
+light on the downsides of this approach. The first thing to note is that we have a language break as we use &lt;span class="caps"&gt;SQL&lt;/span&gt; and Python
+side-by-side in the same program. This causes as some trouble as we never know if the queries we generate are even 
+syntactically valid. Only at execution time we will see if the &lt;span class="caps"&gt;SQL&lt;/span&gt; parsers swallows what we generated which makes unit testing
+such functions quite hard. Without an &lt;span class="caps"&gt;SQL&lt;/span&gt; parser, we can only test in the function above if different kinds of parameters lead
+to some string, which is trivial. Another impact of the language break is that structuring and decoupling the code becomes harder.
+Imagine you want to write one method that takes another query and adds time-based slicing by specifying two dates. If
+the query is a string this will be pretty hard as you need to add some &lt;code&gt;DATE(timestamp) BETWEEN FROM_DATE AND TO_DATE&lt;/code&gt;-clause
+and there might be already some other where-clauses specified. A last downside is that specifying &lt;span class="caps"&gt;SQL&lt;/span&gt; queries like
+this is quite prone to &lt;a href="https://en.wikipedia.org/wiki/SQL_injection"&gt;&lt;span class="caps"&gt;SQL&lt;/span&gt; injection attacks&lt;/a&gt;. So if you compose your queries based on user-generated data, e.g. user input
+from some e-commerce website, a malicious use might inject sub-queries in a smart way to steal your data. In many data science
+related projects this might be a rather academic vector of attack, but especially in learning-to-rank use-cases it might not
+be that&amp;nbsp;unrealistic.&lt;/p&gt;
+&lt;p&gt;To summarize these downsides&amp;nbsp;up:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;language gap between Python and &lt;span class="caps"&gt;SQL&lt;/span&gt;, i.e. no &lt;span class="caps"&gt;IDE&lt;/span&gt;-support to find errors before&amp;nbsp;execution, &lt;/li&gt;
+&lt;li&gt;hard to write clean, decoupled, well-structured code and meaningful unit&amp;nbsp;tests,&lt;/li&gt;
+&lt;li&gt;the possibility of &lt;span class="caps"&gt;SQL&lt;/span&gt; injection&amp;nbsp;attacks.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Programmatic &lt;span class="caps"&gt;SQL&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;span class="dquo"&gt;&amp;#8220;&lt;/span&gt;But &lt;span class="caps"&gt;SQL&lt;/span&gt; is the right tool for this task! So what&amp;#8217;s the solution then?&amp;#8221;, I hear you mutter. Welcome to programmatic &lt;span class="caps"&gt;SQL&lt;/span&gt;!
+And it might not even be new to you if you have ever used &lt;a href="https://spark.apache.org/"&gt;Apache Spark&lt;/a&gt;. In Spark you have many frontends to define your
+queries, i.e. &lt;span class="caps"&gt;SQL&lt;/span&gt; and a Python-based syntax with PySpark as well as Java, Scala, R, etc. Most data scientists naturally use a 
+programmatic approach in their programs avoiding the downsides of &lt;span class="caps"&gt;SQL&lt;/span&gt; string generation without even&amp;nbsp;noticing. &lt;/p&gt;
+&lt;p&gt;But what if we are dealing not with Spark but another database or warehouse like &lt;a href="https://cloud.google.com/bigquery"&gt;BigQuery&lt;/a&gt;? In this case we can
+use &lt;a href="https://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt;! SQLAlchemy comes with two abstraction layers, a &lt;em&gt;Core&lt;/em&gt; layer and a high-level &lt;em&gt;&lt;span class="caps"&gt;ORM&lt;/span&gt;&lt;/em&gt; layer. &lt;span class="caps"&gt;ORM&lt;/span&gt; stands for
+Object-Relational Mapping and is technique that a developer should have heard of but not quite useful for data scientists
+as typical use-cases are analytical and thus not focused on single instances/objects. The underrated Core layer of SQLAlchemy,
+on the other hand, is really useful as it provides us with a way of generating queries programmatically similar to Spark.
+SQLAlchemy is independent of the actual &lt;span class="caps"&gt;SQL&lt;/span&gt; dialect and by installing a corresponding dialect it can deal with all popular
+databases and data warehouses, for instance MySQL, PostgreSQL, BigQuery, etc.
+So how does this work? Let&amp;#8217;s go through this with a BigQuery example as this often used in data science&amp;nbsp;projects.&lt;/p&gt;
+&lt;h2&gt;SQLAlchemy with&amp;nbsp;BigQuery&lt;/h2&gt;
+&lt;p&gt;Let&amp;#8217;s say we want to find out how many monthly downloads some project on &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; has. If you want to follow along and
+try it out yourself, a Jupyter notebook is available on my &lt;a href="https://github.com/FlorianWilhelm/bigquery-programmatic-sql"&gt;Github repository&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;With plain &lt;span class="caps"&gt;SQL&lt;/span&gt; we would solve this task the following&amp;nbsp;way:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;google.cloud&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;bigquery&lt;/span&gt;
+
+&lt;span class="n"&gt;bqclient&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bigquery&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;query_string&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s2"&gt;SELECT &lt;/span&gt;
+&lt;span class="s2"&gt;  DATE_TRUNC(DATE(timestamp), MONTH) AS `month`,&lt;/span&gt;
+&lt;span class="s2"&gt;  COUNT(*) AS num_downloads,&lt;/span&gt;
+&lt;span class="s2"&gt;FROM `bigquery-public-data.pypi.file_downloads`&lt;/span&gt;
+&lt;span class="s2"&gt;WHERE file.project = &amp;#39;pyscaffold&amp;#39;&lt;/span&gt;
+&lt;span class="s2"&gt;    AND details.installer.name = &amp;#39;pip&amp;#39;&lt;/span&gt;
+&lt;span class="s2"&gt;    AND DATE(timestamp) BETWEEN DATE(&amp;#39;2021-01-01&amp;#39;) AND CURRENT_DATE()&lt;/span&gt;
+&lt;span class="s2"&gt;GROUP BY `month`&lt;/span&gt;
+&lt;span class="s2"&gt;ORDER BY `month`&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;bqclient&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query_string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_dataframe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;create_bqstorage_client&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Quite easy but note that to keep this example focused, the query string is static, meaning that in order to dynamically
+change the time slicing, the project name etc., we would have to introduce string substitutions at&amp;nbsp;least.&lt;/p&gt;
+&lt;p&gt;In contrast to that, after having installed &lt;a href="https://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt; and the BigQuery dialect &lt;a href="https://pypi.org/project/pybigquery/"&gt;pybigquery&lt;/a&gt;, we can define a real
+&lt;code&gt;query&lt;/code&gt; object instead of &lt;code&gt;query_string&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy.engine&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;create_engine&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy.schema&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+
+&lt;span class="n"&gt;engine&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;create_engine&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bigquery://my_gcp_project&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;table&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bigquery-public-data.pypi.file_downloads&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;MetaData&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;engine&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;autoload&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date_trunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                 &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;num_downloads&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)],&lt;/span&gt;
+                &lt;span class="n"&gt;from_obj&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+         &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+             &lt;span class="n"&gt;and_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;2021-01-01&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;current_date&lt;/span&gt;&lt;span class="p"&gt;()),&lt;/span&gt;
+                &lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;file.project&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;pyscaffold&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;details.installer.name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;pip&amp;quot;&lt;/span&gt;
+             &lt;span class="p"&gt;)&lt;/span&gt;
+         &lt;span class="p"&gt;)&lt;/span&gt;
+         &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+         &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;order_by&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the syntax of SQLAlchemy, even if 
+it doesn&amp;#8217;t look as concise as PySpark I have to admit. More or less it&amp;#8217;s just &lt;span class="caps"&gt;SQL&lt;/span&gt; but embedded as functions and objects in&amp;nbsp;Python.&lt;/p&gt;
+&lt;p&gt;So far, we have only generated the query and SQLAlchemy would have directly informed us if this was invalid. To see how
+the prepared &lt;span class="caps"&gt;SQL&lt;/span&gt; statement looks like, maybe for debugging, we can just &lt;code&gt;print(query)&lt;/code&gt; to&amp;nbsp;get:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;date_trunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;timestamp&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count_1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;num_downloads&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;bigquery&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;data&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pypi&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;file_downloads&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
+&lt;span class="k"&gt;WHERE&lt;/span&gt; &lt;span class="nb"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;timestamp&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;BETWEEN&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;date_1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="k"&gt;CURRENT_DATE&lt;/span&gt; 
+  &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;project&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;project_1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; 
+  &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;details&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;installer&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;details&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;installer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name_1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;STRING&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; 
+&lt;span class="k"&gt;GROUP&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
+&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;To see the final query with all literals bound to their final values, we need to compile the query first before&amp;nbsp;printing:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;engine&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;compile_kwargs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;literal_binds&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;to&amp;nbsp;get:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;date_trunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;timestamp&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;*&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;num_downloads&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;bigquery&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;data&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pypi&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;file_downloads&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
+&lt;span class="k"&gt;WHERE&lt;/span&gt; &lt;span class="nb"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;timestamp&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;BETWEEN&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;2021-01-01&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="k"&gt;CURRENT_DATE&lt;/span&gt; 
+  &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;project&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pyscaffold&amp;#39;&lt;/span&gt; 
+  &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;details&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;installer&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pip&amp;#39;&lt;/span&gt; 
+&lt;span class="k"&gt;GROUP&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt; 
+&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="o"&gt;`&lt;/span&gt;&lt;span class="k"&gt;month&lt;/span&gt;&lt;span class="o"&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;But this is only interesting for debugging and also for learning SQLAlchemy. In order to execute the query object and transform
+its result set into a dataframe, all we have to do&amp;nbsp;is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_sql&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;engine&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Quite easy, right? &lt;a href="https://pandas.pydata.org/"&gt;Pandas&lt;/a&gt; understands and works nicely with SQLAlchemy query objects and&amp;nbsp;engines.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;We have seen how &lt;span class="caps"&gt;SQL&lt;/span&gt; string generation in Python programs can be replaced by a programmatic approach and that this
+approach has several advantages over the usage of strings. But it also comes with some small downsides. First of all, one
+has to learn SQLAlchemy, and it&amp;#8217;s &lt;span class="caps"&gt;API&lt;/span&gt; as well as documentation is surely not as nice as PySpark. So when switching, you
+will become slower for a while until you get the hang of SQLAlchemy. The second downside is that another level of abstraction,
+naturally comes with less control over the final &lt;span class="caps"&gt;SQL&lt;/span&gt; statement, but this is also true for PySpark and a trade-off a developer
+always needs to consider. Having mentioned Spark again, my 5 cents are that the PySpark &lt;span class="caps"&gt;API&lt;/span&gt; is much better than SQLAlchemy 
+and if you are using Spark anyway, you should rather use Google&amp;#8217;s &lt;a href="https://github.com/GoogleCloudDataproc/spark-bigquery-connector"&gt;Spark Bigquery Connector&lt;/a&gt;. For rather small-data projects,
+where your Python program just uses BigQuery as data storage, using SQLAlchemy might up your Python code quite a&amp;nbsp;bit.&lt;/p&gt;
+&lt;p&gt;Feedback is always welcome! Please let me know if this was helpful and also if you think otherwise in the comments&amp;nbsp;below.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="production"></category><category term="data science"></category></entry><entry><title>Finally! Bayesian Hierarchical Modelling at Scale</title><link href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/" rel="alternate"></link><published>2020-10-01T08:00:00+02:00</published><updated>2020-10-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-10-01:/2020/10/bayesian_hierarchical_modelling_at_scale/</id><summary type="html">&lt;p&gt;For a long time, Bayesian Hierarchical Modelling has been a very powerful tool that sadly could not be applied often due to its high computations costs. With NumPyro and the latest advances in high-performance computations in Python, Bayesian Hierarchical Modelling is now ready for prime&amp;nbsp;time.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional
 techniques from e.g. instrumentation and control engineering, is nowadays considered &lt;em&gt;&lt;span class="caps"&gt;AI&lt;/span&gt;&lt;/em&gt;. For instance, the famous robots
 of Boston Dynamics are not based on deep reinforcement learning as many people think but much more traditional engineering
@@ -1812,353 +1965,4 @@ python setup.py docs
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have seen that using an own Python package in conjunction with JupyterLab gives us means to program much cleaner and the ability to use a proper &lt;span class="caps"&gt;IDE&lt;/span&gt;. JupyterLab is a mighty and flexible tool and thus all the more it&amp;#8217;s important to adhere to some best practices and processes to guarantee quality in your software and analysis. The &lt;a href="https://github.com/FlorianWilhelm/boston_housing"&gt;boston_housing repository&lt;/a&gt; demonstrates a simple analysis of the Boston Housing Dataset in accordance with the outlined points&amp;nbsp;above.&lt;/p&gt;
-&lt;p&gt;JupyterLab also offers many powerful &lt;a href="https://jupyterlab.readthedocs.io/en/stable/user/extensions.html"&gt;extensions&lt;/a&gt;, e.g. &lt;a href="https://github.com/jupyterlab/jupyterlab-git"&gt;jupyterlab-git&lt;/a&gt;, &lt;a href="https://github.com/jupyterlab/jupyterlab-toc"&gt;jupyterlab-toc&lt;/a&gt;, etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. Since general concepts are transferable but the specific workflow may be different, also read the &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt; about the same topic but using partly a different&amp;nbsp;tooling.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="jupyter"></category></entry><entry><title>Multiplicative LSTM for sequence-based Recommenders</title><link href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/" rel="alternate"></link><published>2018-08-05T16:00:00+02:00</published><updated>2018-08-05T16:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2018-08-05:/2018/08/multiplicative_LSTM_for_sequence_based_recos/</id><summary type="html">&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant&amp;nbsp;recommendation.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;Recommender Systems support the decision making processes of customers with personalized suggestions. 
-They are widely used and influence the daily life of almost everyone in different domains like e-commerce, 
-social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation
-of a relevant recommendation. Which user interaction occurred just before the point of time where we want to 
-provide a recommendation?
-How many interactions ago did the user interact with an item like this one?
-Traditional user-item recommenders often neglect the dimension of time completely. 
-This means that many traditional recommenders find for each user a latent representation based on the user&amp;#8217;s
-historical item interactions without any notion of recency and sequence of interactions. To also incorporate 
-this kind of contextual information about interactions, sequence-based recommenders were developed. 
-With the advent of deep learning quite a few of them are nowadays based on &lt;a href="https://en.wikipedia.org/wiki/Recurrent_neural_network"&gt;Recurrent Neural Networks&lt;/a&gt;&amp;nbsp;(RNNs).&lt;/p&gt;
-&lt;p&gt;Whenever I want to dig deeper into a topic like sequence-based recommenders I follow a few simple steps:
-First of all, to learn something I directly need to apply it otherwise learning things doesn&amp;#8217;t work for me. In order to apply something I need a challenge and a small goal that keeps me motivated on the journey. Following the &lt;a href="https://en.wikipedia.org/wiki/SMART_criteria"&gt;&lt;span class="caps"&gt;SMART&lt;/span&gt; citeria&lt;/a&gt; a goal needs to be measurable and thus a typical outcome for me is a blog post like the one you are just reading. Another good thing about a blog post is the fact that no one wants to publish something completely crappy, so there is an intrinsic quality assurance attached to the whole process. This blog post is actually the outcome of several things I wanted to familiarize myself more and try&amp;nbsp;out:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt;, since this framework is used in a large fraction of recent publications about deep&amp;nbsp;learning,&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/maciejkula/spotlight"&gt;Spotlight&lt;/a&gt;, since this library gives you a sophisticated structure to play around with new ideas for recommender systems and already has a lot of functionality&amp;nbsp;implemented,&lt;/li&gt;
-&lt;li&gt;applying a paper about &lt;a href="https://arxiv.org/abs/1609.07959"&gt;Multiplicative &lt;span class="caps"&gt;LSTM&lt;/span&gt; for sequence modelling&lt;/a&gt; to recommender systems and see how that performs compared to traditional&amp;nbsp;LSTMs.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Since Spotlight is based on PyTorch and multiplicative LSTMs (mLSTMs) are not yet implemented in PyTorch the task of evaluating mLSTMs vs. LSTMs inherently addresses all those points outlined above. The goal is set, so let&amp;#8217;s get&amp;nbsp;going!&lt;/p&gt;
-&lt;h2&gt;Theory&lt;/h2&gt;
-&lt;p&gt;Long short-term memory architectures (LSTMs) are maybe the most common incarnations of RNNs since they don&amp;#8217;t adhere 
-to the &lt;a href="https://en.wikipedia.org/wiki/Vanishing_gradient_problem"&gt;vanishing gradient problem&lt;/a&gt; and thus are able to capture long-term relationships in a sequence. You can find a great
-explanation of LSTMs in Colah&amp;#8217;s post &lt;a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/"&gt;Understanding &lt;span class="caps"&gt;LSTM&lt;/span&gt; Networks&lt;/a&gt; and more general about the power of RNNs in the 
-article &lt;a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;. 
-More recently, also Gated Recurrent Units (GRUs) which have a simplified structure compared to LSTMs are also used 
-in sequential prediction tasks with occasionally superior results. &lt;a href="https://github.com/maciejkula/spotlight"&gt;Spotlight&lt;/a&gt; provides a sequential recommender based on LSTMs and 
-the quite renowned &lt;a href="https://github.com/hidasib/GRU4Rec"&gt;GRU4Rec&lt;/a&gt; model uses GRUs but in general it&amp;#8217;s not possible to state that one always outperforms the&amp;nbsp;other.&lt;/p&gt;
-&lt;p&gt;So given these ingredients, how do we now construct a sequential recommender? Let&amp;#8217;s assume on every timestep 
-&lt;span class="math"&gt;\(t\in\{1,\ldots,T\}\)&lt;/span&gt; a user has interacted with an item &lt;span class="math"&gt;\(i_t\)&lt;/span&gt;. The basic idea is now to feed these interactions into
- an &lt;span class="caps"&gt;LSTM&lt;/span&gt; up to the time &lt;span class="math"&gt;\(t\)&lt;/span&gt; in order to get a representation of the user&amp;#8217;s preferences &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and use that to state
- if the user might like or dislike the next item &lt;span class="math"&gt;\(i_{t+1}\)&lt;/span&gt;. Just like in a non-sequential recommender we also do a
- &lt;a href="https://en.wikipedia.org/wiki/One-hot"&gt;one-hot encoding&lt;/a&gt; of the items followed by an embedding into a dense vector representation &lt;span class="math"&gt;\(e_{i_t}\)&lt;/span&gt;
- which is then feed into the &lt;span class="caps"&gt;LSTM&lt;/span&gt;. We can then just use the output &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; of the &lt;span class="caps"&gt;LSTM&lt;/span&gt; and calculate the inner product (&lt;span class="math"&gt;\(\bigotimes\)&lt;/span&gt;) 
- with the embedding &lt;span class="math"&gt;\(e_{i_{t+1}}\)&lt;/span&gt; plus an item bias for varying item popularity to retrieve an output &lt;span class="math"&gt;\(p_{t+1}\)&lt;/span&gt;. 
- This output along with others is then used to calculate the actual loss depending on our sample strategy and loss function. 
- We train our model by sampling positive interactions and corresponding negative interactions. In an &lt;em&gt;explicit feedback&lt;/em&gt; context 
- a positive and negative interaction might be a positive and negative rating of a user for an item, respectively. In an &lt;em&gt;implicit feedback&lt;/em&gt; context, all item interactions of a user are considered positive whereas negative interactions arise from items the
- user did not interact with.
- During the training we adapt the weights of our model so that for a given user the scalar output of a positive interaction
- is greater than the output of a negative interaction. This can be seen as an approximation to a &lt;a href="https://en.wikipedia.org/wiki/Softmax_function"&gt;softmax&lt;/a&gt; in very high-dimensional output&amp;nbsp;space.&lt;/p&gt;
-&lt;p&gt;Figure 1 illustrates our sequential recommender model and this is what&amp;#8217;s actually happening inside Spotlight&amp;#8217;s 
- sequential recommender with an &lt;span class="caps"&gt;LSTM&lt;/span&gt; representation. If you raise your eyebrow due to the usage of an inner product
- then be aware that &lt;a href="https://en.wikipedia.org/wiki/Low-rank_approximation"&gt;low-rank approximations&lt;/a&gt; have been and still are one of the most successful building blocks
- of recommender systems. An alternative would be to replace the inner product with a deep feed forward network but
- to quite some extent, this would also just learn to perform an approximation of an inner product. A recent paper
- &lt;a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46488.pdf"&gt;Latent Cross: Making Use of Context in Recurrent Recommender Systems&lt;/a&gt; by Google also emphasizes the power of learning
- low-rank relations with the help of inner&amp;nbsp;products.&lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/mLSTM.png" alt="mLSTM"&gt;
-&lt;figcaption&gt;&lt;strong&gt;Figure 1:&lt;/strong&gt; At timestep \(t\) the item \(i_t\) is embedded and fed into an &lt;span class="caps"&gt;LSTM&lt;/span&gt; together with
- cell state \(C_{t-1}\) and \(h_{t-1}\) of the last timestep which yields a new presentation \(h_t\). The inner product of 
- \(h_t\) with the embedding of the potential next item \(e_{i_{t+1}}\) yields a scalar value corresponding to how likely the user
- would interact with \(i_{t+1}\).&lt;/figcaption&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;What we want to do is basically replacing the &lt;span class="caps"&gt;LSTM&lt;/span&gt; part of Spotlight&amp;#8217;s sequential recommender with an mLSTM. 
-But before we do that the obvious question is why? Let&amp;#8217;s recap the formulae of a typical &lt;a href="http://pytorch.org/docs/0.3.1/nn.html?highlight=lstm#torch.nn.LSTM"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt; implementation&lt;/a&gt; 
-like the one in&amp;nbsp;PyTorch:&lt;/p&gt;
-&lt;div class="math"&gt;\begin{split}\begin{array}{ll}
-i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{t-1} + b_{hi}) \\
-f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{t-1} + b_{hf}) \\
-g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hc} h_{t-1} + b_{hg}) \\
-o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{ho} h_{t-1} + b_{ho}) \\
-c_t = f_t * c_{t-1} + i_t * g_t \\
-h_t = o_t * \tanh(c_t)
-\end{array}\end{split}&lt;/div&gt;
-&lt;p&gt;
-&lt;br&gt;&lt;/p&gt;
-&lt;p&gt;where &lt;span class="math"&gt;\(i_t\)&lt;/span&gt; denotes the input gate, &lt;span class="math"&gt;\(f_t\)&lt;/span&gt; the forget gate and &lt;span class="math"&gt;\(o_t\)&lt;/span&gt; the output gate at timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt;. If we look at
-those lines again we can see a lot of terms in the form of &lt;span class="math"&gt;\(W_{**} x_t + W_{**} h_{t-1}\)&lt;/span&gt; neglecting the biases &lt;span class="math"&gt;\(b_*\)&lt;/span&gt; for a
-moment. Thus a lot of an &lt;span class="caps"&gt;LSTM&lt;/span&gt;&amp;#8217;s inner workings depend on the addition of the transformed input with the transformed hidden
-state. So what happens if a trained &lt;span class="caps"&gt;LSTM&lt;/span&gt; with thus fixed &lt;span class="math"&gt;\(W_{**}\)&lt;/span&gt; encounters some unexpected, completely surprising input
-&lt;span class="math"&gt;\(x_t\)&lt;/span&gt;? This might disturb the cell state &lt;span class="math"&gt;\(c_t\)&lt;/span&gt; leading to pertubated future &lt;span class="math"&gt;\(h_t\)&lt;/span&gt; and it might take a long time for the
-&lt;span class="caps"&gt;LSTM&lt;/span&gt; to recover from that singular surprising input. The authors of the paper &lt;a href="https://arxiv.org/abs/1609.07959"&gt;Multiplicative &lt;span class="caps"&gt;LSTM&lt;/span&gt; for sequence modelling&lt;/a&gt; 
-now argue that &amp;#8220;&lt;span class="caps"&gt;RNN&lt;/span&gt; architectures with hidden-to-hidden transition functions that are input-dependent are better suited to recover 
-from surprising inputs&amp;#8221;. By allowing the hidden state to react flexibly on the new input by changing its magnitude it might be
-able to recover from mistakes faster. The quite vague formulation of &lt;em&gt;input-dependent transition functions&lt;/em&gt; is then 
-actually achieved in a quite simple way. In an mLSTM the hidden state &lt;span class="math"&gt;\(h_{t-1}\)&lt;/span&gt; is transformed in a multiplicative way
-using the input &lt;span class="math"&gt;\(x_t\)&lt;/span&gt; into an intermediate state &lt;span class="math"&gt;\(m_t\)&lt;/span&gt; before it is used in a plain &lt;span class="caps"&gt;LSTM&lt;/span&gt; as before. Eventually, there
-is only a single equation to be prepended to the equations of an &lt;span class="caps"&gt;LSTM&lt;/span&gt;:&lt;/p&gt;
-&lt;div class="math"&gt;\begin{split}\begin{array}{ll}
-m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm}) \\
-i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{mi} m_t + b_{mi}) \\
-f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{mf} m_t + b_{mf}) \\
-g_t = \tanh(W_{ig} x_t + b_{ig} + W_{mc} m_t + b_{mg}) \\
-o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{mo} m_t + b_{mo}) \\
-c_t = f_t * c_{t-1} + i_t * g_t \\
-h_t = o_t * \tanh(c_t)
-\end{array}\end{split}&lt;/div&gt;
-&lt;p&gt;
-&lt;br&gt;&lt;/p&gt;
-&lt;p&gt;The element-wise multiplication (&lt;span class="math"&gt;\(\odot\)&lt;/span&gt;) allows &lt;span class="math"&gt;\(m_t\)&lt;/span&gt; to flexibly change it&amp;#8217;s value with respect to &lt;span class="math"&gt;\(h_{t-1}\)&lt;/span&gt; and &lt;span class="math"&gt;\(x_t\)&lt;/span&gt;.
-On a more theoretical note, if you picture the hidden states of an &lt;span class="caps"&gt;LSTM&lt;/span&gt; as a tree depending on the inputs at each timestep
-then the number of all possible states at timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt; will be much larger for an mLSTM compared to an &lt;span class="caps"&gt;LSTM&lt;/span&gt;. Therefore, 
-the tree of an mLSTM will be much wider and consequently more flexible to represent different probability distributions
-according to the paper. The paper focuses only on &lt;span class="caps"&gt;NLP&lt;/span&gt; tasks but since surprising inputs are also a concern in sequential recommender systems,
-the self-evident idea is to evaluate if mLSTMs also excel in recommender&amp;nbsp;tasks. &lt;/p&gt;
-&lt;h2&gt;Implementation&lt;/h2&gt;
-&lt;p&gt;Everyone seems to love &lt;a href="https://pytorch.org/"&gt;PyTorch&lt;/a&gt; for it&amp;#8217;s beautiful &lt;span class="caps"&gt;API&lt;/span&gt; and I totally agree. For me its beauty lies in its simplicity. 
-Every elementary building block of a neural network like a linear transformation is called a &lt;em&gt;Module&lt;/em&gt; in PyTorch. A
-Module is just a class that inherits from &lt;code&gt;Module&lt;/code&gt; and implements a &lt;code&gt;forward&lt;/code&gt; method that does the transformation
-with the help of tensor operations. A more complex neural network is again just a &lt;code&gt;Module&lt;/code&gt; and uses the 
-&lt;a href="https://en.wikipedia.org/wiki/Composition_over_inheritance"&gt;composition principle&lt;/a&gt; to compose its functionality from simpler modules. Therefore, in my humble opinion, PyTorch
-found a much nicer concept of combining low-level tensor operations with the high level composition of layers compared
-to core &lt;a href="https://www.tensorflow.org/"&gt;TensorFlow&lt;/a&gt; and &lt;a href="https://keras.io/"&gt;Keras&lt;/a&gt; where you are either stuck on the level of tensor operations or the composition of&amp;nbsp;layers. &lt;/p&gt;
-&lt;p&gt;For our task, we gonna need an &lt;code&gt;mLSTM&lt;/code&gt; module and luckily PyTorch provides &lt;code&gt;RNNBase&lt;/code&gt;, a base class for custom RNNs.
-So all we have to do is to write a module that inherits from &lt;code&gt;RNNBase&lt;/code&gt;, defines additional parameters and implements
-the mLSTM equations inside of &lt;code&gt;forward&lt;/code&gt;: &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;math&lt;/span&gt;
-
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;torch&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;torch.nn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;torch.nn.modules.rnn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RNNBase&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;LSTMCell&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;torch.nn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;functional&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;
-
-
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;mLSTM&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;RNNBase&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mLSTM&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-            &lt;span class="n"&gt;mode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;LSTM&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                 &lt;span class="n"&gt;num_layers&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;batch_first&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                 &lt;span class="n"&gt;dropout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bidirectional&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="n"&gt;w_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;w_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;b_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;b_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w_im&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b_im&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w_hm&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_hm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Parameter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b_hm&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lstm_cell&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;LSTMCell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bias&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_parameters&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;reset_parameters&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;stdv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hidden_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;weight&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-            &lt;span class="n"&gt;weight&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;uniform_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stdv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stdv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;forward&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;n_batch&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_seq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_feat&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-        &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hx&lt;/span&gt;
-        &lt;span class="n"&gt;steps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unsqueeze&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;seq&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_seq&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-            &lt;span class="n"&gt;mx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linear&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="n"&gt;seq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:],&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_im&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_im&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linear&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;w_hm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;b_hm&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="n"&gt;hx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lstm_cell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="n"&gt;seq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:],&lt;/span&gt; &lt;span class="n"&gt;hx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="n"&gt;steps&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unsqueeze&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;steps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dim&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The code is pretty much self-explanatory. We inherit from &lt;code&gt;RNNBase&lt;/code&gt; and initialize the additional parameters we need for the calculation of &lt;span class="math"&gt;\(m_t\)&lt;/span&gt;
-in &lt;code&gt;__init__&lt;/code&gt;. In &lt;code&gt;forward&lt;/code&gt; we use those parameters to calculate &lt;span class="math"&gt;\(m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})\)&lt;/span&gt; with the help of &lt;code&gt;F.linear&lt;/code&gt; and pass it to an ordinary &lt;code&gt;LSTMCell&lt;/code&gt;. We collect the results for each timestep
-in our sequence in &lt;code&gt;steps&lt;/code&gt; and return it as concatenated&amp;nbsp;tensor. &lt;/p&gt;
-&lt;p&gt;The &lt;a href="https://github.com/maciejkula/spotlight"&gt;Spotlight&lt;/a&gt; library, in the spirit of PyTorch, also follows a modular concept of components that can be easily plugged together and replaced.
-It has only five&amp;nbsp;components:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;embedding layers&lt;/strong&gt; which map item ids to dense&amp;nbsp;vectors,&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;user/item representations&lt;/strong&gt; which take embedding layers to calculate latent representations and the score for a 
-    user/item&amp;nbsp;pair, &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;interactions&lt;/strong&gt; which give easy access to the user/item interactions and their explicit/implicit&amp;nbsp;feedback,&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;losses&lt;/strong&gt; which define the objective for the recommendation&amp;nbsp;task,&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;models&lt;/strong&gt; which take user/item representations, the user/item interactions and a given loss to train the&amp;nbsp;network.  &lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Due to this modular layout, we only need to write a new user/item representation module called &lt;code&gt;mLSTMNet&lt;/code&gt;. Since this
-is straight-forward I leave it to you to take a look at the source code in my &lt;a href="https://github.com/FlorianWilhelm/mlstm4reco"&gt;mlstm4reco&lt;/a&gt; repository.
-At this point I should mentioned that the whole layout of the repository was strongly inspired by Maciej Kula&amp;#8217;s 
-&lt;a href="https://arxiv.org/abs/1711.08379"&gt;Mixture-of-tastes Models for Representing Users with Diverse Interests&lt;/a&gt; paper and the accompanying &lt;a href="https://github.com/maciejkula/mixture"&gt;source code&lt;/a&gt;.
-My implementation also follows his advise of using an automatic hyperparameter optimisation for my own model and the
-baseline model for comparison. This avoids quite a common bias in research when people put more effort in hand-tuning
-their own model compared to the baseline to later show a better improvement in order to get the paper accepted.
-Using a tool like &lt;a href="http://hyperopt.github.io/hyperopt/"&gt;HyperOpt&lt;/a&gt; for hyperparameter optimisation is quite easy and mitigates this bias to some extent at&amp;nbsp;least.&lt;/p&gt;
-&lt;h2&gt;Evaluation&lt;/h2&gt;
-&lt;p&gt;To compare Spotlight&amp;#8217;s &lt;a href="https://maciejkula.github.io/spotlight/sequence/implicit.html#module-spotlight.sequence.implicit"&gt;ImplicitSequenceModel&lt;/a&gt; with an &lt;span class="caps"&gt;LSTM&lt;/span&gt; to an mLSTM user representation, the
-&lt;a href="https://github.com/FlorianWilhelm/mlstm4reco"&gt;mlstm4reco&lt;/a&gt; repository provides a &lt;code&gt;run.py&lt;/code&gt; script in the &lt;code&gt;experiments&lt;/code&gt; folder which takes several
-command line options. Some might argue that this is a bit of over-engineering for a one time evaluation. 
-But for me it&amp;#8217;s just one aspect of proper and reproducible research since it avoids errors and you can also easily
-log which parameters were used to generate the results. I also used &lt;a href="https://pyscaffold.org/"&gt;PyScaffold&lt;/a&gt; to set up proper Python package
-scaffold within seconds. This allows me to properly install the &lt;code&gt;mlstm4reco&lt;/code&gt; package and import its functionality from 
-wherever I want without messing around with the &lt;span class="caps"&gt;PYTHONPATH&lt;/span&gt; environment variable which one should never do&amp;nbsp;anyway. &lt;/p&gt;
-&lt;p&gt;For the evaluation matrix below I ran each experiment 200 times to give &lt;a href="http://hyperopt.github.io/hyperopt/"&gt;HyperOpt&lt;/a&gt; enough chances to find good 
-hyperparameters for the number of epochs (&lt;code&gt;n_iter&lt;/code&gt;), number of embeddings (&lt;code&gt;embedding_dim&lt;/code&gt;), l2-regularisation (&lt;code&gt;l2&lt;/code&gt;),
-batch size (&lt;code&gt;batch_size&lt;/code&gt;) and learning rate (&lt;code&gt;learn_rate&lt;/code&gt;). 
-Each of our two models, i.e. &lt;code&gt;lstm&lt;/code&gt; and &lt;code&gt;mlstm&lt;/code&gt; user representation, were applied to three datasets, 
-the &lt;a href="https://grouplens.org/datasets/movielens/"&gt;MovieLens&lt;/a&gt; 1m and 10m datasets as well as the &lt;a href="https://snap.stanford.edu/data/amazon-meta.html"&gt;Amazon&lt;/a&gt; dataset. For instance, to run 200 experiments with the mlstm 
-model on the Movielens 10m dataset the command would be &lt;code&gt;./run.py -m mlstm -n 200 10m&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;In each experiment the data is split into a training, validation and test set where training is used to fit the model,
-validation to find the right hyperparameters and test for the final evaluation after all parameters are determined. 
-The performance of the models is measured with the help of the &lt;a href="https://en.wikipedia.org/wiki/Mean_reciprocal_rank"&gt;mean reciprocal rank&lt;/a&gt; (&lt;span class="caps"&gt;MRR&lt;/span&gt;) score. Here are the&amp;nbsp;results:&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align="right"&gt;dataset&lt;/th&gt;
-&lt;th align="right"&gt;type&lt;/th&gt;
-&lt;th align="right"&gt;validation&lt;/th&gt;
-&lt;th align="right"&gt;test&lt;/th&gt;
-&lt;th align="right"&gt;learn_rate&lt;/th&gt;
-&lt;th align="right"&gt;batch_size&lt;/th&gt;
-&lt;th align="right"&gt;embedding_dim&lt;/th&gt;
-&lt;th align="right"&gt;l2&lt;/th&gt;
-&lt;th align="right"&gt;n_iter&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 1m&lt;/td&gt;
-&lt;td align="right"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt;&lt;/td&gt;
-&lt;td align="right"&gt;0.1199&lt;/td&gt;
-&lt;td align="right"&gt;0.1317&lt;/td&gt;
-&lt;td align="right"&gt;1.93e-2&lt;/td&gt;
-&lt;td align="right"&gt;208&lt;/td&gt;
-&lt;td align="right"&gt;112&lt;/td&gt;
-&lt;td align="right"&gt;6.01e-06&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 1m&lt;/td&gt;
-&lt;td align="right"&gt;mLSTM&lt;/td&gt;
-&lt;td align="right"&gt;0.1275&lt;/td&gt;
-&lt;td align="right"&gt;0.1386&lt;/td&gt;
-&lt;td align="right"&gt;1.25e-2&lt;/td&gt;
-&lt;td align="right"&gt;240&lt;/td&gt;
-&lt;td align="right"&gt;120&lt;/td&gt;
-&lt;td align="right"&gt;5.90e-06&lt;/td&gt;
-&lt;td align="right"&gt;40&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 10m&lt;/td&gt;
-&lt;td align="right"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt;&lt;/td&gt;
-&lt;td align="right"&gt;0.1090&lt;/td&gt;
-&lt;td align="right"&gt;0.1033&lt;/td&gt;
-&lt;td align="right"&gt;4.19e-3&lt;/td&gt;
-&lt;td align="right"&gt;224&lt;/td&gt;
-&lt;td align="right"&gt;120&lt;/td&gt;
-&lt;td align="right"&gt;2.43e-07&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Movielens 10m&lt;/td&gt;
-&lt;td align="right"&gt;mLSTM&lt;/td&gt;
-&lt;td align="right"&gt;0.1142&lt;/td&gt;
-&lt;td align="right"&gt;0.1115&lt;/td&gt;
-&lt;td align="right"&gt;4.50e-3&lt;/td&gt;
-&lt;td align="right"&gt;224&lt;/td&gt;
-&lt;td align="right"&gt;128&lt;/td&gt;
-&lt;td align="right"&gt;1.12e-06&lt;/td&gt;
-&lt;td align="right"&gt;45&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Amazon&lt;/td&gt;
-&lt;td align="right"&gt;&lt;span class="caps"&gt;LSTM&lt;/span&gt;&lt;/td&gt;
-&lt;td align="right"&gt;0.2629&lt;/td&gt;
-&lt;td align="right"&gt;0.2642&lt;/td&gt;
-&lt;td align="right"&gt;2.85e-3&lt;/td&gt;
-&lt;td align="right"&gt;224&lt;/td&gt;
-&lt;td align="right"&gt;128&lt;/td&gt;
-&lt;td align="right"&gt;2.42e-11&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td align="right"&gt;Amazon&lt;/td&gt;
-&lt;td align="right"&gt;mLSTM&lt;/td&gt;
-&lt;td align="right"&gt;0.3061&lt;/td&gt;
-&lt;td align="right"&gt;0.3123&lt;/td&gt;
-&lt;td align="right"&gt;2.48e-3&lt;/td&gt;
-&lt;td align="right"&gt;144&lt;/td&gt;
-&lt;td align="right"&gt;120&lt;/td&gt;
-&lt;td align="right"&gt;4.53e-11&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;If we compare the test results of the Movielens 1m dataset, it&amp;#8217;s an improvement of 5.30% when using mLSTM over &lt;span class="caps"&gt;LSTM&lt;/span&gt; 
-representation, for Movielens 10m it&amp;#8217;s 7.96% more and for Amazon it&amp;#8217;s even 18.19%&amp;nbsp;more. &lt;/p&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;The performance improvements of using an mLSTM over an &lt;span class="caps"&gt;LSTM&lt;/span&gt; user representation are quite good but nothing spectacular.
-They give us at least some indication that mLSTMs achieve superior results for sequential recommendation tasks. In order to 
-further underpin this first assessment one could test with more datasets and also check other evaluation 
-metrics besides &lt;span class="caps"&gt;MRR&lt;/span&gt;. I leave this to a dedicated reader, so if you are interested, please let me know and share your
-results. With regard to my initial motivation and tasks, I have achieved much deeper insights into the domain of
-sequential recommenders and with the help of PyTorch, Spotlight I am looking forward to my next side project! Let me
-know if you liked this post and comment&amp;nbsp;below.&lt;/p&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-
-    var configscript = document.createElement('script');
-    configscript.type = 'text/x-mathjax-config';
-    configscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js'], equationNumbers: { autoNumber: 'auto' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        availableFonts: ['STIX', 'TeX']," +
-        "        preferredFont: 'STIX'," +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="post"></category><category term="python"></category><category term="data science"></category><category term="deep learning"></category><category term="recommender systems"></category></entry></feed>
+&lt;p&gt;JupyterLab also offers many powerful &lt;a href="https://jupyterlab.readthedocs.io/en/stable/user/extensions.html"&gt;extensions&lt;/a&gt;, e.g. &lt;a href="https://github.com/jupyterlab/jupyterlab-git"&gt;jupyterlab-git&lt;/a&gt;, &lt;a href="https://github.com/jupyterlab/jupyterlab-toc"&gt;jupyterlab-toc&lt;/a&gt;, etc., for improved productivity that are worth checking out. If you have any additions or neat tricks for JupyterLab that were not covered, please let me know by using the comments below. Since general concepts are transferable but the specific workflow may be different, also read the &lt;a href="https://cprohm.de/article/notebooks-and-modules.html"&gt;blog post of Christopher Prohm&lt;/a&gt; about the same topic but using partly a different&amp;nbsp;tooling.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="jupyter"></category></entry></feed>

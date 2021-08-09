@@ -167,7 +167,7 @@ query filtering for the needed data only&amp;nbsp;like:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;In this case, the programmatic SQLAlchemy approach as described above, can also be applied to generate &lt;code&gt;sql_string&lt;/code&gt; with the
-the advantages described&amp;nbsp;above.&lt;/p&gt;
+advantages described&amp;nbsp;above.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;Feedback is always welcome! Please let me know if this was helpful and also if you think otherwise in the comments&amp;nbsp;below.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="production"></category><category term="data science"></category></entry><entry><title>Finally! Bayesian Hierarchical Modelling at Scale</title><link href="https://florianwilhelm.info/2020/10/bayesian_hierarchical_modelling_at_scale/" rel="alternate"></link><published>2020-10-01T08:00:00+02:00</published><updated>2020-10-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2020-10-01:/2020/10/bayesian_hierarchical_modelling_at_scale/</id><summary type="html">&lt;p&gt;For a long time, Bayesian Hierarchical Modelling has been a very powerful tool that sadly could not be applied often due to its high computations costs. With NumPyro and the latest advances in high-performance computations in Python, Bayesian Hierarchical Modelling is now ready for prime&amp;nbsp;time.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Since the advent of deep learning, everything is or has to be about &lt;em&gt;Artificial Intelligence&lt;/em&gt;, so it seems. Even software which is applying traditional

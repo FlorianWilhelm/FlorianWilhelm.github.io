@@ -149,7 +149,7 @@ Imagine you want to write one method that takes another query and adds time-base
 the query is a string this will be pretty hard as you need to add some <code>DATE(timestamp) BETWEEN FROM_DATE AND TO_DATE</code>-clause
 and there might be already some other where-clauses specified. A last downside is that specifying <span class="caps">SQL</span> queries like
 this is quite prone to <a href="https://en.wikipedia.org/wiki/SQL_injection"><span class="caps">SQL</span> injection attacks</a>. So if you compose your queries based on user-generated data, e.g. user input
-from some e-commerce website, a malicious use might inject sub-queries in a smart way to steal your data. In many data science
+from some e-commerce website, a malicious user might inject sub-queries in a smart way to steal your data. In many data science
 related projects this might be a rather academic vector of attack, but especially in learning-to-rank use-cases it might not
 be that&nbsp;unrealistic.</p>
 <p>To summarize these&nbsp;downsides:</p>

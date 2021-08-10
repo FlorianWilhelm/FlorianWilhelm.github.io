@@ -271,12 +271,14 @@ and if you are using Spark anyway, you should rather use Google&#8217;s <a href=
 where your Python program just uses BigQuery as data storage, using SQLAlchemy might up your Python code quite a bit&nbsp;though.</p>
 <hr>
 <p><strong><span class="caps">REMARK</span>: Spark BigQuery Connector and Pushdowns to&nbsp;BigQuery</strong></p>
-<p>Right now the <a href="https://github.com/GoogleCloudDataproc/spark-bigquery-connector">Spark Bigquery Connector</a> has no pushdown capabilities regarding BigQuery. This means that the following&nbsp;query:</p>
-<div class="highlight"><pre><span></span><code><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;bigquery-public-data.pypi.file_downloads&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<p>Right now the <a href="https://github.com/GoogleCloudDataproc/spark-bigquery-connector">Spark Bigquery Connector</a> has no full pushdown capabilities regarding BigQuery. If <code>pushAllFilters</code> is set
+to true in <code>spark.conf</code>, which is the default, the connector pushes all the filters Spark can delegate to the BigQuery Storage <span class="caps">API</span>. 
+Since GroupBy is a more complex operation, the following&nbsp;query:</p>
+<div class="highlight"><pre><span></span><code><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;bigquery-public-data.pypi.file_downloads&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 </code></pre></div>
 
 <p>will first fetch all data from the table into Spark. As this might be quite inefficient it&#8217;s better to directly provide an <span class="caps">SQL</span>
-query filtering for the needed data only&nbsp;like:</p>
+query that filters and groups direclty in BigQuery&nbsp;like:</p>
 <div class="highlight"><pre><span></span><code><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sql_string</span><span class="p">)</span>
 </code></pre></div>
 

@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2021-08-08T08:00:00+02:00</updated><entry><title>Using Google BigQuery with Programmatic SQL</title><link href="https://florianwilhelm.info/2021/08/using_bigquery_with_programmatic_sql/" rel="alternate"></link><published>2021-08-08T08:00:00+02:00</published><updated>2021-08-08T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-08-08:/2021/08/using_bigquery_with_programmatic_sql/</id><summary type="html">&lt;p&gt;An often encountered Antipattern in Python code are complex queries composed with the help of string substitutions and concatenations. SQLAlchemy Core allows you to generate queries in a programmatic way for many &lt;span class="caps"&gt;SQL&lt;/span&gt; databases like&amp;nbsp;BigQuery.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feed/atom/index.html" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2021-09-01T08:00:00+02:00</updated><entry><title>Handling Anaconda without getting constricted</title><link href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/" rel="alternate"></link><published>2021-09-01T08:00:00+02:00</published><updated>2021-09-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-09-01:/2021/09/Handling_Anaconda_without_getting_constricted/</id><summary type="html">&lt;p&gt;Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda&amp;nbsp;licence.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Commercial Activities using the Anaconda&amp;nbsp;Repository&lt;/h2&gt;
+&lt;p&gt;In April 2020, &lt;a href="https://www.anaconda.com/"&gt;Anaconda Inc.&lt;/a&gt;, the company behind our beloved Anaconda distribution, started to change their 
+&lt;a href="https://www.anaconda.com/terms-of-service"&gt;Terms of Service&lt;/a&gt; (ToS) in a way that most commercial usage is no longer for free. Peter Wang explained the reasons for
+this change in a &lt;a href="https://www.anaconda.com/blog/sustaining-our-stewardship-of-the-open-source-data-science-community"&gt;blog post&lt;/a&gt;. There was a bit of turmoil in the Anaconda community, also about the interpretation of the 
+ToS at that time. In October 2020, the ToS was updated and some clarifications were given in an official &lt;a href="https://www.anaconda.com/blog/anaconda-commercial-edition-faq"&gt;&lt;span class="caps"&gt;FAQ&lt;/span&gt;&lt;/a&gt; by Stephen&amp;nbsp;Nolan. &lt;/p&gt;
+&lt;p&gt;I am no lawyer, so take my words with a grain of salt. My take-way from the ToS is that whenever you are using the Anaconda
+repository in commercial activities as a company, you must purchase a licence. This is fair enough since the employees at 
+Anaconda Inc. do a hell of a great job, and they need to make a living of course. Thus, if you use Anaconda, and it helps you
+as an enterprise, why not just support it? Just do it and stop&amp;nbsp;reading. &lt;/p&gt;
+&lt;p&gt;That being said, there might be cases, let&amp;#8217;s say you are working as a freelancer for another enterprise and want to use 
+&lt;a href="https://docs.conda.io/en/latest/"&gt;conda&lt;/a&gt;, the package manager of Anaconda, as part of your familiar tool chain. Surely, you are not gonna ask the company to
+go and buy a license, just because you like to use it in your project. So what legal option do you have besides the obvious
+one of not using it and resorting to some virtualenv based&amp;nbsp;approach?&lt;/p&gt;
+&lt;h2&gt;Miniforge, the Miniconda alternative for commercial&amp;nbsp;activities&lt;/h2&gt;
+&lt;p&gt;As a heavy conda user, you surely know &lt;a href="https://conda-forge.org/"&gt;conda-forge&lt;/a&gt;, a community-led collection of recipes, build infrastructure and 
+distributions for the conda package manager. In most cases, you would download &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; install &lt;a href="https://docs.conda.io/en/latest/miniconda.html"&gt;Miniconda&lt;/a&gt;, which uses the Anaconda
+repository as default channel, and add conda-forge as an additional channel in case a package is not in the default&amp;nbsp;channel.&lt;/p&gt;
+&lt;p&gt;What many users of conda-forge don&amp;#8217;t know, is that it encompasses not only additional packages but also almost all packages
+of the Anaconda repository (aka the &lt;em&gt;defaults&lt;/em&gt; channel) itself. One notably difference being the &lt;a href="https://en.wikipedia.org/wiki/Math_Kernel_Library"&gt;Intel &lt;span class="caps"&gt;MKL&lt;/span&gt;&lt;/a&gt; here, which is
+used by Pytorch, Numpy, and others to speed up mathematical operations if&amp;nbsp;available. &lt;/p&gt;
+&lt;p&gt;With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the &lt;em&gt;defaults&lt;/em&gt;
+channel which uses the Anaconda repository (i.e. anaconda.com) from your conda configuration and use only the conda-forge 
+repository (i.e. anaconda.org) instead to be legally on the safe side! More information can be found in 
+&lt;a href="https://conda-forge.org/blog/posts/2020-11-20-anaconda-tos/"&gt;conda-forge statement about the Anaconda&amp;#8217;s ToS&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;To make the aforementioned channel configuration even easier, the &lt;a href="https://github.com/conda-forge/miniforge"&gt;Miniforge&lt;/a&gt; project can be used as an drop-in replacement for Miniconda, 
+that automatically has set up everything for you. Nice! And while you are about to make a change to your installation scripts
+anyway, why not directly try the &lt;em&gt;Mambaforge&lt;/em&gt; from the &lt;a href="https://github.com/conda-forge/miniforge"&gt;Miniforge&lt;/a&gt; project that comes with &lt;a href="https://github.com/mamba-org/mamba"&gt;Mamba&lt;/a&gt;, a faster alternative to &lt;a href="https://docs.conda.io/en/latest/"&gt;conda&lt;/a&gt;, by&amp;nbsp;default.&lt;/p&gt;</content><category term="post"></category><category term="production"></category><category term="Python"></category></entry><entry><title>Using Google BigQuery with Programmatic SQL</title><link href="https://florianwilhelm.info/2021/08/using_bigquery_with_programmatic_sql/" rel="alternate"></link><published>2021-08-08T08:00:00+02:00</published><updated>2021-08-08T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-08-08:/2021/08/using_bigquery_with_programmatic_sql/</id><summary type="html">&lt;p&gt;An often encountered Antipattern in Python code are complex queries composed with the help of string substitutions and concatenations. SQLAlchemy Core allows you to generate queries in a programmatic way for many &lt;span class="caps"&gt;SQL&lt;/span&gt; databases like&amp;nbsp;BigQuery.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Especially in data science projects, Python code is often peppered with functions generating &lt;span class="caps"&gt;SQL&lt;/span&gt; queries as strings&amp;nbsp;like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_sku_ts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entity_id&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sku&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Union&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
@@ -1439,262 +1465,4 @@ the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span c
                         frameborder='0' webkitAllowFullScreen
                         mozallowfullscreen allowFullScreen&gt;
                     &lt;/iframe&gt;
-                &lt;/span&gt;&lt;/p&gt;</content><category term="talk"></category><category term="python"></category><category term="machine-learning"></category><category term="uncertainty quantification"></category><category term="data science"></category></entry><entry><title>More Efficient UD(A)Fs with PySpark</title><link href="https://florianwilhelm.info/2019/04/more_efficient_udfs_with_pyspark/" rel="alternate"></link><published>2019-04-19T12:30:00+02:00</published><updated>2019-04-19T12:30:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2019-04-19:/2019/04/more_efficient_udfs_with_pyspark/</id><summary type="html">&lt;p&gt;With the release of Spark 2.3 implementing user defined functions with PySpark became a lot easier and faster. Unfortunately, there are still some rough edges when it comes to complex data types that need to be worked&amp;nbsp;around.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Some time has passed since my blog post on &lt;a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/"&gt;Efficient &lt;span class="caps"&gt;UD&lt;/span&gt;(A)Fs with PySpark&lt;/a&gt; which demonstrated how to define &lt;em&gt;User-Defined Aggregation Function&lt;/em&gt; (&lt;span class="caps"&gt;UDAF&lt;/span&gt;) with &lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark&lt;/a&gt; 2.1 that allow you to use &lt;a href="http://pandas.pydata.org/"&gt;Pandas&lt;/a&gt;. Meanwhile, things got a lot easier with the release of Spark 2.3 which provides the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt; decorator. This decorator gives you the same functionality as our custom &lt;code&gt;pandas_udaf&lt;/code&gt; in the former post but performs much faster if &lt;a href="https://arrow.apache.org/"&gt;Apache Arrow&lt;/a&gt; is activated. &lt;em&gt;Nice, so life is good now? No more workarounds!? Well,&amp;nbsp;almost&amp;#8230;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;If you are just using simple data types in your Spark dataframes everything will work and even blazingly fast if you got Arrow activated but don&amp;#8217;t you dare dealing with complex data types like maps (dictionaries), arrays (lists) and structs. In that case, all you will get is a &lt;code&gt;TypeError: Unsupported type in conversion to Arrow&lt;/code&gt; which is already tracked under issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt;. Even a simple &lt;code&gt;toPandas()&lt;/code&gt; does not work which might get you to deactivate Arrow support altogether but this would also keep you from using &lt;code&gt;pandas_udf&lt;/code&gt; which is really&amp;nbsp;nice&amp;#8230; &lt;/p&gt;
-&lt;p&gt;To save you from this dilemma, this blog post will demonstrate how to work around the current limitations of Arrow without too much hassle. I tested this on Spark 2.3 and it should also work on Spark 2.4. But before we start, let&amp;#8217;s first take a look into which features &lt;code&gt;pandas_udf&lt;/code&gt; provides and why we should make use of&amp;nbsp;it.&lt;/p&gt;
-&lt;h2&gt;Features of Spark 2.3&amp;#8217;s&amp;nbsp;pandas_udf&lt;/h2&gt;
-&lt;p&gt;Just to give you a little overview about the functionality, take a look at the table&amp;nbsp;below.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;function type&lt;/th&gt;
-&lt;th&gt;Operation&lt;/th&gt;
-&lt;th&gt;Input → Output&lt;/th&gt;
-&lt;th&gt;Pandas equivalent&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;SCALAR&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Mapping&lt;/td&gt;
-&lt;td&gt;Series → Series&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;df.transform(...)&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;GROUPED_MAP&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Group &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Map&lt;/td&gt;
-&lt;td&gt;DataFrame → DataFrame&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;df.apply(...)&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;GROUPED_AGG&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Reduce&lt;/td&gt;
-&lt;td&gt;Series → Scalar&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;df.aggregate(...)&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Besides the return type of your &lt;span class="caps"&gt;UDF&lt;/span&gt;, the &lt;code&gt;pandas_udf&lt;/code&gt; needs you to specify a function type which describes the general behavior of your &lt;span class="caps"&gt;UDF&lt;/span&gt;. If you just want to map a scalar onto a scalar or equivalently a vector onto a vector with the same length, you would pass &lt;code&gt;PandasUDFType.SCALAR&lt;/code&gt;. This would also determine that your &lt;span class="caps"&gt;UDF&lt;/span&gt; retrieves a Pandas series as input and needs to return a series of the same length. It basically does the same as the &lt;code&gt;transform&lt;/code&gt; method of a Pandas dataframe. A &lt;code&gt;GROUPED_MAP&lt;/code&gt; &lt;span class="caps"&gt;UDF&lt;/span&gt; is the most flexible one since it gets a Pandas dataframe and is allowed to return a modified or new dataframe with an arbitrary shape. From Spark 2.4 on you also have the reduce operation &lt;code&gt;GROUPED_AGG&lt;/code&gt; which takes a Pandas Series as input and needs to return a scalar. Read more details about &lt;code&gt;pandas_udf&lt;/code&gt; in the &lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;official Spark documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Basic&amp;nbsp;idea&lt;/h2&gt;
-&lt;p&gt;Our workaround will be quite simple. We make use of the &lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.to_json"&gt;to_json&lt;/a&gt; function and convert all columns with complex data types to &lt;span class="caps"&gt;JSON&lt;/span&gt; strings. Since Arrow can easily handle strings, we are able to use the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt; decorator. Within our &lt;span class="caps"&gt;UDF&lt;/span&gt;, we convert these columns back to their original types and do our actual work. If we want to return columns with complex types, we just do everything the other way around. That means we convert those columns to &lt;span class="caps"&gt;JSON&lt;/span&gt; within our &lt;span class="caps"&gt;UDF&lt;/span&gt;, return the Pandas dataframe and convert eventually the corresponding columns in the Spark dataframe from &lt;span class="caps"&gt;JSON&lt;/span&gt; to complex types with &lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json"&gt;from_json&lt;/a&gt;. The following figure illustrates the&amp;nbsp;process.&lt;/p&gt;
-&lt;figure&gt;
-&lt;p align="center"&gt;
-&lt;img class="noZoom" src="/images/pandas_udf_complex.png" alt="Converting complex data types to JSON before applying the UDF"&gt;
-&lt;/p&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Our workaround involves a lot of bookkeeping and surely is not that user-friendly. Like we did in the last blog post, it is again possible to hide much of the details with the help of a &lt;a href="https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator"&gt;Python decorator&lt;/a&gt; from a user. So let&amp;#8217;s get&amp;nbsp;started!&lt;/p&gt;
-&lt;h2&gt;Implementation&lt;/h2&gt;
-&lt;p&gt;We split our implementation into three different kinds of functionalities: 1. functions that convert a Spark dataframe to and from &lt;span class="caps"&gt;JSON&lt;/span&gt;, 2. functions that do the same for Pandas dataframes and 3. we combine all of them in one decorator. The final and extended implementation can be found in the file &lt;a href="https://florianwilhelm.info/src/pyspark23_udaf.py"&gt;pyspark23_udaf.py&lt;/a&gt; where also some logging mechanism for easier debugging of UDFs was&amp;nbsp;added. &lt;/p&gt;
-&lt;h3&gt;1. Conversion of Spark&amp;nbsp;Dataframe&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MapType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ArrayType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructField&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;to_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;from_json&lt;/span&gt;
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_complex_dtype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Check if dtype is a complex type&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        dtype: Spark Datatype&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        Bool: if dtype is complex&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MapType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;StructType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ArrayType&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;complex_dtypes_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Converts all columns with complex dtypes to JSON&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        df: Spark dataframe&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        tuple: Spark dataframe and dictionary of converted columns and their data types&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;conv_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="n"&gt;selects&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;is_complex_dtype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dataType&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-            &lt;span class="n"&gt;conv_cols&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dataType&lt;/span&gt;
-            &lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;alias&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;conv_cols&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;complex_dtypes_from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;col_dtypes&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Converts JSON columns to complex types&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        df: Spark dataframe&lt;/span&gt;
-&lt;span class="sd"&gt;        col_dtypes (dict): dictionary of columns names and their datatype&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        Spark dataframe&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;selects&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;col_dtypes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keys&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-            &lt;span class="n"&gt;schema&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StructType&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;StructField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;root&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;col_dtypes&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;])])&lt;/span&gt;
-            &lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getItem&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;root&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;alias&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;selects&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The function &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; converts a given Spark dataframe to a new dataframe with all columns that have complex types replaced by &lt;span class="caps"&gt;JSON&lt;/span&gt; strings. Besides the converted dataframe, it also returns a dictionary with column names and their original data types which where converted. This information is used by &lt;code&gt;complex_dtypes_from_json&lt;/code&gt; to convert exactly those columns back to their original type. You might find it strange that we define some &lt;code&gt;root&lt;/code&gt; node in the schema. This is necessary due to some restrictions of Spark&amp;#8217;s &lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=to_json#pyspark.sql.functions.from_json"&gt;from_json&lt;/a&gt; that we circumvent by this. After the conversion, we drop this &lt;code&gt;root&lt;/code&gt; struct again so that &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; and &lt;code&gt;complex_dtypes_from_json&lt;/code&gt; are inverses of each other. We can now also easily define a &lt;code&gt;toPandas&lt;/code&gt; which also works with complex Spark&amp;nbsp;dataframes.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toPandas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Same as df.toPandas() but converts complex types to JSON first&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        df: Spark dataframe&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        Pandas dataframe&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toPandas&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h3&gt;2. Conversion of Pandas&amp;nbsp;Dataframe&lt;/h3&gt;
-&lt;p&gt;Analogously, we define the same functions as above but for Pandas dataframes. The difference is that we need to know which columns to convert to complex types for our actual &lt;span class="caps"&gt;UDF&lt;/span&gt; since we want to avoid probing every column containing strings. In the conversion to &lt;span class="caps"&gt;JSON&lt;/span&gt;, we add the &lt;code&gt;root&lt;/code&gt; node as explained&amp;nbsp;above. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;cols_from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Converts Pandas dataframe colums from json&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        df (dataframe): Pandas DataFrame&lt;/span&gt;
-&lt;span class="sd"&gt;        columns (iter): list of or iterator over column names&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        dataframe: new dataframe with converted columns&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loads&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;ct_val_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Convert a scalar complex type value to JSON&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        value: map or list complex value&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        str: JSON string&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dumps&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;root&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;cols_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Converts Pandas dataframe columns to json and adds root handle&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        df (dataframe): Pandas DataFrame&lt;/span&gt;
-&lt;span class="sd"&gt;        columns ([str]): list of column names&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        dataframe: new dataframe with converted columns&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ct_val_to_json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h3&gt;3.&amp;nbsp;Decorator&lt;/h3&gt;
-&lt;p&gt;At this point we got everything we need for our final decorators named &lt;code&gt;pandas_udf_ct&lt;/code&gt; combining all our ingredients. Like Spark&amp;#8217;s official &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.functions.pandas_udf"&gt;pandas_udf&lt;/a&gt;, our decorator takes the arguments &lt;code&gt;returnType&lt;/code&gt; and &lt;code&gt;functionType&lt;/code&gt;. It&amp;#8217;s just a tad more complicated in the sense that you first have to pass &lt;code&gt;returnType&lt;/code&gt;, &lt;code&gt;functionType&lt;/code&gt; which leaves you with some special decorator. A function decorated with such a decorator takes the parameters &lt;code&gt;cols_in&lt;/code&gt; and &lt;code&gt;cols_out&lt;/code&gt; which specify which columns need to be converted to and from &lt;span class="caps"&gt;JSON&lt;/span&gt;. Only after passing those you end up with the actual &lt;span class="caps"&gt;UDF&lt;/span&gt; that you defined. No need to despair, an example below illustrates the usage but first we take a look at the&amp;nbsp;implementation.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;functools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;wraps&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;pandas_udf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;pandas_udf_ct&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Decorator for UDAFs with Spark &amp;gt;= 2.3 and complex types&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Args:&lt;/span&gt;
-&lt;span class="sd"&gt;        returnType: the return type of the user-defined function. The value can be either a &lt;/span&gt;
-&lt;span class="sd"&gt;                    pyspark.sql.types.DataType object or a DDL-formatted type string.&lt;/span&gt;
-&lt;span class="sd"&gt;        functionType: an enum value in pyspark.sql.functions.PandasUDFType. Default: SCALAR.&lt;/span&gt;
-
-&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;        Function with arguments `cols_in` and `cols_out` defining column names having complex &lt;/span&gt;
-&lt;span class="sd"&gt;        types that need to be transformed during input and output for GROUPED_MAP. In case of &lt;/span&gt;
-&lt;span class="sd"&gt;        SCALAR, we are dealing with a series and thus transformation is done if `cols_in` or &lt;/span&gt;
-&lt;span class="sd"&gt;        `cols_out` evaluates to `True`. &lt;/span&gt;
-&lt;span class="sd"&gt;        Calling this functions with these arguments returns the actual UDF.&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;returnType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;functionType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;returnType&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;functionType&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__call__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="nd"&gt;@wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;converter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="n"&gt;cols_in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="n"&gt;cols_out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-            &lt;span class="nd"&gt;@pandas_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;udf_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-                &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-                    &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cols_from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Series&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                    &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loads&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GROUPED_MAP&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Series&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-                        &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_frame&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;
-                    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cols_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SCALAR&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ct_val_to_json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; 
-                      &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;function_type&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GROUPED_AGG&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-                    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ct_val_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;
-
-            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;udf_wrapper&lt;/span&gt;
-
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;converter&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;It&amp;#8217;s just a typical decorator-with-parameters implementation but with one more layer of wrapping for &lt;code&gt;cols_in&lt;/code&gt; and &lt;code&gt;cols_out&lt;/code&gt;.  &lt;/p&gt;
-&lt;h2&gt;Usage&lt;/h2&gt;
-&lt;p&gt;An example says more than one thousand words of explanation. Let&amp;#8217;s first create some dummy Spark dataframe with complex data&amp;nbsp;types:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Row&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;
-
-&lt;span class="n"&gt;spark&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;spark&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;spark.sql.execution.arrow.enabled&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;spark&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;createDataFrame&lt;/span&gt;&lt;span class="p"&gt;([(&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;a&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;a&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;Row&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
-                            &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;2.&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;a&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;b&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;Row&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
-                            &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;3.&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;d&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;e&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;Row&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))],&lt;/span&gt;
-                           &lt;span class="n"&gt;schema&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;vals&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;maps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;lists&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;structs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;drop&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;lists&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# only Spark 2.4 supports ArrayTypes in to_json!&lt;/span&gt;
-&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;For sake of simplicity, let&amp;#8217;s say we just want to add to the dictionaries in the &lt;code&gt;maps&lt;/code&gt; column a key &lt;code&gt;x&lt;/code&gt; with value &lt;code&gt;42&lt;/code&gt;. But first, we use &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; to get a converted Spark dataframe &lt;code&gt;df_json&lt;/code&gt; and the converted columns &lt;code&gt;ct_cols&lt;/code&gt;. We define then the &lt;span class="caps"&gt;UDF&lt;/span&gt; &lt;code&gt;normalize&lt;/code&gt; and decorate it with our &lt;code&gt;pandas_udf_ct&lt;/code&gt; specifying the return type using &lt;code&gt;dfj_json.schema&lt;/code&gt; (since we only want simple data types) and the function type &lt;code&gt;GROUPED_MAP&lt;/code&gt;. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ct_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_to_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;change_vals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dct&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="n"&gt;dct&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;42&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;dct&lt;/span&gt;
-
-&lt;span class="nd"&gt;@pandas_udf_ct&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PandasUDFType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GROUPED_MAP&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pdf&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="n"&gt;pdf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;maps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;change_vals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pdf&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Just for demonstration, we now group by the &lt;code&gt;vals&lt;/code&gt; column of &lt;code&gt;df_json&lt;/code&gt; and apply our &lt;code&gt;normalize&lt;/code&gt; &lt;span class="caps"&gt;UDF&lt;/span&gt; on each group. Instead of just passing &lt;code&gt;normalize&lt;/code&gt; we have to call it first with parameters &lt;code&gt;cols_in&lt;/code&gt; and &lt;code&gt;cols_out&lt;/code&gt; as explained before. As input columns, we pass the output &lt;code&gt;ct_cols&lt;/code&gt; from our &lt;code&gt;complex_dtypes_to_json&lt;/code&gt; function and since we do not change the shape of our dataframe within the &lt;span class="caps"&gt;UDF&lt;/span&gt;, we use the same for the output &lt;code&gt;cols_out&lt;/code&gt;. In case your &lt;span class="caps"&gt;UDF&lt;/span&gt; removes columns or adds additional ones with complex data types, you would have to change &lt;code&gt;cols_out&lt;/code&gt; accordingly. As a final step we use &lt;code&gt;complex_dtypes_from_json&lt;/code&gt; to convert the &lt;span class="caps"&gt;JSON&lt;/span&gt; strings of our transformed Spark dataframe back to complex data&amp;nbsp;types.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;df_json&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;vals&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cols_in&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cols_out&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;df_final&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;complex_dtypes_from_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_json&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ct_cols&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;df_final&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;We have shown a practical workaround to deal with UDFs and complex data types for Spark 2.3/4. As with every workaround, it&amp;#8217;s far from perfect and hopefully the issue &lt;a href="https://jira.apache.org/jira/browse/SPARK-21187"&gt;&lt;span class="caps"&gt;SPARK&lt;/span&gt;-21187&lt;/a&gt; will be resolved soon rendering this workaround unnecessary. That being said, the presented workaround has been running smoothly in production for quite a while now and my data science colleagues adapted this framework to write their own UDFs based on&amp;nbsp;it.&lt;/p&gt;</content><category term="post"></category><category term="spark"></category><category term="python"></category><category term="big data"></category></entry></feed>
+                &lt;/span&gt;&lt;/p&gt;</content><category term="talk"></category><category term="python"></category><category term="machine-learning"></category><category term="uncertainty quantification"></category><category term="data science"></category></entry></feed>

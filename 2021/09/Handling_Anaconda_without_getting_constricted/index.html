@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>deep learning - Florian Wilhelm</title>
+    <title>Handling Anaconda without getting constricted - Florian Wilhelm</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -9,16 +9,22 @@
 
 
 
+<link rel="canonical" href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/">
 
-    <meta name="author" content="Florian Wilhelm" />
-    <meta name="keywords" content="deep learning" />
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="production,Python" />
+        <meta name="description" content="Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda licence." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Florian Wilhelm" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Florian Wilhelm"/>
-        <meta property="og:url" content="https://florianwilhelm.info"/>
-        <meta property="og:description" content="Florian Wilhelm"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Handling Anaconda without getting constricted"/>
+        <meta property="og:url" content="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/"/>
+        <meta property="og:description" content="Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda licence."/>
+        <meta property="article:published_time" content="2021-09-01" />
+            <meta property="article:section" content="post" />
+            <meta property="article:tag" content="production" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:author" content="Florian Wilhelm" />
 
     <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary">
@@ -36,7 +42,8 @@
     <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
 
 
-
+        <link href="https://florianwilhelm.info/feeds/post.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm post ATOM Feed"/>
 </head>
 <body>
 
@@ -72,13 +79,108 @@ Florian Wilhelm            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-            <article>
-                <h2><a href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">Multiplicative <span class="caps">LSTM</span> for sequence-based&nbsp;Recommenders</a></h2>
-                <div class="summary"><p>Recommender Systems support the decision making processes of customers with personalized suggestions. They are widely used and influence the daily life of almost everyone in different domains like e-commerce, social media, or entertainment. Quite often the dimension of time plays a dominant role in the generation of a relevant&nbsp;recommendation.</p>
-                    <a class="btn btn-default btn-xs" href="https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/">more ...</a>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/"
+                       rel="bookmark"
+                       title="Permalink to Handling Anaconda without getting constricted">
+                        Handling Anaconda without getting&nbsp;constricted
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2021-09-01T08:00:00+02:00"> Sep. 01, 2021</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/production/">production</a>
+        /
+	<a href="https://florianwilhelm.info/tag/python/">Python</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 </div>
-            </article>
-            <hr/>
+                <h2>Commercial Activities using the Anaconda&nbsp;Repository</h2>
+<p>In April 2020, <a href="https://www.anaconda.com/">Anaconda Inc.</a>, the company behind our beloved Anaconda distribution, started to change their 
+<a href="https://www.anaconda.com/terms-of-service">Terms of Service</a> (ToS) in a way that most commercial usage is no longer for free. Peter Wang explained the reasons for
+this change in a <a href="https://www.anaconda.com/blog/sustaining-our-stewardship-of-the-open-source-data-science-community">blog post</a>. There was a bit of turmoil in the Anaconda community, also about the interpretation of the 
+ToS at that time. In October 2020, the ToS was updated and some clarifications were given in an official <a href="https://www.anaconda.com/blog/anaconda-commercial-edition-faq"><span class="caps">FAQ</span></a> by Stephen&nbsp;Nolan. </p>
+<p>I am no lawyer, so take my words with a grain of salt. My take-way from the ToS is that whenever you are using the Anaconda
+repository in commercial activities as a company, you must purchase a licence. This is fair enough since the employees at 
+Anaconda Inc. do a hell of a great job, and they need to make a living of course. Thus, if you use Anaconda, and it helps you
+as an enterprise, why not just support it? Just do it and stop&nbsp;reading. </p>
+<p>That being said, there might be cases, let&#8217;s say you are working as a freelancer for another enterprise and want to use 
+<a href="https://docs.conda.io/en/latest/">conda</a>, the package manager of Anaconda, as part of your familiar tool chain. Surely, you are not gonna ask the company to
+go and buy a license, just because you like to use it in your project. So what legal option do you have besides the obvious
+one of not using it and resorting to some virtualenv based&nbsp;approach?</p>
+<h2>Miniforge, the Miniconda alternative for commercial&nbsp;activities</h2>
+<p>As a heavy conda user, you surely know <a href="https://conda-forge.org/">conda-forge</a>, a community-led collection of recipes, build infrastructure and 
+distributions for the conda package manager. In most cases, you would download <span class="amp">&amp;</span> install <a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>, which uses the Anaconda
+repository as default channel, and add conda-forge as an additional channel in case a package is not in the default&nbsp;channel.</p>
+<p>What many users of conda-forge don&#8217;t know, is that it encompasses not only additional packages but also almost all packages
+of the Anaconda repository (aka the <em>defaults</em> channel) itself. One notably difference being the <a href="https://en.wikipedia.org/wiki/Math_Kernel_Library">Intel <span class="caps">MKL</span></a> here, which is
+used by Pytorch, Numpy, and others to speed up mathematical operations if&nbsp;available. </p>
+<p>With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the <em>defaults</em>
+channel which uses the Anaconda repository (i.e. anaconda.com) from your conda configuration and use only the conda-forge 
+repository (i.e. anaconda.org) instead to be legally on the safe side! More information can be found in 
+<a href="https://conda-forge.org/blog/posts/2020-11-20-anaconda-tos/">conda-forge statement about the Anaconda&#8217;s ToS</a>. </p>
+<p>To make the aforementioned channel configuration even easier, the <a href="https://github.com/conda-forge/miniforge">Miniforge</a> project can be used as an drop-in replacement for Miniconda, 
+that automatically has set up everything for you. Nice! And while you are about to make a change to your installation scripts
+anyway, why not directly try the <em>Mambaforge</em> from the <a href="https://github.com/conda-forge/miniforge">Miniforge</a> project that comes with <a href="https://github.com/mamba-org/mamba">Mamba</a>, a faster alternative to <a href="https://docs.conda.io/en/latest/">conda</a>, by&nbsp;default.</p>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2021/08/using_bigquery_with_programmatic_sql/">Using Google BigQuery with Programmatic <span class="caps">SQL</span></a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/bridging_the_gap_from_ds_to_prod/">Bridging the Gap: from Data Science to&nbsp;Production</a></li>
+        <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
+        <li><a href="https://florianwilhelm.info/2018/03/isolated_environments_with_pyspark/">Managing isolated Environments with&nbsp;PySpark</a></li>
+        <li><a href="https://florianwilhelm.info/2018/01/ds_in_prod_packaging_ci/">Data Science in Production: Packaging, Versioning and Continuous&nbsp;Integration</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+            var disqus_config = function () {
+                this.language = "en";
+
+                        this.page.identifier = '2021-09-01-Handling_Anaconda_without_getting_constricted';
+                        this.page.url = 'https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/';
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
 
         </div>
         <div class="col-sm-3" id="sidebar">
@@ -207,7 +309,7 @@ Florian Wilhelm            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2018 Florian Wilhelm
+         <div class="col-xs-10">&copy; 2021 Florian Wilhelm
             &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
@@ -258,5 +360,10 @@ Florian Wilhelm            </a>
     <!-- End Google Analytics Code -->
 
 
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
 </body>
 </html>

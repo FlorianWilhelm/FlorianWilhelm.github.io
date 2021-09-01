@@ -5,63 +5,70 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/categories.html</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/archives.html</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/search.html</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/tags.html</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/404-not-found/</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/410-gone/</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/500-error/</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/about/</loc>
-<lastmod>2021-08-10T11:40:19-00:00</lastmod>
+<lastmod>2021-09-01T17:41:54-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/</loc>
+<lastmod>2021-09-01T08:00:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -271,7 +278,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/category/post/</loc>
-<lastmod>2021-08-08T08:00:00+00:09</lastmod>
+<lastmod>2021-09-01T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -298,15 +305,15 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://florianwilhelm.info/tag/python/</loc>
-<lastmod>2021-08-08T08:00:00+00:09</lastmod>
+<loc>https://florianwilhelm.info/tag/production/</loc>
+<lastmod>2021-09-01T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://florianwilhelm.info/tag/production/</loc>
-<lastmod>2021-08-08T08:00:00+00:09</lastmod>
+<loc>https://florianwilhelm.info/tag/python/</loc>
+<lastmod>2021-09-01T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

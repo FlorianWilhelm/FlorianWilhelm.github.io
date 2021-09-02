@@ -119,14 +119,14 @@ ToS at that time. In October 2020, the ToS was updated and some clarifications w
 repository in commercial activities as a company, you must purchase a licence. This is fair enough since the employees at 
 Anaconda Inc. do a hell of a great job, and they need to make a living of course. Thus, if you use Anaconda, and it helps you
 as an enterprise, why not just support it? Just do it and stop&nbsp;reading. </p>
-<p>That being said, there might be cases, let&#8217;s say you are working as a freelancer for another enterprise and want to use 
-<a href="https://docs.conda.io/en/latest/">conda</a>, the package manager of Anaconda, as part of your familiar tool chain. Surely, you are not gonna ask the company to
+<p>That being said, there might be cases, let&#8217;s say you are working as a freelancer for another company and want to use 
+<a href="https://docs.conda.io/en/latest/">conda</a>, the package manager of Anaconda, as part of your usual tool chain. Surely, you are not gonna ask the company to
 go and buy a license, just because you like to use it in your project. So what legal option do you have besides the obvious
-one of not using it and resorting to some virtualenv based&nbsp;approach?</p>
+one of not using it and resorting to some <a href="https://virtualenv.pypa.io/">virtualenv</a>-based&nbsp;approach?</p>
 <h2>Miniconda Alternative for Commercial&nbsp;Activities</h2>
 <p>As a heavy conda user, you surely know <a href="https://conda-forge.org/">conda-forge</a>, a community-led collection of recipes, build infrastructure and 
 distributions for the conda package manager. In most cases, you would download <span class="amp">&amp;</span> install <a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>, which uses the Anaconda
-repository as default channel, and add conda-forge as an additional channel in case a package is not in the default&nbsp;channel.</p>
+repository as <em>defaults</em> channel, and add conda-forge as an additional channel in case a package is not in the defaults&nbsp;channel.</p>
 <p>What many users of conda-forge don&#8217;t know, is that it encompasses not only additional packages but also almost all packages
 of the Anaconda repository (aka the <em>defaults</em> channel) itself. With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the <em>defaults</em>
 channel which uses the Anaconda repository (i.e. anaconda.com) from your conda configuration and use only the conda-forge 

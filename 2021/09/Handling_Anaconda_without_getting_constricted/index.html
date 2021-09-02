@@ -128,9 +128,7 @@ one of not using it and resorting to some virtualenv based&nbsp;approach?</p>
 distributions for the conda package manager. In most cases, you would download <span class="amp">&amp;</span> install <a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>, which uses the Anaconda
 repository as default channel, and add conda-forge as an additional channel in case a package is not in the default&nbsp;channel.</p>
 <p>What many users of conda-forge don&#8217;t know, is that it encompasses not only additional packages but also almost all packages
-of the Anaconda repository (aka the <em>defaults</em> channel) itself. One notably difference being the <a href="https://en.wikipedia.org/wiki/Math_Kernel_Library">Intel <span class="caps">MKL</span></a> here, which is
-used by Pytorch, Numpy, and others to speed up mathematical operations if&nbsp;available. </p>
-<p>With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the <em>defaults</em>
+of the Anaconda repository (aka the <em>defaults</em> channel) itself. With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the <em>defaults</em>
 channel which uses the Anaconda repository (i.e. anaconda.com) from your conda configuration and use only the conda-forge 
 repository (i.e. anaconda.org) instead to be legally on the safe side! More information can be found in 
 the <a href="https://conda-forge.org/blog/posts/2020-11-20-anaconda-tos/">conda-forge statement about Anaconda&#8217;s ToS</a>. </p>

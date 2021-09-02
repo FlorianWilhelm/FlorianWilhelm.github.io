@@ -17,9 +17,7 @@ one of not using it and resorting to some virtualenv based&amp;nbsp;approach?&lt
 distributions for the conda package manager. In most cases, you would download &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; install &lt;a href="https://docs.conda.io/en/latest/miniconda.html"&gt;Miniconda&lt;/a&gt;, which uses the Anaconda
 repository as default channel, and add conda-forge as an additional channel in case a package is not in the default&amp;nbsp;channel.&lt;/p&gt;
 &lt;p&gt;What many users of conda-forge don&amp;#8217;t know, is that it encompasses not only additional packages but also almost all packages
-of the Anaconda repository (aka the &lt;em&gt;defaults&lt;/em&gt; channel) itself. One notably difference being the &lt;a href="https://en.wikipedia.org/wiki/Math_Kernel_Library"&gt;Intel &lt;span class="caps"&gt;MKL&lt;/span&gt;&lt;/a&gt; here, which is
-used by Pytorch, Numpy, and others to speed up mathematical operations if&amp;nbsp;available. &lt;/p&gt;
-&lt;p&gt;With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the &lt;em&gt;defaults&lt;/em&gt;
+of the Anaconda repository (aka the &lt;em&gt;defaults&lt;/em&gt; channel) itself. With this in mind and the fact that conda-forge has no restrictions for commercial activities, you can just remove the &lt;em&gt;defaults&lt;/em&gt;
 channel which uses the Anaconda repository (i.e. anaconda.com) from your conda configuration and use only the conda-forge 
 repository (i.e. anaconda.org) instead to be legally on the safe side! More information can be found in 
 the &lt;a href="https://conda-forge.org/blog/posts/2020-11-20-anaconda-tos/"&gt;conda-forge statement about Anaconda&amp;#8217;s ToS&lt;/a&gt;. &lt;/p&gt;

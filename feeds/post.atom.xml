@@ -11,7 +11,7 @@ as an enterprise, why not just support it? Just do it and stop&amp;nbsp;reading.
 &lt;p&gt;That being said, there might be cases, let&amp;#8217;s say you are working as a freelancer for another company and want to use 
 &lt;a href="https://docs.conda.io/en/latest/"&gt;conda&lt;/a&gt;, the package manager of Anaconda, as part of your usual tool chain. Surely, you are not gonna ask the company to
 go and buy a license, just because you like to use it in your project. So what legal option do you have besides the obvious
-one of not using it and resorting to some &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;-based&amp;nbsp;approach?&lt;/p&gt;
+one of not using it and resorting to some &lt;a href="https://virtualenv.pypa.io/"&gt;virtualenv&lt;/a&gt;/&lt;a href="https://pip.pypa.io/"&gt;pip&lt;/a&gt;-based&amp;nbsp;approach?&lt;/p&gt;
 &lt;h2&gt;Miniconda Alternative for Commercial&amp;nbsp;Activities&lt;/h2&gt;
 &lt;p&gt;As a heavy conda user, you surely know &lt;a href="https://conda-forge.org/"&gt;conda-forge&lt;/a&gt;, a community-led collection of recipes, build infrastructure and 
 distributions for the conda package manager. In most cases, you would download &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; install &lt;a href="https://docs.conda.io/en/latest/miniconda.html"&gt;Miniconda&lt;/a&gt;, which uses the Anaconda

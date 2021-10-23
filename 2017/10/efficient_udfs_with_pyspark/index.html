@@ -133,8 +133,8 @@ In our case, this means we provide some Python code that takes a set of rows and
 At the time of writing - with PySpark 2.2 as latest version - there is no &#8220;official&#8221; way of defining an arbitrary <span class="caps">UDAF</span> function.
 Also, the tracking Jira issue <a href="https://issues.apache.org/jira/browse/SPARK-10915"><span class="caps">SPARK</span>-10915</a> does not indicate that this changes in near future.
 Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.
-However, as you might have guessed from the title of this article, there are workarounds to the rescue.
-<!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... --></p>
+However, as you might have guessed from the title of this article, there are workarounds to the&nbsp;rescue.</p>
+<!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... -->
 <p>This is where the <a href="https://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD"><span class="caps">RDD</span></a> <span class="caps">API</span> comes in.
 As a reminder, a <em>Resilient Distributed Dataset</em> (<span class="caps">RDD</span>) is the low-level data structure of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>.
 This <span class="caps">RDD</span> <span class="caps">API</span> allows us to specify arbitrary Python functions that get executed on the data.
@@ -170,10 +170,10 @@ So in our <code>df.filter()</code> example, the DataFrame operation and the filt
 Once the query is executed, the filter condition is evaluated on the distributed DataFrame within Java, without any callback to Python!
 In case our workflow loads the DataFrame from Hive and saves the resulting DataFrame as Hive table, throughout the entire query execution all data operations are performed in a distributed fashion within Java Spark workers, which allows Spark to be very fast for queries on large data sets. 
 Okay, so why is the <span class="caps">RDD</span> <code>filter()</code> method then so much slower?
-The reason is that the lambda function cannot be directly applied to the DataFrame residing in <span class="caps">JVM</span> memory. 
+The reason is that the lambda function cannot be directly applied to the DataFrame residing in <span class="caps">JVM</span>&nbsp;memory. </p>
 <!--- 
 To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
---></p>
+-->
 <p>What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
 At execution time, the Spark workers send our lambda function to those Python workers.
 Next, the Spark workers start serializing their <span class="caps">RDD</span> partitions and pipe them to the Python workers via sockets, where our lambda function gets evaluated on each row.

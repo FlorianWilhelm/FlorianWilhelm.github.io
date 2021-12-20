@@ -163,7 +163,7 @@ Local communication acts like a JVM remote control from Python.
 
 <h2>PySpark&nbsp;internals</h2>
 <p>PySpark is actually a wrapper around the Spark core written in Scala. 
-When you start your <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SparkSession">SparkSession</a> in Python, in the background PySpark uses <a href="https://www.py4j.org/">Py4J</a> to launch a <span class="caps">JVM</span> and create a Java SparkContext. 
+When you start your <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.SparkSession.html">SparkSession</a> in Python, in the background PySpark uses <a href="https://www.py4j.org/">Py4J</a> to launch a <span class="caps">JVM</span> and create a Java SparkContext. 
 All PySpark operations, for example our <code>df.filter()</code> method call, behind the scenes get translated into corresponding calls on the respective Spark DataFrame object within the <span class="caps">JVM</span> SparkContext. This is in general extremely fast and the overhead can be neglected as long as you don&#8217;t call the function millions of times.
 So in our <code>df.filter()</code> example, the DataFrame operation and the filter condition will be send to the Java SparkContext, where it gets compiled into an overall optimized query plan.
 Once the query is executed, the filter condition is evaluated on the distributed DataFrame within Java, without any callback to Python!
@@ -189,7 +189,7 @@ This functionality is provided by the <a href="https://spark.apache.org/docs/lat
 <div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 </code></pre></div>
 
-<p>If you want to further read up on RDDs and partitions, you can checkout the chapter <a href="https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-rdd-partitions.html">Partitions and Partitioning</a> of the excellent <em>Mastering Apache Spark 2</em> book by Jacek Laskowski.
+<p>If you want to further read up on RDDs and partitions, you can checkout the chapter <a href="https://mallikarjuna_g.gitbooks.io/spark/content/spark-rdd-partitions.html">Partitions and Partitioning</a> of the excellent <em>Mastering Apache Spark 2</em> book by Jacek Laskowski.
 In most cases we would want to control the number of partitions, like 100, or even group by a column, let&#8217;s say <code>country</code>, in which case we would&nbsp;write:</p>
 <div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 </code></pre></div>
@@ -419,7 +419,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 <span class="nb">print</span><span class="p">(</span><span class="n">stats_df</span><span class="o">.</span><span class="n">toPandas</span><span class="p">())</span>
 </code></pre></div>
 
-<p>The code above can be easily tested with the help of a Jupyter notebook with PySpark where the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SparkSession">SparkSession</a> <code>spark</code> is&nbsp;predefined.</p>
+<p>The code above can be easily tested with the help of a Jupyter notebook with PySpark where the <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.SparkSession.html">SparkSession</a> <code>spark</code> is&nbsp;predefined.</p>
 <h2>Summary</h2>
 <p>Overall, this proposed method allows the definition of an <span class="caps">UDF</span> as well as an <span class="caps">UDAF</span> since it is up to the function <code>my_func</code> if it returns (1) a DataFrame having as many rows as the input DataFrame (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.transform.html">Pandas transform</a>), (2) a DataFrame of only a single row or (3) optionally a Series (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.aggregate.html">Pandas aggregate</a>) or a DataFrame with an arbitrary number of rows (think <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html">Pandas apply</a>) with even varying columns.
 Therefore, this approach should be applicable to a variety of use cases where the built-in PySpark functionality is not&nbsp;sufficient.</p>

@@ -159,7 +159,7 @@ from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling
 of PyMC3 like to call it. I love it for it&#8217;s elegant design and consequently its expressiveness. The documentation is great
 and thus you can pretty much hack away with your model ideas. The only problem I always had with it is that for me it never
 scaled so well with somewhat larger datasets, i.e. more than 100k data points, and a larger number of parameters. There is a technical and 
-methodical reason for it. Regarding the former, PyMC3 uses <a href="http://deeplearning.net/software/theano/">Theano</a> to speed
+methodical reason for it. Regarding the former, PyMC3 uses <a href="https://github.com/Theano/Theano">Theano</a> to speed
 up its computations by transpiling your Python code to C. Theano inspired many frameworks like <a href="https://www.tensorflow.org/">Tensorflow</a> 
 and <a href="https://pytorch.org/">PyTorch</a> but is considered deprecated today and cannot rival the speed of modern frameworks
 anymore. For the latter, I used PyMC3 mostly with <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">Markov chain Monte Carlo</a> (<span class="caps">MCMC</span>) based methods, 

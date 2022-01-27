@@ -55,14 +55,14 @@ includes other attributes, just think of a dictionary where some keys are again&
 &lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are alright,
 then logging the current configuration and sleeping for some predefined time by our&amp;nbsp;configuration.&lt;/p&gt;
 &lt;p&gt;So executing just &lt;code&gt;hydra-test&lt;/code&gt; results&amp;nbsp;in:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Cannot find primary config &lt;span class="s1"&gt;&amp;#39;main&amp;#39;&lt;/span&gt;. Check that it&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;s &lt;span class="k"&gt;in&lt;/span&gt; your config search path.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Cannot find primary config &amp;#39;main&amp;#39;. Check that it&amp;#39;s in your config search path.
 
 Config search path:
-    &lt;span class="nv"&gt;provider&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;hydra, &lt;span class="nv"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pkg://hydra.conf
-    &lt;span class="nv"&gt;provider&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;main, &lt;span class="nv"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pkg://my_pkg
-    &lt;span class="nv"&gt;provider&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;schema, &lt;span class="nv"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;structured://
+    provider=hydra, path=pkg://hydra.conf
+    provider=main, path=pkg://my_pkg
+    provider=schema, path=structured://
 
-Set the environment variable &lt;span class="nv"&gt;HYDRA_FULL_ERROR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; a &lt;span class="nb"&gt;complete&lt;/span&gt; stack trace.
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This is due to the fact that we set &lt;code&gt;config_path=None&lt;/code&gt;, which is desirable for productive application. The application
@@ -72,15 +72,15 @@ For this reason we pass the configuration at execution with &lt;code&gt;-cd&lt;/
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This results in the&amp;nbsp;error:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Error executing job with overrides: &lt;span class="o"&gt;[]&lt;/span&gt;
-Traceback &lt;span class="o"&gt;(&lt;/span&gt;most recent call last&lt;span class="o"&gt;)&lt;/span&gt;:
-  File &lt;span class="s2"&gt;&amp;quot;.../hydra-example-project/src/my_pkg/cli.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;11&lt;/span&gt;, &lt;span class="k"&gt;in&lt;/span&gt; main
-    OmegaConf.to_object&lt;span class="o"&gt;(&lt;/span&gt;cfg&lt;span class="o"&gt;)&lt;/span&gt;
-omegaconf.errors.MissingMandatoryValue: Structured config of &lt;span class="nb"&gt;type&lt;/span&gt; &lt;span class="sb"&gt;`&lt;/span&gt;Config&lt;span class="sb"&gt;`&lt;/span&gt; has missing mandatory value: experiment
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Error executing job with overrides: []
+Traceback (most recent call last):
+  File &amp;quot;.../hydra-example-project/src/my_pkg/cli.py&amp;quot;, line 11, in main
+    OmegaConf.to_object(cfg)
+omegaconf.errors.MissingMandatoryValue: Structured config of type `Config` has missing mandatory value: experiment
     full_key: experiment
-    &lt;span class="nv"&gt;object_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;Config
+    object_type=Config
 
-Set the environment variable &lt;span class="nv"&gt;HYDRA_FULL_ERROR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; a &lt;span class="nb"&gt;complete&lt;/span&gt; stack trace.
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This is exactly as we want it, since by taking a look into &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py"&gt;config.py&lt;/a&gt;, we see that the schema of the main configuration&amp;nbsp;is:&lt;/p&gt;
@@ -94,10 +94,10 @@ Set the environment variable &lt;span class="nv"&gt;HYDRA_FULL_ERROR&lt;/span&gt
 
 &lt;p&gt;Therefore, experiment is a mandatory parameter that the &lt;span class="caps"&gt;CLI&lt;/span&gt; user needs to provide. Consequently, we add &lt;code&gt;+experiment=exp1&lt;/code&gt; to select the
 configuration from &lt;code&gt;exp1.yaml&lt;/code&gt; and finally get what we would&amp;nbsp;expect:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment&lt;span class="o"&gt;=&lt;/span&gt;exp1
-&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2022&lt;/span&gt;-01-27 &lt;span class="m"&gt;08&lt;/span&gt;:14:34,257&lt;span class="o"&gt;][&lt;/span&gt;my_pkg.cli&lt;span class="o"&gt;][&lt;/span&gt;INFO&lt;span class="o"&gt;]&lt;/span&gt; -
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1
+[2022-01-27 08:14:34,257][my_pkg.cli][INFO] -
 main:
-  sleep: &lt;span class="m"&gt;3&lt;/span&gt;
+  sleep: 3
 neptune:
   project: florian.wilhelm/my_expriments
   api_token: ~/.neptune_api_token
@@ -108,13 +108,13 @@ neptune:
 db:
   driver: mysql
   host: server_string
-  port: &lt;span class="m"&gt;1028&lt;/span&gt;
+  port: 1028
   username: myself
   password: secret
 experiment:
   model: XGBoost
-  l2: &lt;span class="m"&gt;0&lt;/span&gt;.01
-  n_steps: &lt;span class="m"&gt;1000&lt;/span&gt;
+  l2: 0.01
+  n_steps: 1000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Note that we had to use a plus sign in the flag &lt;code&gt;+experiment&lt;/code&gt; as we &lt;em&gt;added&lt;/em&gt; the mandatory experiment parameter. Conveniently, 
@@ -131,16 +131,16 @@ This is due to fact that in &lt;code&gt;main.yaml&lt;/code&gt;, we defined some&
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We can override this default behavior by adding &lt;code&gt;db=postgresql&lt;/code&gt; and this time without &lt;code&gt;+&lt;/code&gt; as we override a&amp;nbsp;default:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment&lt;span class="o"&gt;=&lt;/span&gt;exp1 &lt;span class="nv"&gt;db&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;postgresql
-Error executing job with overrides: &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;+experiment=exp1&amp;#39;&lt;/span&gt;, &lt;span class="s1"&gt;&amp;#39;db=postgresql&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
-Traceback &lt;span class="o"&gt;(&lt;/span&gt;most recent call last&lt;span class="o"&gt;)&lt;/span&gt;:
-  File &lt;span class="s2"&gt;&amp;quot;.../hydra-example-project/src/my_pkg/cli.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;11&lt;/span&gt;, &lt;span class="k"&gt;in&lt;/span&gt; main
-    OmegaConf.to_object&lt;span class="o"&gt;(&lt;/span&gt;cfg&lt;span class="o"&gt;)&lt;/span&gt;
-pydantic.error_wrappers.ValidationError: &lt;span class="m"&gt;1&lt;/span&gt; validation error &lt;span class="k"&gt;for&lt;/span&gt; DataBase
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1 db=postgresql
+Error executing job with overrides: [&amp;#39;+experiment=exp1&amp;#39;, &amp;#39;db=postgresql&amp;#39;]
+Traceback (most recent call last):
+  File &amp;quot;.../hydra-example-project/src/my_pkg/cli.py&amp;quot;, line 11, in main
+    OmegaConf.to_object(cfg)
+pydantic.error_wrappers.ValidationError: 1 validation error for DataBase
 port
-  Choose a non-privileged port! &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;value_error&lt;span class="o"&gt;)&lt;/span&gt;
+  Choose a non-privileged port! (type=value_error)
 
-Set the environment variable &lt;span class="nv"&gt;HYDRA_FULL_ERROR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; a &lt;span class="nb"&gt;complete&lt;/span&gt; stack trace.
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Nice this worked as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
@@ -163,10 +163,10 @@ a port greater than&amp;nbsp;1023.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Good, so we could fix our configuration file or pass an extra parameter if we are in a hurry,&amp;nbsp;i.e.:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment&lt;span class="o"&gt;=&lt;/span&gt;exp1 &lt;span class="nv"&gt;db&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;postgresql db.port&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1832&lt;/span&gt;
-&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2022&lt;/span&gt;-01-27 &lt;span class="m"&gt;08&lt;/span&gt;:13:52,148&lt;span class="o"&gt;][&lt;/span&gt;my_pkg.cli&lt;span class="o"&gt;][&lt;/span&gt;INFO&lt;span class="o"&gt;]&lt;/span&gt; -
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1 db=postgresql db.port=1832
+[2022-01-27 08:13:52,148][my_pkg.cli][INFO] -
 main:
-  sleep: &lt;span class="m"&gt;3&lt;/span&gt;
+  sleep: 3
 neptune:
   project: florian.wilhelm/my_expriments
   api_token: ~/.neptune_api_token
@@ -177,13 +177,13 @@ neptune:
 db:
   driver: postgreqsql
   host: server_string
-  port: &lt;span class="m"&gt;1832&lt;/span&gt;
+  port: 1832
   username: me
   password: birthday
 experiment:
   model: XGBoost
-  l2: &lt;span class="m"&gt;0&lt;/span&gt;.01
-  n_steps: &lt;span class="m"&gt;1000&lt;/span&gt;
+  l2: 0.01
+  n_steps: 1000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And this works! So much flexibility and robustness in just 70 lines of code, awesome! While you are at it, you can also

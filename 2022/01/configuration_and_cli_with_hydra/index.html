@@ -168,14 +168,14 @@ includes other attributes, just think of a dictionary where some keys are again&
 <p>Looking at the actual code, we see that we only trigger some <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> checks to see if configuration and <span class="caps">CLI</span> parameters are alright,
 then logging the current configuration and sleeping for some predefined time by our&nbsp;configuration.</p>
 <p>So executing just <code>hydra-test</code> results&nbsp;in:</p>
-<div class="highlight"><pre><span></span><code>Cannot find primary config <span class="s1">&#39;main&#39;</span>. Check that it<span class="err">&#39;</span>s <span class="k">in</span> your config search path.
+<div class="highlight"><pre><span></span><code>Cannot find primary config &#39;main&#39;. Check that it&#39;s in your config search path.
 
 Config search path:
-    <span class="nv">provider</span><span class="o">=</span>hydra, <span class="nv">path</span><span class="o">=</span>pkg://hydra.conf
-    <span class="nv">provider</span><span class="o">=</span>main, <span class="nv">path</span><span class="o">=</span>pkg://my_pkg
-    <span class="nv">provider</span><span class="o">=</span>schema, <span class="nv">path</span><span class="o">=</span>structured://
+    provider=hydra, path=pkg://hydra.conf
+    provider=main, path=pkg://my_pkg
+    provider=schema, path=structured://
 
-Set the environment variable <span class="nv">HYDRA_FULL_ERROR</span><span class="o">=</span><span class="m">1</span> <span class="k">for</span> a <span class="nb">complete</span> stack trace.
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 </code></pre></div>
 
 <p>This is due to the fact that we set <code>config_path=None</code>, which is desirable for productive application. The application
@@ -185,15 +185,15 @@ For this reason we pass the configuration at execution with <code>-cd</code>, sh
 </code></pre></div>
 
 <p>This results in the&nbsp;error:</p>
-<div class="highlight"><pre><span></span><code>Error executing job with overrides: <span class="o">[]</span>
-Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
-  File <span class="s2">&quot;.../hydra-example-project/src/my_pkg/cli.py&quot;</span>, line <span class="m">11</span>, <span class="k">in</span> main
-    OmegaConf.to_object<span class="o">(</span>cfg<span class="o">)</span>
-omegaconf.errors.MissingMandatoryValue: Structured config of <span class="nb">type</span> <span class="sb">`</span>Config<span class="sb">`</span> has missing mandatory value: experiment
+<div class="highlight"><pre><span></span><code>Error executing job with overrides: []
+Traceback (most recent call last):
+  File &quot;.../hydra-example-project/src/my_pkg/cli.py&quot;, line 11, in main
+    OmegaConf.to_object(cfg)
+omegaconf.errors.MissingMandatoryValue: Structured config of type `Config` has missing mandatory value: experiment
     full_key: experiment
-    <span class="nv">object_type</span><span class="o">=</span>Config
+    object_type=Config
 
-Set the environment variable <span class="nv">HYDRA_FULL_ERROR</span><span class="o">=</span><span class="m">1</span> <span class="k">for</span> a <span class="nb">complete</span> stack trace.
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 </code></pre></div>
 
 <p>This is exactly as we want it, since by taking a look into <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py">config.py</a>, we see that the schema of the main configuration&nbsp;is:</p>
@@ -207,10 +207,10 @@ Set the environment variable <span class="nv">HYDRA_FULL_ERROR</span><span class
 
 <p>Therefore, experiment is a mandatory parameter that the <span class="caps">CLI</span> user needs to provide. Consequently, we add <code>+experiment=exp1</code> to select the
 configuration from <code>exp1.yaml</code> and finally get what we would&nbsp;expect:</p>
-<div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment<span class="o">=</span>exp1
-<span class="o">[</span><span class="m">2022</span>-01-27 <span class="m">08</span>:14:34,257<span class="o">][</span>my_pkg.cli<span class="o">][</span>INFO<span class="o">]</span> -
+<div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1
+[2022-01-27 08:14:34,257][my_pkg.cli][INFO] -
 main:
-  sleep: <span class="m">3</span>
+  sleep: 3
 neptune:
   project: florian.wilhelm/my_expriments
   api_token: ~/.neptune_api_token
@@ -221,13 +221,13 @@ neptune:
 db:
   driver: mysql
   host: server_string
-  port: <span class="m">1028</span>
+  port: 1028
   username: myself
   password: secret
 experiment:
   model: XGBoost
-  l2: <span class="m">0</span>.01
-  n_steps: <span class="m">1000</span>
+  l2: 0.01
+  n_steps: 1000
 </code></pre></div>
 
 <p>Note that we had to use a plus sign in the flag <code>+experiment</code> as we <em>added</em> the mandatory experiment parameter. Conveniently, 
@@ -244,16 +244,16 @@ This is due to fact that in <code>main.yaml</code>, we defined some&nbsp;default
 </code></pre></div>
 
 <p>We can override this default behavior by adding <code>db=postgresql</code> and this time without <code>+</code> as we override a&nbsp;default:</p>
-<div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment<span class="o">=</span>exp1 <span class="nv">db</span><span class="o">=</span>postgresql
-Error executing job with overrides: <span class="o">[</span><span class="s1">&#39;+experiment=exp1&#39;</span>, <span class="s1">&#39;db=postgresql&#39;</span><span class="o">]</span>
-Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
-  File <span class="s2">&quot;.../hydra-example-project/src/my_pkg/cli.py&quot;</span>, line <span class="m">11</span>, <span class="k">in</span> main
-    OmegaConf.to_object<span class="o">(</span>cfg<span class="o">)</span>
-pydantic.error_wrappers.ValidationError: <span class="m">1</span> validation error <span class="k">for</span> DataBase
+<div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1 db=postgresql
+Error executing job with overrides: [&#39;+experiment=exp1&#39;, &#39;db=postgresql&#39;]
+Traceback (most recent call last):
+  File &quot;.../hydra-example-project/src/my_pkg/cli.py&quot;, line 11, in main
+    OmegaConf.to_object(cfg)
+pydantic.error_wrappers.ValidationError: 1 validation error for DataBase
 port
-  Choose a non-privileged port! <span class="o">(</span><span class="nv">type</span><span class="o">=</span>value_error<span class="o">)</span>
+  Choose a non-privileged port! (type=value_error)
 
-Set the environment variable <span class="nv">HYDRA_FULL_ERROR</span><span class="o">=</span><span class="m">1</span> <span class="k">for</span> a <span class="nb">complete</span> stack trace.
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 </code></pre></div>
 
 <p>Nice this worked as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
@@ -276,10 +276,10 @@ a port greater than&nbsp;1023.</p>
 </code></pre></div>
 
 <p>Good, so we could fix our configuration file or pass an extra parameter if we are in a hurry,&nbsp;i.e.:</p>
-<div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment<span class="o">=</span>exp1 <span class="nv">db</span><span class="o">=</span>postgresql db.port<span class="o">=</span><span class="m">1832</span>
-<span class="o">[</span><span class="m">2022</span>-01-27 <span class="m">08</span>:13:52,148<span class="o">][</span>my_pkg.cli<span class="o">][</span>INFO<span class="o">]</span> -
+<div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1 db=postgresql db.port=1832
+[2022-01-27 08:13:52,148][my_pkg.cli][INFO] -
 main:
-  sleep: <span class="m">3</span>
+  sleep: 3
 neptune:
   project: florian.wilhelm/my_expriments
   api_token: ~/.neptune_api_token
@@ -290,13 +290,13 @@ neptune:
 db:
   driver: postgreqsql
   host: server_string
-  port: <span class="m">1832</span>
+  port: 1832
   username: me
   password: birthday
 experiment:
   model: XGBoost
-  l2: <span class="m">0</span>.01
-  n_steps: <span class="m">1000</span>
+  l2: 0.01
+  n_steps: 1000
 </code></pre></div>
 
 <p>And this works! So much flexibility and robustness in just 70 lines of code, awesome! While you are at it, you can also

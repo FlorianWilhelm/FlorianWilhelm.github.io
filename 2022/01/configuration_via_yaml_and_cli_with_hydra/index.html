@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Effective and Consistent Configuration & CLI with Hydra - Florian Wilhelm's blog</title>
+    <title>Effective and Consistent Configuration via YAML & CLI with Hydra - Florian Wilhelm's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="https://florianwilhelm.info/2022/01/configuration_and_cli_with_hydra/">
+<link rel="canonical" href="https://florianwilhelm.info/2022/01/configuration_via_yaml_and_cli_with_hydra/">
 
         <meta name="author" content="Florian Wilhelm" />
         <meta name="keywords" content="python,configuration,production" />
@@ -17,8 +17,8 @@
 
         <meta property="og:site_name" content="Florian Wilhelm's blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Effective and Consistent Configuration &amp; CLI with Hydra"/>
-        <meta property="og:url" content="https://florianwilhelm.info/2022/01/configuration_and_cli_with_hydra/"/>
+        <meta property="og:title" content="Effective and Consistent Configuration via YAML &amp; CLI with Hydra"/>
+        <meta property="og:url" content="https://florianwilhelm.info/2022/01/configuration_via_yaml_and_cli_with_hydra/"/>
         <meta property="og:description" content="Hydra allows you to have consistent configuration of Python applications via a command-line interface and YAML files."/>
         <meta property="article:published_time" content="2022-01-27" />
             <meta property="article:section" content="post" />
@@ -83,10 +83,10 @@ Florian Wilhelm's blog            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://florianwilhelm.info/2022/01/configuration_and_cli_with_hydra/"
+                    <a href="https://florianwilhelm.info/2022/01/configuration_via_yaml_and_cli_with_hydra/"
                        rel="bookmark"
-                       title="Permalink to Effective and Consistent Configuration & CLI with Hydra">
-                        Effective and Consistent Configuration <span class="amp">&amp;</span> <span class="caps">CLI</span> with&nbsp;Hydra
+                       title="Permalink to Effective and Consistent Configuration via YAML & CLI with Hydra">
+                        Effective and Consistent Configuration via <span class="caps">YAML</span> <span class="amp">&amp;</span> <span class="caps">CLI</span> with&nbsp;Hydra
                     </a>
                 </h1>
             </header>
@@ -303,8 +303,8 @@ experiment:
 run <code>hydra-test -cd configs +experiment=missing_key</code> and <code>hydra-test -cd configs +experiment=wrong_type</code> to see some
 nice errors from pydantic telling you about a missing key and wrong type of the configuration value, respectively.
 By the way, also passing the port parameter wrong, e.g. with <code>db.port=72</code>, would have triggered the same exception, so 
-<span class="caps">CLI</span> and the configurations share the same checks and validations. So <a href="https://hydra.cc/">Hydra</a> and <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> work nicely together. 
-Just remember to use the <code>dataclass</code> from <a href="https://pydantic-docs.helpmanual.io/">pydantic</a>, not the standard library
+<span class="caps">CLI</span> and the <span class="caps">YAML</span> configurations share the same checks and validations. <a href="https://hydra.cc/">Hydra</a> and <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> work nicely together here
+to make this possible. Just remember to use the <code>dataclass</code> from <a href="https://pydantic-docs.helpmanual.io/">pydantic</a>, not the standard library
 and call <code>OmegaConf.to_object(cfg)</code> at the start of your application to fail as early as&nbsp;possible.</p>
 <p>Hydra has many more, really nice features. Imagine you want to run now the experiments <code>exp1</code> and <code>exp2</code> consecutively,
 you can just use the <code>--multirun</code> feature, or <code>-m</code> for&nbsp;short:</p>
@@ -341,8 +341,8 @@ flag <code>--hydra-help</code>, you can see the hydra-specific parameters of you
             var disqus_config = function () {
                 this.language = "en";
 
-                        this.page.identifier = '2022-01-27-configuration_and_cli_with_hydra';
-                        this.page.url = 'https://florianwilhelm.info/2022/01/configuration_and_cli_with_hydra/';
+                        this.page.identifier = '2022-01-27-configuration_via_yaml_and_cli_with_hydra';
+                        this.page.url = 'https://florianwilhelm.info/2022/01/configuration_via_yaml_and_cli_with_hydra/';
             };
 
             /* * * DON'T EDIT BELOW THIS LINE * * */

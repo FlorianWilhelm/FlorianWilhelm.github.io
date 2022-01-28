@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Florian Wilhelm's blog - post</title><link href="https://florianwilhelm.info/" rel="alternate"></link><link href="https://florianwilhelm.info/feeds/post.atom.xml" rel="self"></link><id>https://florianwilhelm.info/</id><updated>2022-01-27T10:00:00+01:00</updated><entry><title>Effective and Consistent Configuration via YAML &amp; CLI with Hydra</title><link href="https://florianwilhelm.info/2022/01/configuration_via_yaml_and_cli_with_hydra/" rel="alternate"></link><published>2022-01-27T10:00:00+01:00</published><updated>2022-01-27T10:00:00+01:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2022-01-27:/2022/01/configuration_via_yaml_and_cli_with_hydra/</id><summary type="html">&lt;p&gt;Hydra allows you to have consistent configuration of Python applications via a command-line interface and &lt;span class="caps"&gt;YAML&lt;/span&gt;&amp;nbsp;files.&lt;/p&gt;</summary><content type="html">&lt;p&gt;A frequent requirement for productive Python application is that they are configurable via configuration files and/or
 the command-line-interface (&lt;span class="caps"&gt;CLI&lt;/span&gt;). This allows you to change the behavior of your application without touching the source code, e.g. configuring
-another database &lt;span class="caps"&gt;URL&lt;/span&gt; or the logging verbosity. For the &lt;span class="caps"&gt;CLI&lt;/span&gt;-part, &lt;a href="https://docs.python.org/3/library/argparse.html"&gt;argparse&lt;/a&gt; or &lt;a href="https://click.palletsprojects.com/"&gt;Click&lt;/a&gt; is often used and with &lt;a href="https://pyyaml.org/"&gt;PyYAML&lt;/a&gt; configuration files
+another database &lt;span class="caps"&gt;URL&lt;/span&gt; or the logging verbosity. For the &lt;span class="caps"&gt;CLI&lt;/span&gt;-part, &lt;a href="https://docs.python.org/3/library/argparse.html"&gt;argparse&lt;/a&gt; or &lt;a href="https://click.palletsprojects.com/"&gt;click&lt;/a&gt; is often used and with &lt;a href="https://pyyaml.org/"&gt;PyYAML&lt;/a&gt; configuration files
 can be easily read, so where is the&amp;nbsp;problem?&lt;/p&gt;
 &lt;p&gt;The &lt;span class="caps"&gt;CLI&lt;/span&gt; and configuration file of a Python application have many things in common, i.e.,&amp;nbsp;both&lt;/p&gt;
 &lt;ol&gt;
@@ -52,8 +52,8 @@ includes other attributes, just think of a dictionary where some keys are again&
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are alright,
-then logging the current configuration and sleeping for some predefined time by our&amp;nbsp;configuration.&lt;/p&gt;
+&lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if tne configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are alright,
+then we log the current configuration and sleep for some time as defined in the&amp;nbsp;configuration.&lt;/p&gt;
 &lt;p&gt;So executing just &lt;code&gt;hydra-test&lt;/code&gt; results&amp;nbsp;in:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Cannot find primary config &amp;#39;main&amp;#39;. Check that it&amp;#39;s in your config search path.
 
@@ -150,13 +150,11 @@ a port greater than&amp;nbsp;1023.&lt;/p&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DataBase&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
     &lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
-
     &lt;span class="nd"&gt;@validator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;validate_some_var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_non_privileged_port&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Choose a non-privileged port!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Choose a non-privileged port!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;
-
     &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;
     &lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
     &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;

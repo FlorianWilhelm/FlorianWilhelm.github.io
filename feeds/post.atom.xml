@@ -10,13 +10,13 @@ can be easily read, so where is the&amp;nbsp;problem?&lt;/p&gt;
 &lt;li&gt;need to be consistent and mergeable, i.e. a &lt;span class="caps"&gt;CLI&lt;/span&gt; flag should be named like the &lt;span class="caps"&gt;YAML&lt;/span&gt; key and if both are passed the &lt;span class="caps"&gt;CLI&lt;/span&gt;
    overwrites the &lt;span class="caps"&gt;YAML&lt;/span&gt;&amp;nbsp;configuration.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Thus implementing the &lt;span class="caps"&gt;CLI&lt;/span&gt; and configuration by a &lt;span class="caps"&gt;YAML&lt;/span&gt; file seperated from each other, leads often to code duplication
+&lt;p&gt;Thus implementing configuration by a &lt;span class="caps"&gt;CLI&lt;/span&gt; and a &lt;span class="caps"&gt;YAML&lt;/span&gt; file separately, leads often to code duplication
 and inconsistent behavior, not to mention the enormous amount of work that must be done to get this&amp;nbsp;right.&lt;/p&gt;
 &lt;p&gt;With this in mind, Facebook implemented the &lt;a href="https://hydra.cc/"&gt;Hydra&lt;/a&gt; library, which allows you to do hierarchical configuration by
-composition and override it through config files and the command-line. This repository serves as an example project set
-up to demonstrate the most important features. We also show how &lt;a href="https://hydra.cc/"&gt;Hydra&lt;/a&gt; can be used in conjunction with &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt;,
-which extends the validation capabilities of &lt;a href="https://omegaconf.readthedocs.io/"&gt;OmegaConf&lt;/a&gt; that is used internally by Hydra. To follow along, we
-set up an &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project"&gt;example project with Hydra&lt;/a&gt; that serves as a demonstration, but also as a playground for&amp;nbsp;you.&lt;/p&gt;
+composition and override it through config files and the command-line. In this blog post, we demonstrate in an example project
+the most important features of &lt;a href="https://hydra.cc/"&gt;Hydra&lt;/a&gt; and how it can be used in conjunction with &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt;,
+which extends the validation capabilities of &lt;a href="https://omegaconf.readthedocs.io/"&gt;OmegaConf&lt;/a&gt; that is used internally by Hydra. To follow along, check out
+this &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project"&gt;repository&lt;/a&gt; that serves as a demonstration, but also as a playground for&amp;nbsp;you.&lt;/p&gt;
 &lt;h3&gt;Ok, so give me the gist of how Hydra&amp;nbsp;works&lt;/h3&gt;
 &lt;p&gt;Sure, just take a look into &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/cli.py"&gt;cli.py&lt;/a&gt; and &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py"&gt;config.py&lt;/a&gt; first as these are the only files we added,
 roughly 70 lines of code. The hierarchical configuration can be found in the &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/tree/master/configs"&gt;configs&lt;/a&gt;&amp;nbsp;folder.&lt;/p&gt;
@@ -35,7 +35,7 @@ roughly 70 lines of code. The hierarchical configuration can be found in the &lt
 &lt;p&gt;Basically, this structure allows you to mix and match your configuration by choosing for instance the MySQL database
 with the setup of experiment 2. Each group then corresponds to an attribute in the configuration object, which
 includes other attributes, just think of a dictionary where some keys are again&amp;nbsp;dictionaries.&lt;/p&gt;
-&lt;p&gt;In our &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project"&gt;example project with Hydra&lt;/a&gt;, we defined the &lt;span class="caps"&gt;CLI&lt;/span&gt; command &lt;code&gt;hydra-test&lt;/code&gt; by changing in &lt;code&gt;setup.cfg&lt;/code&gt; the following&amp;nbsp;lines:&lt;/p&gt;
+&lt;p&gt;In our [example project with Hydra], we defined the &lt;span class="caps"&gt;CLI&lt;/span&gt; command &lt;code&gt;hydra-test&lt;/code&gt; by changing in &lt;code&gt;setup.cfg&lt;/code&gt; the following&amp;nbsp;lines:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Add here console scripts like:&lt;/span&gt;
 &lt;span class="na"&gt;console_scripts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;
      &lt;span class="na"&gt;hydra-test&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;my_pkg.cli:main&lt;/span&gt;

@@ -143,7 +143,7 @@ port
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Nice this worked as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
+&lt;p&gt;Nice! This worked as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
 This is the magic of &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; doing its validation work. Taking a look into &lt;code&gt;config.py&lt;/code&gt;, we see the check that assures
 a port greater than&amp;nbsp;1023.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nd"&gt;@dataclass&lt;/span&gt;

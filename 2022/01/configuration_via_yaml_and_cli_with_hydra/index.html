@@ -220,7 +220,7 @@ neptune:
 db:
   driver: mysql
   host: server_string
-  port: 1028
+  port: ${env:MYSQL_PORT,1028}
   username: myself
   password: secret
 experiment:
@@ -242,7 +242,17 @@ This is due to fact that in <code>main.yaml</code>, we defined some&nbsp;default
   <span class="c1"># experiment: is not mentioned here but in config.py to have a mandatory setting</span>
 </code></pre></div>
 
-<p>We can override this default behavior by adding <code>db=postgresql</code> and this time without <code>+</code> as we override a&nbsp;default:</p>
+<p>Taking a look into <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/configs/db/mysql.yaml">mysql.yaml</a>, we see that Hydra also allows accessing environment variables easily to help with 
+configuration. As an example we defined the database port to be whatever the environment variable <code>MYSQL_PORT</code> is set
+to or 1028 if undefined. So Hydra does not only unify the configuration by <span class="caps">YAML</span> and <span class="caps">CLI</span> but also by environment&nbsp;variables.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">driver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql</span>
+<span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server_string</span>
+<span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${env:MYSQL_PORT,1028}</span>
+<span class="nt">username</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">myself</span>
+<span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">secret</span>
+</code></pre></div>
+
+<p>We can also override the default database by adding the flag <code>db=postgresql</code> and this time without <code>+</code> as we override a&nbsp;default:</p>
 <div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1 db=postgresql
 Error executing job with overrides: [&#39;+experiment=exp1&#39;, &#39;db=postgresql&#39;]
 Traceback (most recent call last):
@@ -314,7 +324,9 @@ you can just use the <code>--multirun</code> feature, or <code>-m</code> for&nbs
 </code></pre></div>
 
 <p>There&#8217;s so much more to Hydra and several plugins even for hyperparameter optimization exist. Also note that with the
-flag <code>--hydra-help</code>, you can see the hydra-specific parameters of your application. So now go and check it&nbsp;out!</p>
+flag <code>--hydra-help</code>, you can see the hydra-specific parameters of your application. Using just <code>--help</code> returns some
+automatic generated help according to your application&#8217;s configuration. This can of course be customized easily with
+the help of a powerful templating system as described in <a href="https://hydra.cc/docs/1.0/configure_hydra/app_help/">Customizing Application&#8217;s help docs</a>.</p>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">

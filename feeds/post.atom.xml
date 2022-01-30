@@ -107,7 +107,7 @@ neptune:
 db:
   driver: mysql
   host: server_string
-  port: 1028
+  port: ${env:MYSQL_PORT,1028}
   username: myself
   password: secret
 experiment:
@@ -129,7 +129,17 @@ This is due to fact that in &lt;code&gt;main.yaml&lt;/code&gt;, we defined some&
   &lt;span class="c1"&gt;# experiment: is not mentioned here but in config.py to have a mandatory setting&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We can override this default behavior by adding &lt;code&gt;db=postgresql&lt;/code&gt; and this time without &lt;code&gt;+&lt;/code&gt; as we override a&amp;nbsp;default:&lt;/p&gt;
+&lt;p&gt;Taking a look into &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/configs/db/mysql.yaml"&gt;mysql.yaml&lt;/a&gt;, we see that Hydra also allows accessing environment variables easily to help with 
+configuration. As an example we defined the database port to be whatever the environment variable &lt;code&gt;MYSQL_PORT&lt;/code&gt; is set
+to or 1028 if undefined. So Hydra does not only unify the configuration by &lt;span class="caps"&gt;YAML&lt;/span&gt; and &lt;span class="caps"&gt;CLI&lt;/span&gt; but also by environment&amp;nbsp;variables.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;mysql&lt;/span&gt;
+&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;server_string&lt;/span&gt;
+&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;${env:MYSQL_PORT,1028}&lt;/span&gt;
+&lt;span class="nt"&gt;username&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;myself&lt;/span&gt;
+&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secret&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We can also override the default database by adding the flag &lt;code&gt;db=postgresql&lt;/code&gt; and this time without &lt;code&gt;+&lt;/code&gt; as we override a&amp;nbsp;default:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1 db=postgresql
 Error executing job with overrides: [&amp;#39;+experiment=exp1&amp;#39;, &amp;#39;db=postgresql&amp;#39;]
 Traceback (most recent call last):
@@ -201,7 +211,9 @@ you can just use the &lt;code&gt;--multirun&lt;/code&gt; feature, or &lt;code&gt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;There&amp;#8217;s so much more to Hydra and several plugins even for hyperparameter optimization exist. Also note that with the
-flag &lt;code&gt;--hydra-help&lt;/code&gt;, you can see the hydra-specific parameters of your application. So now go and check it&amp;nbsp;out!&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="configuration"></category><category term="production"></category></entry><entry><title>Handling Anaconda without getting Constricted</title><link href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/" rel="alternate"></link><published>2021-09-01T08:00:00+02:00</published><updated>2021-09-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-09-01:/2021/09/Handling_Anaconda_without_getting_constricted/</id><summary type="html">&lt;p&gt;Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda&amp;nbsp;licence.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Commercial Activities using the Anaconda&amp;nbsp;Repository&lt;/h2&gt;
+flag &lt;code&gt;--hydra-help&lt;/code&gt;, you can see the hydra-specific parameters of your application. Using just &lt;code&gt;--help&lt;/code&gt; returns some
+automatic generated help according to your application&amp;#8217;s configuration. This can of course be customized easily with
+the help of a powerful templating system as described in &lt;a href="https://hydra.cc/docs/1.0/configure_hydra/app_help/"&gt;Customizing Application&amp;#8217;s help docs&lt;/a&gt;.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="configuration"></category><category term="production"></category></entry><entry><title>Handling Anaconda without getting Constricted</title><link href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/" rel="alternate"></link><published>2021-09-01T08:00:00+02:00</published><updated>2021-09-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-09-01:/2021/09/Handling_Anaconda_without_getting_constricted/</id><summary type="html">&lt;p&gt;Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda&amp;nbsp;licence.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Commercial Activities using the Anaconda&amp;nbsp;Repository&lt;/h2&gt;
 &lt;p&gt;In April 2020, &lt;a href="https://www.anaconda.com/"&gt;Anaconda Inc.&lt;/a&gt;, the company behind our beloved Anaconda distribution, started to change their 
 &lt;a href="https://www.anaconda.com/terms-of-service"&gt;Terms of Service&lt;/a&gt; (ToS) in a way that most commercial usage is no longer for free. Peter Wang explained the reasons for
 this change in a &lt;a href="https://www.anaconda.com/blog/sustaining-our-stewardship-of-the-open-source-data-science-community"&gt;blog post&lt;/a&gt;. There was a bit of turmoil in the Anaconda community, also about the interpretation of the 

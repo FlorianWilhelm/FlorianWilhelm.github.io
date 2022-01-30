@@ -51,7 +51,7 @@ includes other attributes, just think of a dictionary where some keys are again&
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if tne configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are alright,
+&lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if the configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are alright,
 then we log the current configuration and sleep for some time as defined in the&amp;nbsp;configuration.&lt;/p&gt;
 &lt;p&gt;So executing just &lt;code&gt;hydra-test&lt;/code&gt; results&amp;nbsp;in:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Cannot find primary config &amp;#39;main&amp;#39;. Check that it&amp;#39;s in your config search path.

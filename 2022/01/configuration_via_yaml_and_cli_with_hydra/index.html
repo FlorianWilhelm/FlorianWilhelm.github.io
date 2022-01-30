@@ -164,7 +164,7 @@ includes other attributes, just think of a dictionary where some keys are again&
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">sleep</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Looking at the actual code, we see that we only trigger some <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> checks to see if tne configuration and <span class="caps">CLI</span> parameters are alright,
+<p>Looking at the actual code, we see that we only trigger some <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> checks to see if the configuration and <span class="caps">CLI</span> parameters are alright,
 then we log the current configuration and sleep for some time as defined in the&nbsp;configuration.</p>
 <p>So executing just <code>hydra-test</code> results&nbsp;in:</p>
 <div class="highlight"><pre><span></span><code>Cannot find primary config &#39;main&#39;. Check that it&#39;s in your config search path.

@@ -107,7 +107,7 @@ neptune:
 db:
   driver: mysql
   host: server_string
-  port: ${env:MYSQL_PORT,1028}
+  port: ${oc.env:MYSQL_PORT,1028}
   username: myself
   password: secret
 experiment:
@@ -134,7 +134,7 @@ configuration. As an example we defined the database port to be whatever the env
 to or 1028 if undefined. So Hydra does not only unify the configuration by &lt;span class="caps"&gt;YAML&lt;/span&gt; and &lt;span class="caps"&gt;CLI&lt;/span&gt; but also by environment&amp;nbsp;variables.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;mysql&lt;/span&gt;
 &lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;server_string&lt;/span&gt;
-&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;${env:MYSQL_PORT,1028}&lt;/span&gt;
+&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;${oc.env:MYSQL_PORT,1028}&lt;/span&gt;
 &lt;span class="nt"&gt;username&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;myself&lt;/span&gt;
 &lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secret&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

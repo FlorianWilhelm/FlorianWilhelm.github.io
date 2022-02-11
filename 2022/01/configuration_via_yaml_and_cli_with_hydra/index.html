@@ -147,7 +147,7 @@ roughly 70 lines of code. The hierarchical configuration can be found in the <a 
 <p>Basically, this structure allows you to mix and match your configuration by choosing for instance the MySQL database
 with the setup of experiment 2. Each group then corresponds to an attribute in the configuration object, which
 includes other attributes, just think of a dictionary where some keys are again&nbsp;dictionaries.</p>
-<p>In our [example project with Hydra], we defined the <span class="caps">CLI</span> command <code>hydra-test</code> by changing in <code>setup.cfg</code> the following&nbsp;lines:</p>
+<p>In the <a href="https://github.com/FlorianWilhelm/hydra-example-project">repository</a> of our example project, we defined the <span class="caps">CLI</span> command <code>hydra-test</code> by changing in <code>setup.cfg</code> the following&nbsp;lines:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add here console scripts like:</span>
 <span class="na">console_scripts</span> <span class="o">=</span>
      <span class="na">hydra-test</span> <span class="o">=</span> <span class="s">my_pkg.cli:main</span>

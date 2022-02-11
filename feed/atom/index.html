@@ -34,7 +34,7 @@ roughly 70 lines of code. The hierarchical configuration can be found in the &lt
 &lt;p&gt;Basically, this structure allows you to mix and match your configuration by choosing for instance the MySQL database
 with the setup of experiment 2. Each group then corresponds to an attribute in the configuration object, which
 includes other attributes, just think of a dictionary where some keys are again&amp;nbsp;dictionaries.&lt;/p&gt;
-&lt;p&gt;In our [example project with Hydra], we defined the &lt;span class="caps"&gt;CLI&lt;/span&gt; command &lt;code&gt;hydra-test&lt;/code&gt; by changing in &lt;code&gt;setup.cfg&lt;/code&gt; the following&amp;nbsp;lines:&lt;/p&gt;
+&lt;p&gt;In the &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project"&gt;repository&lt;/a&gt; of our example project, we defined the &lt;span class="caps"&gt;CLI&lt;/span&gt; command &lt;code&gt;hydra-test&lt;/code&gt; by changing in &lt;code&gt;setup.cfg&lt;/code&gt; the following&amp;nbsp;lines:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Add here console scripts like:&lt;/span&gt;
 &lt;span class="na"&gt;console_scripts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;
      &lt;span class="na"&gt;hydra-test&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;my_pkg.cli:main&lt;/span&gt;

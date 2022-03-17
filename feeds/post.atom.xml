@@ -1322,7 +1322,7 @@ just take for granted the&amp;nbsp;following&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;correction terms, i.e.&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(+\sigma^2\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(+\frac{1}{2}\sigma^2\)&lt;/span&gt;&lt;/td&gt;
 &lt;td&gt;&lt;span class="math"&gt;\(0\)&lt;/span&gt;&lt;/td&gt;
 &lt;td&gt;&lt;span class="math"&gt;\(-\sigma^2\)&lt;/span&gt;&lt;/td&gt;
 &lt;td&gt;&lt;span class="math"&gt;\(-\frac{3}{2}\sigma^2\)&lt;/span&gt;&lt;/td&gt;

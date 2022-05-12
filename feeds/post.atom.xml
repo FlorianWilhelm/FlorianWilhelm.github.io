@@ -1610,6 +1610,15 @@ $$&lt;/div&gt;
 We need the two integrals in &lt;span class="math"&gt;\(\eqref{eqn:mape-proof}\)&lt;/span&gt; to be equal to fulfill the equation, thus &lt;span class="math"&gt;\(\log(\hat y)\)&lt;/span&gt; needs to be
 the median. With the shifted normal distribution &lt;span class="math"&gt;\(f_s(x)\)&lt;/span&gt;, we have that for &lt;span class="math"&gt;\(\log(\hat y) = \mu - \sigma^2\)&lt;/span&gt;. Consequently,
 the correction term for &lt;span class="caps"&gt;MAPE&lt;/span&gt; is &lt;span class="math"&gt;\(-\sigma^2\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h2&gt;Talk of this&amp;nbsp;Article&lt;/h2&gt;
+&lt;p&gt;This blog post was also presented at &lt;a href="https://2022.pycon.de/program/7YDWYL/"&gt;PyCon/PyData 2022&lt;/a&gt; and the slides are available on &lt;a href="https://www.slideshare.net/FlorianWilhelm2/honey-i-shrunk-the-target-variable-common-pitfalls-when-transforming-the-target-variable-and-how-to-exploit-transformations-251572450"&gt;SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class="videobox"&gt;
+                    &lt;iframe width="800" height="500"
+                        src='https://www.youtube.com/embed/fdKy_FFzZF4'
+                        frameborder='0' webkitAllowFullScreen
+                        mozallowfullscreen allowFullScreen&gt;
+                    &lt;/iframe&gt;
+                &lt;/span&gt;&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

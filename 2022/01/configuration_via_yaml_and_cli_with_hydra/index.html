@@ -164,8 +164,8 @@ some kind of nested dictionary of dictionaries, where each configuration group i
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">sleep</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Looking at the actual code, we see that we only trigger some <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> checks to see if the configuration and <span class="caps">CLI</span> parameters are alright,
-then we log the current configuration and sleep for some time as defined in the&nbsp;configuration.</p>
+<p>Looking at the actual code, we see that we only trigger some <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> checks to see if the configuration and <span class="caps">CLI</span> parameters are correct,
+then we log the current configuration and sleep for the time defined in the&nbsp;configuration.</p>
 <p>So executing just <code>hydra-test</code> results&nbsp;in:</p>
 <div class="highlight"><pre><span></span><code>Cannot find primary config &#39;main&#39;. Check that it&#39;s in your config search path.
 
@@ -177,9 +177,9 @@ Config search path:
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 </code></pre></div>
 
-<p>This is due to the fact that we set <code>config_path=None</code>, which is desirable for productive application. The application
-itself doesn&#8217;t know where it is gonna be installed and thus defining a path to the configuration files doesn&#8217;t make sense.
-For this reason we pass the configuration at execution with <code>-cd</code>, short for <code>--config-dir</code>:</p>
+<p>This is due to the fact that we set <code>config_path=None</code>, which is desirable for a productive application. The application
+itself doesn&#8217;t know where it is going to be installed and thus defining a path to the configuration files doesn&#8217;t make any sense.
+For this reason we pass the configuration at execution time with <code>-cd</code>, short form of <code>--config-dir</code>:</p>
 <div class="highlight"><pre><span></span><code>hydra-test -cd configs
 </code></pre></div>
 
@@ -195,7 +195,7 @@ omegaconf.errors.MissingMandatoryValue: Structured config of type `Config` has m
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 </code></pre></div>
 
-<p>This is exactly as we want it, since by taking a look into <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py">config.py</a>, we see that the schema of the main configuration&nbsp;is:</p>
+<p>This behavior is exactly as we want it, because a look into <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py">config.py</a> shows us that the schema of the main configuration&nbsp;is:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
     <span class="n">main</span><span class="p">:</span> <span class="n">Main</span>
@@ -204,8 +204,8 @@ Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
     <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span> <span class="o">=</span> <span class="n">MISSING</span>
 </code></pre></div>
 
-<p>Therefore, experiment is a mandatory parameter that the <span class="caps">CLI</span> user needs to provide. Consequently, we add <code>+experiment=exp1</code> to select the
-configuration from <code>exp1.yaml</code> and finally get what we would&nbsp;expect:</p>
+<p>and the experiment is defined as <code>MISSING</code>. Therefore, experiment is a mandatory parameter that the user needs to provide via the <span class="caps">CLI</span>. 
+Consequently, we add <code>+experiment=exp1</code> to select the configuration from <code>exp1.yaml</code> and finally get what we would&nbsp;expect:</p>
 <div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1
 [2022-01-27 08:14:34,257][my_pkg.cli][INFO] -
 main:
@@ -229,7 +229,7 @@ experiment:
   n_steps: 1000
 </code></pre></div>
 
-<p>Note that we had to use a plus sign in the flag <code>+experiment</code> as we <em>added</em> the mandatory experiment parameter. Conveniently, 
+<p>Note the plus sign in the flag <code>+experiment</code>. This is needed since we <em>add</em> the mandatory experiment parameter. Conveniently, 
 Hydra has also set up the logging for us and besides logging to the terminal, all output will also be collected in the <code>./outputs</code>
 folder.</p>
 <p>So the section <code>main</code> and <code>neptune</code> are directly defined in <code>main.yaml</code>, but why did Hydra now choose the MySQL database?
@@ -243,8 +243,8 @@ This is due to fact that in <code>main.yaml</code>, we defined some&nbsp;default
 </code></pre></div>
 
 <p>Taking a look into <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/configs/db/mysql.yaml">mysql.yaml</a>, we see that Hydra also allows accessing environment variables easily to help with 
-configuration. As an example we defined the database port to be whatever the environment variable <code>MYSQL_PORT</code> is set
-to or 1028 if undefined. So Hydra does not only unify the configuration by <span class="caps">YAML</span> and <span class="caps">CLI</span> but also by environment&nbsp;variables.</p>
+configuration. As an example, we defined the database port to be whatever the environment variable <code>MYSQL_PORT</code> is set
+to or 1028 if undefined. So Hydra does not only unify the configuration via <span class="caps">YAML</span> and <span class="caps">CLI</span> but also via environment&nbsp;variables.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">driver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql</span>
 <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server_string</span>
 <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${oc.env:MYSQL_PORT,1028}</span>
@@ -252,7 +252,7 @@ to or 1028 if undefined. So Hydra does not only unify the configuration by <span
 <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">secret</span>
 </code></pre></div>
 
-<p>We can also override the default database by adding the flag <code>db=postgresql</code> and this time without <code>+</code> as we override a&nbsp;default:</p>
+<p>We can also override the default database by adding the flag <code>db=postgresql</code>. This time the flag has no <code>+</code> as we override a&nbsp;default:</p>
 <div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1 db=postgresql
 Error executing job with overrides: [&#39;+experiment=exp1&#39;, &#39;db=postgresql&#39;]
 Traceback (most recent call last):
@@ -265,9 +265,9 @@ port
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 </code></pre></div>
 
-<p>Nice! This worked as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
+<p>Nice! This works just as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
 This is the magic of <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> doing its validation work. Taking a look into <code>config.py</code>, we see the check that assures
-a port greater than&nbsp;1023.</p>
+a port not smaller than&nbsp;1024.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">DataBase</span><span class="p">:</span>
     <span class="n">driver</span><span class="p">:</span> <span class="nb">str</span>
@@ -282,7 +282,7 @@ a port greater than&nbsp;1023.</p>
     <span class="n">password</span><span class="p">:</span> <span class="nb">str</span>
 </code></pre></div>
 
-<p>Good, so we could fix our configuration file or pass an extra parameter if we are in a hurry,&nbsp;i.e.:</p>
+<p>Good, we can now fix our configuration file or just pass an extra parameter if we are in a hurry,&nbsp;i.e.:</p>
 <div class="highlight"><pre><span></span><code>❯ hydra-test -cd configs +experiment=exp1 db=postgresql db.port=1832
 [2022-01-27 08:13:52,148][my_pkg.cli][INFO] -
 main:
@@ -308,9 +308,9 @@ experiment:
 
 <p>And this works! So much flexibility and robustness in just 70 lines of code, awesome! While you are at it, you can also
 run <code>hydra-test -cd configs +experiment=missing_key</code> and <code>hydra-test -cd configs +experiment=wrong_type</code> to see some
-nice errors from pydantic telling you about a missing key and wrong type of the configuration value, respectively.
+nice errors from pydantic telling you about a missing key and a wrong type of the configuration value, respectively.
 By the way, also passing the port parameter wrong, e.g. with <code>db.port=72</code>, would have triggered the same exception, so 
-<span class="caps">CLI</span> and the <span class="caps">YAML</span> configurations share the same checks and validations. <a href="https://hydra.cc/">Hydra</a> and <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> work nicely together 
+the configuration via the <span class="caps">CLI</span> and <span class="caps">YAML</span> share the same checks and validations. <a href="https://hydra.cc/">Hydra</a> and <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> work nicely together 
 to make this possible and <a href="https://pydantic-docs.helpmanual.io/">pydantic</a> greatly extends the validation capabilities of <a href="https://omegaconf.readthedocs.io/">OmegaConf</a>, which Hydra uses
 as default. Just remember to use the <code>dataclass</code> from <a href="https://pydantic-docs.helpmanual.io/">pydantic</a>, not the standard library
 and call <code>OmegaConf.to_object(cfg)</code> at the start of your application to fail as early as&nbsp;possible.</p>
@@ -325,10 +325,10 @@ you can just use the <code>--multirun</code> feature, or <code>-m</code> for&nbs
 
 <p>There&#8217;s so much more to Hydra and several plugins even for hyperparameter optimization exist. Also note that with the
 flag <code>--hydra-help</code>, you can see the hydra-specific parameters of your application. Using just <code>--help</code> returns some
-automatic generated help according to your application&#8217;s configuration. This can of course be customized easily with
+automatic generated help according to the configuration of your application. This can of course be customized easily with
 the help of a powerful templating system as described in <a href="https://hydra.cc/docs/1.0/configure_hydra/app_help/">Customizing Application&#8217;s help docs</a>. </p>
-<p>Hydra makes configuration by <span class="caps">CLI</span>, <span class="caps">YAML</span> and environment variables a bliss and the time of learning Hydra is well invested
-as your application&#8217;s codebase will be more flexible configurable, less complex and thus more&nbsp;robust.</p>
+<p>Hydra makes configuration by <span class="caps">CLI</span>, <span class="caps">YAML</span> and environment variables a bliss and the time for learning Hydra is well invested
+as your application&#8217;s codebase will be more flexible configurable, less complex and therefore more&nbsp;robust.</p>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
@@ -397,6 +397,9 @@ as your application&#8217;s codebase will be more flexible configurable, less co
   <a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
   <ul class="list-group list-inline tagcloud" id="tags">
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/ai/">ai</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -450,7 +453,7 @@ as your application&#8217;s codebase will be more flexible configurable, less co
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
-    <li class="list-group-item tag-3">
+    <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
     </li>
     <li class="list-group-item tag-4">

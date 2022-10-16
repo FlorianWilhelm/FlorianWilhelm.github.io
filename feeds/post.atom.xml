@@ -51,8 +51,8 @@ some kind of nested dictionary of dictionaries, where each configuration group i
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if the configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are alright,
-then we log the current configuration and sleep for some time as defined in the&amp;nbsp;configuration.&lt;/p&gt;
+&lt;p&gt;Looking at the actual code, we see that we only trigger some &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; checks to see if the configuration and &lt;span class="caps"&gt;CLI&lt;/span&gt; parameters are correct,
+then we log the current configuration and sleep for the time defined in the&amp;nbsp;configuration.&lt;/p&gt;
 &lt;p&gt;So executing just &lt;code&gt;hydra-test&lt;/code&gt; results&amp;nbsp;in:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Cannot find primary config &amp;#39;main&amp;#39;. Check that it&amp;#39;s in your config search path.
 
@@ -64,9 +64,9 @@ Config search path:
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;This is due to the fact that we set &lt;code&gt;config_path=None&lt;/code&gt;, which is desirable for productive application. The application
-itself doesn&amp;#8217;t know where it is gonna be installed and thus defining a path to the configuration files doesn&amp;#8217;t make sense.
-For this reason we pass the configuration at execution with &lt;code&gt;-cd&lt;/code&gt;, short for &lt;code&gt;--config-dir&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;This is due to the fact that we set &lt;code&gt;config_path=None&lt;/code&gt;, which is desirable for a productive application. The application
+itself doesn&amp;#8217;t know where it is going to be installed and thus defining a path to the configuration files doesn&amp;#8217;t make any sense.
+For this reason we pass the configuration at execution time with &lt;code&gt;-cd&lt;/code&gt;, short form of &lt;code&gt;--config-dir&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;hydra-test -cd configs
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -82,7 +82,7 @@ omegaconf.errors.MissingMandatoryValue: Structured config of type `Config` has m
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;This is exactly as we want it, since by taking a look into &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py"&gt;config.py&lt;/a&gt;, we see that the schema of the main configuration&amp;nbsp;is:&lt;/p&gt;
+&lt;p&gt;This behavior is exactly as we want it, because a look into &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py"&gt;config.py&lt;/a&gt; shows us that the schema of the main configuration&amp;nbsp;is:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nd"&gt;@dataclass&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Config&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Main&lt;/span&gt;
@@ -91,8 +91,8 @@ Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
     &lt;span class="n"&gt;experiment&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Experiment&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MISSING&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Therefore, experiment is a mandatory parameter that the &lt;span class="caps"&gt;CLI&lt;/span&gt; user needs to provide. Consequently, we add &lt;code&gt;+experiment=exp1&lt;/code&gt; to select the
-configuration from &lt;code&gt;exp1.yaml&lt;/code&gt; and finally get what we would&amp;nbsp;expect:&lt;/p&gt;
+&lt;p&gt;and the experiment is defined as &lt;code&gt;MISSING&lt;/code&gt;. Therefore, experiment is a mandatory parameter that the user needs to provide via the &lt;span class="caps"&gt;CLI&lt;/span&gt;. 
+Consequently, we add &lt;code&gt;+experiment=exp1&lt;/code&gt; to select the configuration from &lt;code&gt;exp1.yaml&lt;/code&gt; and finally get what we would&amp;nbsp;expect:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1
 [2022-01-27 08:14:34,257][my_pkg.cli][INFO] -
 main:
@@ -116,7 +116,7 @@ experiment:
   n_steps: 1000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Note that we had to use a plus sign in the flag &lt;code&gt;+experiment&lt;/code&gt; as we &lt;em&gt;added&lt;/em&gt; the mandatory experiment parameter. Conveniently, 
+&lt;p&gt;Note the plus sign in the flag &lt;code&gt;+experiment&lt;/code&gt;. This is needed since we &lt;em&gt;add&lt;/em&gt; the mandatory experiment parameter. Conveniently, 
 Hydra has also set up the logging for us and besides logging to the terminal, all output will also be collected in the &lt;code&gt;./outputs&lt;/code&gt;
 folder.&lt;/p&gt;
 &lt;p&gt;So the section &lt;code&gt;main&lt;/code&gt; and &lt;code&gt;neptune&lt;/code&gt; are directly defined in &lt;code&gt;main.yaml&lt;/code&gt;, but why did Hydra now choose the MySQL database?
@@ -130,8 +130,8 @@ This is due to fact that in &lt;code&gt;main.yaml&lt;/code&gt;, we defined some&
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Taking a look into &lt;a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/configs/db/mysql.yaml"&gt;mysql.yaml&lt;/a&gt;, we see that Hydra also allows accessing environment variables easily to help with 
-configuration. As an example we defined the database port to be whatever the environment variable &lt;code&gt;MYSQL_PORT&lt;/code&gt; is set
-to or 1028 if undefined. So Hydra does not only unify the configuration by &lt;span class="caps"&gt;YAML&lt;/span&gt; and &lt;span class="caps"&gt;CLI&lt;/span&gt; but also by environment&amp;nbsp;variables.&lt;/p&gt;
+configuration. As an example, we defined the database port to be whatever the environment variable &lt;code&gt;MYSQL_PORT&lt;/code&gt; is set
+to or 1028 if undefined. So Hydra does not only unify the configuration via &lt;span class="caps"&gt;YAML&lt;/span&gt; and &lt;span class="caps"&gt;CLI&lt;/span&gt; but also via environment&amp;nbsp;variables.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;mysql&lt;/span&gt;
 &lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;server_string&lt;/span&gt;
 &lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;${oc.env:MYSQL_PORT,1028}&lt;/span&gt;
@@ -139,7 +139,7 @@ to or 1028 if undefined. So Hydra does not only unify the configuration by &lt;s
 &lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secret&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We can also override the default database by adding the flag &lt;code&gt;db=postgresql&lt;/code&gt; and this time without &lt;code&gt;+&lt;/code&gt; as we override a&amp;nbsp;default:&lt;/p&gt;
+&lt;p&gt;We can also override the default database by adding the flag &lt;code&gt;db=postgresql&lt;/code&gt;. This time the flag has no &lt;code&gt;+&lt;/code&gt; as we override a&amp;nbsp;default:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1 db=postgresql
 Error executing job with overrides: [&amp;#39;+experiment=exp1&amp;#39;, &amp;#39;db=postgresql&amp;#39;]
 Traceback (most recent call last):
@@ -152,9 +152,9 @@ port
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Nice! This worked as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
+&lt;p&gt;Nice! This works just as expected by telling us that our port configuration is actually wrong as we chose a privileged port!
 This is the magic of &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; doing its validation work. Taking a look into &lt;code&gt;config.py&lt;/code&gt;, we see the check that assures
-a port greater than&amp;nbsp;1023.&lt;/p&gt;
+a port not smaller than&amp;nbsp;1024.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nd"&gt;@dataclass&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DataBase&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
@@ -169,7 +169,7 @@ a port greater than&amp;nbsp;1023.&lt;/p&gt;
     &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Good, so we could fix our configuration file or pass an extra parameter if we are in a hurry,&amp;nbsp;i.e.:&lt;/p&gt;
+&lt;p&gt;Good, we can now fix our configuration file or just pass an extra parameter if we are in a hurry,&amp;nbsp;i.e.:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;❯ hydra-test -cd configs +experiment=exp1 db=postgresql db.port=1832
 [2022-01-27 08:13:52,148][my_pkg.cli][INFO] -
 main:
@@ -195,9 +195,9 @@ experiment:
 
 &lt;p&gt;And this works! So much flexibility and robustness in just 70 lines of code, awesome! While you are at it, you can also
 run &lt;code&gt;hydra-test -cd configs +experiment=missing_key&lt;/code&gt; and &lt;code&gt;hydra-test -cd configs +experiment=wrong_type&lt;/code&gt; to see some
-nice errors from pydantic telling you about a missing key and wrong type of the configuration value, respectively.
+nice errors from pydantic telling you about a missing key and a wrong type of the configuration value, respectively.
 By the way, also passing the port parameter wrong, e.g. with &lt;code&gt;db.port=72&lt;/code&gt;, would have triggered the same exception, so 
-&lt;span class="caps"&gt;CLI&lt;/span&gt; and the &lt;span class="caps"&gt;YAML&lt;/span&gt; configurations share the same checks and validations. &lt;a href="https://hydra.cc/"&gt;Hydra&lt;/a&gt; and &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; work nicely together 
+the configuration via the &lt;span class="caps"&gt;CLI&lt;/span&gt; and &lt;span class="caps"&gt;YAML&lt;/span&gt; share the same checks and validations. &lt;a href="https://hydra.cc/"&gt;Hydra&lt;/a&gt; and &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; work nicely together 
 to make this possible and &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; greatly extends the validation capabilities of &lt;a href="https://omegaconf.readthedocs.io/"&gt;OmegaConf&lt;/a&gt;, which Hydra uses
 as default. Just remember to use the &lt;code&gt;dataclass&lt;/code&gt; from &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt;, not the standard library
 and call &lt;code&gt;OmegaConf.to_object(cfg)&lt;/code&gt; at the start of your application to fail as early as&amp;nbsp;possible.&lt;/p&gt;
@@ -212,10 +212,10 @@ you can just use the &lt;code&gt;--multirun&lt;/code&gt; feature, or &lt;code&gt
 
 &lt;p&gt;There&amp;#8217;s so much more to Hydra and several plugins even for hyperparameter optimization exist. Also note that with the
 flag &lt;code&gt;--hydra-help&lt;/code&gt;, you can see the hydra-specific parameters of your application. Using just &lt;code&gt;--help&lt;/code&gt; returns some
-automatic generated help according to your application&amp;#8217;s configuration. This can of course be customized easily with
+automatic generated help according to the configuration of your application. This can of course be customized easily with
 the help of a powerful templating system as described in &lt;a href="https://hydra.cc/docs/1.0/configure_hydra/app_help/"&gt;Customizing Application&amp;#8217;s help docs&lt;/a&gt;. &lt;/p&gt;
-&lt;p&gt;Hydra makes configuration by &lt;span class="caps"&gt;CLI&lt;/span&gt;, &lt;span class="caps"&gt;YAML&lt;/span&gt; and environment variables a bliss and the time of learning Hydra is well invested
-as your application&amp;#8217;s codebase will be more flexible configurable, less complex and thus more&amp;nbsp;robust.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="configuration"></category><category term="production"></category></entry><entry><title>Handling Anaconda without getting Constricted</title><link href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/" rel="alternate"></link><published>2021-09-01T08:00:00+02:00</published><updated>2021-09-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-09-01:/2021/09/Handling_Anaconda_without_getting_constricted/</id><summary type="html">&lt;p&gt;Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda&amp;nbsp;licence.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Commercial Activities using the Anaconda&amp;nbsp;Repository&lt;/h2&gt;
+&lt;p&gt;Hydra makes configuration by &lt;span class="caps"&gt;CLI&lt;/span&gt;, &lt;span class="caps"&gt;YAML&lt;/span&gt; and environment variables a bliss and the time for learning Hydra is well invested
+as your application&amp;#8217;s codebase will be more flexible configurable, less complex and therefore more&amp;nbsp;robust.&lt;/p&gt;</content><category term="post"></category><category term="python"></category><category term="configuration"></category><category term="production"></category></entry><entry><title>Handling Anaconda without getting Constricted</title><link href="https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/" rel="alternate"></link><published>2021-09-01T08:00:00+02:00</published><updated>2021-09-01T08:00:00+02:00</updated><author><name>Florian Wilhelm</name></author><id>tag:florianwilhelm.info,2021-09-01:/2021/09/Handling_Anaconda_without_getting_constricted/</id><summary type="html">&lt;p&gt;Miniforge is a Miniconda alternative that allows you to engage in commercial activities without an Anaconda&amp;nbsp;licence.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Commercial Activities using the Anaconda&amp;nbsp;Repository&lt;/h2&gt;
 &lt;p&gt;In April 2020, &lt;a href="https://www.anaconda.com/"&gt;Anaconda Inc.&lt;/a&gt;, the company behind our beloved Anaconda distribution, started to change their 
 &lt;a href="https://www.anaconda.com/terms-of-service"&gt;Terms of Service&lt;/a&gt; (ToS) in a way that most commercial usage is no longer for free. Peter Wang explained the reasons for
 this change in a &lt;a href="https://www.anaconda.com/blog/sustaining-our-stewardship-of-the-open-source-data-science-community"&gt;blog post&lt;/a&gt;. There was a bit of turmoil in the Anaconda community, also about the interpretation of the 

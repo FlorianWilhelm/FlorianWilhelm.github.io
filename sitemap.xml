@@ -5,56 +5,63 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/categories.html</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/archives.html</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/tags.html</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/404-not-found/</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/410-gone/</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/500-error/</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/about/</loc>
-<lastmod>2022-10-16T18:54:20-00:00</lastmod>
+<lastmod>2022-10-16T19:22:14-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/2022/10/forget_about_ai_and_do_mathematical_modelling_instead/</loc>
+<lastmod>2022-10-16T08:00:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -306,7 +313,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/category/talk/</loc>
-<lastmod>2021-09-24T17:00:00+00:09</lastmod>
+<lastmod>2022-10-16T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/tag/data-science/</loc>
+<lastmod>2022-10-16T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/tag/mathematics/</loc>
+<lastmod>2022-10-16T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/tag/ai/</loc>
+<lastmod>2022-10-16T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -333,22 +361,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://florianwilhelm.info/tag/data-science/</loc>
-<lastmod>2021-09-24T17:00:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>https://florianwilhelm.info/tag/recommender-systems/</loc>
 <lastmod>2021-09-24T17:00:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://florianwilhelm.info/tag/mathematics/</loc>
-<lastmod>2020-10-01T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

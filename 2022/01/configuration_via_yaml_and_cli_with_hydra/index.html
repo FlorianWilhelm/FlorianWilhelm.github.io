@@ -126,16 +126,16 @@ can be easily read, so where is the&nbsp;problem?</p>
 <p>Thus implementing configuration by a <span class="caps">CLI</span> and a <span class="caps">YAML</span> file separately, leads often to code duplication
 and inconsistent behavior, not to mention the enormous amount of work that must be done to get this&nbsp;right.</p>
 <p>With this in mind, Facebook implemented the <a href="https://hydra.cc/">Hydra</a> library, which allows you to do hierarchical configuration by
-composition and override it through config files and the command-line. In this blog post, we demonstrate in an example project
+composition of config files and overrides via the command line. In this blog post, we demonstrate in an example project
 the most important features of <a href="https://hydra.cc/">Hydra</a> and how it can be used in conjunction with <a href="https://pydantic-docs.helpmanual.io/">pydantic</a>,
 which extends its validation capabilities. To follow along, check out  this <a href="https://github.com/FlorianWilhelm/hydra-example-project">repository</a> that serves as a demonstration, but also as a playground for&nbsp;you.</p>
 <h3>Ok, so give me the gist of how Hydra&nbsp;works</h3>
 <p>Sure, just take a look into <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/cli.py">cli.py</a> and <a href="https://github.com/FlorianWilhelm/hydra-example-project/blob/master/src/my_pkg/config.py">config.py</a> first as these are the only files we added,
-roughly 70 lines of code. The hierarchical configuration can be found in the <a href="https://github.com/FlorianWilhelm/hydra-example-project/tree/master/configs">configs</a>&nbsp;folder.</p>
+roughly 70 lines of code. The hierarchical configuration can be found in the <a href="https://github.com/FlorianWilhelm/hydra-example-project/tree/master/configs">configs</a> folder and look like&nbsp;this:</p>
 <div class="highlight"><pre><span></span><code>├── configs
 │   ├── main.yaml             &lt;- entry point for configuration
 │   ├── db                    &lt;- database configuration group
-│   │   ├── mysql.yaml        &lt;- configuration of MySQL
+│   │   ├── mysql.yaml        &lt;- configuration for MySQL
 │   │   └── postgresql.yaml   &lt;- configuration for PostgreSQL
 │   └── experiment            &lt;- experiment configuration group
 │       ├── exp1.yaml         &lt;- configuration for experiment 1
@@ -144,9 +144,9 @@ roughly 70 lines of code. The hierarchical configuration can be found in the <a 
 │       └── wrong_type.yaml   &lt;- wrong configuration with wrong type
 </code></pre></div>
 
-<p>Basically, this structure allows you to mix and match your configuration by choosing for instance the MySQL database
-with the setup of experiment 2. Each group then corresponds to an attribute in the configuration object, which
-includes other attributes, just think of a dictionary where some keys are again&nbsp;dictionaries.</p>
+<p>Basically, this structure allows you to mix and match your configuration by choosing for instance the configuration for
+the MySQL database with the configuration for experiment 2. Hydra creates for you one consistent configuration object,
+some kind of nested dictionary of dictionaries, where each configuration group is an&nbsp;attribute.</p>
 <p>In the <a href="https://github.com/FlorianWilhelm/hydra-example-project">repository</a> of our example project, we defined the <span class="caps">CLI</span> command <code>hydra-test</code> by changing in <code>setup.cfg</code> the following&nbsp;lines:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add here console scripts like:</span>
 <span class="na">console_scripts</span> <span class="o">=</span>

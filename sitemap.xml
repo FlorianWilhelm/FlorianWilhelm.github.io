@@ -5,56 +5,63 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/categories.html</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/archives.html</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/tags.html</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/404-not-found/</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/410-gone/</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/500-error/</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/about/</loc>
-<lastmod>2023-03-22T17:51:57-00:00</lastmod>
+<lastmod>2023-06-25T10:15:23-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/2023/05/waldstack/</loc>
+<lastmod>2023-05-13T08:00:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -306,7 +313,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/category/post/</loc>
-<lastmod>2023-03-10T08:00:00+00:09</lastmod>
+<lastmod>2023-05-13T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -333,8 +340,36 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>https://florianwilhelm.info/tag/dbt/</loc>
+<lastmod>2023-05-13T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>https://florianwilhelm.info/tag/python/</loc>
-<lastmod>2023-03-10T08:00:00+00:09</lastmod>
+<lastmod>2023-05-13T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/tag/airbyte/</loc>
+<lastmod>2023-05-13T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/tag/snowflake/</loc>
+<lastmod>2023-05-13T08:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://florianwilhelm.info/tag/lightdash/</loc>
+<lastmod>2023-05-13T08:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

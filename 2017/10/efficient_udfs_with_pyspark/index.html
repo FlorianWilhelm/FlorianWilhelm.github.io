@@ -132,19 +132,21 @@ In our case, this means we provide some Python code that takes a set of rows and
 At the time of writing - with PySpark 2.2 as latest version - there is no &#8220;official&#8221; way of defining an arbitrary <span class="caps">UDAF</span> function.
 Also, the tracking Jira issue <a href="https://issues.apache.org/jira/browse/SPARK-10915"><span class="caps">SPARK</span>-10915</a> does not indicate that this changes in near future.
 Depending on your use-case, this might even be a reason to completely discard PySpark as a viable solution.
-However, as you might have guessed from the title of this article, there are workarounds to the&nbsp;rescue.</p>
+However, as you might have guessed from the title of this article, there are workarounds to the rescue.
 <!-- langsamer weg den wir probiert hatten: groupby() + collect_list() + udf die liste an events in pandas DF lädt ... -->
-<p>This is where the <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.html"><span class="caps">RDD</span></a> <span class="caps">API</span> comes in.
+This is where the <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.html"><span class="caps">RDD</span></a> <span class="caps">API</span> comes in.
 As a reminder, a <em>Resilient Distributed Dataset</em> (<span class="caps">RDD</span>) is the low-level data structure of Spark and a Spark <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.DataFrame.html">DataFrame</a> is built on top of it. As we are mostly dealing with DataFrames in PySpark, we can get access to the underlying <span class="caps">RDD</span> with the help of the <code>rdd</code> attribute and convert it back with <code>toDF()</code>.
 This <span class="caps">RDD</span> <span class="caps">API</span> allows us to specify arbitrary Python functions that get executed on the data.
 To give an example, let&#8217;s say we have a DataFrame <code>df</code> of one billion rows with a boolean <code>is_sold</code> column and we want to filter for rows with sold products. One could accomplish this with the&nbsp;code</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</pre></div>
+
 
 <p>Although not explicitly declared as such, this lambda function is essentially a user-defined function (<span class="caps">UDF</span>).
 For this exact use case, we could also use the more high-level DataFrame <code>filter()</code> method, producing the same&nbsp;result:</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">is_sold</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
 
 <p>Before we now go into the details on how to implement UDAFs using the <span class="caps">RDD</span> <span class="caps">API</span>, there is something important to keep in mind which might sound counterintuitive to the title of this post: in PySpark you should <em>avoid</em> all kind of Python UDFs - like <span class="caps">RDD</span> functions or data frame UDFs - as much as possible!
 Whenever there is a built-in DataFrame method available, this will be much faster than its <span class="caps">RDD</span> counterpart. 
@@ -169,11 +171,11 @@ So in our <code>df.filter()</code> example, the DataFrame operation and the filt
 Once the query is executed, the filter condition is evaluated on the distributed DataFrame within Java, without any callback to Python!
 In case our workflow loads the DataFrame from Hive and saves the resulting DataFrame as Hive table, throughout the entire query execution all data operations are performed in a distributed fashion within Java Spark workers, which allows Spark to be very fast for queries on large data sets. 
 Okay, so why is the <span class="caps">RDD</span> <code>filter()</code> method then so much slower?
-The reason is that the lambda function cannot be directly applied to the DataFrame residing in <span class="caps">JVM</span>&nbsp;memory. </p>
+The reason is that the lambda function cannot be directly applied to the DataFrame residing in <span class="caps">JVM</span> memory. 
 <!--- 
 To get a better understanding of the huge performance difference, we need to look more closely at the previously mentioned second point of data transfer between the JVM and Python.
 -->
-<p>What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
+What actually happens internally is that Spark spins up Python workers next to the Spark executors on the cluster nodes.
 At execution time, the Spark workers send our lambda function to those Python workers.
 Next, the Spark workers start serializing their <span class="caps">RDD</span> partitions and pipe them to the Python workers via sockets, where our lambda function gets evaluated on each row.
 For the resulting rows, the whole serialization/deserialization procedure happens again in the opposite direction so that
@@ -186,21 +188,24 @@ If we cannot avoid UDFs, we should at least try to make them as efficient as pos
 <h1>PySpark UDAFs with&nbsp;Pandas</h1>
 <p>As mentioned before our detour into the internals of PySpark, for defining an arbitrary <span class="caps">UDAF</span> function we need an operation that allows us to operate on multiple rows and produce one or multiple resulting rows.
 This functionality is provided by the <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.html"><span class="caps">RDD</span></a> method <code>mapPartitions</code>, where we can apply an arbitrary Python function <code>my_func</code> to a DataFrame <code>df</code> partition&nbsp;with:</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</pre></div>
+
 
 <p>If you want to further read up on RDDs and partitions, you can checkout the chapter <a href="https://mallikarjuna_g.gitbooks.io/spark/content/spark-rdd-partitions.html">Partitions and Partitioning</a> of the excellent <em>Mastering Apache Spark 2</em> book by Jacek Laskowski.
 In most cases we would want to control the number of partitions, like 100, or even group by a column, let&#8217;s say <code>country</code>, in which case we would&nbsp;write:</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</pre></div>
+
 
 <p>or</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
+</pre></div>
+
 
 <p>Having solved one problem, as it is quite often in life, we have introduced another problem. As we are working now with the low-level <span class="caps">RDD</span> interface, our function <code>my_func</code> will be passed an iterator of PySpark <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.Row.html">Row</a> objects and needs to return them as well. A <code>Row</code> object itself is only a container for the column values in one row, as you might have guessed. When we return such a <code>Row</code>, the data types of these values therein must be interpretable by Spark in order to translate them back to Scala. This is a lot of low-level stuff to deal with since in most cases we would love to implement our <span class="caps">UDF</span>/<span class="caps">UDAF</span> with the help of Pandas, keeping in mind that one partition should hold less than 10 million&nbsp;rows.</p>
 <p>So first we need to define a nice function that will convert a <code>Row</code> iterator into a Pandas&nbsp;DataFrame:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">logging</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
@@ -208,7 +213,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 
 
 <span class="k">def</span> <span class="nf">rows_to_pandas</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Converts a Spark Row iterator of a partition to a Pandas DataFrame assuming YARN</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a Spark Row iterator of a partition to a Pandas DataFrame assuming YARN</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        rows: iterator over PySpark Row objects</span>
@@ -227,14 +232,15 @@ In most cases we would want to control the number of partitions, like 100, or ev
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">first_row</span><span class="o">.</span><span class="n">__fields__</span><span class="p">)</span>
     <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Converted partition to DataFrame of shape </span><span class="si">{}</span><span class="s2"> with types:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">df</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>This function actually does only one thing which is calling <code>df = pd.DataFrame.from_records(rows, columns=first_row.__fields__)</code> in order to generate a DataFrame. The rest of the code makes sure that the iterator is not empty and for debugging reasons we also peek into the first row and print the value as well as the datatype of each column. This has proven in practice to be extremely helpful in case something goes wrong and one needs to debug what&#8217;s going on in the <span class="caps">UDF</span>/<span class="caps">UDAF</span>. The functions <code>peek</code> and <code>rtype</code> are defined as&nbsp;follows:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 
 <span class="k">def</span> <span class="nf">peek</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Peek into the first element and return the whole iterator again</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Peek into the first element and return the whole iterator again</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        iterable: iterable object like list or iterator</span>
@@ -252,7 +258,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 
 
 <span class="k">def</span> <span class="nf">rtype</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Heuristic representation for nested types/containers</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Heuristic representation for nested types/containers</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        var: some (nested) variable</span>
@@ -279,15 +285,16 @@ In most cases we would want to control the number of partitions, like 100, or ev
         <span class="k">return</span> <span class="s2">&quot;Tuple[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elem_types</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">etype</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>The next part is to actually convert the result of our <span class="caps">UDF</span>/<span class="caps">UDAF</span> back to an iterator of Row objects. Since our result will most likely be a Pandas DataFrame or Series, we define the&nbsp;following:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">Row</span>
 
 
 <span class="k">def</span> <span class="nf">convert_dtypes</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Converts some Pandas data types to pure Python data types</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts some Pandas data types to pure Python data types</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        rows (array): numpy recarray holding all rows</span>
@@ -311,7 +318,7 @@ In most cases we would want to control the number of partitions, like 100, or ev
 
 
 <span class="k">def</span> <span class="nf">pandas_to_rows</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Converts Pandas DataFrame to iterator of Row objects</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts Pandas DataFrame to iterator of Row objects</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df: Pandas DataFrame</span>
@@ -335,15 +342,16 @@ In most cases we would want to control the number of partitions, like 100, or ev
     <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;First record row: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first_row_info</span><span class="p">))</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">Row</span><span class="p">(</span><span class="o">*</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">row</span><span class="p">(</span><span class="o">*</span><span class="n">elems</span><span class="p">)</span> <span class="k">for</span> <span class="n">elems</span> <span class="ow">in</span> <span class="n">records</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>This looks a bit more complicated but essentially we convert a Pandas Series to a DataFrame if necessary and handle the edge cases of an empty DataFrame or <code>None</code> as return value. We then convert the DataFrame to records, convert some NumPy data types to the Python equivalent and create an iterator over Row objects from the converted&nbsp;records. </p>
 <p>With these functions at hand we can define a <a href="https://wiki.python.org/moin/PythonDecorators#What_is_a_Decorator">Python decorator</a> that will allow us to automatically call the functions <code>rows_to_pandas</code> and <code>pandas_to_rows</code> at the right&nbsp;time:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 
 <span class="k">class</span> <span class="nc">pandas_udaf</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Decorator for PySpark UDAFs using Pandas</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator for PySpark UDAFs using Pandas</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        loglevel (int): minimum loglevel for emitting messages</span>
@@ -361,15 +369,16 @@ In most cases we would want to control the number of partitions, like 100, or ev
             <span class="n">df</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pandas_to_rows</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">wrapper</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>The code is pretty much self-explanatory if you have ever written a Python decorator; otherwise, you should read about it since it takes some time to wrap your head around it. Basically, we set up a default logger, create a Pandas DataFrame from the Row iterator, pass it to our <span class="caps">UDF</span>/<span class="caps">UDAF</span> and convert its return value back to a Row iterator. The only additional thing that might still raise questions is the usage of <code>args[-1]</code>. This is due to the fact that <code>func</code> might also be a method of an object. In this case, the first argument would be <code>self</code> but the last argument is in either cases the actual argument that <code>mapPartitions</code> will pass to us. The code of <code>setup_logger</code> depends on your Spark installation. In case you are using Spark on Apache <a href="https://hortonworks.com/apache/yarn/"><span class="caps">YARN</span></a>, it might look like&nbsp;this:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
 <span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">loglevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;pyspark.log&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Setup basic logging for logging on the executor</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup basic logging for logging on the executor</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        loglevel (int): minimum loglevel for emitting messages</span>
@@ -391,10 +400,11 @@ In most cases we would want to control the number of partitions, like 100, or ev
                         <span class="n">filename</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span>
                         <span class="nb">format</span><span class="o">=</span><span class="n">logformat</span><span class="p">,</span>
                         <span class="n">datefmt</span><span class="o">=</span><span class="n">datefmt</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Now having all parts in place let&#8217;s assume the code above resides in the python module <a href="https://florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a>. A future post will cover the topic of deploying dependencies in a systematic way for production requirements. For now we just presume that <a href="https://florianwilhelm.info/src/pyspark_udaf.py">pyspark_udaf.py</a> as well as all its dependencies like Pandas, NumPy, etc. are accessible by the Spark driver as well as the executors. This allows us to then easily define an example <span class="caps">UDAF</span> <code>my_func</code> that collects some basic statistics for each country&nbsp;as:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark_udaf</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 
@@ -404,10 +414,11 @@ In most cases we would want to control the number of partitions, like 100, or ev
         <span class="k">return</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>It is of course not really useful in practice to return some statistics with the help of a <span class="caps">UDAF</span> that could also be retrieved with basic PySpark functionality but this is just an example. We now generate a dummy data DataFrame and apply the function to each partition as above&nbsp;with:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># make pyspark_udaf.py available to the executors</span>
+<div class="highlight"><pre><span></span><span class="c1"># make pyspark_udaf.py available to the executors</span>
 <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">addFile</span><span class="p">(</span><span class="s1">&#39;./pyspark_udaf.py&#39;</span><span class="p">)</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
@@ -417,7 +428,8 @@ In most cases we would want to control the number of partitions, like 100, or ev
 
 <span class="n">stats_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">stats_df</span><span class="o">.</span><span class="n">toPandas</span><span class="p">())</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>The code above can be easily tested with the help of a Jupyter notebook with PySpark where the <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.SparkSession.html">SparkSession</a> <code>spark</code> is&nbsp;predefined.</p>
 <h2>Summary</h2>
@@ -498,6 +510,9 @@ In this respect we are really looking forward to closer integration of <a href="
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -523,6 +538,9 @@ In this respect we are really looking forward to closer integration of <a href="
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -551,6 +569,9 @@ In this respect we are really looking forward to closer integration of <a href="
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -570,9 +591,9 @@ In this respect we are really looking forward to closer integration of <a href="
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -583,6 +604,9 @@ In this respect we are really looking forward to closer integration of <a href="
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

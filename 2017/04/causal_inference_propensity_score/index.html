@@ -149,7 +149,7 @@ Florian Wilhelm's blog            </a>
 <h2>Python&nbsp;implementation</h2>
 <p>We can set up a synthetic experiment to demonstrate and evaluate this method with the help of Python and Scikit-Learn. A synthetic experiment is appropriate to address the fundamental problem of causal inference described above. With real data, we  don&#8217;t know what would have happened if we had not treated someone, sent a voucher or not booked that additional option and vice versa. Therefore, we derive a model that describes the relationship of <span class="math">\(X\)</span> to <span class="math">\(Y\)</span> as well as the effect of <span class="math">\(Z\)</span> on <span class="math">\(Y\)</span>. We use this model to generate observational data where for each sample <span class="math">\(x_i\)</span> we either have <span class="math">\(Z=1\)</span> or <span class="math">\(Z=0\)</span> and thus incomplete information in our data. Our task is now to estimate the effect of <span class="math">\(Z\)</span> with the help of the generated&nbsp;data.</p>
 <p>The following portion of this article is available for <a href="https://florianwilhelm.info/notebooks/causal_inference_propensity_score.ipynb">download</a> as a Jupyter&nbsp;notebook.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -175,7 +175,8 @@ Florian Wilhelm's blog            </a>
 
 <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <h3>Model</h3>
 <p>Assume we have patients characterized by sex and age suffering from some disease with different severities. The recovery time of a patient depends only on the sex, age, severity and if the patient is on medication. Let the expected recovery time in days <span class="math">\(t_{recovery}\)</span> be defined&nbsp;as
@@ -184,24 +185,26 @@ Florian Wilhelm's blog            </a>
 <p>
 where <span class="math">\(I\)</span> is an indicator function.
 Furthermore, we will assume a Poisson distribution in order to generate some synthetic data of our patient&#8217;s recovery time. Due to our definition, treating the disease with medication reduces the recovery time to <span class="math">\(\exp(-1)\approx 0.37\)</span> of the recovery time having no treatment. Although the recovery time is specific to each patients, i.e. his/her features, the effect of a reduction to 37% of the recovery time without medication is the same for all&nbsp;patients. </p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">exp_recovery_time</span><span class="p">(</span><span class="n">sex</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">medication</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">exp_recovery_time</span><span class="p">(</span><span class="n">sex</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">medication</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sex</span><span class="o">+</span><span class="mf">0.03</span><span class="o">*</span><span class="n">age</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">severity</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">medication</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">rvs_recovery_time</span><span class="p">(</span><span class="n">sex</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">medication</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">poisson</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">exp_recovery_time</span><span class="p">(</span><span class="n">sex</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">medication</span><span class="p">))</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>For the features of the patients we will use a Beta distribution to show how badly the disease struck the patients, a Gamma distribution for the age of our patients and a Bernoulli distribution for the gender of the&nbsp;patients.</p>
-<div class="highlight"><pre><span></span><code><span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># number of observations, i.e. patients</span>
+<div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># number of observations, i.e. patients</span>
 <span class="n">sexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>  <span class="c1"># sex == 1 if male otherwise female</span>
 <span class="n">ages_dist</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">ages</span> <span class="o">=</span> <span class="n">ages_dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
 <span class="n">sev_dist</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
 <span class="n">severties</span> <span class="o">=</span> <span class="n">sev_dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>It&#8217;s always a good idea to take a look at the nontrivial&nbsp;distributions:</p>
-<div class="highlight"><pre><span></span><code><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;years&#39;</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
@@ -213,7 +216,8 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">ages</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">severties</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_age_severity_density.png">
@@ -221,17 +225,19 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 
 <h3>Randomized&nbsp;trial</h3>
 <p>In a controlled randomized trial we randomly select patients and assign them with a chance of 50% to either treatment or control. Therefore, the assignment of treatement is completely random and&nbsp;independent. </p>
-<div class="highlight"><pre><span></span><code><span class="n">meds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">meds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+</pre></div>
+
 
 <p>We assemble everything in a dataframe also including a constant&nbsp;column.</p>
-<div class="highlight"><pre><span></span><code><span class="n">const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 <span class="n">df_rnd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">sex</span><span class="o">=</span><span class="n">sexes</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="n">ages</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">severties</span><span class="p">,</span> <span class="n">medication</span><span class="o">=</span><span class="n">meds</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">const</span><span class="p">))</span>
 <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;severity&#39;</span><span class="p">,</span> <span class="s1">&#39;medication&#39;</span><span class="p">,</span> <span class="s1">&#39;const&#39;</span><span class="p">]</span>
 <span class="n">df_rnd</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="p">[</span><span class="n">features</span><span class="p">]</span> <span class="c1"># to enforce column order</span>
 <span class="n">df_rnd</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">rvs_recovery_time</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df_rnd</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <thead>
@@ -293,8 +299,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="n">df_rnd</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df_rnd</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
 
 <table>
 <thead>
@@ -384,17 +391,20 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tbody>
 </table>
 <p>By construction, there is no correlation between medication and any other&nbsp;covariate.</p>
-<div class="highlight"><pre><span></span><code><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_rnd</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_rnd</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_heatmap_nocorr.png">
 </p>
+
 <p>To get started we use a Poisson regression to estimate the coefficients of our formula for <span class="math">\(\mathbf{E}(t_{recovery})\)</span> from the generated data. Of course we expect to see approximately the same coefficients since Poisson regression assumes the exact same model that generated our&nbsp;data.</p>
-<div class="highlight"><pre><span></span><code><span class="n">glm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">df_rnd</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">],</span> <span class="n">df_rnd</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><span class="n">glm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">df_rnd</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">],</span> <span class="n">df_rnd</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">())</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">res</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <caption>Generalized Linear Model Regression Results</caption>
@@ -446,11 +456,12 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tbody></table>
 
 <p>Now we use a randome forest which is a pretty standard machine learning method to estimate the individual effects of the treatment on the patients. We fit the model and predict for each patient the recovery time assuming medication, i.e. medication column is 1, as well as assuming no medication, i.e. medication column is 0. Subsequently we divide the prediction assuming medication by the prediction assuming no medication to get an estimation of the treatment&#8217;s&nbsp;effect.</p>
-<div class="highlight"><pre><span></span><code><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -466,7 +477,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </div>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">X_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">X_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="c1"># set the medication column to 0</span>
 <span class="n">X_neg</span><span class="p">[:,</span> <span class="n">df_rnd</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;medication&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">X_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -474,16 +485,18 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <span class="n">X_pos</span><span class="p">[:,</span> <span class="n">df_rnd</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;medication&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="n">preds_rnd</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_pos</span><span class="p">)</span> <span class="o">/</span> <span class="n">reg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_neg</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Let&#8217;s take a look at the distribution of individual effects. Even though we are assuming no model by using a random forest, our estimations of the treatment effect look&nbsp;decent.</p>
-<div class="highlight"><pre><span></span><code><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">preds_rnd</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">preds_rnd</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;treatment effect&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds_rnd</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;truth&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_treatment_effect_random.png">
@@ -491,14 +504,15 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 
 <h3>Nonrandomized&nbsp;trial</h3>
 <p>To make things a bit more interesting, we put now patients on a treatment depending on their sex and severity of the illness. Since men often suffer more than women from the same illness, e.g. <a href="https://en.wikipedia.org/wiki/Man_flu">man flu</a>, they tend to complain more and thus are more likely to convince the doctor of prescibing a medication. Thereafter we generate the recovery time again and follow the same procedure as before in the randomized&nbsp;trial.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_medication</span><span class="p">(</span><span class="n">sex</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">medication</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_medication</span><span class="p">(</span><span class="n">sex</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">medication</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">sex</span> <span class="o">+</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">severity</span> <span class="o">+</span> <span class="mf">0.15</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">)</span>
 
 <span class="n">df_obs</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;recovery&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;medication&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_medication</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">rvs_recovery_time</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df_obs</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
   <thead>
@@ -588,17 +602,19 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
   </tbody>
 </table>
 
-<div class="highlight"><pre><span></span><code><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_obs</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_obs</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_heatmap_corr.png">
 </p>
 
-<div class="highlight"><pre><span></span><code><span class="n">glm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">],</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><span class="n">glm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">],</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">())</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">res</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <caption>Generalized Linear Model Regression Results</caption>
@@ -650,11 +666,12 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tbody></table>
 
 <p>The first stunning result is that the Poisson regression is still able to correctly estimate the coefficients of our model. This is due to the <a href="http://www.preventionresearch.org/wp-content/uploads/2011/07/SPR-Propensity-pc-workshop-slides.pdf">model dependence</a> and in realistic cases actually a bad thing. In a nutshell, model dependence means that the inference of the causal effect depends on the chosen model. In our case, the assumptions about the relation of the covariates in the Poisson regression extrapolates our data and thus makes our results heavily depend on the Poisson model. Since we also used a Poisson model to generate the data we are lucky but this is in reality rarely the case. Let&#8217;s check how the random forest&nbsp;performs.</p>
-<div class="highlight"><pre><span></span><code><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -670,7 +687,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </div>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">X_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">X_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">X_neg</span><span class="p">[:,</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;medication&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">X_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">X_pos</span><span class="p">[:,</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;medication&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -683,7 +700,8 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds_no_rnd</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;truth&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_treatment_effect_no_random.png">
@@ -692,7 +710,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <p>The distribution is now quite skewed and we can see that for a lot of our patients their individual treatment effect is heavily underestimated. This due to the fact that the random forest overrates the impact of a patient&#8217;s sex which is highly correlated with the&nbsp;medication.</p>
 <h3>Inverse probability of treatment&nbsp;weighting</h3>
 <p>To deminish the impact of other covariates onto the effect of medication we will no calculate the propensity score and use inverse probability of treatment weighting (<span class="caps">IPTW</span>). In order to do that we use a classification to predict the probability of a patient to be treated. This can be accomplished by Scikit-Learn&#8217;s <code>predict_proba</code> method that is available for most classificators. Don&#8217;t be fooled by the name though, in most cases (logistic regression is an exception) the probabilites are not calibrated and cannot be relied on. To fix this, we use the <a href="http://scikit-learn.org/stable/modules/calibration.html">CalibratedClassifierCV</a> in order to get proper probabilities (and it doesn&#8217;t hurt applying it for logistic regression too). After that we calculate the inverse probability of treatment weights and pass those as sample weights to the estimator during the&nbsp;fit.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># classifier to estimate the propensity score</span>
+<div class="highlight"><pre><span></span><span class="c1"># classifier to estimate the propensity score</span>
 <span class="bp">cls</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="c1">#cls = GaussianNB()  # another possible propensity score estimator</span>
 
@@ -702,7 +720,8 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <span class="n">X</span> <span class="o">=</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;medication&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;medication&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="bp">cls</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -718,9 +737,10 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </div>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">propensity</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="n">propensity</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
 <span class="n">propensity</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <thead>
@@ -759,19 +779,20 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tbody>
 </table>
 <p>We can see that the propensity scores of our patients in the randomized trial vary a lot as&nbsp;expected.</p>
-<div class="highlight"><pre><span></span><code><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">propensity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">propensity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Propensity scores of nonrandomized trial&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;propensity scores&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">);</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_propensity_scores_no_random.png">
 </p>
 
 <p>Only for comparison we can also plot the propensity scores of the randomized trail and check if the propensity score is <span class="math">\(\frac{1}{2}\)</span> as&nbsp;expected.</p>
-<div class="highlight"><pre><span></span><code><span class="n">X</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;medication&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;medication&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_rnd</span><span class="p">[</span><span class="s1">&#39;medication&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="bp">cls</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]);</span>
@@ -779,20 +800,22 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Propensity scores of randomized trial&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;propensity scores&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">);</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_propensity_scores_random.png">
 </p>
 
 <p>We now calculate at this point the inverse probability of treatment weights (IPTWs) with the help of the propensity scores of the nonrandomized&nbsp;trial.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># DataFrame&#39;s lookup method extracts the column index </span>
+<div class="highlight"><pre><span></span><span class="c1"># DataFrame&#39;s lookup method extracts the column index </span>
 <span class="c1"># provided by df2[&#39;medication&#39;] for each row</span>
 <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;iptw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">propensity</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span>
    <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">propensity</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;medication&#39;</span><span class="p">])</span>
 
 <span class="n">df_obs</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <thead>
@@ -891,12 +914,13 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tbody>
 </table>
 <p>The poisson regression benefits from using the IPTWs as weights since the Z-scores of the coefficients&nbsp;increase.</p>
-<div class="highlight"><pre><span></span><code><span class="n">glm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">],</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> 
+<div class="highlight"><pre><span></span><span class="n">glm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">],</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">],</span> 
              <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">(),</span>
              <span class="n">freq_weights</span><span class="o">=</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;iptw&#39;</span><span class="p">])</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">res</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <caption>Generalized Linear Model Regression Results</caption>
@@ -948,11 +972,12 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tbody></table>
 
 <p>Let&#8217;s check how our random forest does with the help of&nbsp;IPTWs.</p>
-<div class="highlight"><pre><span></span><code><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df_obs</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;recovery&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;iptw&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -968,7 +993,7 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </div>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">X_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">X_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">X_neg</span><span class="p">[:,</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;medication&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">X_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">X_pos</span><span class="p">[:,</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;medication&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -981,7 +1006,8 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds_propensity</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;truth&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_treatment_effect_no_random_iptw.png">
@@ -989,33 +1015,36 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 
 <p>After taking a brief look at the distribution we see that using <span class="caps">IPTW</span> drastically improved the estimation of the treatment&#8217;s causal effect. On second glance though, it can also be seen that for a few samples we have over-estimation beyond 1. Looking at those patients it can be seen that all of them are female. This indicates that the causal effect for these cases could not be captured maybe due to the bagging approach in random forests. For most of the patients the estimation of the causal effect is improved&nbsp;though.</p>
 <p>A direct comparison is given below, showing the estimations of treatment effects for the <em>randomized</em> trail, the <em>non-randomized</em> trail and the <em>non-randomized with <span class="caps">IPTW</span></em>&nbsp;application.</p>
-<div class="highlight"><pre><span></span><code><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">preds_rnd</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;randomized&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">preds_rnd</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;randomized&#39;</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">preds_no_rnd</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;non-randomized&#39;</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">preds_propensity</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;non-randomized with IPTW&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;treatment effect&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</code></pre></div>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_treatment_effect_no_random_cmp.png">
 </p>
 
 <p>The actual trick of <span class="caps">IPTW</span> is that sample weights are chosen in such a way that the correlation of other covariates and the medication is decreased. With the help of a weighted correlation this can also be illustrated. Remarkably enough, neither Numpy, Scipy, Pandas nor StatsModels seem to directly provide a weigthed correlation function, only weighted covariance, which we use to define a weighted&nbsp;correlation.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">weighted_corr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weighted_corr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">aweights</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">cov</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Here is the original correlation of the nonrandomized trial again by setting all weights to&nbsp;1.</p>
-<div class="highlight"><pre><span></span><code><span class="n">sel_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s1">&#39;iptw&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">sel_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_obs</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s1">&#39;iptw&#39;</span><span class="p">]</span>
 <span class="n">orig_corr</span> <span class="o">=</span> <span class="n">weighted_corr</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="n">sel_cols</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span> <span class="n">w</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">df_obs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">orig_corr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">orig_corr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">sel_cols</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">sel_cols</span><span class="p">)</span>
 <span class="n">orig_corr</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <thead>
@@ -1086,18 +1115,20 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">orig_corr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">orig_corr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_heatmap_corr.png">
 </p>
 
 <p>Using the IPTWs the correlation reduces quite a&nbsp;bit.</p>
-<div class="highlight"><pre><span></span><code><span class="n">iptw_corr</span> <span class="o">=</span> <span class="n">weighted_corr</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="n">sel_cols</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span> <span class="n">w</span><span class="o">=</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;iptw&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">iptw_corr</span> <span class="o">=</span> <span class="n">weighted_corr</span><span class="p">(</span><span class="n">df_obs</span><span class="p">[</span><span class="n">sel_cols</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span> <span class="n">w</span><span class="o">=</span><span class="n">df_obs</span><span class="p">[</span><span class="s1">&#39;iptw&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">iptw_corr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">iptw_corr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">sel_cols</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">sel_cols</span><span class="p">)</span>
 <span class="n">iptw_corr</span>
-</code></pre></div>
+</pre></div>
+
 
 <table>
 <thead>
@@ -1168,8 +1199,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">iptw_corr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">iptw_corr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+
 
 <p align="center">
 <img class="noZoom" src="/images/cips_heatmap_corr_iptw.png">
@@ -1342,6 +1374,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -1367,6 +1402,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -1395,6 +1433,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -1414,9 +1455,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -1427,6 +1468,9 @@ Furthermore, we will assume a Poisson distribution in order to generate some syn
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

@@ -160,7 +160,7 @@ Polars and Pandas side by side to show how much easier Polars is to&nbsp;use.</p
 </ul>
 <p>Performance <a href="https://h2oai.github.io/db-benchmark/">benchmark</a> of various&nbsp;frameworks</p>
 <h2>Prelude, or let&#8217;s get started&nbsp;:-)</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
@@ -168,35 +168,43 @@ Polars and Pandas side by side to show how much easier Polars is to&nbsp;use.</p
 <span class="kn">from</span> <span class="nn">polars</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">lit</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">pandas.io.common</span> <span class="kn">import</span> <span class="n">get_handle</span>
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pl</span><span class="o">.</span><span class="n">__version__</span>
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code>&#39;0.7.18&#39;
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span>
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code>&#39;1.2.4&#39;
-</code></pre></div>
+<div class="highlight"><pre><span></span>&#39;0.7.18&#39;
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="c1"># Download a huge csv as a test. Takes a while and only needed once...</span>
+
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&#39;1.2.4&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1"># Download a huge csv as a test. Takes a while and only needed once...</span>
 <span class="n">big_csv</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./big.csv&quot;</span><span class="p">)</span>
 <span class="n">csv_url</span> <span class="o">=</span> <span class="s2">&quot;http://sdm.lbl.gov/fastbit/data/star2002-full.csv.gz&quot;</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">big_csv</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="k">with</span> <span class="n">get_handle</span><span class="p">(</span><span class="n">csv_url</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;gzip&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh_in</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">big_csv</span><span class="p">,</span> <span class="s2">&quot;bw&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh_out</span><span class="p">:</span>
         <span class="n">fh_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fh_in</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-</code></pre></div>
+</pre></div>
+
 
 <h3>Eager&nbsp;Execution</h3>
-<div class="highlight"><pre><span></span><code><span class="n">edf</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">big_csv</span><span class="p">),</span> <span class="n">has_headers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">edf</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">big_csv</span><span class="p">),</span> <span class="n">has_headers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;column_1&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;column_9&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</code></pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;column_1&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;column_9&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -256,8 +264,9 @@ i64
 </div>
 
 <h4>alternatively <em>Pandas</em> style (not&nbsp;recommended!)</h4>
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[</span><span class="n">edf</span><span class="p">[</span><span class="s2">&quot;column_1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][[</span><span class="s2">&quot;column_9&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[</span><span class="n">edf</span><span class="p">[</span><span class="s2">&quot;column_1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][[</span><span class="s2">&quot;column_9&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -324,12 +333,14 @@ i64
 </ul>
 <h3>Lazy&nbsp;Execution</h3>
 <p>Just switching <code>read_csv</code> to <code>scan_csv</code> is all it needs to go from eager to lazy in this example. <code>collect</code> or <code>fetch</code> is then used to trigger the&nbsp;execution.</p>
-<div class="highlight"><pre><span></span><code><span class="n">ldf</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">scan_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">big_csv</span><span class="p">),</span> <span class="n">has_headers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">ldf</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">scan_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">big_csv</span><span class="p">),</span> <span class="n">has_headers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">ldf</span> <span class="o">=</span> <span class="n">ldf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;column_1&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+<div class="highlight"><pre><span></span><span class="n">ldf</span> <span class="o">=</span> <span class="n">ldf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;column_1&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ldf</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;column_9&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -389,11 +400,12 @@ i64
 </div>
 
 <p>Pandas style fails in lazy&nbsp;mode:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ldf</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">scan_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">big_csv</span><span class="p">),</span> <span class="n">has_headers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">ldf</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">scan_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">big_csv</span><span class="p">),</span> <span class="n">has_headers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">ldf</span><span class="p">[</span><span class="n">ldf</span><span class="p">[</span><span class="s2">&quot;column_1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][[</span><span class="s2">&quot;column_9&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>---------------------------------------------------------------------------
+
+<div class="highlight"><pre><span></span>---------------------------------------------------------------------------
 
 TypeError                                 Traceback (most recent call last)
 
@@ -403,7 +415,8 @@ TypeError                                 Traceback (most recent call last)
 
 
 TypeError: &#39;LazyFrame&#39; object is not subscriptable
-</code></pre></div>
+</pre></div>
+
 
 <h3>Slicing <span class="amp">&amp;</span>&nbsp;Indexing</h3>
 <p>Slicing and indexing in Polars works with the help of the subscript syntax similar to Numpy, i.e. df[1] or df[1, 2]. Some simple rules&nbsp;apply:</p>
@@ -419,10 +432,11 @@ TypeError: &#39;LazyFrame&#39; object is not subscriptable
 <li>returns the row(s) indexed by an integer in the first dimension and the column(s) indexed by integer or string in the second dimension, e.g. <code>df[69, 42]</code> or <code>df[69, "col_42"]</code></li>
 </ul>
 <p>In case of integers also slices, e.g. <code>1:</code>, are&nbsp;possible.</p>
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># this is a bug right now</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># this is a bug right now</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>Series: &#39;column_2&#39; [i64]
+
+<div class="highlight"><pre><span></span>Series: &#39;column_2&#39; [i64]
 [
     1613423
     1613423
@@ -435,10 +449,12 @@ TypeError: &#39;LazyFrame&#39; object is not subscriptable
     1613423
     1613423
 ]
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[[</span><span class="mi">1</span><span class="p">]]</span>
-</code></pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[[</span><span class="mi">1</span><span class="p">]]</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -612,20 +628,25 @@ f64
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="c1"># index by (row, column)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="c1"># index by (row, column)</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>20011015.222604
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column_4&quot;</span><span class="p">]</span> <span class="c1"># or as string</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span>20011015.222604
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>20011015.222604
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>  <span class="c1"># index by (row, column) but returns data frame</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column_4&quot;</span><span class="p">]</span> <span class="c1"># or as string</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>20011015.222604
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>  <span class="c1"># index by (row, column) but returns data frame</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -673,8 +694,9 @@ f64
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;column_4&quot;</span><span class="p">:]</span> <span class="c1"># slice by row and column&#39;s name</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">edf</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;column_4&quot;</span><span class="p">:]</span> <span class="c1"># slice by row and column&#39;s name</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -904,32 +926,40 @@ f64
 </div>
 
 <p>Since in Pandas there is an explicit index that can be any type, not just integer and columns that can have any immutable datatype, it has to workaround several ambiguities with special accessors like <code>iloc</code>, <code>loc</code>, <code>at</code>, <code>iat</code>,&nbsp;etc.</p>
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span> <span class="o">=</span> <span class="n">edf</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">edf</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code>20011015.222604
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="c1"># when mixing indexing by integer and by string it gets less comprehensible in Pandas</span>
+
+<div class="highlight"><pre><span></span>20011015.222604
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1"># when mixing indexing by integer and by string it gets less comprehensible in Pandas</span>
 <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;column_4&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>20011015.222604
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span>20011015.222604
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>column_3    8.080000e+02
+
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>column_3    8.080000e+02
 column_4    2.001102e+07
 Name: 1, dtype: float64
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="p">[[</span><span class="s2">&quot;column_4&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-</code></pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="p">[[</span><span class="s2">&quot;column_4&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -969,10 +999,11 @@ Name: 1, dtype: float64
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="c1"># for slicing with column names and guaranteed indexing by integer we have to write:</span>
+<div class="highlight"><pre><span></span><span class="c1"># for slicing with column names and guaranteed indexing by integer we have to write:</span>
 <span class="n">pdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;column_4&quot;</span><span class="p">:]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
 <span class="c1"># `pdf.loc[1:4, &quot;column_4&quot;:]` works only as long the index is set correctly.</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1061,12 +1092,13 @@ Name: 1, dtype: float64
 </div>
 
 <h3>Dealing with missing&nbsp;values</h3>
-<div class="highlight"><pre><span></span><code><span class="n">left_df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]})</span>
+<div class="highlight"><pre><span></span><span class="n">left_df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]})</span>
 <span class="n">right_df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="mi">69</span><span class="p">]})</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">left_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">right_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
 <span class="n">df</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1146,8 +1178,9 @@ null
 </div>
 
 <p>Note that the last element of the <code>c</code> column is <code>null</code>, not <code>NaN</code> as in Pandas, and the datatype is still int and not automatically converted to float as in&nbsp;Pandas.</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_null</span><span class="p">())</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_null</span><span class="p">())</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1205,24 +1238,29 @@ null
 </div>
 
 <p>Pandas does something pretty scary&nbsp;here</p>
-<div class="highlight"><pre><span></span><code><span class="n">left_pdf</span> <span class="o">=</span> <span class="n">left_df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">left_pdf</span> <span class="o">=</span> <span class="n">left_df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
 <span class="n">right_pdf</span> <span class="o">=</span> <span class="n">right_df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Note that &#8220;c&#8221;-column has type&nbsp;int:</p>
-<div class="highlight"><pre><span></span><code><span class="n">right_pdf</span><span class="o">.</span><span class="n">dtypes</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">right_pdf</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code>a    int64
+
+<div class="highlight"><pre><span></span>a    int64
 c    int64
 dtype: object
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">left_pdf</span><span class="p">,</span> <span class="n">right_pdf</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
-</code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">left_pdf</span><span class="p">,</span> <span class="n">right_pdf</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">pdf</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1272,8 +1310,9 @@ dtype: object
 
 <p>Depending on the datatype, Pandas shows <code>None</code> or <code>NaN</code>, also note that the column <code>c</code> was converted from <code>int</code> to <code>float</code> without our&nbsp;consent!</p>
 <h1>New&nbsp;columns</h1>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">with_column</span><span class="p">((</span><span class="n">lit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;3*c&quot;</span><span class="p">))</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">with_column</span><span class="p">((</span><span class="n">lit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;3*c&quot;</span><span class="p">))</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1368,8 +1407,9 @@ null
 </div>
 
 <p>Same is possible in Pandas but note that we have to retype again the variable name <code>pdf</code> just to access a&nbsp;column!</p>
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;3*c&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]})</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;3*c&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]})</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1422,7 +1462,7 @@ null
 </div>
 
 <h1>Column&nbsp;Expressions</h1>
-<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;nrs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
         <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;ham&quot;</span><span class="p">,</span> <span class="s2">&quot;spam&quot;</span><span class="p">,</span> <span class="s2">&quot;egg&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
@@ -1431,7 +1471,8 @@ null
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="n">df</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1553,19 +1594,21 @@ null
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="c1"># and in Pandas</span>
+<div class="highlight"><pre><span></span><span class="c1"># and in Pandas</span>
 <span class="n">pdf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <h4>Construct a new dataframe with a sorted column and some&nbsp;aggregations</h4>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">pl</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s2">&quot;nrs&quot;</span><span class="p">),</span> <span class="c1"># or equivalently col(&quot;nrs&quot;).sum()</span>
         <span class="n">col</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(),</span>
         <span class="n">col</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">n_unique</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;unique_names_1&quot;</span><span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1667,14 +1710,15 @@ null
 </div>
 
 <p>In Pandas we create a new DataFrame and reference several times <code>pdf</code></p>
-<div class="highlight"><pre><span></span><code><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;nrs&quot;</span><span class="p">:</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;nrs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
         <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(),</span>
         <span class="s2">&quot;unique_names_1&quot;</span><span class="p">:</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
     <span class="p">}</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1735,8 +1779,9 @@ null
 </div>
 
 <h4>Select certain elements from a column by filtering from&nbsp;another</h4>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.4</span><span class="p">))</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.4</span><span class="p">))</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1791,8 +1836,9 @@ null
 </div>
 
 <p>Syntax in Pandas is way less&nbsp;readable</p>
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.4</span><span class="p">][[</span><span class="s2">&quot;names&quot;</span><span class="p">]]</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.4</span><span class="p">][[</span><span class="s2">&quot;names&quot;</span><span class="p">]]</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1837,8 +1883,9 @@ null
 </div>
 
 <p>Another way in Pandas is to use the query&nbsp;style:</p>
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;random &gt; 0.4&quot;</span><span class="p">)[[</span><span class="s2">&quot;names&quot;</span><span class="p">]]</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;random &gt; 0.4&quot;</span><span class="p">)[[</span><span class="s2">&quot;names&quot;</span><span class="p">]]</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1885,7 +1932,7 @@ null
 <p>The problem with Pandas&#8217; query style is that it is basically string hacking with no checks whatsoever until the code is executed. Also reuse of certain expressions is highly limited if you have just&nbsp;strings.</p>
 <h3>Complex expressions are also&nbsp;possible</h3>
 <p>All expressions in Polars are <em>embarassingly parallel</em> by design and thus automatically&nbsp;parallelized</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s2">&quot;nrs&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">pl</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span>
                            <span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1893,7 +1940,8 @@ null
         <span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">)</span>
     <span class="p">]</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -1953,10 +2001,11 @@ f64
 </div>
 
 <p><span class="caps">SQL</span>-like <code>when</code>/<code>then</code>/<code>otherwise</code> statements are not possible in Pandas, thus we have to use <code>np.where</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
     <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;nrs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;result&quot;</span>
 <span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2004,9 +2053,10 @@ f64
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="c1"># or easier to read but much slower since not vectorized at all</span>
+<div class="highlight"><pre><span></span><span class="c1"># or easier to read but much slower since not vectorized at all</span>
 <span class="n">pdf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="n">x</span> <span class="o">*</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;nrs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2055,14 +2105,15 @@ f64
 </div>
 
 <h4>Even window expressions are&nbsp;possible</h4>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">col</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">),</span>  <span class="c1"># select all</span>
         <span class="n">col</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;sum[random]/groups&quot;</span><span class="p">),</span>
         <span class="n">col</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;random/name&quot;</span><span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2228,13 +2279,14 @@ null
 
 <p>Doing the same in Pandas is a bit more complex. Also note that there is an unexpected <code>NaN</code> in the last row. This is due to the fact that when inserting <code>pdf.groupby(['names'], dropna=False)['random'].apply(list)</code> we compare <code>NaN</code> to <code>NaN</code> which is false by definition. This is just another subtle problem caused by the fact that Pandas uses <code>NaN</code> to express <code>NA</code>.
 Also note that Polars needs no explicit index like Pandas to do operations like this, just like Spark has no way to set an index&nbsp;explicitely.</p>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;sum[random]/groups&quot;</span><span class="p">:</span> <span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;groups&#39;</span><span class="p">])[</span><span class="s1">&#39;random&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()})</span>
     <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;random/name&quot;</span><span class="p">:</span> <span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;names&#39;</span><span class="p">],</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;random&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)})</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2306,13 +2358,14 @@ Also note that Polars needs no explicit index like Pandas to do operations like 
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="c1"># or alternatively using `join` which is also avoiding the NaN problem</span>
+<div class="highlight"><pre><span></span><span class="c1"># or alternatively using `join` which is also avoiding the NaN problem</span>
 <span class="n">pdf</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;sum[random]/groups&quot;</span><span class="p">),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;groups&quot;</span>
 <span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;names&#39;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;random/name&quot;</span><span class="p">),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;names&quot;</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2391,11 +2444,12 @@ Also note that Polars needs no explicit index like Pandas to do operations like 
 </div>
 
 <h1>GroupBy</h1>
-<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://theunitedstates.io/congress-legislators/legislators-current.csv&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://theunitedstates.io/congress-legislators/legislators-current.csv&quot;</span><span class="p">)</span>
 <span class="n">pdf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">lazy</span><span class="p">()</span>  <span class="c1"># allows for working only on a subset using limit</span>
+
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">lazy</span><span class="p">()</span>  <span class="c1"># allows for working only on a subset using limit</span>
    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">)</span>
    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
        <span class="p">[</span>
@@ -2408,7 +2462,8 @@ Also note that Polars needs no explicit index like Pandas to do operations like 
    <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
    <span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2532,7 +2587,7 @@ str
 
 <p>Note how easily we can deal with lists of strings by aggregating over gender using <code>list()</code>.</p>
 <p>In Pandas the same operation feels more like string hacking and renaming happens as a separate step having unnecessary repetitions of the column names. Everything is of course eagerly&nbsp;evaluated.</p>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;party&quot;</span><span class="p">:</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span> 
           <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="n">grp</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span> 
           <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;first&quot;</span><span class="p">})</span>
@@ -2542,7 +2597,8 @@ str
     <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;n_party&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2609,7 +2665,7 @@ str
 </div>
 
 <h4>Conditionals in&nbsp;aggregations</h4>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">lazy</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">lazy</span><span class="p">()</span>
    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span>
    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
        <span class="p">[</span>
@@ -2621,7 +2677,8 @@ str
    <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
    <span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2723,7 +2780,7 @@ u32
 </div>
 
 <p>The translation to Pandas is &#8220;somewhat&#8221; more complicated&#8230; kudos to everyone able to solve this without looking it up on StackOverflow&nbsp;:-) </p>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;party&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">grp</span> <span class="o">==</span> <span class="s2">&quot;Democrat&quot;</span><span class="p">)),</span> 
                     <span class="p">(</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span>  <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">grp</span> <span class="o">==</span> <span class="s2">&quot;Republican&quot;</span><span class="p">))]})</span>
     <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> 
@@ -2731,7 +2788,8 @@ u32
     <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2792,7 +2850,7 @@ u32
 </div>
 
 <h4>Composition and reuse of more complex&nbsp;operations</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">compute_age</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Expr</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_age</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Expr</span><span class="p">:</span>
     <span class="c1"># Date64 is time in ms</span>
     <span class="n">ms_to_year</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span>
     <span class="k">return</span> <span class="p">(</span>
@@ -2821,7 +2879,8 @@ u32
    <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
    <span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -2923,7 +2982,7 @@ null
 </div>
 
 <p>Translating this to Pandas is really hard since we have no way to refer to a column. Also with Pandas&#8217; <code>agg</code> we have only access to the aggregation column and cannot filter by another, thus we have to use <code>apply</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">p_compute_age</span><span class="p">(</span><span class="n">grp</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">p_compute_age</span><span class="p">(</span><span class="n">grp</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
     <span class="c1"># Date64 is time in ms</span>
     <span class="n">s_to_year</span> <span class="o">=</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span>
     <span class="k">return</span> <span class="p">(</span>
@@ -2948,7 +3007,8 @@ null
     <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;state&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3010,14 +3070,16 @@ null
 
 <p>The same code in Pandas just feels not as clean as in Polars, thus showing nicely the power that comes with Polars&#8217; composable&nbsp;expressions.</p>
 <h1>User-Defined (Aggregation)&nbsp;Functions</h1>
-<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> 
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> 
                    <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> 
                    <span class="s2">&quot;cls&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)})</span>
 <span class="n">pdf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">df</span>
-</code></pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3175,12 +3237,14 @@ i64
 
 <h4>Vector&nbsp;Operations</h4>
 <p>Use <code>map</code> for vector operations on a whole column, i.e. series -&gt;&nbsp;series:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">my_custom_func</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_custom_func</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">my_custom_func</span><span class="p">,</span> <span class="n">return_dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Float64</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">my_custom_func</span><span class="p">,</span> <span class="n">return_dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Float64</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3238,8 +3302,9 @@ i64
 </div>
 
 <p>Use <code>apply</code> for scalar operations on a cell or group level but returning a&nbsp;scalar:</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3324,8 +3389,9 @@ f64
 </div>
 
 <p>In Pandas, you have <code>apply</code> and <code>applymap</code> working quite&nbsp;similarily:</p>
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">my_custom_func</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">my_custom_func</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3361,8 +3427,9 @@ f64
 </table>
 </div>
 
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="p">[[</span><span class="s2">&quot;bar&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="p">[[</span><span class="s2">&quot;bar&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3431,8 +3498,9 @@ f64
 </div>
 
 <h4>Aggregation&nbsp;Operations</h4>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;cls&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">grp</span><span class="o">.</span><span class="n">sum</span><span class="p">())])</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;cls&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="mi">3</span><span class="o">*</span><span class="n">grp</span><span class="o">.</span><span class="n">sum</span><span class="p">())])</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3489,8 +3557,9 @@ f64
 </div>
 
 <p>Quite analogous in Pandas but of course you need to fight the&nbsp;multi-index:</p>
-<div class="highlight"><pre><span></span><code><span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;cls&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">grp</span><span class="o">.</span><span class="n">sum</span><span class="p">()})</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;cls&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">grp</span><span class="o">.</span><span class="n">sum</span><span class="p">()})</span>
+</pre></div>
+
 
 <div>
 <style scoped>
@@ -3599,6 +3668,9 @@ f64
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -3624,6 +3696,9 @@ f64
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -3652,6 +3727,9 @@ f64
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -3671,9 +3749,9 @@ f64
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -3684,6 +3762,9 @@ f64
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

@@ -191,6 +191,7 @@ This is what the distribution of the price looks&nbsp;like.</p>
 <img class="noZoom" src="/images/histtv_price_distribution.png" alt="distribution of price">
 <figcaption align="center">Distribution plot of the price variable using 1,000.- € bins.</figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>It surely does look like a <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">log-normal distribution</a> and just to have visual check, fitting a log-normal distribution
 with the help of the wonderful <a href="https://www.scipy.org/">SciPy</a> gets us&nbsp;this.</p>
@@ -198,6 +199,7 @@ with the help of the wonderful <a href="https://www.scipy.org/">SciPy</a> gets u
 <img class="noZoom" src="/images/histtv_price_log-normal_fit.png" alt="log-normal fit">
 <figcaption align="center">Log-normal distribution fitted to the distribution of prices.</figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>Seeing this, you might feel the itch to just apply now the logarithm to our target variable, just to make it look
 more <em>normal</em>. And isn&#8217;t this some basic assumption of a linear model&nbsp;anyway? </p>
@@ -223,7 +225,7 @@ on the predictor <span class="math">\(\mathbf{x}\)</span> is normally distribute
 <p>To make it even a tad more illustrative, imagine you want to predict the average alcohol level (in some strange log scale)
 of a person celebrating Carnival only using a single binary feature, e.g. did the person have a one-night-stand over Carnival or not. 
 Under these assumptions we simple generate some data using the linear model from above and plot&nbsp;it:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -233,7 +235,8 @@ Under these assumptions we simple generate some data using the linear model from
 
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Obviously, this results in a bimodal distribution also known as the notorious <a href="https://en.wikipedia.org/wiki/Cologne_Cathedral">Cologne Cathedral distribution</a> as some may call it.
 Thus, although using a linear model, we generated a non-normally distributed target variable with residuals that are normally&nbsp;distributed.</p>
@@ -241,6 +244,7 @@ Thus, although using a linear model, we generated a non-normally distributed tar
 <img class="noZoom" src="/images/dom_distribution.png" alt="log-normal fit">
 <figcaption align="center">Bimodal distribution generated with a linear model, which is obviously resembling the cathedral of Cologne.</figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>Based on common mnemonic techniques, and assuming this example was surprising, physical, sexual and humorous enough for you, 
 you will never forget that the residuals of a linear model are normally distributed and <em>not</em> the target variable in general. 
@@ -315,7 +319,7 @@ log-normally than normally distributed. If we now use the simplest model we can 
 (yeah, here comes the linear model with just an intercept again), the target distribution directly determines the residual
 distribution. Now, we find the minimum point using <span class="caps">RMSE</span> and <span class="caps">MAE</span> to compare the results to the mean and median of 
 the price vector <code>y</code>,&nbsp;respectively.  </p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
 <span class="o">&gt;&gt;&gt;</span>     <span class="c1"># not taking the root, i.e. MSE, would not change the actual result</span>
 <span class="o">&gt;&gt;&gt;</span>     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
 
@@ -352,13 +356,14 @@ the price vector <code>y</code>,&nbsp;respectively.  </p>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="mf">4100.0</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>As expected, by looking at the <code>x</code> in the output of <code>minimize</code>, we approximated the mean by minimizing the <span class="caps">RMSE</span> and the median by minimizing the <span class="caps">MAE</span>.</p>
 <h2>Shrinking the target&nbsp;variable</h2>
 <p>There is still some elephant in the room that we haven&#8217;t talked about yet. What happens now if we shrink our target
 variable by applying a log transformation and then minimize the <span class="caps">MSE</span>?</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">y_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">y_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">y_log</span><span class="p">,),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">)</span>
       <span class="n">fun</span><span class="p">:</span> <span class="mf">1.0632889349620418</span>
  <span class="n">hess_inv</span><span class="p">:</span> <span class="n">array</span><span class="p">([[</span><span class="mf">1.06895454</span><span class="p">]])</span>
@@ -370,7 +375,8 @@ variable by applying a log transformation and then minimize the <span class="cap
    <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
   <span class="n">success</span><span class="p">:</span> <span class="kc">True</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">8.31228458</span><span class="p">])</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>So if we now transform the result <code>x</code> which is roughly <code>8.31</code> back using <code>np.exp(8.31)</code> we get a rounded result of <code>4064</code>.
 <em>Wait a second! What just happened!?</em> We would have expected the final result to be around <code>6704</code> because that&#8217;s the
@@ -527,8 +533,8 @@ so that <span class="math">\(\exp(\hat \mu + \tilde c)=\hat y\)</span>, which is
 we used to call this the <em>Gronbach factor</em> after our colleague Moritz Gronbach, who would successfully apply this fitted correction
 to all kinds of regression problems with non-negative values. The implementation is actually quite easy
 given the true value, our predicted value in log-space and some error&nbsp;measure:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_corr</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred_log</span><span class="p">,</span> <span class="n">error_func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Determine correction delta for exp transformation&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_corr</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred_log</span><span class="p">,</span> <span class="n">error_func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine correction delta for exp transformation&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">cost_func</span><span class="p">(</span><span class="n">delta</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">error_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">y_pred_log</span><span class="p">),</span> <span class="n">y_true</span><span class="p">)</span>
 
@@ -537,21 +543,23 @@ given the true value, our predicted value in log-space and some error&nbsp;measu
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finding correction term failed!</span><span class="se">\n</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Let&#8217;s now get our hands dirty and evaluate how <span class="caps">RMSE</span>, <span class="caps">MAE</span>, <span class="caps">MAPE</span> and <span class="caps">RMSPE</span> behave in our use-case with the raw as well 
 as the log-transformed target using no, the theoretical and the fitted correction. To do so we gonna do some feature engineering and apply some <span class="caps">ML</span> method. 
 Regarding the former, we just do some extremely basic things like calculating the age of a car and average mileage per year,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dateOfRegistration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">ds</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;yearOfRegistration&#39;</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;monthOfRegistration&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ageInYears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">ds</span><span class="p">:</span> <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;dateCreated&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;dateOfRegistration&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mi">365</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mileageOverAge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kilometer&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ageInYears&#39;</span><span class="p">]</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>In total, combined with the original features, we take as our feature set including the&nbsp;target:</p>
-<div class="highlight"><pre><span></span><code><span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vehicleType&quot;</span><span class="p">,</span> 
+<div class="highlight"><pre><span></span><span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vehicleType&quot;</span><span class="p">,</span> 
             <span class="s2">&quot;ageInYears&quot;</span><span class="p">,</span>
             <span class="s2">&quot;mileageOverAge&quot;</span><span class="p">,</span>
             <span class="s2">&quot;gearbox&quot;</span><span class="p">,</span> 
@@ -562,18 +570,21 @@ Regarding the former, we just do some extremely basic things like calculating th
             <span class="s2">&quot;brand&quot;</span><span class="p">,</span>
             <span class="s2">&quot;price&quot;</span><span class="p">]</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">]</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>and transform all categorical features to integers,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">):</span>
         <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>to get our final feature matrix <code>X</code> and target vector <code>y</code> with</p>
-<div class="highlight"><pre><span></span><code><span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;price&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>As <span class="caps">ML</span> method, let&#8217;s just choose a <a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest</a> as for me it&#8217;s like the <a href="https://en.wikipedia.org/wiki/Volkswagen_Passat">Volkswagen Passat Variant</a> among all <span class="caps">ML</span> algorithms. 
 Although you will not win any competition with it, in most use-cases it will do a pretty decent job without much hassle.
@@ -936,6 +947,9 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -961,6 +975,9 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -989,6 +1006,9 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -1008,9 +1028,9 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -1021,6 +1041,9 @@ the correction term for <span class="caps">MAPE</span> is <span class="math">\(-
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

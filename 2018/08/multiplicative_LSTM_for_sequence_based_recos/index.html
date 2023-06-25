@@ -226,7 +226,7 @@ to core <a href="https://www.tensorflow.org/">TensorFlow</a> and <a href="https:
 <p>For our task, we gonna need an <code>mLSTM</code> module and luckily PyTorch provides <code>RNNBase</code>, a base class for custom RNNs.
 So all we have to do is to write a module that inherits from <code>RNNBase</code>, defines additional parameters and implements
 the mLSTM equations inside of <code>forward</code>: </p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">math</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Parameter</span>
@@ -270,7 +270,8 @@ the mLSTM equations inside of <code>forward</code>: </p>
             <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cx</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>The code is pretty much self-explanatory. We inherit from <code>RNNBase</code> and initialize the additional parameters we need for the calculation of <span class="math">\(m_t\)</span>
 in <code>__init__</code>. In <code>forward</code> we use those parameters to calculate <span class="math">\(m_t = (W_{im} x_t + b_{im}) \odot{} ( W_{hm} h_{t-1} + b_{hm})\)</span> with the help of <code>F.linear</code> and pass it to an ordinary <code>LSTMCell</code>. We collect the results for each timestep
@@ -536,6 +537,9 @@ know if you liked this post and comment&nbsp;below.</p>
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -561,6 +565,9 @@ know if you liked this post and comment&nbsp;below.</p>
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -589,6 +596,9 @@ know if you liked this post and comment&nbsp;below.</p>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -608,9 +618,9 @@ know if you liked this post and comment&nbsp;below.</p>
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -621,6 +631,9 @@ know if you liked this post and comment&nbsp;below.</p>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

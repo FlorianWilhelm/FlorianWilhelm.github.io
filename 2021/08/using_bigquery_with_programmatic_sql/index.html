@@ -114,14 +114,14 @@ Florian Wilhelm's blog            </a>
                 </div>
                 <h2>Introduction</h2>
 <p>Especially in data science projects, Python code is often peppered with functions generating <span class="caps">SQL</span> queries as strings&nbsp;like:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_sku_ts</span><span class="p">(</span><span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sku</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_sku_ts</span><span class="p">(</span><span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sku</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compose query to retrieve timeseries for SKU or list of SKUs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    SELECT *</span>
 <span class="s2">    FROM `sku-table`</span>
-<span class="s2">    WHERE entity_id = </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">entity_id</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"></span>
+<span class="s2">    WHERE entity_id = </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">entity_id</span><span class="si">}</span><span class="se">\&quot;</span>
 <span class="s2">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sku</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">query</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; AND sku = </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">sku</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> &quot;</span>
@@ -132,7 +132,8 @@ Florian Wilhelm's blog            </a>
 <span class="s2">    ORDER BY date ASC</span>
 <span class="s2">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">query</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>And this is even only a simple example. Using dynamic joins and sub-queries, things can get even more complicated.
 When the Python on-board resources are no longer sufficient, some developers start using templating engines like <a href="https://jinja.palletsprojects.com/">Jinja</a>
@@ -174,7 +175,7 @@ So how does this work? Let&#8217;s go through this with a BigQuery example as it
 <p>Let&#8217;s say we want to find out how many monthly downloads some project on <a href="https://pypi.org/">PyPI</a> has. If you want to follow along and
 try it out yourself, a Jupyter notebook is available on my <a href="https://github.com/FlorianWilhelm/bigquery-programmatic-sql">Github repository</a>. </p>
 <p>With plain <span class="caps">SQL</span>, we would solve this task the following&nbsp;way:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">google.cloud</span> <span class="kn">import</span> <span class="n">bigquery</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.cloud</span> <span class="kn">import</span> <span class="n">bigquery</span>
 
 <span class="n">bqclient</span> <span class="o">=</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
 
@@ -195,14 +196,15 @@ try it out yourself, a Jupyter notebook is available on my <a href="https://gith
     <span class="o">.</span><span class="n">result</span><span class="p">()</span>
     <span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">create_bqstorage_client</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Quite easy, but note that to keep this example focused, the query string is static, meaning that in order to dynamically
 change the time slicing, the project name etc., we would have to introduce string substitutions at least. This would
 result in the aforementioned&nbsp;downsides.</p>
 <p>In contrast to that, after having installed <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> and the BigQuery dialect <a href="https://pypi.org/project/pybigquery/">pybigquery</a>, we can define a 
 dynamic <code>query</code> object instead of <code>query_string</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="kn">import</span> <span class="n">func</span> <span class="k">as</span> <span class="n">F</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.engine</span> <span class="kn">import</span> <span class="n">create_engine</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="kn">import</span> <span class="o">*</span>
@@ -224,39 +226,44 @@ dynamic <code>query</code> object instead of <code>query_string</code>:</p>
     <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span>
 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>At first sight, it looks somewhat more verbose and unfamiliar, but you will get used to the SQLAlchemy <span class="caps">API</span>, even if 
 it doesn&#8217;t look as concise as the one of PySpark, I have to admit. More or less, it&#8217;s just <span class="caps">SQL</span> but embedded nicely as functions and objects in&nbsp;Python.</p>
 <p>So far, we have only generated the query and SQLAlchemy would have directly informed us if this was invalid. To see how
 the prepared <span class="caps">SQL</span> statement looks like, maybe for debugging, we can just <code>print(query)</code> to&nbsp;get:</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span> <span class="n">date_trunc</span><span class="p">(</span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">),</span> <span class="k">month</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">%</span><span class="p">(</span><span class="n">count_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="n">num_downloads</span><span class="o">`</span> 
-<span class="k">FROM</span> <span class="o">`</span><span class="n">bigquery</span><span class="o">-</span><span class="k">public</span><span class="o">-</span><span class="k">data</span><span class="p">.</span><span class="n">pypi</span><span class="p">.</span><span class="n">file_downloads</span><span class="o">`</span> 
-<span class="k">WHERE</span> <span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">)</span> <span class="k">BETWEEN</span> <span class="o">%</span><span class="p">(</span><span class="n">date_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span> <span class="k">AND</span> <span class="k">CURRENT_DATE</span> 
-  <span class="k">AND</span> <span class="o">`</span><span class="n">file</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">project</span><span class="o">`</span> <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">project_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span> 
-  <span class="k">AND</span> <span class="o">`</span><span class="n">details</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">installer</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">details</span><span class="p">.</span><span class="n">installer</span><span class="p">.</span><span class="n">name_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span> 
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span> 
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">date_trunc</span><span class="p">(</span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">),</span><span class="w"> </span><span class="k">month</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">%</span><span class="p">(</span><span class="n">count_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="o">`</span><span class="n">num_downloads</span><span class="o">`</span><span class="w"> </span>
+<span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">bigquery</span><span class="o">-</span><span class="k">public</span><span class="o">-</span><span class="k">data</span><span class="p">.</span><span class="n">pypi</span><span class="p">.</span><span class="n">file_downloads</span><span class="o">`</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="o">%</span><span class="p">(</span><span class="n">date_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="o">`</span><span class="n">file</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">project</span><span class="o">`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">project_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="w"> </span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="o">`</span><span class="n">details</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">installer</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">name</span><span class="o">`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="p">(</span><span class="n">details</span><span class="p">.</span><span class="n">installer</span><span class="p">.</span><span class="n">name_1</span><span class="p">:</span><span class="n">STRING</span><span class="p">)</span><span class="n">s</span><span class="w"> </span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="w"> </span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="o">`</span><span class="k">month</span><span class="o">`</span>
+</pre></div>
+
 
 <p>To see the actual query with all literals bound to their final values, we need to compile the query first before&nbsp;printing:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">compile_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;literal_binds&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">compile_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;literal_binds&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span>
+</pre></div>
+
 
 <p>to&nbsp;get:</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span> <span class="n">date_trunc</span><span class="p">(</span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">),</span> <span class="k">month</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="k">AS</span> <span class="o">`</span><span class="n">num_downloads</span><span class="o">`</span> 
-<span class="k">FROM</span> <span class="o">`</span><span class="n">bigquery</span><span class="o">-</span><span class="k">public</span><span class="o">-</span><span class="k">data</span><span class="p">.</span><span class="n">pypi</span><span class="p">.</span><span class="n">file_downloads</span><span class="o">`</span> 
-<span class="k">WHERE</span> <span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">)</span> <span class="k">BETWEEN</span> <span class="s1">&#39;2021-01-01&#39;</span> <span class="k">AND</span> <span class="k">CURRENT_DATE</span> 
-  <span class="k">AND</span> <span class="o">`</span><span class="n">file</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">project</span><span class="o">`</span> <span class="o">=</span> <span class="s1">&#39;pyscaffold&#39;</span> 
-  <span class="k">AND</span> <span class="o">`</span><span class="n">details</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">installer</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="o">=</span> <span class="s1">&#39;pip&#39;</span> 
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span> 
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="o">`</span><span class="k">month</span><span class="o">`</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">date_trunc</span><span class="p">(</span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">),</span><span class="w"> </span><span class="k">month</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="o">`</span><span class="n">num_downloads</span><span class="o">`</span><span class="w"> </span>
+<span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">bigquery</span><span class="o">-</span><span class="k">public</span><span class="o">-</span><span class="k">data</span><span class="p">.</span><span class="n">pypi</span><span class="p">.</span><span class="n">file_downloads</span><span class="o">`</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="nb">date</span><span class="p">(</span><span class="o">`</span><span class="k">timestamp</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="s1">&#39;2021-01-01&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="o">`</span><span class="n">file</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">project</span><span class="o">`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pyscaffold&#39;</span><span class="w"> </span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="o">`</span><span class="n">details</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">installer</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">name</span><span class="o">`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pip&#39;</span><span class="w"> </span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="o">`</span><span class="k">month</span><span class="o">`</span><span class="w"> </span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="o">`</span><span class="k">month</span><span class="o">`</span>
+</pre></div>
+
 
 <p>But this is only interesting for debugging and also for learning SQLAlchemy. In order to execute the query object and transform
 its result set into a dataframe, all we have to do&nbsp;is:</p>
-<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+</pre></div>
+
 
 <p>Quite easy, right? <a href="https://pandas.pydata.org/">Pandas</a> understands and works nicely with SQLAlchemy query objects and&nbsp;engines.</p>
 <h2>Conclusion</h2>
@@ -273,13 +280,15 @@ where your Python program just uses BigQuery as data storage, using SQLAlchemy m
 <p>Right now the <a href="https://github.com/GoogleCloudDataproc/spark-bigquery-connector">Spark Bigquery Connector</a> has no full pushdown capabilities regarding BigQuery. If <code>pushAllFilters</code> is set
 to true in <code>spark.conf</code>, which is the default, the connector pushes all the filters Spark can delegate to the BigQuery Storage <span class="caps">API</span>. 
 Since GroupBy is a more complex operation, the following&nbsp;query:</p>
-<div class="highlight"><pre><span></span><code><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;bigquery-public-data.pypi.file_downloads&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;bigquery-public-data.pypi.file_downloads&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+
 
 <p>will first fetch all data from the table into Spark. As this might be quite inefficient it&#8217;s better to directly provide an <span class="caps">SQL</span>
 query that filters and groups direclty in BigQuery&nbsp;like:</p>
-<div class="highlight"><pre><span></span><code><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sql_string</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;bigquery&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sql_string</span><span class="p">)</span>
+</pre></div>
+
 
 <p>In this case, the programmatic SQLAlchemy approach as described above, can also be applied to generate <code>sql_string</code> with the
 advantages described&nbsp;above.</p>
@@ -356,6 +365,9 @@ advantages described&nbsp;above.</p>
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -381,6 +393,9 @@ advantages described&nbsp;above.</p>
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -409,6 +424,9 @@ advantages described&nbsp;above.</p>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -428,9 +446,9 @@ advantages described&nbsp;above.</p>
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -441,6 +459,9 @@ advantages described&nbsp;above.</p>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

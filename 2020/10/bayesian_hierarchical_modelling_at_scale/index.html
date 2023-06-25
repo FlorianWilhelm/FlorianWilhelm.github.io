@@ -146,14 +146,14 @@ deviate a bit from our prior knowledge about the parameter. In case we have lots
 respective district should be allowed to have a huge difference compared to the parameter of the pooled model. Thus the pooled model
 acts as an informed prior for the parameters within the unpooled model leading altogether to an <em>hierarchical model</em>,
 which is sometimes also referred to as <em>partially pooled model</em>. Figure 1 illustrates our thoughts so&nbsp;far.</p>
-<p>&nbsp;</p>
+<p>&nbsp;
 <figure>
 <img class="noZoom" src="/images/hierarchical_model.png" alt="pooled, unpooled, hierarchical model">
 <figcaption align="center"><strong>Figure 1:</strong> Hierarchical model as a combination of a pooled and an unpooled model 
 from <a href="https://widdowquinn.github.io/Teaching-Stan-Hierarchical-Modelling/07-partial_pooling_intro.html">Bayesian Multilevel Modelling using PyStan</a>.
 </figcaption>
 </figure>
-<p>&nbsp;</p>
+&nbsp;</p>
 <h2>Recent&nbsp;Advances</h2>
 <p>So far I mostly used <a href="https://docs.pymc.io/">PyMC3</a> for Bayesian inference or <em>probabilistic programming</em> as the authors
 of PyMC3 like to call it. I love it for it&#8217;s elegant design and consequently its expressiveness. The documentation is great
@@ -255,6 +255,7 @@ And that&#8217;s already most of it. Figure 2 depicts the graphical model outlin
 <strong>Figure 2:</strong> Graphical representation of a hierarchical model (centered version) as defined above.
 </figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>Those boxes in Figure 2, which are called <a href="https://en.wikipedia.org/wiki/Plate_notation">plates</a>, tell you how many times a parameter is repeated.
 Nested plates are multiplied by the number given by outer plates, which can also be seen by looking at the number of indices.
@@ -265,7 +266,7 @@ Shaded circles are observed values, which in our case are the number of sales on
 <p>Let&#8217;s take a quick look into our model code which is just a normal Python function. It&#8217;s good to keep in mind, that we call this a <em>model</em> since we assume that given
 the right parameters it would be able to generate sales for some given stores and days resembling the observed sales for these stores and days.
 The model function only defines the model parameters, how they interact and their&nbsp;priors.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpyro</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpyro</span>
 <span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
 <span class="kn">from</span> <span class="nn">numpyro.infer.reparam</span> <span class="kn">import</span> <span class="n">TransformReparam</span>
 <span class="kn">from</span> <span class="nn">jax.numpy</span> <span class="kn">import</span> <span class="n">DeviceArray</span>
@@ -274,7 +275,7 @@ The model function only defines the model parameters, how they interact and thei
 
 
 <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeviceArray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Gamma-Poisson hierarchical model for daily sales forecasting</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gamma-Poisson hierarchical model for daily sales forecasting</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: input data</span>
@@ -341,14 +342,15 @@ The model function only defines the model parameters, how they interact and thei
         <span class="n">betas</span> <span class="o">=</span> <span class="n">is_observed</span><span class="o">*</span><span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">disp_params</span><span class="p">)</span> <span class="o">+</span> <span class="n">not_observed</span>
         <span class="n">alphas</span> <span class="o">=</span> <span class="n">means</span> <span class="o">*</span> <span class="n">betas</span>
         <span class="k">return</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">GammaPoisson</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">betas</span><span class="p">),</span> <span class="n">obs</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Note that <code>disp_param</code> is <span class="math">\(r\)</span> and <code>coef</code> is <span class="math">\(\theta\)</span> in the source code above for better readability. You will
 recognize a lot of what we have talked about and I don&#8217;t want to go into the syntactical details of NumPyro. My suggestion
 would be to first read the documentation of Pyro, as it is way more comprehensive, and then look up the differences in the
 NumPyro&nbsp;reference. </p>
 <p>Reading the source code more thoroughly, you might wonder about the definition of the coefficients&nbsp;as:</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">reparam</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;coefs&quot;</span><span class="p">:</span> <span class="n">TransformReparam</span><span class="p">()}):</span>
+<div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">reparam</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;coefs&quot;</span><span class="p">:</span> <span class="n">TransformReparam</span><span class="p">()}):</span>
     <span class="n">coefs</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
         <span class="s2">&quot;coefs&quot;</span><span class="p">,</span>
         <span class="n">dist</span><span class="o">.</span><span class="n">TransformedDistribution</span><span class="p">(</span>
@@ -356,7 +358,8 @@ NumPyro&nbsp;reference. </p>
             <span class="n">dist</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">AffineTransform</span><span class="p">(</span><span class="n">coef_mus</span><span class="p">,</span> <span class="n">coef_sigmas</span><span class="p">),</span>
         <span class="p">),</span>
     <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>The explanations of the model I have given and also the plot, actually shows the <em>centered version</em> of a
 hierarchical model. For me the centered version feels much more intuitive and is easier to explain. The downside is that
@@ -373,8 +376,8 @@ allows the model to answer a store manager&#8217;s potential question: &#8220;Ho
 <p>Until now we have talked about the model and if you are a PyMC3 user, you might think that this should be enough to actually solve it.
 Pyro and NumPyro have a curious difference with respect to that. To actually fit the parameters of the model, distributions for the 
 parameters have to be defined since its <span class="caps">SVI</span>. This is done in a separate function called <em>guide</em>. </p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Guide with parameters of the posterior</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guide</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">DeviceArray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guide with parameters of the posterior</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: input data</span>
@@ -445,14 +448,15 @@ parameters have to be defined since its <span class="caps">SVI</span>. This is d
                         <span class="n">dist</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">AffineTransform</span><span class="p">(</span><span class="n">coef_mus</span><span class="p">,</span> <span class="n">coef_sigmas</span><span class="p">),</span>
                     <span class="p">),</span>
                 <span class="p">)</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>As you can see, the structure of the guide reflects the structure of the model and there we are just defining for each model parameter
 a distribution that again has parameters that need to be determined. The link between model and guide is given by the names of the <em>sample sites</em>
 like &#8220;coef_offsets&#8221;. This is a bit dangerous as a single typo in the model or guide may break this link leading to unexpected
 behaviour. I spent more than a day of debugging a model once until I realized that some sample site in the guide had a typo.
 You can see in the actual implementation, i.e. <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/src/bhm_at_scale/model.py">model.py</a>, that I learnt from my mistakes as this source of error can be completely eliminated by simply defining class variables&nbsp;like:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
     <span class="n">disp_param_mu</span> <span class="o">=</span> <span class="s2">&quot;disp_param_mu&quot;</span>
     <span class="n">disp_param_sigma</span> <span class="o">=</span> <span class="s2">&quot;disp_param_sigma&quot;</span>
     <span class="n">disp_param_offsets</span> <span class="o">=</span> <span class="s2">&quot;disp_param_offsets&quot;</span>
@@ -462,7 +466,8 @@ You can see in the actual implementation, i.e. <a href="https://github.com/Flori
     <span class="n">coef_offsets</span> <span class="o">=</span> <span class="s2">&quot;coef_offsets&quot;</span>
     <span class="n">coefs</span> <span class="o">=</span> <span class="s2">&quot;coefs&quot;</span>
     <span class="n">days</span> <span class="o">=</span> <span class="s2">&quot;days&quot;</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>Then using variables like <code>Site.coef_offsets</code> instead of strings like <code>"coef_offsets"</code> as identifiers of sample sites, allows your <span class="caps">IDE</span> to inform you about any typo as you go. Problem&nbsp;solved.</p>
 <p>Besides the model and guide, we also have to define a local guide and a predictive model. The local guide assumes
@@ -473,27 +478,30 @@ of sales on days beyond our training interval. As these functions are only slide
 then fixing the global parameters and fitting the local guide on the stores from the test set with a really short history of 7 days.
 This works really well although the number of features, which is 23, is much higher than 7! Let&#8217;s take a look at the coefficients 
 of a store from the test set as detailed in the <a href="https://github.com/FlorianWilhelm/bhm-at-scale/blob/master/notebooks/02-model.ipynb">model notebook</a>:</p>
-<div class="highlight"><pre><span></span><code>[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
+<div class="highlight"><pre><span></span>[ 2.7901888   2.6591218   2.6881874   2.6126788   2.656775    2.554397
   2.4938385   0.33227605  3.115691    2.9264386   2.692092    2.9548435
   0.05613964  0.06542112  2.8379264   2.9023972   3.5701406   3.2074358
   4.0569873   2.9304545   2.7463424   2.823191    2.959007  ]
-</code></pre></div>
+</pre></div>
+
 
 <p>The notebook also shows that the traditional Poisson regression using Scikit-Learn overfits the training set and yields implausible coefficients. 
 Comparing the coefficients from above to the ones of the Poisson regression for the same store,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span><code>[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
+<div class="highlight"><pre><span></span>[ 1.1747563  -2.2386415   2.1442924   1.9889396   1.9385103   1.8024149
  -6.8102717   1.1747563   2.2386413  -2.2386413   0.          0.
  -0.09434899  0.          0.          0.          0.          0.
   0.          0.          0.          0.          0.        ]
-</code></pre></div>
+</pre></div>
+
 
 <p>we see that they are highly different and zero for features in the Poisson regression that weren&#8217;t encountered in the data of just 7 days.
 Now comparing the coefficients of our <span class="caps">BHM</span> model trained on just 7 days with the coefficients of a cheating model trained on the whole test set,&nbsp;i.e.</p>
-<div class="highlight"><pre><span></span><code>[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
+<div class="highlight"><pre><span></span>[ 2.814997    2.7551868   2.6182172   2.6453698   2.672692    2.5201027
   2.593036    0.2265296   3.184446    3.1163387   2.5429602   2.9477317
  -0.03218627  0.06836608  2.8726482   2.925492    3.56679     3.215817
   4.0523443   2.9164758   2.7241356   2.8247747   2.9598234 ]
-</code></pre></div>
+</pre></div>
+
 
 <p>we see that they are quite similar. That&#8217;s the magic of a hierarchical model! We started with plausible defaults from a 
 global perspective and adapted locally depending on the amount of available&nbsp;data.</p>
@@ -519,6 +527,7 @@ We start with taking a look at the sales prediction for one of the stores from t
 <strong>Figure 3:</strong> Sales forecast of one store from the test set. The blue dashed line is the the mean predicted mean.
 </figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>Only judging by the eye, we see that predicted mean (blue dashed line) follows the number of sales (bluish bars) quite good.
 The background is shaded according to some important features like promotions and holidays which explain some of the variations
@@ -536,6 +545,7 @@ weekday starting with Monday a density over the means of all&nbsp;stores. </p>
 <strong>Figure 4:</strong> Density plot of the means of the weekday coefficients over all stores. 
 </figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>We can see that on average there seem to be a higher sales uplift on Mondays and also a high variance for the means on Saturdays and
 Sundays when many stores are closed. If we are more interested in things we can change, like when to do a promotion,
@@ -548,6 +558,7 @@ we could be interested in analyzing the distribution of the promotion effect ove
 <strong>Figure 5:</strong> Density plot of the promotion effect over all stores with the red line showing the median.
 </figcaption>
 </figure>
+
 <p>&nbsp;</p>
 <p>These are just some analysis one could start to look into to derive useful insights for store management. 
 The rest is up to your imagination and also depending on your use-case. Imagine we had a dataset that features not 
@@ -700,6 +711,9 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -725,6 +739,9 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -753,6 +770,9 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -772,9 +792,9 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -785,6 +805,9 @@ practical dataset sizes with the help of NumPyro! Cheers to that and let&#8217;s
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

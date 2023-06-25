@@ -131,23 +131,25 @@ Fortunately, it is easy to get started with <a href="https://spark.apache.org/do
 <h2>Generating the&nbsp;environment</h2>
 <p>In order to create our aforementioned environment we start by creating a directory that will contain our isolated environment, e.g. <code>venv</code>, on our local Linux machine. Then we will populate this directory with the wheel files of all libraries that our PySpark application uses. Since wheel files contain compiled code they are dependent on the exact Python version and platform. 
 For us this means we have to make sure that we use the same platform and Python version locally as we gonna use on the Spark cluster. In my case the cluster runs Ubuntu Trusty Linux with Python 3.4. To replicate this locally it&#8217;s best to use a conda&nbsp;environment:</p>
-<div class="highlight"><pre><span></span><code>conda create -n py34 <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.4
-<span class="nb">source</span> activate py34
-</code></pre></div>
+<div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>py34<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.4
+<span class="nb">source</span><span class="w"> </span>activate<span class="w"> </span>py34
+</pre></div>
+
 
 <p>Having activated the conda environment, we just use <code>pip download</code> to download all the requirements of our PySpark application as wheel files. In case there is no wheel file available, <code>pip</code> will download a source-based <code>tar.gz</code> file instead but we can easily generate a wheel from it. To do so, we just unpack the archive, change into the directory and type <code>python setup.py bdist_wheel</code>. A wheel file should now reside in the <code>dist</code> subdirectory. At this point one should also be aware that some wheel files come with low-level Linux dependencies that just need to be installed by a sysadmin on every host, e.g. <code>python3-dev</code> and <code>unixodbc-dev</code>.   </p>
 <p>Now we copy the wheel files of all our PySpark application&#8217;s dependencies into the <code>venv</code> directory. After that, we unpack them with <code>unzip</code> since they are just normal zip files with a strange suffix. Finally, we push everything to <span class="caps">HDFS</span>, e.g. <code>/my_venvs/venv</code>, using <code>hdfs dfs -put ./venv /my_venvs/venv</code> and make sure that the files are readable by&nbsp;anyone.</p>
 <h2>Bootstrapping the&nbsp;environment</h2>
 <p>When our PySpark application runs the first thing we do is calling <code>sc.addFile</code> on every file in <code>/my_venvs/venv</code>. Since this will also set the <code>PYTHONPATH</code> correctly, importing any library which resides in <code>venv</code> will just work. If our Python application itself is also nicely structured as a Python package (maybe using <a href="http://pyscaffold.org/">PyScaffold</a>) we can also push it to <code>/my_venvs/venv</code>. This allows us to roll a full-blown PySpark application and nicely separate the boilerplate code that bootstraps our isolated environment from&nbsp;it.</p>
 <p>Let&#8217;s assume our PySpark application is a Python package called <code>my_pyspark_app</code>. The boilerplate code to bootstrap <code>my_pyspark_app</code>, i.e. to activate the isolated environment on Spark, will be in the module <code>activate_env.py</code>. When we submit our Spark job we will specify this module and specify the environment as an argument,&nbsp;e.g.:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">PYSPARK_PYTHON</span><span class="o">=</span>python3.4 /opt/spark/bin/spark-submit --master yarn --deploy-mode cluster <span class="se">\</span>
---num-executors <span class="m">4</span> --driver-memory 12g --executor-memory 4g --executor-cores <span class="m">1</span> <span class="se">\</span>
---files /etc/spark/conf/hive-site.xml --queue default --conf spark.yarn.maxAppAttempts<span class="o">=</span><span class="m">1</span> <span class="se">\</span>
-activate_env.py /my_venvs/venv
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="nv">PYSPARK_PYTHON</span><span class="o">=</span>python3.4<span class="w"> </span>/opt/spark/bin/spark-submit<span class="w"> </span>--master<span class="w"> </span>yarn<span class="w"> </span>--deploy-mode<span class="w"> </span>cluster<span class="w"> </span><span class="se">\</span>
+--num-executors<span class="w"> </span><span class="m">4</span><span class="w"> </span>--driver-memory<span class="w"> </span>12g<span class="w"> </span>--executor-memory<span class="w"> </span>4g<span class="w"> </span>--executor-cores<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+--files<span class="w"> </span>/etc/spark/conf/hive-site.xml<span class="w"> </span>--queue<span class="w"> </span>default<span class="w"> </span>--conf<span class="w"> </span>spark.yarn.maxAppAttempts<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+activate_env.py<span class="w"> </span>/my_venvs/venv
+</pre></div>
+
 
 <p>Easy and quite flexible! We are even able to change from one environment to another by just passing another <span class="caps">HDFS</span> directory. Here is how <code>activate_env.py</code> which does the actual heavy lifting with <code>sc.addFile</code> looks&nbsp;like:</p>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Bootstrapping an isolated environment for `my_pyspark_app` on Spark</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -162,7 +164,7 @@ activate_env.py /my_venvs/venv
 
 
 <span class="k">def</span> <span class="nf">list_path_names</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List files and directories in an HDFS path</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List files and directories in an HDFS path</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        path (str): HDFS path to directory</span>
@@ -181,7 +183,7 @@ activate_env.py /my_venvs/venv
 
 
 <span class="k">def</span> <span class="nf">distribute_hdfs_files</span><span class="p">(</span><span class="n">hdfs_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Distributes recursively a given directory in HDFS to Spark</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Distributes recursively a given directory in HDFS to Spark</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        hdfs_path (str): path to directory</span>
@@ -195,7 +197,7 @@ activate_env.py /my_venvs/venv
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main entry point allowing external calls</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main entry point allowing external calls</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      args ([str]): command line parameter list</span>
@@ -223,14 +225,15 @@ activate_env.py /my_venvs/venv
 
 
 <span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Entry point for console_scripts</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point for console_scripts</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">run</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>It is actually easier than it looks. In the <code>main</code> function we initialize the <code>SparkSession</code> the first time so that later calls to the session builder will use this instance. Thereafter, the passed path argument when doing the <code>spark-submit</code> is extracted. Subsequently, this is passed to <code>distribute_hdfs_files</code> which calls <code>sc.addFile</code> recursively on every file to set up the isolated environment on the driver and executors. After this we are able to import our <code>my_pyspark_app</code> package and call for instance its <code>main</code> method. The following graphic illustrates the whole&nbsp;concept: </p>
 <figure>
@@ -313,6 +316,9 @@ activate_env.py /my_venvs/venv
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -338,6 +344,9 @@ activate_env.py /my_venvs/venv
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -366,6 +375,9 @@ activate_env.py /my_venvs/venv
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -385,9 +397,9 @@ activate_env.py /my_venvs/venv
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -398,6 +410,9 @@ activate_env.py /my_venvs/venv
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

@@ -157,18 +157,19 @@ of Pandas to keep things simple. It should not be necessary to mention that this
 task can be handled in HiveQL directly, so this is really only for&nbsp;demonstration.</p>
 <h2>1. Setting up our dummy&nbsp;table</h2>
 <p>With the following query we generate our sample&nbsp;data:</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">tmp</span><span class="p">;</span>
-<span class="n">USE</span> <span class="n">tmp</span><span class="p">;</span>
-<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">vtype</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">price</span> <span class="nb">FLOAT</span><span class="p">);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="ss">&quot;car&quot;</span><span class="p">,</span> <span class="mi">69</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="mi">1426</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="mi">1234</span><span class="p">.);</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">foo</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="ss">&quot;bike&quot;</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="n">USE</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">vtype</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="nb">FLOAT</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;car&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;car&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;car&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;car&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;bike&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1426</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;bike&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;bike&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1234</span><span class="p">.);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;bike&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+</pre></div>
+
 
 <p>Note that the last row even contains a null value that we need to handle&nbsp;later.</p>
 <h2>2. Creating and uploading a virtual&nbsp;environment</h2>
@@ -183,21 +184,25 @@ any recent 64bit Linux distribution will&nbsp;do.</p>
 we explicitly ask for Python 3. Who uses Python 2 these days&nbsp;anyhow?</p>
 <p>The problem with the <code>activate</code> script of a virtual environment is that 
 its path is hard-coded. We change that by replacing the&nbsp;line </p>
-<div class="highlight"><pre><span></span><code><span class="nv">VIRTUAL_ENV</span><span class="o">=</span><span class="s2">&quot;your/path/to/venv&quot;</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="nv">VIRTUAL_ENV</span><span class="o">=</span><span class="s2">&quot;your/path/to/venv&quot;</span>
+</pre></div>
+
 
 <p>with</p>
-<div class="highlight"><pre><span></span><code><span class="nv">HERE</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span> <span class="nb">cd</span> <span class="s2">&quot;</span><span class="k">$(</span> dirname <span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">)</span><span class="s2">&quot;</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span> <span class="k">)</span><span class="s2">&quot;</span>
-<span class="nv">VIRTUAL_ENV</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span> readlink -f <span class="s2">&quot;</span><span class="si">${</span><span class="nv">HERE</span><span class="si">}</span><span class="s2">/../&quot;</span> <span class="k">)</span><span class="s2">&quot;</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="nv">HERE</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">VIRTUAL_ENV</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>readlink<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HERE</span><span class="si">}</span><span class="s2">/../&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+
 
 <p>in <code>./venv/bin/activate</code>. Additionally, we replace in <code>pip</code> the shebang line, i.e.&nbsp;replacing</p>
-<div class="highlight"><pre><span></span><code><span class="ch">#!/your/path/to/venv/venv/bin/python3</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="ch">#!/your/path/to/venv/venv/bin/python3</span>
+</pre></div>
+
 
 <p>with</p>
-<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+</pre></div>
+
 
 <p>This will help us later when we call <code>pip list</code> for debugging&nbsp;reasons.</p>
 <p>We activate the virtual environment and install Pandas in&nbsp;it.</p>
@@ -227,7 +232,7 @@ environment (what we need to do later) assumes an installation of at least
 miniconda which might not be available on the data&nbsp;nodes.</p>
 <h2>3. Writing and uploading the&nbsp;scripts</h2>
 <p>We start by writing a simple Python script <code>udaf.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
@@ -259,7 +264,8 @@ miniconda which might not be available on the data&nbsp;nodes.</p>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-</code></pre></div>
+</pre></div>
+
 
 <p>The script should be pretty much self-explanatory. We read from the standard
 input with the help of a generator that strips and splits the lines by the
@@ -280,15 +286,16 @@ as <span class="caps">UDAF</span> we would see import errors if Pandas is not in
 But in the spirit of David Wheeler&#8217;s &#8220;All problems in computer science can be
 solved by another level of indirection.&#8221; we just write a little helper script
 called <code>udaf.sh</code> that does this job for us and calls the Python script&nbsp;afterwards.</p>
-<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-<span class="nb">set</span> -e
-<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="nb">echo</span> <span class="s2">&quot;Begin of script&quot;</span><span class="o">)</span>
-<span class="nb">source</span> ./venv.tgz/bin/activate
-<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="nb">echo</span> <span class="s2">&quot;Activated venv&quot;</span><span class="o">)</span>
-<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> pip list --format<span class="o">=</span>columns --no-cache-dir<span class="o">)</span>
-python udaf.py
-<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="nb">echo</span> <span class="s2">&quot;End of script&quot;</span><span class="o">)</span>
-</code></pre></div>
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span><span class="w"> </span>-e
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Begin of script&quot;</span><span class="o">)</span>
+<span class="nb">source</span><span class="w"> </span>./venv.tgz/bin/activate
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Activated venv&quot;</span><span class="o">)</span>
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="w"> </span>pip<span class="w"> </span>list<span class="w"> </span>--format<span class="o">=</span>columns<span class="w"> </span>--no-cache-dir<span class="o">)</span>
+python<span class="w"> </span>udaf.py
+<span class="o">(</span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;End of script&quot;</span><span class="o">)</span>
+</pre></div>
+
 
 <p>Again we use standard error to trace what the script is currently doing.
 Furthermore, we use <code>pip list</code> to output the content of the virtual environment
@@ -301,17 +308,18 @@ left is to push both files somewhere on <span class="caps">HDFS</span> for the c
 </blockquote>
 <h2>4. Writing the actual HiveQL&nbsp;query</h2>
 <p>After we are all prepared and set we can write the actual HiveQL&nbsp;query:</p>
-<div class="highlight"><pre><span></span><code><span class="k">DELETE</span> <span class="n">ARCHIVE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">venv</span><span class="p">.</span><span class="n">tgz</span><span class="p">;</span>
-<span class="k">ADD</span> <span class="n">ARCHIVE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">venv</span><span class="p">.</span><span class="n">tgz</span><span class="p">;</span>
-<span class="k">DELETE</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
-<span class="k">ADD</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
-<span class="k">DELETE</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">sh</span><span class="p">;</span>
-<span class="k">ADD</span> <span class="n">FILE</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">sh</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="k">DELETE</span><span class="w"> </span><span class="n">ARCHIVE</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">venv</span><span class="p">.</span><span class="n">tgz</span><span class="p">;</span>
+<span class="k">ADD</span><span class="w"> </span><span class="n">ARCHIVE</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">venv</span><span class="p">.</span><span class="n">tgz</span><span class="p">;</span>
+<span class="k">DELETE</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
+<span class="k">ADD</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
+<span class="k">DELETE</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">sh</span><span class="p">;</span>
+<span class="k">ADD</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="n">hdfs</span><span class="p">:</span><span class="o">///</span><span class="n">tmp</span><span class="o">/</span><span class="n">udaf</span><span class="p">.</span><span class="n">sh</span><span class="p">;</span>
 
-<span class="n">USE</span> <span class="n">tmp</span><span class="p">;</span>
-<span class="k">SELECT</span> <span class="k">TRANSFORM</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span> <span class="k">USING</span> <span class="s1">&#39;udaf.sh&#39;</span> <span class="k">AS</span> <span class="p">(</span><span class="n">vtype</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">mean</span> <span class="nb">FLOAT</span><span class="p">,</span> <span class="n">var</span> <span class="nb">FLOAT</span><span class="p">)</span>
-  <span class="k">FROM</span> <span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">foo</span> <span class="k">CLUSTER</span> <span class="k">BY</span> <span class="n">vtype</span><span class="p">)</span> <span class="k">AS</span> <span class="n">TEMP_TABLE</span><span class="p">;</span>
-</code></pre></div>
+<span class="n">USE</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">TRANSFORM</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">vtype</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="s1">&#39;udaf.sh&#39;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="n">vtype</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">mean</span><span class="w"> </span><span class="nb">FLOAT</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="nb">FLOAT</span><span class="p">)</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">CLUSTER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">vtype</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEMP_TABLE</span><span class="p">;</span>
+</pre></div>
+
 
 <p>At first we add the zipped virtual environment to the distributed cache that
 will be automatically unpacked for us due to the <code>ADD ARCHIVE</code> command.
@@ -349,7 +357,7 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
         <li><a href="https://florianwilhelm.info/2018/07/how_mobilede_brings_ds_to_prod_for_a_personalized_web_experience/">How mobile.de brings Data Science to Production for a Personalized Web&nbsp;Experience</a></li>
         <li><a href="https://florianwilhelm.info/2017/10/efficient_udfs_with_pyspark/">Efficient <span class="caps">UD</span>(A)Fs with&nbsp;PySpark</a></li>
         <li><a href="https://florianwilhelm.info/2013/10/handling_big_data_with_python/">Handling Big Data with&nbsp;Python</a></li>
-        <li><a href="https://florianwilhelm.info/2023/03/pyconde_pydata_2023_conference_programme_with_pretalx_and_pytanis/">The Programme of the PyConDE / PyData 2023 in&nbsp;Berlin</a></li>
+        <li><a href="https://florianwilhelm.info/2023/05/waldstack/"><span class="caps">WALD</span>: A Modern <span class="amp">&amp;</span> Sustainable Analytics&nbsp;Stack</a></li>
     </ul>
 </section>
     <hr/>
@@ -411,6 +419,9 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
       <a href="https://florianwilhelm.info/tag/ai/">ai</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
     </li>
     <li class="list-group-item tag-4">
@@ -436,6 +447,9 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
     </li>
     <li class="list-group-item tag-1">
       <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
@@ -464,6 +478,9 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
     </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
     </li>
@@ -483,9 +500,9 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
       <a href="https://florianwilhelm.info/tag/programming/">programming</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://florianwilhelm.info/tag/python/">python</a>
+      <a href="https://florianwilhelm.info/tag/python/">Python</a>
     </li>
-    <li class="list-group-item tag-2">
+    <li class="list-group-item tag-3">
       <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
     </li>
     <li class="list-group-item tag-2">
@@ -496,6 +513,9 @@ for instance allow us to push changes in <code>udaf.py</code> automatically with
     </li>
     <li class="list-group-item tag-4">
       <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/snowflake/">Snowflake</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://florianwilhelm.info/tag/spark/">spark</a>

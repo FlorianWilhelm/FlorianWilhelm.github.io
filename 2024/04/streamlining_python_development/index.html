@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Streamlining Python Development: A Guide to a Modern Project Setup - Florian Wilhelm's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="https://florianwilhelm.info/2024/04/streamlining_python_development/">
+
+        <meta name="author" content="Florian Wilhelm" />
+        <meta name="keywords" content="python,configuration,programming,template" />
+        <meta name="description" content="In this blogpost, we’ll explore tools like Hatch, mypy, and ruff, and dive into efficient project setups. Perfect for Python beginners!" />
+
+        <meta property="og:site_name" content="Florian Wilhelm's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Streamlining Python Development: A Guide to a Modern Project Setup"/>
+        <meta property="og:url" content="https://florianwilhelm.info/2024/04/streamlining_python_development/"/>
+        <meta property="og:description" content="In this blogpost, we’ll explore tools like Hatch, mypy, and ruff, and dive into efficient project setups. Perfect for Python beginners!"/>
+        <meta property="article:published_time" content="2024-04-22" />
+            <meta property="article:section" content="talk" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="configuration" />
+            <meta property="article:tag" content="programming" />
+            <meta property="article:tag" content="template" />
+            <meta property="article:author" content="Florian Wilhelm" />
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@FlorianWilhelm">
+        <meta name="twitter:creator" content="@FlorianWilhelm">
+    <meta name="twitter:domain" content="https://florianwilhelm.info">
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://florianwilhelm.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://florianwilhelm.info/theme/css/pygments/native.css" rel="stylesheet">
+        <link href="https://florianwilhelm.info/theme/css/typogrify.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://florianwilhelm.info/theme/css/style.css" type="text/css"/>
+
+
+        <link href="https://florianwilhelm.info/feeds/talk.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Florian Wilhelm's blog talk ATOM Feed"/>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQCSE9V2BL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LQCSE9V2BL');
+    </script>
+    <!-- End Google Analytics Code -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://florianwilhelm.info/" class="navbar-brand">
+Florian Wilhelm's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/about/">About me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://florianwilhelm.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<!-- Banner -->
+<!-- End Banner -->
+
+<!-- Content Container -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://florianwilhelm.info/2024/04/streamlining_python_development/"
+                       rel="bookmark"
+                       title="Permalink to Streamlining Python Development: A Guide to a Modern Project Setup">
+                        Streamlining Python Development: A Guide to a Modern Project&nbsp;Setup
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2024-04-22T08:00:00+02:00"> Apr. 22, 2024</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://florianwilhelm.info/tag/python/">python</a>
+        /
+	<a href="https://florianwilhelm.info/tag/configuration/">configuration</a>
+        /
+	<a href="https://florianwilhelm.info/tag/programming/">programming</a>
+        /
+	<a href="https://florianwilhelm.info/tag/template/">template</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>In the dynamic world of Python programming, an efficient project setup is key to success. Although our beloved Python emphasizes <em>There should be one&#8212; and preferably only one &#8212;obvious way to do it.</em> in its Zen, we all know that it&#8217;s rather Perl&#8217;s <em>There Is More Than One Way To Do It!</em> when it comes to the nuts and bolts of a Python Package, like packaging, environment <span class="amp">&amp;</span> dependency management, etc.
+In my talk, which was presented at <a href="https://pretalx.com/pyconde-pydata-2024/talk/CBVTEG/">PyConDE/PyData Berlin 2024</a>, I demystify the process of setting up a Python project with clarity and efficiency. I&#8217;ll introduce <a href="https://hatch.pypa.io/">Hatch</a>, a cutting-edge tool that simplifies project management. We&#8217;ll delve into the functionalities and benefits of using pyproject.toml, a cornerstone in modern Python development for its streamlined approach to project&nbsp;configuration.</p>
+<p>The talk will also cover effective strategies for organizing your project&#8217;s directory structure, ensuring a clean and manageable workspace. Understanding the importance of testing, we&#8217;ll discuss unit testing techniques for enhancing code reliability. Additionally, the presentation will feature mypy for type checking, an essential practice for catching errors early and improving code quality. Finally, we&#8217;ll explore the use of ruff, a modern linter, to keep your code clean and in line with Python&nbsp;standards.</p>
+<p>By the end of this presentation, you will have gained a comprehensive understanding of the tools and methodologies necessary for a modern Python project setup, empowering them to create well-structured, high-quality Python&nbsp;applications.</p>
+<p>Check out the <a href="https://www.youtube.com/watch?v=Qwu11p41YF0">video of the presentation</a>, as well as the <a href="https://florianwilhelm.info/documents/slides_streamlining_python_development.pdf">slides</a> and the Cookiecutter template <a href="https://github.com/FlorianWilhelm/the-hatchlor">The Hatchlor</a> that sets up a Python project just like presented in this&nbsp;talk!</p>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://florianwilhelm.info/2022/01/configuration_via_yaml_and_cli_with_hydra/">Effective and Consistent Configuration via <span class="caps">YAML</span> <span class="amp">&amp;</span> <span class="caps">CLI</span> with&nbsp;Hydra</a></li>
+        <li><a href="https://florianwilhelm.info/2017/07/declarative_thinking_and_programming/">Declarative Thinking and&nbsp;Programming</a></li>
+        <li><a href="https://florianwilhelm.info/2014/07/howto_setup_a_new_python_project/">How to setup a new Python&nbsp;project</a></li>
+        <li><a href="https://florianwilhelm.info/2024/05/snowinstructor/">Showcasing Snowflake&#8217;s Cortex <span class="caps">AI</span> capabilities with the Arctic <span class="caps">LLM</span></a></li>
+        <li><a href="https://florianwilhelm.info/2023/09/unlocking_the_power_of_integer_programming/">Unlocking the Power of Integer Programming: A Beginner’s Guide to Conference&nbsp;Scheduling</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+            var disqus_config = function () {
+                this.language = "en";
+
+                        this.page.identifier = '2024-04-22-streamlining_python_development';
+                        this.page.url = 'https://florianwilhelm.info/2024/04/streamlining_python_development/';
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://linkedin.com/in/florian-wilhelm-621ba834"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/FlorianWilhelm"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://florianwilhelm.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/ai/">ai</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/airbyte/">airbyte</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asynchronous/">asynchronous</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/asyncio/">asyncio</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bayesian/">bayesian</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/big-data/">big data</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/bokeh/">bokeh</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/causal-inference/">causal inference</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/conference/">conference</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/configuration/">configuration</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/data-science/">data science</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/dbt/">dbt</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/deep-learning/">deep learning</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/event-driven/">event-driven</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gans/">GANs</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/google-hangouts/">google hangouts</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/gps/">gps</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hadoop/">hadoop</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/hive/">hive</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/integer-programming/">integer programming</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/jupyter/">jupyter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/kalman-filter/">kalman filter</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/lightdash/">lightdash</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/machine-learning/">machine-learning</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/mathematics/">mathematics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/ml/">ml</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/nlp/">nlp</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/predictive-analytics/">predictive analytics</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/production/">production</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/programming/">programming</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://florianwilhelm.info/tag/python/">python</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/recommender-systems/">recommender systems</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/scikit-learn/">scikit-learn</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/scipy/">scipy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/semi-supervised/">semi-supervised</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/snowflake/">snowflake</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://florianwilhelm.info/tag/spark/">spark</a>
+    </li>
+    <li class="list-group-item tag-3">
+      <a href="https://florianwilhelm.info/tag/template/">template</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://florianwilhelm.info/tag/uncertainty-quantification/">uncertainty quantification</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<!-- End Content Container -->
+
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2024 Florian Wilhelm
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://florianwilhelm.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://florianwilhelm.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://florianwilhelm.info/theme/js/respond.min.js"></script>
+
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'florianwilhelmblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+
+
+<script>
+   $(document).ready(function () {
+      $("table").attr("class","table table-condensed table-bordered");
+   });
+</script>
+</body>
+</html>

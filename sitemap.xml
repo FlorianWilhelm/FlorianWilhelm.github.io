@@ -5,56 +5,56 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://florianwilhelm.info/</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/categories.html</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/archives.html</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/tags.html</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/404-not-found/</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/410-gone/</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/500-error/</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://florianwilhelm.info/about/</loc>
-<lastmod>2025-09-16T08:04:30-00:00</lastmod>
+<lastmod>2025-10-07T10:06:07-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -130,7 +130,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://florianwilhelm.info/2021/09/Handling_Anaconda_without_getting_constricted/</loc>
+<loc>https://florianwilhelm.info/2021/09/handling_anaconda_without_getting_constricted/</loc>
 <lastmod>2021-09-01T08:00:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
@@ -200,7 +200,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://florianwilhelm.info/2018/08/multiplicative_LSTM_for_sequence_based_recos/</loc>
+<loc>https://florianwilhelm.info/2018/08/multiplicative_lstm_for_sequence_based_recos/</loc>
 <lastmod>2018-08-05T16:00:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
